@@ -1,16 +1,93 @@
-# Decision Bench
+<p align="center">
+  <img src="docs/assets/decision-bench-frontier.png" alt="Decision Bench in black pixel lettering with a small blue accent on an off-white background." width="960">
+</p>
 
-An open benchmark for the bounded decisions software asks language models to make:
-- Which team owns this complaint?
-- Is this message a prompt injection?
-- Does this NDA say this?
-- Which tool should the agent call?
-- Is this commit a fix, a feature or a refactor?
-- Which figure on this receipt is the total?
+<h1 align="center">Decision Bench Methodology</h1>
 
-**1,071 rows · 35 tasks · 11 use cases · 36 public datasets.** Every row is a real record; the answer comes from the dataset's own annotators or an objective record such as a test result or a filing's item number, never from a model. 122 rows carry an image as well as a text rendering, so vision and text-only models can both be scored. Every row names its dataset, licence, record id and original label.
+<p align="center">
+  <strong>Small decisions. Real evidence. Measurable tradeoffs.</strong><br>
+  An open benchmark for how accurately, quickly, and cheaply language models make bounded decisions.
+</p>
 
-Browse every row, every source and the leaderboard on the site (run `python3 -m decision_bench serve` for a local copy).
+<!-- Badge snapshot: 2026-09-23. Refresh date, corpus counts, and results status
+when updating the benchmark. No GitHub remote is configured yet. Once published,
+replace the static updated badge with Shields /github/last-commit/OWNER/REPO
+and add /github/actions/workflow/status/OWNER/REPO/ci.yml; do not invent CI status. -->
+<p align="center">
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/updated-2026--09--23-3028C8?style=flat-square&amp;labelColor=161616" alt="README and benchmark snapshot updated September 23, 2026"></a>
+  <a href="data/corpus/bench-v4/manifest.json"><img src="https://img.shields.io/badge/rows-1%2C071-3028C8?style=flat-square&amp;labelColor=161616" alt="1,071 benchmark rows"></a>
+  <a href="docs/tasks.md"><img src="https://img.shields.io/badge/use%20cases-11-ED9FC8?style=flat-square&amp;labelColor=161616" alt="11 use cases"></a>
+  <a href="data/SOURCES.md"><img src="https://img.shields.io/badge/datasets-36-ED9FC8?style=flat-square&amp;labelColor=161616" alt="36 public source datasets"></a>
+  <a href="#latest-bench"><img src="https://img.shields.io/badge/results-pending-ED9FC8?style=flat-square&amp;labelColor=161616" alt="Benchmark results awaiting publication"></a>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/code-MIT-3028C8?style=flat-square&amp;labelColor=161616" alt="Code license: MIT"></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/badge/python-3.11%2B-3028C8?style=flat-square&amp;labelColor=161616&amp;logo=python&amp;logoColor=white" alt="Python 3.11 or newer"></a>
+  <a href="data/corpus/current.json"><img src="https://img.shields.io/badge/corpus-bench--v4-ED9FC8?style=flat-square&amp;labelColor=161616" alt="Active corpus: bench-v4"></a>
+  <a href="docs/tasks.md"><img src="https://img.shields.io/badge/tasks-35-ED9FC8?style=flat-square&amp;labelColor=161616" alt="35 benchmark tasks"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-3028C8?style=flat-square&amp;labelColor=161616" alt="Contributions welcome"></a>
+</p>
+
+<p align="center">
+  <a href="#latest-bench">Latest bench</a> ·
+  <a href="#worked-example">Worked example</a> ·
+  <a href="#methodology">Methodology</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="docs/tasks.md">Task catalog</a> ·
+  <a href="data/SOURCES.md">Sources</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
+</p>
+
+---
+
+## Latest bench
+
+<!-- LATEST-BENCH:START -->
+> **bench-v4 · Corpus ready · Results awaiting publication**
+>
+> This space is reserved for the latest completed benchmark. No model scores have been published in this checkout yet.
+
+| Corpus | Tasks | Use cases | Public datasets | Rows with images |
+| :---: | :---: | :---: | :---: | :---: |
+| **1,071 rows** | **35** | **11** | **36** | **122** |
+
+| Latest run | Status |
+| :--- | :--- |
+| Published on | — |
+| Models evaluated | — |
+| Results & comparison | Awaiting the first published run |
+
+| Model / input modality | Accuracy (95% CI) | Coverage | Median latency / row | Total cost (basis) | Predictions |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Awaiting publication | — | — | — | — | — |
+
+*Dashes mean unavailable, not zero. Populate this table from validated, completed runs on the current corpus; record the publication date above.*
+
+<!-- Replace the status and run table above when results are published. Link to
+results/bench-v4/leaderboard.md and the relevant model folders only once they exist.
+Include accuracy with Wilson 95% intervals, coverage, latency, cost and cost basis.
+Keep this block aligned with data/corpus/current.json; never mix corpus versions. -->
+<!-- LATEST-BENCH:END -->
+
+[How to publish a result →](results/README.md) · [Result format →](docs/results-format.md)
+
+## What does Decision Bench measure?
+
+Software repeatedly asks models to make a choice: route a complaint, identify a clause, select a tool, classify a code change, or pick the total from a receipt. Decision Bench tests those choices against real records with traceable answers.
+
+Every row names its dataset, license, record ID, and original label. Answers come from source annotations or objective records, never from a model. Image rows include a text rendering so both vision and text-only models can be evaluated; the input modality should be considered when comparing results.
+
+| Evidence | Decision |
+| :--- | :--- |
+| A customer complaint | Which product team owns it? |
+| An agreement and a statement | Does the agreement support, contradict, or omit it? |
+| A user request and available tools | Which tool should the agent call? |
+| A code diff | Is this a fix, feature, or refactor? |
+| A receipt | Which figure is the total? |
+
+<details>
+<summary><strong>Explore all 11 use cases and their sources</strong></summary>
 
 | Use case | Questions | Rows | Sources |
 | --- | --- | --- | --- |
@@ -28,39 +105,146 @@ Browse every row, every source and the leaderboard on the site (run `python3 -m 
 
 The full task list, with options and how rows were chosen, is in [docs/tasks.md](docs/tasks.md). Sources, licences and citations are in [data/SOURCES.md](data/SOURCES.md). The authoring rules are in [docs/authoring-v4.md](docs/authoring-v4.md).
 
+</details>
+
+## Worked example
+
+**Task PRD-2: Which part of the version was bumped?** This example uses row `prd-2-ramsey-uuid-2.4.0` from the [frozen corpus](data/corpus/bench-v4/cases.jsonl). The evidence is reproduced below; the task instruction is summarized for readability.
+
+**Evidence shown to the model**
+
+```text
+Project: a PHP UUID library
+
+### Added
+
+* Return `null` from `Uuid::getVersion()` if the UUID isn't an RFC 4122 variant
+* Support string UUIDs without dashes passed to `Uuid::fromString()`
+```
+
+**Decision:** classify the release as `minor` (backward-compatible functionality), `major` (incompatible changes), or `patch` (bug or security fixes only). These are the row's stored option order. The actual version numbers and gold label are withheld.
+
+**Illustrative valid response** — the probabilities below are an example, not a measured model output:
+
+```json
+{
+  "answers": {
+    "decision": {
+      "label": "minor",
+      "probabilities": {
+        "minor": 0.90,
+        "major": 0.05,
+        "patch": 0.05
+      }
+    }
+  }
+}
+```
+
+**How it scores:** the frozen answer is `minor`, derived from the source's version change from 2.3.0 to 2.4.0. The example earns one correct answer; its probabilities also contribute to calibration (Brier score **0.015**, log loss **≈ 0.105**). A valid `major` or `patch` answer counts as wrong. Missing probabilities make the response invalid, which also counts as wrong and is recorded as an operational error.
+
+Source: the committed [ramsey/uuid changelog](data/sources/changelogs/ramsey__uuid.md), under MIT; provenance is preserved in the corpus row. The response envelope shown here is used by the OpenAI-compatible and CLI adapters; TypeSafe uses `choice` instead of `label`.
+
+## Methodology
+
+```text
+  REAL RECORDS       FROZEN CORPUS       MODEL DECISION       AUDITABLE RESULTS
+  evidence + label → version + SHA-256 → choice + confidence → scores + predictions
+                                        ↑
+                              gold labels stay hidden
+```
+
+### 01 · Ground every question in a real record
+
+Sample public datasets using documented authoring rules. Preserve source provenance and labels. Freeze the corpus before inference; corrections require a new corpus version. The manifest's SHA-256 identifies exactly which rows a run used.
+
+### 02 · Show evidence, withhold the answer
+
+The model receives the record, instructions, and options in a fixed per-row shuffled order. Gold labels, rationales, titles, source metadata, and notes are withheld. The shared system policy treats the record as untrusted data. CLI adapters run in empty directories with tools disabled.
+
+### 03 · Require a choice and its probabilities
+
+The response must contain a valid option label and a probability for every option. Probabilities must be finite, between zero and one, and sum to one within 0.02; accepted values are normalized. Invalid output counts as an incorrect answer and an operational error. Invalid model output is not automatically retried.
+
+### 04 · Measure quality and the cost of getting there
+
+| Dimension | What is reported |
+| :--- | :--- |
+| **Accuracy** | Exact label match, with Wilson 95% intervals; overall, per use case, and per task |
+| **Balance** | Category macro accuracy and mean task macro-F1 |
+| **Calibration** | Brier score, log loss, expected calibration error, and risk/coverage on valid answers |
+| **Latency** | Wall-clock time per row, including network or CLI startup and retries |
+| **Cost & tokens** | Token usage and provider-reported or estimated cost, with the cost basis recorded |
+| **Paired comparisons** | Accuracy differences on shared rows, with bootstrap intervals resampling whole tasks |
+
+Unknown cost is recorded as `null`, never zero. Compare latency alongside provider type and concurrency. Small score differences need uncertainty estimates, especially at the task level.
+
+### 05 · Publish enough to reproduce the result
+
+Runs record the corpus hash, prompt version, model configuration, harness commit, coverage, and attempts. Published results include per-row predictions and scores. Validation recomputes published scores from predictions. Runs from different corpus versions cannot be combined.
+
+[Read the full evaluation protocol →](docs/protocol.md)
+
+## Reading the results
+
+Start with the task you need the model to perform, then compare its accuracy and operating costs.
+
+- **Compare equivalent runs.** Use the same corpus version and full coverage. Check model configuration, prompt version, and whether images were supplied; text-only and vision runs receive different evidence.
+- **Read uncertainty alongside accuracy.** Small gaps in point estimates can be noise. Use task-level results and the paired comparison intervals when available; an overall rank does not establish which model is best for every use case.
+- **Check failures and confidence.** Invalid responses count as wrong. Calibration describes valid responses only, so a well-calibrated model may still have operational failures.
+- **Compare cost and latency on their recorded basis.** Check whether cost is provider-reported or estimated and how much usage has known cost. Latency includes retries and network or CLI overhead; compare provider type and concurrency too.
+
+Public-data contamination and small task samples limit what these scores establish. See [Limits](#limits) and the [full protocol](docs/protocol.md) before drawing conclusions.
+
 ## Quick start
 
-Python 3.11+, standard library only.
+**Python 3.11+ · Standard library only · Linux, macOS, or WSL**
+
+From the repository root, validate the committed corpus and build the local explorer:
 
 ```sh
-git clone https://github.com/OWNER/decision-bench && cd decision-bench
-python3 -m decision_bench validate           # check the frozen corpus and any published results
-python3 -m decision_bench report && python3 -m decision_bench serve   # http://127.0.0.1:8765
+python3 -m decision_bench validate
+python3 -m decision_bench report
+python3 -m decision_bench serve
 ```
 
-To evaluate a model, point the harness at any OpenAI-compatible endpoint (OpenAI, OpenRouter, a LiteLLM proxy, vLLM, Ollama and others):
+Open **http://127.0.0.1:8765** to browse tasks, source records, and available results. No model credentials are needed for these steps.
+
+### Evaluate a model
 
 ```sh
-cp .env.example .env      # set DECISION_BENCH_BASE_URL and DECISION_BENCH_API_KEY; .env is never committed
-python3 -m decision_bench models                                   # models in config/models.json
-python3 -m decision_bench run --model gemini-3.5-flash --limit 5   # smoke test
-python3 -m decision_bench run --model gemini-3.5-flash             # all rows; re-run the same command to resume
-python3 -m decision_bench publish <run-id>                         # copy the finished run into results/
-python3 scripts/run_all.py                                         # every API model, then publish and rebuild
+cp .env.example .env
+# Set DECISION_BENCH_BASE_URL and DECISION_BENCH_API_KEY in .env.
+
+python3 -m decision_bench models
+python3 -m decision_bench run --model gemini-3.5-flash --limit 5
+python3 -m decision_bench run --model gemini-3.5-flash
 ```
 
-Models flagged `"vision": true` in `config/models.json` receive the row's images; the others receive the text rendering. There are also adapters for the Claude Code CLI, the Codex CLI and the TypeSafe API. Setup, options, costs and resuming are covered in [docs/running.md](docs/running.md).
+Model names must match your endpoint; use `--api-model <name>` if its identifier differs from the configured one. Repeat the same run command to resume. The smoke test and full evaluation are separate runs.
 
-## How it works
+The harness supports OpenAI-compatible endpoints, plus adapters for Claude Code CLI, Codex CLI, TypeSafe, and Laya. Models marked `"vision": true` receive images alongside text.
 
-- **The model sees only the evidence.** Each row's record, the task instruction and the options (in a fixed per-row shuffled order) are sent. The answer, rationale, title, source and notes never are. The system prompt treats the record as untrusted data. CLI adapters run in an empty directory with tools disabled. See [docs/protocol.md](docs/protocol.md).
-- **Answers are strict JSON:** a label from the options plus a probability for each option. Anything else counts as no answer, not a guess.
-- **Scores are accuracy with Wilson 95% intervals,** overall, per use case and per task, alongside macro F1, calibration, latency, cost and tokens. Each task page also shows a plain fit verdict per model, computed from the numbers.
-- **The corpus is frozen** with a sha256 in its manifest. Every run records the hash it used, and results from different versions are never mixed.
+### Publish a completed run
 
-## Results
+```sh
+python3 -m decision_bench publish <run-id>
+python3 -m decision_bench validate
+python3 -m decision_bench report
+```
 
-`results/<suite>/<model-id>/` holds the latest published run of each model: `metadata.json`, one line per row in `predictions.jsonl`, and `scores.json`. `results/<suite>/leaderboard.json` ranks them. No file there contains a key, an endpoint URL or a provider request id. The format and how to submit results are in [results/README.md](results/README.md).
+Publishing writes the latest run for a model to `results/<suite>/<model-id>/` and rebuilds the suite leaderboard. Local unfinished runs stay in the ignored `runs/` directory. See the [running guide](docs/running.md) for configuration, retries, concurrency, and costs.
+
+## Explore the repository
+
+| Resource | What you will find |
+| :--- | :--- |
+| [Evaluation protocol](docs/protocol.md) | Model inputs, answer parsing, scoring, and integrity rules |
+| [Task catalog](docs/tasks.md) | Questions, options, and sampling details |
+| [Source catalog](data/SOURCES.md) | Upstream datasets, licenses, and citations |
+| [Authoring guide](docs/authoring-v4.md) | Rules for building and reviewing the corpus |
+| [Results](results/README.md) | Published run structure and submission instructions |
+| [Changelog](CHANGELOG.md) | Project changes |
 
 ## Data and licences
 
@@ -84,3 +268,19 @@ If you hold rights in a row or are named in one, open a **Data removal request**
 ## Contributing and citing
 
 Label corrections, new models, results and new tasks are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md). To cite the benchmark, use [CITATION.cff](CITATION.cff), and please also cite the datasets behind the tasks you use. Their BibTeX is in [data/SOURCES.md](data/SOURCES.md).
+
+Copyable citation for the version recorded in `CITATION.cff`:
+
+```bibtex
+@software{decision_bench_v4,
+  author  = {{Decision Bench contributors}},
+  title   = {Decision Bench: bounded decisions on real public data},
+  version = {4.0.0}
+}
+```
+
+For reproducibility, also identify the corpus SHA-256 and harness commit from your run metadata. The citation above identifies the benchmark; individual datasets retain their own attribution requirements.
+
+---
+
+<sub>README layout inspired by the prominent updates and setup guidance in [SWE-bench](https://github.com/SWE-bench/SWE-bench) and the compact evaluation documentation in [simple-evals](https://github.com/openai/simple-evals). Decision Bench defines its own tasks and evaluation protocol.</sub>

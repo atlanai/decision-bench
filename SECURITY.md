@@ -16,6 +16,8 @@ Every real row names the public dataset it came from, the record id and the lice
 
 ## Secrets in this repository
 
-The harness reads API keys and endpoints only from environment variables or an untracked `.env` file (see `.env.example`). Run records never store keys, endpoint URLs or provider request ids. CI fails if a tracked file contains a key-shaped string, a private hostname or a local home-directory path.
+The harness reads API keys and endpoints only from environment variables or an untracked `.env` file (see `.env.example`). Configured harness keys and endpoint URLs are redacted before writing run records and again when exporting predictions. Raw local responses can retain provider request ids and other debugging metadata: keep `runs/` private. Redaction is not a guarantee against encoded, transformed, or unknown secrets; inspect output before publication, especially older runs created before a key was rotated.
+
+CI and the Pages build scan tracked and nonignored text files for known credential formats. Third-party data is exempt from hostname, home-path and generic entropy rules, but not recognized provider-key rules. Binary files and files over 20 MB are outside the scanner's coverage. The scanner never prints matched credential values. Review images, new datasets, and Git history separately; a clean heuristic scan is not proof that no secret exists.
 
 The benchmark rows include code excerpts where the answer is "real credential". Those secrets are replaced with fake values of the same shape before they enter the corpus. None of them works.

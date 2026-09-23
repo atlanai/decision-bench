@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from .errors import CallError
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 # Credentials the harness itself uses are never passed to a CLI child process.
 HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "TYPESAFE_API_KEY",
+                   "LAYA_API_KEY", "LAYA_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
 
@@ -30,37 +32,79 @@ def call(model, case, timeout, api_model=None):
         return openai_compat.completion(model, case, timeout, api_model)
     if provider == "typesafe":
         return typesafe(model, case, timeout, api_model)
+    if provider == "laya":
+        return laya(model, case, timeout, api_model)
     if provider in ("claude-cli", "codex-cli"):
         return cli(model, case, timeout, api_model)
     raise ValueError(f"Unknown provider {provider}")
+
+
+def laya_endpoint():
+    base = (env_value("LAYA_BASE_URL") or "").strip().rstrip("/")
+    if not base:
+        raise CallError("LAYA_BASE_URL is not set; see .env.example", status="config_missing")
+    parsed = urllib.parse.urlsplit(base)
+    if (parsed.scheme not in ("https", "http") or not parsed.hostname or parsed.username or parsed.password
+            or parsed.query or parsed.fragment or not parsed.path.endswith("/v1")):
+        raise CallError("LAYA_BASE_URL must be a base http(s) URL ending in /v1, without credentials or query",
+                        status="config_invalid")
+    if parsed.scheme == "http" and parsed.hostname not in openai_compat.LOCAL_HOSTS:
+        raise CallError("A remote Laya endpoint must use HTTPS", status="config_invalid")
+    return base + "/systemone"
+
+
+def laya_key(url):
+    key = env_value("LAYA_API_KEY")
+    if not key and urllib.parse.urlsplit(url).hostname not in openai_compat.LOCAL_HOSTS:
+        raise CallError("LAYA_API_KEY is not set; see .env.example", status="auth_missing")
+    return key
 
 
 def typesafe(model, case, timeout, api_model=None):
     key = env_value("TYPESAFE_API_KEY")
     if not key:
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
+    return systemone(model, case, timeout, api_model, TYPESAFE_URL, key, "TypeSafe")
+
+
+def laya(model, case, timeout, api_model=None):
+    url = laya_endpoint()
+    return systemone(model, case, timeout, api_model, url, laya_key(url), "Laya")
+
+
+def systemone(model, case, timeout, api_model, url, key, provider_name):
+    def redact(value):
+        return openai_compat.redact(value, extra_secrets=(key,), extra_endpoints=(url,))
+
     data = public_input(case)
     questions = {q["id"]: {"type": q["type"], "instructions": JUDGMENT_POLICY + q["instructions"],
                            "criteria": q["options"]} for q in data["questions"]}
     payload = {"model": api_model or model["model"], "state": data["state"], "questions": questions}
-    req = urllib.request.Request(TYPESAFE_URL, data=json.dumps(payload).encode(),
-                                 headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json",
-                                          "User-Agent": "DecisionBench (classification evaluation)"})
+    headers = {"Content-Type": "application/json", "User-Agent": "DecisionBench (classification evaluation)"}
+    if key:
+        headers["Authorization"] = f"Bearer {key}"
+    req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers=headers)
     started = time.perf_counter()
     try:
         with urllib.request.build_opener(openai_compat.NoRedirect).open(req, timeout=timeout) as response:
             text = response.read().decode()
             status = response.status
     except urllib.error.HTTPError as e:
-        body = e.read().decode(errors="replace").replace(key, "[REDACTED]")
+        try:
+            body = redact(e.read().decode(errors="replace"))
+        finally:
+            e.close()
         raise CallError(f"HTTP {e.code}: {body[:500]}", raw={"status": e.code, "body": body},
                         retryable=e.code in openai_compat.RETRYABLE, status=e.code) from e
     except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
-        raise CallError(str(e), retryable=True, status="transport_error") from e
+        message = redact(str(e))
+        raise CallError(message, retryable=True, status="transport_error") from e
     try:
-        raw = json.loads(text)
+        original = json.loads(text)
+        raw = redact(original)
+        text = json.dumps(raw, ensure_ascii=False) if raw != original else redact(text)
     except ValueError:
-        raise CallError("TypeSafe returned non-JSON content", raw={"body": text[:8000]}, status="invalid_transport_output")
+        raise CallError(f"{provider_name} returned non-JSON content", status="invalid_transport_output")
     usage = raw.get("usage", {})
     return {"raw": raw, "response": raw, "source": "native", "output_text": text,
             "resolved_model": raw.get("model"), "http_status": status, "provider_duration_ms": None,

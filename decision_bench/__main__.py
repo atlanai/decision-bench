@@ -86,6 +86,8 @@ def parser():
     r.add_argument("--api-model", help="Override the model name sent to the provider (recorded in the run)")
     r.add_argument("--jobs", type=int, default=3, help="Concurrent requests (default 3)")
     r.add_argument("--timeout", type=int, default=180, help="Seconds per request (default 180)")
+    r.add_argument("--rpm", type=float, help="Maximum request starts per minute for this model")
+    r.add_argument("--global-rpm", type=float, help="Maximum request starts per minute across runs in this checkout")
     r.add_argument("--max-attempts", type=int, default=2, help="Attempts per row for retryable errors (default 2)")
     r.add_argument("--limit", type=int, help="Only the first N rows (a smoke test; makes a separate run)")
     r.add_argument("--ids", help="Comma-separated row ids (makes a separate run)")

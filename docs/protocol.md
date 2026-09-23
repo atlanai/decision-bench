@@ -39,6 +39,7 @@ How it is sent depends on the provider:
 | --- | --- |
 | `openai-compatible` | `POST <base>/chat/completions` with a system message (the policy) and a user message (the public input as JSON, then the answer JSON schema). By default `response_format` is `json_schema` (strict); models that do not support it use `json_object` or `prompt`, as set in `config/models.json`. Token limit field, maximum tokens, reasoning effort and temperature also come from the config; unset values use the provider's default. |
 | `typesafe` | `POST https://api.typesafe.ai/v1/systemone` with the state and the question in TypeSafe's native format (the policy is prefixed to the instructions). |
+| `laya` | `POST <LAYA_BASE_URL>/systemone` with the same native state and question format. The endpoint may be hosted or self-hosted; the server routes to a Laya checkpoint. |
 | `claude-cli` | `claude --print` with the policy as system prompt, the public input on stdin, `--json-schema`, no tools, no MCP servers, no session persistence, and `--effort` from the config. |
 | `codex-cli` | `codex exec` with the prompt on stdin, `--output-schema`, a read-only sandbox, shell and patch tools disabled, and `model_reasoning_effort` from the config. |
 
@@ -49,7 +50,7 @@ Codex invalidates that answer (`protocol_violation`).
 ## Answer parsing
 
 The model must return `{"answers": {"<question id>": {"label": "<option>", "probabilities": {"<option>": p, ...}}}}`
-(TypeSafe returns `choice` instead of `label`). An answer is valid only if:
+(TypeSafe and Laya return `choice` instead of `label`). An answer is valid only if:
 
 - the response is a JSON object. For chat models, one complete Markdown code fence around the JSON is removed
   when `json_wrapper_policy` is `allow_single_code_fence` (the default). No other extraction or repair is done;

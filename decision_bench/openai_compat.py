@@ -67,17 +67,22 @@ def endpoint_id(base):
     return "endpoint-" + hashlib.sha256(base.rstrip("/").encode()).hexdigest()[:12]
 
 
-def redact(value):
+def redact(value, *, extra_secrets=(), extra_endpoints=()):
     """Remove the key, the endpoint URL and its hostname from anything that may be written to disk."""
-    secrets = [s for s in [env_value(KEY_ENV)] if s]
-    try:
-        base = base_url()
-    except CallError:
-        base = None
+    secrets = [s for s in [env_value(KEY_ENV), env_value("TYPESAFE_API_KEY"), env_value("LAYA_API_KEY"),
+                           *extra_secrets] if s]
     hosts = []
-    if base:
-        hosts = [base]
-        host = urllib.parse.urlsplit(base).hostname
+    for base in [env_value(BASE_ENV), env_value("LAYA_BASE_URL"), *extra_endpoints]:
+        if not base:
+            continue
+        base = base.strip().rstrip("/")
+        if not base:
+            continue
+        hosts.append(base)
+        try:
+            host = urllib.parse.urlsplit(base).hostname
+        except ValueError:
+            host = None
         if host and host not in LOCAL_HOSTS:
             hosts.append(host)
 
@@ -91,7 +96,7 @@ def redact(value):
         if isinstance(v, list):
             return [clean(x) for x in v]
         if isinstance(v, dict):
-            return {k: "[REDACTED]" if str(k).lower() in SENSITIVE_KEYS else clean(x) for k, x in v.items()}
+            return {clean(k): "[REDACTED]" if str(k).lower() in SENSITIVE_KEYS else clean(x) for k, x in v.items()}
         return v
     return clean(value)
 

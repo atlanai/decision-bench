@@ -49,7 +49,8 @@ class Config(unittest.TestCase):
     def test_committed_config_is_valid(self):
         models = config.load_models()
         ids = {m["id"] for m in models}
-        self.assertTrue({"jev-1.13", "gpt-6-luna-codex", "claude-sonnet-5-cli", "gemini-3.5-flash"} <= ids)
+        self.assertTrue({"laya-routed", "jev-1.13", "gpt-6-luna", "gpt-6-luna-codex", "claude-sonnet-5-cli", "gemini-3.5-flash"} <= ids)
+        self.assertNotIn("gpt-5.6-luna", ids)
         self.assertEqual({m["provider"] for m in models}, config.PROVIDERS)
 
 

@@ -29,11 +29,13 @@ CREDENTIALS = [
     ("Stripe live key", r"\b[sr]k_live_[A-Za-z0-9]{20,}"),
     ("Google API key", r"\bAIza[0-9A-Za-z_-]{35}\b"),
     ("private key", r"-----BEGIN [A-Z ]*PRIVATE KEY"),
+    ("OpenAI/Anthropic-style key", r"\bsk-(?:ant-|proj-)?[A-Za-z0-9_-]{24,}"),
+    ("GitHub fine-grained token", r"\bgithub_pat_[A-Za-z0-9_]{22,}"),
+    ("Laya API key", r"\bimp-rt-[A-Za-z0-9_-]{24,}"),
+    ("bearer token", r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{24,}"),
 ]
 # Checked in code, config and docs. Strings are split so this file does not match itself.
 PROJECT = [
-    ("OpenAI/Anthropic-style key", r"\bsk-(?:ant-|proj-)?[A-Za-z0-9_-]{24,}"),
-    ("bearer token", r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{24,}"),
     ("internal proxy host", "llm" + "proxy"),
     ("company URL", r"(?i)[a-z][a-z0-9+.-]*://[^\s\"'<>)]*" + "at" + "lan"),
     ("private hostname", r"(?i)\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:internal|corp|intranet|lan)\b(?![\w-])"),
@@ -72,12 +74,12 @@ def scan_text(rel, text):
         for name, rx in rules:
             for m in rx.finditer(line):
                 if not PLACEHOLDER.search(m.group(0)):
-                    findings.append((rel, lineno, name, m.group(0)[:60]))
+                    findings.append((rel, lineno, name, "[REDACTED]"))
                     break
         if not third_party:
             for m in ASSIGNMENT.finditer(line):
                 if entropy(m.group(1)) >= 3.5 and not PLACEHOLDER.search(m.group(1)):
-                    findings.append((rel, lineno, "high-entropy secret assignment", m.group(0)[:60]))
+                    findings.append((rel, lineno, "high-entropy secret assignment", "[REDACTED]"))
     return findings
 
 

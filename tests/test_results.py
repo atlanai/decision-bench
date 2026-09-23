@@ -29,7 +29,8 @@ class EmptyResults(unittest.TestCase):
             self.assertEqual(data["leaderboard"], [])
             self.assertEqual(len(data["cases"]), 3)
             self.assertEqual(data["suite"], "mini")
-            self.assertEqual({m["id"] for m in data["models"]}, {"fake-model", "fake-typesafe", "fake-claude"})
+            self.assertEqual({m["id"] for m in data["models"]},
+                             {"fake-model", "fake-typesafe", "fake-laya", "fake-claude"})
             corpus_rows = json.loads((root / "site/corpus.json").read_text())
             self.assertEqual(corpus_rows[0]["questions"][0]["rationale"], "RATIONALE_r1")  # reader fields kept
             self.assertEqual(corpus_rows[0]["source"]["dataset"], "SOURCE_DATASET")

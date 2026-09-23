@@ -15,7 +15,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import corpus
+from . import corpus, openai_compat
 from .metrics import attempt_totals, consolidate_attempts, summarize
 from .runner import read_jsonl, runs_dir, write_json
 from .scoring import score_answer
@@ -91,7 +91,7 @@ def predictions_from_run(records, ledger, case_map):
         if isinstance(text, str) and len(text) > MAX_OUTPUT_CHARS:
             row["output_truncated"] = True
         out.append(row)
-    return out
+    return openai_compat.redact(out)
 
 
 def records_from_predictions(predictions, run_id):

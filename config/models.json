@@ -55,12 +55,12 @@
       "vision": true
     },
     {
-      "id": "gpt-5.6-luna",
-      "label": "GPT-5.6 Luna",
+      "id": "gpt-6-luna",
+      "label": "GPT-6 Luna",
       "short_label": "Luna API",
       "vendor": "OpenAI",
       "provider": "openai-compatible",
-      "model": "gpt-5.6-luna",
+      "model": "gpt-6-luna",
       "color": "#109467",
       "request": {
         "response_format": "json_schema",
@@ -71,10 +71,10 @@
         "json_wrapper_policy": "allow_single_code_fence"
       },
       "pricing": {
-        "input_per_mtok": 0.2,
-        "cached_input_per_mtok": 0.02,
-        "output_per_mtok": 1.2,
-        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "input_per_mtok": 0.1,
+        "cached_input_per_mtok": 0.01,
+        "output_per_mtok": 0.5,
+        "source_url": "https://docs.litellm.ai/blog/gpt_6_sol_luna",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
       },
@@ -225,6 +225,17 @@
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
       },
+      "vision": false
+    },
+    {
+      "id": "laya-routed",
+      "label": "Laya (routed)",
+      "short_label": "Laya",
+      "vendor": "Laya",
+      "provider": "laya",
+      "model": "convaiinnovations/laya",
+      "color": "#8b5cf6",
+      "notes": "The Laya server selects a checkpoint per request. Set LAYA_BASE_URL to a hosted or self-hosted /v1 endpoint. API cost is not estimated; self-hosting compute is excluded.",
       "vision": false
     },
     {

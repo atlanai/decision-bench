@@ -59,6 +59,7 @@ def validate(cases):
         for a in c.get("assets", []):
             assert a.get("path") and str(a.get("mime_type", "")).startswith("image/") and a.get("alt_text"), \
                 f"{c['id']}: assets need path, an image mime_type and alt_text"
+            asset_path(a["path"])
         assert len(c.get("questions", [])) == 1, f"{c['id']}: exactly one question per row"
         q = c["questions"][0]
         assert q.get("type") == "choice", f"{c['id']}: only choice questions are supported"
@@ -110,12 +111,24 @@ def response_schema(case):
             "required": ["answers"]}
 
 
+def asset_path(value):
+    """Resolve only repository image assets, rejecting traversal and escaping symlinks."""
+    relative = Path(value)
+    allowed = (ROOT / "data/assets").resolve()
+    path = (ROOT / relative).resolve()
+    if relative.is_absolute() or ".." in relative.parts or not path.is_relative_to(allowed):
+        raise ValueError("Image assets must stay inside data/assets")
+    if not path.is_file():
+        raise ValueError("Image asset is missing or is not a regular file")
+    return path
+
+
 def image_assets(case):
     """The row's images, as (mime_type, bytes). Only rows of image tasks have any."""
     out = []
     for a in case.get("assets", []):
         if str(a.get("mime_type", "")).startswith("image/"):
-            out.append((a["mime_type"], (ROOT / a["path"]).read_bytes()))
+            out.append((a["mime_type"], asset_path(a["path"]).read_bytes()))
     return out
 
 

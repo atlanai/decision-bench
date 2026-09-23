@@ -24,6 +24,8 @@ precedence over `.env`.
 | `DECISION_BENCH_BASE_URL` | `openai-compatible` | Base URL that `/chat/completions` is appended to, usually ending in `/v1`. HTTPS is required except for `localhost`. |
 | `DECISION_BENCH_API_KEY` | `openai-compatible` | Bearer key. Optional for a `localhost` endpoint. |
 | `TYPESAFE_API_KEY` | `typesafe` | Key for `https://api.typesafe.ai`. |
+| `LAYA_BASE_URL` | `laya` | Laya System One base URL ending in `/v1`. Use `https://api.impossibl.com/v1` or a self-hosted `http://localhost:8000/v1`. |
+| `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
 
 Examples of `DECISION_BENCH_BASE_URL`: `https://api.openai.com/v1`, `https://openrouter.ai/api/v1`,
 `http://localhost:4000/v1` (a local LiteLLM proxy), `http://localhost:8000/v1` (vLLM).
@@ -33,6 +35,13 @@ origin, redirects are refused, and neither the key nor the URL is written to any
 
 The `claude-cli` and `codex-cli` providers use the `claude` and `codex` commands on your `PATH` with their own
 sign-in. The harness removes its own keys from their environment.
+
+Laya uses the same typed question protocol as Jev. To run its hosted API, set `LAYA_BASE_URL` and
+`LAYA_API_KEY` in `.env`, then run `python3 -m decision_bench run --model laya-routed --limit 5`.
+To self-host, install `laya[serve]` in a separate environment, start `laya-serve`, and set
+`LAYA_BASE_URL=http://localhost:8000/v1`. Laya's router chooses the checkpoint per request;
+`--api-model` can override the configured model id. Laya has no price in this config, so
+API cost is recorded as unknown; self-hosting compute is outside the cost estimate.
 
 ## Choose a model
 
@@ -49,7 +58,7 @@ Each entry:
 {
   "id": "gemini-3.5-flash",              // our stable slug: run ids and results/ paths use it
   "label": "Gemini 3.5 Flash", "short_label": "Gemini Flash", "vendor": "Google", "color": "#2563eb",
-  "provider": "openai-compatible",       // openai-compatible | typesafe | claude-cli | codex-cli
+  "provider": "openai-compatible",       // openai-compatible | typesafe | laya | claude-cli | codex-cli
   "model": "gemini-3.5-flash",           // the model name sent to the provider
   "request": {"response_format": "json_schema", "token_limit_field": "max_tokens", "max_output_tokens": 8192,
               "reasoning_effort": "low", "temperature": null, "json_wrapper_policy": "allow_single_code_fence"},
@@ -80,6 +89,17 @@ python3 -m decision_bench run --model gemini-3.5-flash,qwen3-32b     # several m
 
 Options: `--jobs` (concurrent requests, default 3), `--timeout` (seconds per request, default 180),
 `--max-attempts` (default 2), `--ids a,b,c` (specific rows), `--run-id` (a name of your choice).
+Optional `--rpm` and `--global-rpm` pace request starts, including retries. The global cap is shared
+by benchmark processes in this checkout.
+
+To run every configured API model, use `python3 scripts/run_all.py`. It starts three models at a time,
+with four concurrent requests per model by default. Request starts are paced to 60 per minute per
+model and 120 per minute across the checkout; tune these with `--parallel`, `--jobs`, `--rpm`, and
+`--global-rpm` for your provider. In a terminal, the live dashboard shows a loader and row progress
+for each model, plus publish/build progress. Detailed row output stays in `runs/<model-id>.log`, and
+timestamped session events and progress milestones go to `runs/run-all-*.log`. Use `--plan` to preview,
+`--no-tui` for line-by-line output, or `--limit 5` for a smoke test that does not publish. Rate-limit
+waiting is recorded separately and excluded from model latency.
 
 The default run id is `<model-id>-<suite>-<hash of the frozen configuration>`, with `-subset` added when not every
 row is selected. So a smoke test and a full run are separate runs, and repeating a command continues the same run.
@@ -137,8 +157,8 @@ or `make check`. Tests use a local fake endpoint and never call a model.
 - Costs are the provider's own figure when it reports one, otherwise an estimate from `config/models.json` prices.
   Prices change; check them before relying on a number. Codex CLI costs are API-equivalent estimates, not what a
   subscription charges.
-- Keep `--jobs` within your provider's rate limit. 429 responses are retried, but a run that keeps hitting limits
-  will record errors. Retry them later with `--retry-errors`.
+- Keep `--jobs`, `--rpm`, and `--global-rpm` within your provider's limits. 429 responses are retried,
+  but a run that keeps hitting limits will record errors. Retry them later with `--retry-errors`.
 - Proxies and providers may cache responses. Nothing in the harness disables caching, so repeated runs can be
   faster and cheaper than a cold run.
 - Latency includes the network or CLI start-up and depends on `--jobs`; compare latency only between runs made the

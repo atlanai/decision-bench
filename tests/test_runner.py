@@ -29,6 +29,17 @@ def response(case, label="a", cost=.01):
 
 
 class Runner(unittest.TestCase):
+    def test_laya_endpoint_is_frozen_and_remote_key_is_required(self):
+        with fixtures.repo({"LAYA_BASE_URL": "https://api.example.com/v1"}):
+            with self.assertRaises(CallError) as cm:
+                runner.prepare(args(model="fake-laya"))
+            self.assertEqual(cm.exception.status, "auth_missing")
+        with fixtures.repo({"LAYA_BASE_URL": "http://localhost:8000/v1"}):
+            _, _, cfg, run_id = runner.prepare(args(model="fake-laya", run_id=None))
+            self.assertTrue(cfg["endpoint_id"].startswith("endpoint-"))
+            self.assertNotIn("localhost", json.dumps(cfg))
+            self.assertTrue(run_id.startswith("fake-laya-mini-"))
+
     def test_resume_skips_success_and_keeps_retry_attempts(self):
         with fixtures.repo(ENV) as root, patch.object(runner.time, "sleep"), \
                 patch.object(runner, "git_revision", return_value={"commit": None, "dirty": False}):

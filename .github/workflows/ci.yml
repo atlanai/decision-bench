@@ -32,3 +32,5 @@ jobs:
         run: python3 -m decision_bench report
       - name: Check site JavaScript
         run: for f in site/*.js; do node --check "$f"; done
+      - name: Test populated viewer and hostile URL filters
+        run: node --test tests/test_site.cjs

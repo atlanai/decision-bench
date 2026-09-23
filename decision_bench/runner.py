@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import concurrent.futures
 import json
+import math
 import os
 import platform
 import re
@@ -22,6 +23,7 @@ from pathlib import Path
 from . import __version__, adapters, config, corpus, openai_compat
 from .corpus import PROMPT_VERSION, canonical, digest, public_input
 from .errors import CallError
+from .rate_limit import RequestPacer
 from .scoring import normalize_answers, score
 
 RUN_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,120}")
@@ -66,7 +68,7 @@ def read_jsonl(path, allow_partial=False):
 
 def write_json(path, value):
     temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n")
+    temporary.write_text(json.dumps(openai_compat.redact(value), indent=2, ensure_ascii=False) + "\n")
     temporary.replace(path)
 
 
@@ -79,6 +81,8 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
            "selected_case_ids": [c["id"] for c in cases]}
     if model["provider"] == "openai-compatible":
         cfg["endpoint_id"] = openai_compat.endpoint_id(openai_compat.base_url())
+    elif model["provider"] == "laya":
+        cfg["endpoint_id"] = openai_compat.endpoint_id(adapters.laya_endpoint())
     return cfg
 
 
@@ -117,6 +121,8 @@ def preflight(model):
         openai_compat.api_key(openai_compat.base_url())
     elif provider == "typesafe" and not config.env_value("TYPESAFE_API_KEY"):
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
+    elif provider == "laya":
+        adapters.laya_key(adapters.laya_endpoint())
     elif provider in ("claude-cli", "codex-cli"):
         adapters.executable("claude" if provider == "claude-cli" else "codex")
 
@@ -125,6 +131,10 @@ def prepare(args):
     """Resolve the model, selection, frozen configuration and run id without making any call."""
     for name in ("jobs", "max_attempts", "timeout"):
         if getattr(args, name) < 1:
+            raise ValueError(f"--{name.replace('_', '-')} must be positive")
+    for name in ("rpm", "global_rpm"):
+        value = getattr(args, name, None)
+        if value is not None and (not math.isfinite(value) or value <= 0):
             raise ValueError(f"--{name.replace('_', '-')} must be positive")
     model = config.get_model(args.model)
     all_cases = corpus.load_cases()
@@ -162,24 +172,40 @@ def _run(args, model, cases, cfg, run_id, folder):
     meta.update(status="running", last_started_at=utc())
     meta["executions"].append({"started_at": meta["last_started_at"], "git": git_revision(), "jobs": args.jobs,
                                "timeout_seconds": args.timeout, "max_attempts": args.max_attempts,
-                               "retry_errors": args.retry_errors, "pending_rows": len(pending)})
+                               "retry_errors": args.retry_errors, "pending_rows": len(pending),
+                               "rpm": getattr(args, "rpm", None), "global_rpm": getattr(args, "global_rpm", None)})
     write_json(run_path, meta)
     lock = threading.Lock()
     done = len(cases) - len(pending)
+    pacer = RequestPacer(runs_dir(), model["id"], getattr(args, "rpm", None),
+                         getattr(args, "global_rpm", None))
+    if pacer.rpm or pacer.global_rpm:
+        print(f"Pacing: {pacer.rpm or 'unlimited'} rpm for {model['id']}, "
+              f"{pacer.global_rpm or 'unlimited'} rpm across models", flush=True)
 
     def append(name, value):
         with lock:
             with (folder / name).open("a") as f:
-                f.write(canonical(value) + "\n")
+                f.write(canonical(openai_compat.redact(value)) + "\n")
                 f.flush()
 
     def one(case):
         nonlocal done
         began = time.perf_counter()
+        rate_wait = 0.0
+        retry_rate_wait = 0.0
         record = {"run_id": run_id, "case_id": case["id"], "started_at": utc(),
                   "input_hash": digest(public_input(case)), "answers": {}, "attempts": [], "usage": {},
                   "cost_usd": None, "cost_basis": "unavailable", "resolved_model": None, "output_text": None}
         for attempt in range(1, args.max_attempts + 1):
+            waited = pacer.wait()
+            rate_wait += waited
+            if attempt == 1:
+                # Queue time is pacing, not model latency.
+                began = time.perf_counter()
+                record["started_at"] = utc()
+            else:
+                retry_rate_wait += waited
             aid = f"{case['id']}-{time.time_ns()}-{attempt}"
             a = {"attempt_id": aid, "case_id": case["id"], "number": attempt, "started_at": utc()}
             append("attempts.jsonl", {**a, "event": "started"})
@@ -207,7 +233,7 @@ def _run(args, model, cases, cfg, run_id, folder):
                 a.update(status=str(e.status or "call_error"), error=str(e))
                 record.update(status=a["status"], error=str(e))
                 if e.raw is not None:
-                    (raw_dir / f"{aid}.json").write_text(json.dumps(e.raw, ensure_ascii=False, indent=2))
+                    write_json(raw_dir / f"{aid}.json", e.raw)
                 retry = e.retryable
             except (ValueError, KeyError, TypeError) as e:
                 a.update(status="invalid_output", error=str(e))
@@ -216,7 +242,7 @@ def _run(args, model, cases, cfg, run_id, folder):
                 a.update(status="runner_error", error=f"{type(e).__name__}: {e}")
                 record.update(status="runner_error", error=a["error"])
             if result:
-                (raw_dir / f"{aid}.json").write_text(json.dumps(result["raw"], ensure_ascii=False, indent=2))
+                write_json(raw_dir / f"{aid}.json", result["raw"])
             a.update(ended_at=utc(), duration_ms=(time.perf_counter() - t) * 1000, raw_path=f"raw/{aid}.json",
                      event="finished")
             record["attempts"].append(a)
@@ -226,7 +252,8 @@ def _run(args, model, cases, cfg, run_id, folder):
             time.sleep(min(2 ** attempt, 8))
         record["scores"] = score(case, record["answers"])
         record["ended_at"] = utc()
-        record["duration_ms"] = (time.perf_counter() - began) * 1000
+        record["duration_ms"] = max(0.0, time.perf_counter() - began - retry_rate_wait) * 1000
+        record["rate_wait_ms"] = rate_wait * 1000
         known = [x["cost_usd"] for x in record["attempts"] if x.get("cost_usd") is not None]
         record["known_attempt_cost_usd"] = sum(known) if known else None
         record["cost_coverage"] = len(known) / len(record["attempts"])

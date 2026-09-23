@@ -20,3 +20,4 @@ serve: report
 
 check: test validate secrets
 	node --check site/app.js
+	node --test tests/test_site.cjs
