@@ -24,6 +24,7 @@ precedence over `.env`.
 | `DECISION_BENCH_BASE_URL` | `openai-compatible` | Base URL that `/chat/completions` is appended to, usually ending in `/v1`. HTTPS is required except for `localhost`. |
 | `DECISION_BENCH_API_KEY` | `openai-compatible` | Bearer key. Optional for a `localhost` endpoint. |
 | `TYPESAFE_API_KEY` | `typesafe` | Key for `https://api.typesafe.ai`. |
+| `DJEV_API_KEY` | `djev` | Key for the hosted DiffusionGemma-Jev API at `https://api.djev.dev`. |
 | `LAYA_BASE_URL` | `laya` | Laya System One base URL ending in `/v1`. Use `https://api.impossibl.com/v1` or a self-hosted `http://localhost:8000/v1`. |
 | `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
 
@@ -43,6 +44,12 @@ To self-host, install `laya[serve]` in a separate environment, start `laya-serve
 `--api-model` can override the configured model id. Laya has no price in this config, so
 API cost is recorded as unknown; self-hosting compute is outside the cost estimate.
 
+Djev uses the same typed answer format through its hosted `POST /v1/request` endpoint. Set
+`DJEV_API_KEY` in `.env`, then run `python3 -m decision_bench run --model djev --limit 5`.
+The configured $0.035 per million input tokens is the announced rate, so reported cost is an
+estimate until the API supplies a charged amount. This entry evaluates text rows; image input
+is not enabled in the Djev adapter. See [Djev's API contract](https://djev.dev/llms.txt).
+
 ## Choose a model
 
 Models live in `config/models.json`:
@@ -58,7 +65,7 @@ Each entry:
 {
   "id": "gemini-3.5-flash",              // our stable slug: run ids and results/ paths use it
   "label": "Gemini 3.5 Flash", "short_label": "Gemini Flash", "vendor": "Google", "color": "#2563eb",
-  "provider": "openai-compatible",       // openai-compatible | typesafe | laya | claude-cli | codex-cli
+  "provider": "openai-compatible",       // openai-compatible | typesafe | djev | laya | claude-cli | codex-cli
   "model": "gemini-3.5-flash",           // the model name sent to the provider
   "request": {"response_format": "json_schema", "token_limit_field": "max_tokens", "max_output_tokens": 8192,
               "reasoning_effort": "low", "temperature": null, "json_wrapper_policy": "allow_single_code_fence"},

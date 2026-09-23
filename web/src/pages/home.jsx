@@ -25,22 +25,28 @@ const Link = ({href, children}) => <a href={href} className="text-brand underlin
 const HowToAdd = () => <>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, and open a PR. {B.repoOk() && <Link href={B.gh('results/README.md')}>How to submit results</Link>}</>;
 
 /* ---------- Banner ---------- */
-/* One pixel per eight rows. On hover a wave runs across the pixels column by column (see .px-* in index.html). */
-function PixelStrip({route}) {
-  const cur = route.q.get('category') || '';
+/* Rows by use case as a small pixel bar chart, one square per eight rows. Each line filters the leaderboard.
+   On hover a wave runs across the squares (see .px-* in index.html). */
+const PER = 8;
+function UseCases({route}) {
+  const cur = route.q.get('category') || '', counts = B.categoryOrder().map(k => [k, B.allCases.filter(c => B.catKey(c) === k).length]);
   return (
-    <div className="px-strip flex flex-wrap items-end gap-x-6 gap-y-4">
-      {B.categoryOrder().map(k => {
-        const n = B.allCases.filter(c => B.catKey(c) === k).length, sq = Math.max(1, Math.round(n / 8)), cols = Math.ceil(sq / 2), per = 6, gap = 2, w = cols * (per + gap) - gap, h = 2 * (per + gap) - gap, on = cur === k;
-        return <a key={k} href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} title={B.catInfo(k).description} data-on={on || undefined}
-          className="px-chip flex flex-col gap-1.5 rounded-sm font-mono text-[11px] tracking-[.06em] whitespace-nowrap uppercase outline-offset-4">
-          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true" className="overflow-visible">
-            {Array.from({length: cols * 2}, (_, i) => { const col = Math.floor(i / 2), row = i % 2;
-              return <rect key={i} x={col * (per + gap)} y={row * (per + gap)} width={per} height={per} className={cn('px', i < sq ? 'px-on' : 'px-off')} style={{'--d': `${col * 28 + row * 42}ms`}} />; })}
-          </svg>
-          <span className="px-label">{B.catInfo(k).name}<span className="px-n ml-1.5">{n}</span></span>
-        </a>;
-      })}
+    <div className="w-full lg:max-w-[400px] lg:justify-self-end">
+      <div className="mb-3 flex items-baseline justify-between gap-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">
+        <span>Browse by use case</span>
+        <span className="inline-flex items-center gap-1.5"><i className="inline-block size-[6px] bg-foreground/70" />= {PER} rows</span>
+      </div>
+      <ul className="px-strip -mx-2">
+        {counts.map(([k, n]) => { const on = cur === k, sq = Math.max(1, Math.round(n / PER)), w = sq * 8 - 2;
+          return <li key={k}><a href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} title={B.catInfo(k).description} data-on={on || undefined} aria-current={on || undefined}
+            className="px-chip grid grid-cols-[10rem_minmax(0,1fr)_2.25rem] items-center gap-3 rounded-md px-2 py-[5px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-foreground/[.03]">
+            <span className="px-label truncate">{B.catInfo(k).name}</span>
+            <svg width={w} height="6" viewBox={`0 0 ${w} 6`} aria-hidden="true" className="overflow-visible">
+              {Array.from({length: sq}, (_, i) => <rect key={i} x={i * 8} y="0" width="6" height="6" className="px px-on" style={{'--d': `${i * 22}ms`}} />)}
+            </svg>
+            <span className="px-n text-right tabular-nums">{n}</span>
+          </a></li>; })}
+      </ul>
     </div>
   );
 }
@@ -48,25 +54,24 @@ function PixelStrip({route}) {
 const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-top';
 function Banner({route}) {
   const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
-  const kpi = (l, v, s) => <div className="bg-card px-4 py-3"><dt className="font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">{l}</dt><dd className="mt-1 font-mono text-xl font-medium tabular-nums">{v}</dd>{s && <dd className="mt-0.5 font-mono text-[11px] text-muted-foreground">{s}</dd>}</div>;
+  const stat = (l, v, t) => <div title={t || undefined} className="flex flex-col-reverse px-6 first:pl-0 last:pr-0"><dt className="mt-1 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">{l}</dt><dd className="font-mono text-2xl font-medium tabular-nums">{v}</dd></div>;
   const move = e => { const el = e.currentTarget, b = el.getBoundingClientRect(); el.style.setProperty('--mx', `${e.clientX - b.left}px`); el.style.setProperty('--my', `${e.clientY - b.top}px`); };
   return (
     <div onPointerMove={e => e.pointerType === 'mouse' && move(e)} className={cn('group/banner relative border-b [--grid-line:var(--border)]', GRID)}>
       <div className="relative bg-gradient-to-b from-background/40 via-background/70 to-background">
         <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/banner:opacity-100 [--grid-line:color-mix(in_oklab,var(--brand)_45%,transparent)] [mask-image:radial-gradient(220px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_70%)]', GRID)} />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/banner:opacity-100 [background:radial-gradient(320px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--brand)_7%,transparent),transparent_70%)]" />
-        <div className="relative mx-auto grid max-w-[1240px] items-end gap-10 px-4 pt-12 pb-8 md:px-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,1fr)]">
+        <div className="relative mx-auto grid max-w-[1240px] items-center gap-x-16 gap-y-12 px-4 pt-14 pb-12 md:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
             <p className="mb-5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">Decision Bench · {B.man().version} · real records, open licences</p>
             <h1 className="max-w-[16ch] font-pixel text-4xl leading-[1.02] uppercase sm:text-5xl lg:text-[52px]">Can a small model make <em className="text-brand not-italic">this decision</em> for you?</h1>
-            <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-foreground/80">Bounded decisions from real work: route a ticket, spot an injection, check a contract, pick a tool, judge an answer. Every row is a record from an <Link href="#/data">open dataset</Link>, and every answer comes from the dataset's own annotators or an objective record, never from a model.</p>
+            <p className="mt-5 max-w-[48ch] text-base leading-relaxed text-foreground/75">Route a ticket, spot an injection, check a contract: real records from <Link href="#/data">open datasets</Link>, each answered by its source, never by a model.</p>
+            <dl className="mt-8 flex flex-wrap gap-y-4 divide-x">
+              {stat('rows', num(rows), imgs ? `${num(imgs)} with images` : '')}{stat('tasks', B.taskOrder().length)}{stat(models ? 'models' : 'configured', models || configured)}{stat('datasets', B.DATASETS.length)}
+            </dl>
           </div>
-          <dl className="grid w-full max-w-[380px] grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border shadow-xs lg:justify-self-end">
-            {kpi('Rows', num(rows), imgs ? `${num(imgs)} with images` : '')}{kpi('Tasks', B.taskOrder().length, `${B.categoryOrder().length} use cases`)}
-            {kpi('Models', models || configured, models ? 'evaluated' : 'configured')}{kpi('Datasets', B.DATASETS.length, 'cited')}
-          </dl>
+          <UseCases route={route} />
         </div>
-        <div className="relative mx-auto max-w-[1240px] px-4 pb-8 md:px-8"><PixelStrip route={route} /></div>
       </div>
     </div>
   );

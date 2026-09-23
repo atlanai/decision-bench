@@ -30,6 +30,7 @@ class ReleaseSecurity(unittest.TestCase):
 
     def test_persistence_redacts_all_configured_provider_keys(self):
         settings = {"DECISION_BENCH_API_KEY": "synthetic-" + "openai-key", "TYPESAFE_API_KEY": "synthetic-ts-key",
+                    "DJEV_API_KEY": "synthetic-djev-key",
                     "LAYA_API_KEY": "synthetic-laya-key", "LAYA_BASE_URL": "https://models.example.test/v1"}
         with repo(settings) as root:
             path = root / "record.json"
