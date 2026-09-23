@@ -23,18 +23,20 @@ const TITLES = {home: 'Leaderboard', tasks: 'Tasks', models: 'Models', compare: 
    visit it stays long enough for the mark to finish assembling, then bursts apart as the app zooms in behind it. */
 const boot = (msg, f) => window.dbBoot?.(msg, f);
 const SPLASH_MS = 1150;
+const BOOT_HOLD_MS = 1500;
 function splashLeft() { let seen = false; try { seen = sessionStorage.getItem('db-splash') === '1'; sessionStorage.setItem('db-splash', '1'); } catch {} return seen ? 0 : Math.max(0, SPLASH_MS - performance.now()); }
-function hideBoot() {
+function hideBoot(hold = 0) {
   const el = document.getElementById('boot'); if (!el || el.dataset.leaving) return;
   el.dataset.leaving = '1'; boot('Ready', 1);
-  setTimeout(() => { el.dataset.done = ''; setTimeout(() => el.remove(), 900); }, splashLeft());
+  setTimeout(() => { el.dataset.done = ''; setTimeout(() => el.remove(), 900); }, Math.max(hold, splashLeft()));
+
 }
 /* The Tailwind runtime writes the stylesheet after the page mounts, so the first layout is unstyled and charts
    measure the wrong width until their ResizeObserver catches up. Lift the loading screen once the stylesheet has
    been quiet for a moment, the fonts are in and two frames have let the charts re-measure. */
 function hideBootWhenSettled() {
   let t;
-  const mo = new MutationObserver(() => quiet()), done = () => { mo.disconnect(); clearTimeout(t); clearTimeout(cap); hideBoot(); };
+  const mo = new MutationObserver(() => quiet()), done = () => { mo.disconnect(); clearTimeout(t); clearTimeout(cap); hideBoot(BOOT_HOLD_MS); };
   const sized = () => [...document.querySelectorAll('[role=img] > svg[width]')].every(s => Math.abs(+s.getAttribute('width') - Math.max(220, s.parentElement.clientWidth)) <= 1);
   const check = () => sized() ? done() : requestAnimationFrame(check);
   const quiet = () => { clearTimeout(t); t = setTimeout(() => (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(() => requestAnimationFrame(check))), 150); };

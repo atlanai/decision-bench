@@ -180,7 +180,7 @@ export function Header({page, id}) {
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 max-lg:hidden">
       <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-6 px-4 md:px-8">
         <a href="#/" className="flex shrink-0 items-center gap-2 font-mono text-xs font-medium tracking-[.08em] uppercase" aria-label="Decision Bench home">
-          <BrandMark className="h-[15px] w-3 text-brand" />Decision Bench
+          <BrandMark className="h-[15px] w-3 text-brand" /><span className="leading-none [text-box:trim-both_cap_alphabetic]">Decision Bench</span>
         </a>
         <NavLinks page={page} />
         <div className="ml-auto flex items-center gap-1">
