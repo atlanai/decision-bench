@@ -3,6 +3,7 @@
 Writes into site/:
   data.json      everything the viewer renders (schema in docs/results-format.md)
   corpus.json    the active corpus rows, including reader-only fields (rationale, note, source)
+  assets/rows/   copies of the row images under data/assets/
   datasets.json  copy of data/datasets.json, when it exists
   protocol.txt   copy of docs/protocol.md
   results/       copy of results/, so published files can be downloaded from the site
@@ -83,7 +84,7 @@ def build(include_runs=False):
                 comparisons.append({"a": a["id"], "b": b["id"], "corpus_sha256": manifest["sha256"], **paired})
     published = sum(r["source"] == "published" for r in runs)
     models = [{**config.display(m), "api_model": m["model"], "request": m.get("request", {}),
-               "pricing": m.get("pricing")} for m in config.load_models()]
+               "pricing": m.get("pricing"), "vision": bool(m.get("vision"))} for m in config.load_models()]
     output = {"schema_version": DATA_SCHEMA_VERSION, "generated_at": datetime.now(timezone.utc).isoformat(),
               "suite": suite, "corpus_sha256": manifest["sha256"], "manifest": manifest,
               "inventory": {"cases": len(cases), "questions": sum(len(c["questions"]) for c in cases),
@@ -109,6 +110,11 @@ def build(include_runs=False):
     protocol = corpus.ROOT / "docs/protocol.md"
     if protocol.exists():
         shutil.copyfile(protocol, site / "protocol.txt")
+    # Row images (data/assets/<category>/…) are served from site/assets/rows/ so the viewer can show them.
+    shutil.rmtree(site / "assets" / "rows", ignore_errors=True)
+    if (corpus.ROOT / "data/assets").is_dir():
+        shutil.copytree(corpus.ROOT / "data/assets", site / "assets" / "rows",
+                        ignore=shutil.ignore_patterns(".*"))
     shutil.rmtree(site / "results", ignore_errors=True)
     if (corpus.ROOT / "results").is_dir():
         shutil.copytree(corpus.ROOT / "results", site / "results",

@@ -25,7 +25,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": true
     },
     {
       "id": "gemini-flash-lite-latest",
@@ -50,7 +51,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": true
     },
     {
       "id": "gpt-5.6-luna",
@@ -75,7 +77,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": true
     },
     {
       "id": "claude-haiku-4.5",
@@ -100,7 +103,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": true
     },
     {
       "id": "claude-sonnet-5",
@@ -125,7 +129,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": true
     },
     {
       "id": "glm-5.3-flash",
@@ -142,7 +147,8 @@
         "reasoning_effort": null,
         "temperature": null,
         "json_wrapper_policy": "allow_single_code_fence"
-      }
+      },
+      "vision": false
     },
     {
       "id": "nova-micro-v1",
@@ -167,7 +173,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": false
     },
     {
       "id": "qwen3-32b",
@@ -191,7 +198,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": false
     },
     {
       "id": "deepseek-v4.1-flash",
@@ -216,7 +224,8 @@
         "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
         "as_of": "2026-09",
         "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
-      }
+      },
+      "vision": false
     },
     {
       "id": "jev-1.13",
@@ -232,7 +241,8 @@
         "source_url": "https://docs.typesafe.ai/models",
         "as_of": "2026-09",
         "note": "Published input rate; output tokens are not billed."
-      }
+      },
+      "vision": false
     },
     {
       "id": "gpt-6-luna-codex",
@@ -252,7 +262,8 @@
         "source_url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
         "as_of": "2026-09",
         "note": "API-equivalent estimate; a Codex subscription is billed differently."
-      }
+      },
+      "vision": false
     },
     {
       "id": "claude-sonnet-5-cli",
@@ -265,7 +276,8 @@
       "request": {
         "reasoning_effort": "low"
       },
-      "notes": "Claude Code reports its own API-equivalent cost per call."
+      "notes": "Claude Code reports its own API-equivalent cost per call.",
+      "vision": false
     },
     {
       "id": "claude-haiku-4.5-cli",
@@ -278,7 +290,8 @@
       "request": {
         "reasoning_effort": null
       },
-      "notes": "Haiku does not accept an effort setting. Claude Code reports its own API-equivalent cost per call."
+      "notes": "Haiku does not accept an effort setting. Claude Code reports its own API-equivalent cost per call.",
+      "vision": false
     }
   ]
 }

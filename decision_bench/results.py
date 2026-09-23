@@ -80,7 +80,7 @@ def predictions_from_run(records, ledger, case_map):
                "probabilities": answer["probabilities"] if answer else None,
                "output_text": text[:MAX_OUTPUT_CHARS] if isinstance(text, str) else None,
                "error": public_error(r.get("error")) if r["status"] != "ok" else None,
-               "latency_ms": r.get("duration_ms"),
+               "latency_ms": r.get("duration_ms"), "images_sent": r.get("images_sent", 0),
                "tokens": {k.removesuffix("_tokens"): totals["tokens"][k]
                           for k in ("input_tokens", "output_tokens", "cached_input_tokens", "reasoning_output_tokens")},
                "cost_usd": totals["cost_usd"], "cost_basis": totals["cost_bases"],
@@ -102,7 +102,8 @@ def records_from_predictions(predictions, run_id):
         s = {"question_id": "decision", "type": "choice", **score_answer(p["gold"], p["answer"], p.get("probabilities"))}
         records.append({"run_id": run_id, "case_id": p["row_id"], "status": p["status"], "error": p.get("error"),
                         "duration_ms": p.get("latency_ms"), "scores": [s], "cost_usd": p.get("cost_usd"),
-                        "tokens": p.get("tokens"), "attempt_count": len(p.get("attempts", []))})
+                        "tokens": p.get("tokens"), "attempt_count": len(p.get("attempts", [])),
+                        "images_sent": p.get("images_sent", 0), "output_text": p.get("output_text")})
         for i, a in enumerate(p.get("attempts", [])):
             t = a.get("tokens") or {}
             events.append({"attempt_id": f"{p['row_id']}#{i}", "case_id": p["row_id"],

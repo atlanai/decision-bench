@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Decision Bench</title>
-<meta name="description" content="Open benchmark of the everyday decisions inside AI software, built from real public datasets: prompt injection, sensitive data, agent traces, routing, eval judging, contracts and skills.">
+<meta name="description" content="An open benchmark of the bounded decisions software asks language models to make, built from real records in open-licence datasets: engineering, agents, safety, support, commerce, finance, legal, product, data, documents and design.">
 <!-- The one place the repository URL is set. Every GitHub link on the site is derived from it. -->
 <meta name="repo" content="https://github.com/OWNER/decision-bench">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>try{const q=new URLSearchParams(location.search).get('theme');const t=q||localStorage.getItem('db-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
@@ -17,21 +17,19 @@
 <a class="skip" href="#main" onclick="event.preventDefault();document.getElementById('main').focus()">Skip to content</a>
 <header class="nav">
   <div class="nav-inner">
-    <a class="brand" href="#overview" aria-label="Decision Bench home">
+    <a class="brand" href="#/" aria-label="Decision Bench home">
       <svg class="brand-mark" viewBox="0 0 4 5" aria-hidden="true" shape-rendering="crispEdges"><rect x="0" y="0" width=".82" height=".82"/><rect x="1" y="0" width=".82" height=".82"/><rect x="2" y="0" width=".82" height=".82"/><rect x="0" y="1" width=".82" height=".82"/><rect x="3" y="1" width=".82" height=".82"/><rect x="0" y="2" width=".82" height=".82"/><rect x="3" y="2" width=".82" height=".82"/><rect x="0" y="3" width=".82" height=".82"/><rect x="3" y="3" width=".82" height=".82"/><rect x="0" y="4" width=".82" height=".82"/><rect x="1" y="4" width=".82" height=".82"/><rect x="2" y="4" width=".82" height=".82"/></svg>
       <span>Decision Bench</span>
     </a>
     <nav aria-label="Main navigation">
-      <a href="#overview" data-page="overview">Leaderboard</a>
-      <a href="#tasks" data-page="tasks">Rows <span id="task-count"></span></a>
-      <a href="#compare" data-page="compare" hidden>Analysis</a>
-      <a href="#failures" data-page="failures" hidden>Failures</a>
-      <a href="#review" data-page="review">Review</a>
-      <a href="#data" data-page="data">Data</a>
-      <a href="#about" data-page="about">About</a>
+      <a href="#/" data-page="home">Leaderboard</a>
+      <a href="#/tasks" data-page="tasks">Tasks <span id="task-count"></span></a>
+      <a href="#/models" data-page="models">Models</a>
+      <a href="#/data" data-page="data">Data</a>
+      <a href="#/methodology" data-page="methodology">Methodology</a>
     </nav>
     <div class="nav-tools">
-      <button id="refresh" class="tool" type="button" title="Reload the site data" hidden>Reload</button>
+      <a class="tool" id="gh-link" href="#" target="_blank" rel="noopener" hidden>GitHub</a>
       <button id="theme" class="theme-toggle" type="button" aria-label="Toggle dark mode"><i></i></button>
     </div>
   </div>

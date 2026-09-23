@@ -6,10 +6,10 @@ parsed and scored, and what is recorded. Commands are in [running.md](running.md
 
 ## Corpus
 
-`data/corpus/current.json` names the one active corpus. Today that is **bench-v3** (`data/corpus/bench-v3/`):
-359 rows in 14 fixed tasks and 7 categories. 323 rows are real records sampled from public datasets, with the
-dataset's own label as the answer; the rest are written examples. Every row is text and has exactly one choice
-question with two or more options. See [data/SOURCES.md](../data/SOURCES.md) for sources and licenses.
+`data/corpus/current.json` names the one active corpus. Today that is **bench-v4** (`data/corpus/bench-v4/`): real records
+sampled from public datasets across eleven use-case categories, with the dataset's own label or an objective record
+as the answer. Every row has exactly one choice question with two or more options; some rows carry an image as well
+as a text rendering of it. See [data/SOURCES.md](../data/SOURCES.md) for sources and licenses.
 
 The corpus is frozen: its sha256 is in `manifest.json`, and loading fails if the rows do not match. Every run
 records the sha256 it used. A run on a different corpus version cannot be resumed, published or compared.
@@ -20,7 +20,8 @@ Public datasets may appear in model training data, so scores may be inflated by 
 
 The model input is built by allowlist (`decision_bench/corpus.py: public_input`):
 
-- the row's `state` (the evidence), and
+- the row's `state` (the evidence; for image rows this includes a text rendering of the image),
+- for models whose `config/models.json` entry has `"vision": true`, the row's images as data URIs after the text, and
 - for its question: `id`, `type`, `instructions`, and the options in the row's stored presentation order
   (`option_order`, a fixed per-row shuffle).
 

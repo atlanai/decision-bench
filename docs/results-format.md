@@ -24,7 +24,7 @@ All files are UTF-8 JSON. Unknown values are `null`, never `0`. Schema version: 
 The frozen `config` is what defines the measurement. Resuming a run with a different one is refused:
 
 ```json
-{"suite": "bench-v3", "corpus_version": "3.0.0", "corpus_sha256": "…", "prompt_version": "choice-v1",
+{"suite": "bench-v4", "corpus_version": "4.0.0", "corpus_sha256": "…", "prompt_version": "choice-v1",
  "model_id": "gemini-3.5-flash", "provider": "openai-compatible", "api_model": "gemini-3.5-flash",
  "request": {"response_format": "json_schema", "max_output_tokens": 8192, "…": "…"},
  "endpoint_id": "endpoint-8f59086678b3", "selected_case_ids": ["…"]}
@@ -40,7 +40,7 @@ without recording either. Concurrency, timeouts and attempt limits are not froze
 ```json
 {
   "schema_version": 1,
-  "suite": "bench-v3",
+  "suite": "bench-v4",
   "model": {"id": "gemini-3.5-flash", "label": "Gemini 3.5 Flash", "short_label": "Gemini Flash",
             "vendor": "Google", "provider": "openai-compatible", "color": "#2563eb",
             "api_model": "gemini-3.5-flash", "resolved_models": ["gemini-3.5-flash"]},
@@ -49,7 +49,7 @@ without recording either. Concurrency, timeouts and attempt limits are not froze
   "pricing": {"input_per_mtok": 1.5, "cached_input_per_mtok": 0.15, "output_per_mtok": 9,
               "source_url": "https://…", "as_of": "2026-09", "note": "…"},
   "prompt_version": "choice-v1",
-  "corpus": {"version": "3.0.0", "sha256": "…", "current": true},
+  "corpus": {"version": "4.0.0", "sha256": "…", "current": true},
   "harness": {"version": "0.3.0", "git_commit": "…", "git_dirty": false, "git_commits": ["…"]},
   "run": {"run_id": "…", "status": "completed", "created_at": "…", "completed_at": "…", "published_at": "…",
           "executions": 1, "jobs": 3, "timeout_seconds": 180, "max_attempts": 2,
@@ -77,6 +77,7 @@ One line per row, in corpus order:
 | `correct` | `answer == gold`. A row with no valid answer is `false`. |
 | `confidence` | The probability the model gave its own answer, after normalizing to sum 1. |
 | `probabilities` | The full normalized distribution, or `null`. |
+| `images_sent` | How many of the row's images were sent: 0 for text-only models and for text tasks. |
 | `output_text` | The model's raw answer text (at most 20,000 characters; `output_truncated: true` if cut). |
 | `error` | Short error message with URLs removed, when `status` is not `ok`. |
 | `latency_ms` | Wall clock for the row, including retries. |
@@ -88,7 +89,7 @@ One line per row, in corpus order:
 
 ```json
 {
-  "schema_version": 1, "suite": "bench-v3", "model_id": "…", "corpus_sha256": "…",
+  "schema_version": 1, "suite": "bench-v4", "model_id": "…", "corpus_sha256": "…",
   "overall": {"rows": 359, "correct": 280, "accuracy": 0.780, "wilson95": [0.734, 0.820], "errors": 2,
               "macro_category_accuracy": 0.77, "macro_task_f1": 0.71},
   "by_category": [{"id": "pii", "name": "Sensitive data", "rows": 54, "correct": 40, "accuracy": 0.74, "wilson95": [0.61, 0.84]}],
@@ -110,7 +111,7 @@ Every value in `scores.json` can be recomputed from `predictions.jsonl` and the 
 `results/<suite>/leaderboard.json` lists every published model, sorted by accuracy:
 
 ```json
-{"schema_version": 1, "suite": "bench-v3", "corpus_version": "3.0.0", "corpus_sha256": "…", "note": "…",
+{"schema_version": 1, "suite": "bench-v4", "corpus_version": "4.0.0", "corpus_sha256": "…", "note": "…",
  "models": [{"model_id": "…", "label": "…", "vendor": "…", "provider": "…", "api_model": "…",
              "accuracy": 0.780, "wilson95": [0.734, 0.820], "correct": 280, "rows": 359, "errors": 2,
              "cost_usd": 0.19, "cost_coverage": 1.0, "cost_per_1000_rows_usd": 0.49, "latency_p50_ms": 1840,
@@ -153,11 +154,11 @@ A `runs` entry:
 ```json
 {"id": "<run id>", "source": "published", "status": "completed", "created_at": "…", "completed_at": "…",
  "published_at": "…", "model_id": "…", "model": {"id": "…", "label": "…", "vendor": "…", "…": "…"},
- "config": {"model_id": "…", "provider": "…", "api_model": "…", "request": {}, "suite": "bench-v3",
-            "corpus_version": "3.0.0", "corpus_sha256": "…", "prompt_version": "choice-v1",
+ "config": {"model_id": "…", "provider": "…", "api_model": "…", "request": {}, "suite": "bench-v4",
+            "corpus_version": "4.0.0", "corpus_sha256": "…", "prompt_version": "choice-v1",
             "endpoint_id": "…", "selected_case_ids": ["…"]},
  "coverage": {"…": "as in metadata.json"}, "current_corpus": true, "harness": {}, "pricing": {},
- "files": {"metadata": "results/bench-v3/<id>/metadata.json", "predictions": "…", "scores": "…", "readme": "…"},
+ "files": {"metadata": "results/bench-v4/<id>/metadata.json", "predictions": "…", "scores": "…", "readme": "…"},
  "metrics": {"cases": 359, "questions": 359, "correct": 280, "accuracy": 0.780, "accuracy_wilson95": [0.73, 0.82],
              "macro_category_accuracy": 0.77, "macro_task_f1": 0.71, "operational_errors": 2, "wrong_decisions": 84,
              "attempts": 391, "retries": 4, "incomplete_attempts": 0, "attempt_errors": 6,

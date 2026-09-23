@@ -29,7 +29,7 @@ site/results/
 site/catalog.json
 site/corpora/
 site/reports/
-site/assets/
+site/assets/rows/
 site/export/
 site/gateway-*.json
 site/gateway-protocol.txt

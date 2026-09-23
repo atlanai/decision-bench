@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-THIRD_PARTY = ("data/corpus/", "data/sources/", "authoring/bench/creddata_excerpts.json")
+THIRD_PARTY = ("data/corpus/", "data/sources/", "data/assets/", "authoring/bench/v3/", "authoring/bench/engineering_creddata.json")
 SKIP_DIRS = {".git", "runs", "__pycache__", ".venv", "node_modules"}
 MAX_BYTES = 20_000_000
 

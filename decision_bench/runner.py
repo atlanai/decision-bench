@@ -75,7 +75,8 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
     cfg = {"suite": manifest.get("suite"), "corpus_version": manifest.get("version"),
            "corpus_sha256": digest(all_cases), "prompt_version": PROMPT_VERSION,
            "model_id": model["id"], "provider": model["provider"], "api_model": api_model or model["model"],
-           "request": model.get("request", {}), "selected_case_ids": [c["id"] for c in cases]}
+           "request": model.get("request", {}), "vision": bool(model.get("vision")),
+           "selected_case_ids": [c["id"] for c in cases]}
     if model["provider"] == "openai-compatible":
         cfg["endpoint_id"] = openai_compat.endpoint_id(openai_compat.base_url())
     return cfg
@@ -193,7 +194,7 @@ def _run(args, model, cases, cfg, run_id, folder):
                          provider_duration_ms=result.get("provider_duration_ms"))
                 record.update({k: result.get(k) for k in ("usage", "cost_usd", "cost_basis", "resolved_model",
                                "output_text", "provider_duration_ms", "finish_reason", "output_validation_error",
-                               "output_wrapper_normalization", "command") if k in result})
+                               "output_wrapper_normalization", "command", "images_sent") if k in result})
                 record["raw_response"] = result["response"]
                 record["inference_input"] = result["payload"]
                 record["answers"] = normalize_answers(result["response"], case, result["source"])

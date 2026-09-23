@@ -17,7 +17,8 @@ REQUEST_KEYS = {
     "claude-cli": {"reasoning_effort"},
     "codex-cli": {"reasoning_effort"},
 }
-MODEL_KEYS = {"id", "label", "short_label", "vendor", "provider", "model", "color", "request", "pricing", "notes"}
+MODEL_KEYS = {"id", "label", "short_label", "vendor", "provider", "model", "color", "request", "pricing", "notes",
+              "vision"}
 PRICING_KEYS = {"input_per_mtok", "cached_input_per_mtok", "output_per_mtok", "source_url", "as_of", "note"}
 
 
@@ -62,6 +63,8 @@ def _check_model(m):
         raise ConfigError(f"{where}: token_limit_field must be max_tokens or max_completion_tokens")
     if request.get("json_wrapper_policy", "allow_single_code_fence") not in ("allow_single_code_fence", "strict"):
         raise ConfigError(f"{where}: json_wrapper_policy must be allow_single_code_fence or strict")
+    if "vision" in m and not isinstance(m["vision"], bool):
+        raise ConfigError(f"{where}: vision must be true or false")
     pricing = m.get("pricing")
     if pricing is not None:
         if set(pricing) - PRICING_KEYS:
@@ -95,7 +98,8 @@ def get_model(model_id):
 def display(m):
     """Presentation fields only. Changing these never invalidates a run."""
     return {"id": m["id"], "label": m["label"], "short_label": m.get("short_label") or m["label"],
-            "vendor": m["vendor"], "provider": m["provider"], "color": m.get("color")}
+            "vendor": m["vendor"], "provider": m["provider"], "color": m.get("color"),
+            "vision": bool(m.get("vision"))}
 
 
 def estimate_cost(pricing, usage):

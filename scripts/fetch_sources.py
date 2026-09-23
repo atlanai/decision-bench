@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download the public source files that bench-v3 rows are sampled from, and verify their hashes.
+"""Download the public source files that the bench rows are sampled from, and verify their hashes.
 
 Each module in authoring/bench declares SOURCES = [{"dataset", "url", "path", optional "zip_member"}], where path is relative to
 data/sources. Files are not committed; data/sources/manifest.json pins their sha256.

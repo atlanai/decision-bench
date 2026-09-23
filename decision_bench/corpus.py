@@ -48,7 +48,7 @@ def load_cases(path=None):
 
 
 def validate(cases):
-    """Structural checks for bench-v3 rows: one text-only choice question per row."""
+    """Structural checks for bench rows: one choice question per row; optional image assets."""
     seen = set()
     for c in cases:
         assert c.get("id") and c["id"] not in seen, f"duplicate or missing id: {c.get('id')}"
@@ -56,7 +56,9 @@ def validate(cases):
         for key in ("title", "task", "category", "provenance"):
             assert c.get(key), f"{c['id']}: missing {key}"
         assert c.get("state"), f"{c['id']}: empty state"
-        assert not c.get("assets"), f"{c['id']}: rows are text only; assets are not supported"
+        for a in c.get("assets", []):
+            assert a.get("path") and str(a.get("mime_type", "")).startswith("image/") and a.get("alt_text"), \
+                f"{c['id']}: assets need path, an image mime_type and alt_text"
         assert len(c.get("questions", [])) == 1, f"{c['id']}: exactly one question per row"
         q = c["questions"][0]
         assert q.get("type") == "choice", f"{c['id']}: only choice questions are supported"
@@ -106,6 +108,15 @@ def response_schema(case):
             "properties": {"answers": {"type": "object", "additionalProperties": False,
                                        "properties": answers, "required": list(answers)}},
             "required": ["answers"]}
+
+
+def image_assets(case):
+    """The row's images, as (mime_type, bytes). Only rows of image tasks have any."""
+    out = []
+    for a in case.get("assets", []):
+        if str(a.get("mime_type", "")).startswith("image/"):
+            out.append((a["mime_type"], (ROOT / a["path"]).read_bytes()))
+    return out
 
 
 def user_message(case):

@@ -4,5 +4,5 @@ title: "Decision Bench: bounded decisions on real public data"
 type: software
 authors:
   - name: "Decision Bench contributors"
-version: "3.0.0"
+version: "4.0.0"
 license: MIT

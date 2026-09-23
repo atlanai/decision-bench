@@ -6,7 +6,7 @@ here with `python3 -m decision_bench publish <run-id>`.
 
 ```
 results/
-  <suite>/                      e.g. bench-v3
+  <suite>/                      e.g. bench-v4
     leaderboard.json            every published model, sorted by accuracy
     leaderboard.md              the same as a table
     <model-id>/                 id from config/models.json

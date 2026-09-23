@@ -74,7 +74,7 @@ request.
 
 ```sh
 python3 -m decision_bench run --model gemini-3.5-flash --limit 5     # smoke test on 5 rows
-python3 -m decision_bench run --model gemini-3.5-flash               # all 359 rows
+python3 -m decision_bench run --model gemini-3.5-flash               # every row
 python3 -m decision_bench run --model gemini-3.5-flash,qwen3-32b     # several models, one after another
 ```
 
@@ -101,7 +101,7 @@ Earlier failed attempts stay in `runs/<run-id>/attempts.jsonl` and still count t
 ## Publish
 
 ```sh
-python3 -m decision_bench publish gemini-3.5-flash-bench-v3-1a2b3c4d
+python3 -m decision_bench publish gemini-3.5-flash-bench-v4-1a2b3c4d
 python3 -m decision_bench validate
 ```
 

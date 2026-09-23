@@ -14,7 +14,9 @@ import urllib.parse
 import urllib.request
 
 from .config import env_value
-from .corpus import SYSTEM, response_schema, user_message
+import base64
+
+from .corpus import SYSTEM, image_assets, response_schema, user_message
 from .errors import CallError
 
 BASE_ENV = "DECISION_BENCH_BASE_URL"
@@ -146,10 +148,18 @@ def number(value):
     return n if math.isfinite(n) and n >= 0 else None
 
 
-def payload_for(case, api_model, options):
+def payload_for(case, api_model, options, vision=False):
+    """Chat payload. A vision model gets the row's images as data URIs after the text; text-only models get the
+    text rendering that every image row carries in its state."""
     schema = response_schema(case)
+    content = user_message(case)
+    images = image_assets(case) if vision else []
+    if images:
+        content = [{"type": "text", "text": content}] + [
+            {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{base64.b64encode(data).decode()}"}}
+            for mime, data in images]
     payload = {"model": api_model, "stream": False,
-               "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user_message(case)}]}
+               "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": content}]}
     mode = options.get("response_format", "json_schema")
     if mode == "json_schema":
         payload["response_format"] = {"type": "json_schema",
@@ -163,6 +173,18 @@ def payload_for(case, api_model, options):
     if options.get("temperature") is not None:
         payload["temperature"] = options["temperature"]
     return payload
+
+
+def stored_payload(payload):
+    """The payload as kept in run records: image bytes are replaced by their size, so records stay small."""
+    out = json.loads(json.dumps(payload))
+    for m in out.get("messages", []):
+        if isinstance(m.get("content"), list):
+            for part in m["content"]:
+                if part.get("type") == "image_url":
+                    url = part["image_url"]["url"]
+                    part["image_url"] = {"url": f"[{url.split(';', 1)[0].removeprefix('data:')} image, {len(url)} characters of base64 omitted]"}
+    return out
 
 
 def parse_output(text, options):
@@ -183,7 +205,9 @@ def parse_output(text, options):
 def completion(model, case, timeout, api_model=None):
     options = model.get("request", {})
     base = base_url()
-    payload = payload_for(case, api_model or model["model"], options)
+    payload = payload_for(case, api_model or model["model"], options, vision=bool(model.get("vision")))
+    images_sent = sum(1 for part in payload["messages"][1]["content"] if isinstance(part, dict)
+                      and part.get("type") == "image_url") if isinstance(payload["messages"][1]["content"], list) else 0
     raw, headers, status, elapsed = request(base + "/chat/completions", payload, timeout)
     usage = raw.get("usage") or {}
     prompt_details = usage.get("prompt_tokens_details") or {}
@@ -215,6 +239,6 @@ def completion(model, case, timeout, api_model=None):
                       "cache_creation_input_tokens": prompt_details.get("cache_creation_tokens")},
             "cost_usd": cost, "cost_basis": "provider_reported" if cost is not None else "unavailable",
             "cost_source": "endpoint response" if cost is not None else None,
-            "payload": payload, "output_wrapper_normalization": wrapper,
+            "payload": stored_payload(payload), "images_sent": images_sent, "output_wrapper_normalization": wrapper,
             "finish_reason": choice.get("finish_reason"), "output_validation_error": error,
             "endpoint_id": endpoint_id(base)}
