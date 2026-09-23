@@ -27,6 +27,9 @@ const REPO=(document.querySelector('meta[name="repo"]')?.content||'').replace(/\
 const gh=path=>`${REPO}/blob/main/${path}`;
 const ghIssue=(template,params={})=>`${REPO}/issues/new?template=${template}${Object.entries(params).map(([k,v])=>`&${k}=${encodeURIComponent(v)}`).join('')}`;
 const ext=(href,html)=>/^https?:\/\//i.test(String(href||''))?`<a href="${esc(href)}" target="_blank" rel="noopener">${html}</a>`:html;
+/* Stroke icons (Lucide shapes, ISC licence), drawn in the current text colour. */
+const ICONS={chev:'<path d="m6 9 6 6 6-6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',ext:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',file:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>',github:'<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.1-1.3-.3-2.5-1-3.5.3-1.2.3-2.4 0-3.5 0 0-1 0-3 1.5a10.4 10.4 0 0 0-5.4 0C7.6 2 6.6 2 6.6 2c-.3 1.1-.3 2.3 0 3.5-.7 1-1.1 2.2-1 3.5 0 3.5 3 5.5 6 5.5-.4.5-.7 1-.9 1.6-.2.6-.2 1.3-.1 1.9v4"/><path d="M9 18c-4.5 2-5-2-7-2"/>',flag:'<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 8 2a6 6 0 0 0 3.6-1.2.5.5 0 0 1 .4.9V15a1 1 0 0 1-.4.8A6 6 0 0 1 16 17c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/>'};
+const icon=(n,cls='')=>`<svg class="ic${cls?` ${cls}`:''}" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 
 /* ---------- Routing helpers: every state is a URL ---------- */
 const route={page:'home',id:'',q:new URLSearchParams()};
@@ -43,9 +46,9 @@ const statCache=new Map(),metricCache=new Map();
 const man=()=>data?.manifest||{};
 
 /* ---------- Model identity: label, colour, vendor logo and interface come from data.json models[] ---------- */
-const IFACE={'openai-compatible':'API',typesafe:'API','claude-cli':'Claude Code CLI','codex-cli':'Codex CLI'};
+const IFACE={'openai-compatible':'API',typesafe:'API',laya:'API','claude-cli':'Claude Code CLI','codex-cli':'Codex CLI'};
 const PALETTE=['#2563eb','#7c3aed','#0f766e','#d97706','#db2777','#0891b2','#65a30d','#c2410c','#6d28d9','#475569'];
-const LOGOS={google:'google.com',anthropic:'anthropic.com',openai:'openai.com',deepseek:'deepseek.com','z.ai':'z.ai',zhipu:'z.ai',qwen:'qwen.ai',alibaba:'alibabacloud.com',amazon:'amazon.com',aws:'amazon.com',typesafe:'typesafe.ai'};
+const LOGOS={google:'google.com',anthropic:'anthropic.com',openai:'openai.com',deepseek:'deepseek.com','z.ai':'z.ai',zhipu:'z.ai',qwen:'qwen.ai',alibaba:'alibabacloud.com',amazon:'amazon.com',aws:'amazon.com',typesafe:'typesafe.ai',laya:'convaiinnovations.com',convai:'convaiinnovations.com'};
 let MODELS={},ORDER=[];
 function registerModel(m,configured){
  if(!m?.id||MODELS[m.id])return;
@@ -271,7 +274,7 @@ function heatTasks(rs,cases){
 }
 
 /* ---------- Page scaffolding ---------- */
-const pageHead=(title,sub,extra='',eyebrow='Decision Bench')=>`<header class="page-head"><div>${eyebrow?`<p class="eyebrow">${eyebrow}</p>`:''}<h1>${title}</h1>${sub?`<p class="lede">${sub}</p>`:''}</div>${extra}</header>`;
+const pageHead=(title,sub,extra='',eyebrow='')=>`<header class="page-head"><div>${eyebrow?`<p class="eyebrow">${eyebrow}</p>`:''}<h1>${title}</h1>${sub?`<p class="lede">${sub}</p>`:''}</div>${extra}</header>`;
 const section=(title,sub,body,{id='',aside=''}={})=>`<section class="sec"${id?` id="${id}"`:''}><div class="sec-head"><div><h2>${title}</h2>${sub?`<p>${sub}</p>`:''}</div>${aside?`<div class="aside">${aside}</div>`:''}</div>${body}</section>`;
 const block=(title,sub,body,{aside='',foot=''}={})=>`<div class="block"><div class="block-head"><h3>${title}</h3>${aside?`<div class="aside">${aside}</div>`:''}</div>${sub?`<p class="help">${sub}</p>`:''}${body}${foot?`<p class="foot">${foot}</p>`:''}</div>`;
 const seg=(label,items,attr,current)=>`<div class="seg" role="group" aria-label="${esc(label)}">${items.map(([v,l])=>`<button type="button" data-${attr}="${esc(v)}" aria-pressed="${v===current}">${esc(l)}</button>`).join('')}</div>`;
@@ -388,18 +391,31 @@ function home(){
 }
 const unevaluated=()=>ORDER.filter(k=>MODELS[k].configured&&!RUNS.some(r=>keyOf(r)===k)&&!PARTIAL.some(r=>keyOf(r)===k));
 
-/* ---------- Task table ---------- */
+/* ---------- Task table: one group per use case, collapsible; source and options live in a dialog ---------- */
+const collapsedGroups=new Set();
+const taskOptions=t=>{const q=taskRows(t)[0]?.questions[0];return q?optionOrder(q):[];};
+function bestOn(t){const rows=taskRows(t);return RUNS.map(r=>[r,subsetMetrics(r,rows)]).filter(([,m])=>m.questions).sort(([,a],[,b])=>b.accuracy-a.accuracy)[0]||null;}
 function taskTable(){
  const cat=route.q.get('category')||'',mod=route.q.get('modality')||'',q=(route.q.get('q')||'').toLowerCase();
- const tasks=taskOrder().filter(t=>(!cat||taskCat(t)===cat)&&(!mod||(mod==='image')===isImageTask(t))&&(!q||`${taskName(t)} ${taskAsk(t)} ${catInfo(taskCat(t)).name} ${taskInfo(t).input_type||''} ${(taskInfo(t).datasets||[]).join(' ')}`.toLowerCase().includes(q)));
- const best=t=>{const rows=taskRows(t),ms=RUNS.map(r=>[r,subsetMetrics(r,rows)]).filter(([,m])=>m.questions).sort(([,a],[,b])=>b.accuracy-a.accuracy);return ms[0]||null;};
+ const tasks=taskOrder().filter(t=>(!cat||taskCat(t)===cat)&&(!mod||(mod==='image')===isImageTask(t))&&(!q||`${t} ${taskName(t)} ${taskAsk(t)} ${catInfo(taskCat(t)).name} ${taskInfo(t).input_type||''} ${(taskInfo(t).datasets||[]).join(' ')}`.toLowerCase().includes(q)));
  const hasImg=allCases.some(c=>isImageTask(c.task));
- const bar=`<div class="filters">${selectHtml('f-category','Use case',[['','All'],...categoryOrder().map(k=>[k,catInfo(k).name])],cat)}${hasImg?seg('Input',[['','All inputs'],['text','Text'],['image','Image']],'modality',mod):''}<input id="f-q" type="search" placeholder="Search tasks…" value="${esc(route.q.get('q')||'')}" aria-label="Search tasks"><span class="spacer"></span><span class="count">${plural(tasks.length,'task')} · ${num(tasks.reduce((n,t)=>n+taskRows(t).length,0))} rows</span></div>`;
- let last=null;
- const body=tasks.map(t=>{const i=taskInfo(t),rows=taskRows(t),ds=[...new Set(rows.map(c=>dsOf(c)).filter(Boolean))],b=best(t);let g='';if(taskCat(t)!==last){last=taskCat(t);g=`<tr class="grp"><td colspan="7" style="padding-top:18px;color:var(--muted);font-size:var(--fs-1);font-weight:500;border-bottom-color:var(--line-strong)"><a href="${catHref(last)}" style="color:inherit">${esc(catInfo(last).name)}</a></td></tr>`;}
-  return g+`<tr class="link" data-href="${taskHref(t)}"><td><a class="t-link" href="${taskHref(t)}">${esc(taskName(t))}</a><span class="sub">${esc(t)}</span></td><td class="q">${esc(taskAsk(t))}<div class="opts-inline">${Object.keys(rows[0].questions[0].options).length<=8&&!i.per_row_options?Object.entries(rows[0].questions[0].options).slice(0,8).map(([k])=>`<b>${esc(human(k))}</b>`).join(''):`<b>${esc(i.per_row_options?'options come from the record':`${Object.keys(rows[0].questions[0].options).length} options`)}</b>`}</div></td><td><div class="tags">${i.input_type?`<span class="tag">${esc(i.input_type)}</span>`:''}${isImageTask(t)?'<span class="tag img">image</span>':''}${i.shape?`<span class="tag">${esc(i.shape)}</span>`:''}</div></td><td class="muted">${ds.map(d=>dsLink(d)).join(', ')||'—'}</td><td class="r num">${rows.length}</td><td>${b?`<span class="m">${logoHtml(keyOf(b[0]))}<span class="num">${pct0(b[1].accuracy)}</span></span>`:'<span class="faint">—</span>'}</td><td>${hasResults()?fitHtml(verdict(RUNS.length?subsetMetrics(RUNS.reduce((w,r)=>subsetMetrics(r,rows).accuracy>(w?subsetMetrics(w,rows).accuracy:-1)?r:w,null)||RUNS[0],rows):null)):'<span class="faint">—</span>'}</td></tr>`;}).join('');
- return pageHead('Tasks',`Every task is one fixed question with a short list of options, asked of ${plural(allCases.length,'real record')}. Open a task to read its rows and see how each model did. <a href="corpus.json" download>Download all rows (JSON)</a>`)+bar+`<div class="table-wrap"><table class="tasks"><thead><tr><th>Task</th><th>Question and options</th><th>Input</th><th>Source</th><th class="r">Rows</th><th>Best model</th><th>Best verdict</th></tr></thead><tbody>${body||'<tr><td colspan="7" class="muted">No task matches these filters.</td></tr>'}</tbody></table></div>`;
+ const bar=`<div class="toolbar"><label class="search">${icon('search')}<input id="f-q" type="search" placeholder="Search tasks, inputs, datasets…" value="${esc(route.q.get('q')||'')}" aria-label="Search tasks"></label>${selectHtml('f-category','Use case',[['','All use cases'],...categoryOrder().map(k=>[k,catInfo(k).name])],cat)}${hasImg?seg('Input',[['','All inputs'],['text','Text'],['image','Image']],'modality',mod):''}<span class="spacer"></span><span class="count">${plural(tasks.length,'task')} · ${num(tasks.reduce((n,t)=>n+taskRows(t).length,0))} rows</span></div>`;
+ const optCell=t=>{const i=taskInfo(t),opts=taskOptions(t);if(i.per_row_options)return '<span class="varies" title="The options come from each record">varies</span>';return `<span class="opt-n"${tipAttr(`<strong>${plural(opts.length,'option')}</strong>${opts.map(o=>`<div>${esc(human(o))}</div>`).join('')}`,false)}>${opts.length}</span>`;};
+ const row=t=>{const i=taskInfo(t),rows=taskRows(t),b=bestOn(t);
+  return `<tr class="link" data-href="${taskHref(t)}"><td class="tid">${esc(t)}</td><td class="tname"><a class="t-link" href="${taskHref(t)}">${esc(taskName(t))}</a><span class="ask">${esc(taskAsk(t))}</span></td><td><span class="badges">${i.input_type?`<span class="badge">${isImageTask(t)?icon('image'):''}${esc(i.input_type)}</span>`:''}</span></td><td class="r num">${optCell(t)}</td><td class="r num">${rows.length}</td><td>${b?`<span class="m">${logoHtml(keyOf(b[0]))}<span class="num">${pct0(b[1].accuracy)}</span></span>`:'<span class="faint">—</span>'}</td><td>${b?fitHtml(verdict(b[1])):'<span class="faint">—</span>'}</td><td class="act"><button type="button" class="icon-btn" data-info="${esc(t)}" aria-label="Details and source for ${esc(taskName(t))}" title="Details and source">${icon('info')}</button></td></tr>`;};
+ const groups=categoryOrder().map(k=>[k,tasks.filter(t=>taskCat(t)===k)]).filter(([,ts])=>ts.length);
+ const body=groups.map(([k,ts])=>{const open=!collapsedGroups.has(k)||!!q;return `<tbody class="grp-body${open?'':' collapsed'}"><tr class="grp"><td colspan="8"><button type="button" class="grp-toggle" data-grp="${esc(k)}" aria-expanded="${open}">${icon('chev','chev')}<span class="grp-name">${esc(catInfo(k).name)}</span><span class="badge secondary num">${ts.length}</span><span class="grp-desc">${esc(catInfo(k).description)}</span></button></td></tr>${ts.map(row).join('')}</tbody>`;}).join('');
+ return pageHead('Tasks',`Every task is one fixed question with a short list of options, asked of ${plural(allCases.length,'real record')}. Open a task to read its rows and see how each model did.`,`<a class="btn outline" href="corpus.json" download>${icon('down')}Download all rows</a>`)+bar+`<div class="table-wrap"><table class="tasks"><colgroup><col class="c-id"><col><col class="c-in"><col class="c-n"><col class="c-n"><col class="c-best"><col class="c-fit"><col class="c-act"></colgroup><thead><tr><th>ID</th><th>Task</th><th>Input</th><th class="r">Options</th><th class="r">Rows</th><th>Best model</th><th>Verdict</th><th><span class="sr">Details</span></th></tr></thead>${body||'<tbody><tr><td colspan="8" class="empty-row">No task matches these filters.</td></tr></tbody>'}</table></div>`;
 }
+/* The dialog behind the ⓘ button: the question, its options and where the rows come from. */
+function taskDialog(t){
+ const i=taskInfo(t),rows=taskRows(t),q0=rows[0]?.questions[0],cat=taskCat(t),ds=[...new Set(rows.map(c=>dsOf(c)).filter(Boolean))];
+ const facts=[['Decision',cap(i.shape||'')],['Input',[i.input_type,isImageTask(t)?'image':'text'].filter(Boolean).join(' · ')],['Rows',rows.length],['Answer from',i.label_origin||rows[0]?.source?.labelled_by||''],['Contamination',cap(i.contamination||'')]].filter(([,v])=>v!==''&&v!=null);
+ const opts=i.per_row_options?`<p class="muted">The options differ per row and come from the record.</p>`:`<ul class="opt-list">${taskOptions(t).map(o=>`<li><span class="badge">${esc(human(o))}</span><span>${esc(q0?.options?.[o]||'')}</span></li>`).join('')}</ul>`;
+ const src=ds.map(d=>`<div class="src"><div class="src-head"><strong>${esc(d.name)}</strong>${d.license?`<span class="lic">${esc(d.license)}</span>`:''}</div>${d.content?`<p>${esc(d.content)}</p>`:''}${d.labelled_by?`<p class="muted"><b>Answers from</b> ${esc(d.labelled_by)}</p>`:''}<div class="src-links">${d.homepage?ext(d.homepage,`${icon('ext')}Dataset homepage`):''}<a href="${href(`data/${encodeURIComponent(d.id)}`)}">Licence and terms</a></div></div>`).join('')||'<p class="muted">No source recorded.</p>';
+ return `<header class="dlg-head"><p class="eyebrow">${esc(catInfo(cat).name)} · ${esc(t)}</p><h2>${esc(taskName(t))}</h2><p class="muted">${esc(taskAsk(t))}</p></header><div class="dlg-sec"><h3>Options</h3>${opts}</div><div class="dlg-sec"><dl class="facts">${facts.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div><div class="dlg-sec"><h3>Source</h3>${src}</div><footer class="dlg-foot"><button type="button" class="btn outline" data-close>Close</button><a class="btn" href="${taskHref(t)}" data-close>Open task</a></footer>`;
+}
+function openDialog(html){const d=$('#dlg');if(!d?.showModal)return;d.querySelector('.dlg-body').innerHTML=html;d.showModal();}
 
 /* ---------- Task page ---------- */
 function taskPage(t){
@@ -547,41 +563,42 @@ function comparePage(){
 }
 
 /* ---------- Data page: every dataset, its licence and its terms ---------- */
+/* Accordion item: a native <details> styled as a shadcn accordion row. */
+const accItem=(id,title,meta,body,open)=>`<details class="acc" id="${esc(id)}"${open?' open':''}><summary><span class="acc-title">${title}</span>${meta?`<span class="acc-meta">${meta}</span>`:''}${icon('chev','chev')}</summary><div class="acc-body">${body}</div></details>`;
+/* Download tiles: label, what it is, format. */
+const dlTiles=items=>`<div class="tiles">${items.map(([h,label,sub,k,attrs])=>`<a class="tile" href="${esc(h)}" ${attrs}>${icon(k==='GitHub'?'github':k==='Issue'?'flag':'file')}<span><strong>${esc(label)}</strong><span>${esc(sub)}</span></span><span class="badge secondary">${esc(k)}</span></a>`).join('')}</div>`;
 function dataPage(focus){
- const items=DATASETS.length?DATASETS:[];
- const card=d=>`<article class="ds" id="ds-${esc(slug(d.id))}"><h3>${d.homepage?ext(d.homepage,esc(d.name)):esc(d.name)}${d.license?`<span class="lic">${esc(d.license)}</span>`:''}${d.content_license&&d.content_license!==d.license?`<span class="lic" title="Licence of the text or images inside the dataset">content ${esc(d.content_license)}</span>`:''}</h3><dl>
-  <dt>Used for</dt><dd>${d.tasks.map(t=>`<a href="${taskHref(t)}">${esc(taskName(t))}</a>`).join(', ')} · ${plural(d.rows.length,'row')}</dd>
-  ${d.content?`<dt>What a row is</dt><dd>${esc(d.content)}</dd>`:''}
-  ${d.labelled_by?`<dt>Answers from</dt><dd>${esc(d.labelled_by)}</dd>`:''}
-  ${d.selection?`<dt>How rows were chosen</dt><dd>${esc(d.selection)}</dd>`:''}
-  ${d.changes?`<dt>What we changed</dt><dd>${esc(d.changes)}</dd>`:''}
-  ${d.content_terms?`<dt>Terms of the material</dt><dd>${esc(d.content_terms)}</dd>`:''}
-  ${d.license_url?`<dt>Licence read at</dt><dd>${ext(d.license_url,esc(d.license_url.replace(/^https?:\/\//,'')))}</dd>`:''}
-  </dl>${d.citation?`<p class="cite">Cite: ${esc(d.citation)}</p>`:''}${d.bibtex?`<details class="adv"><summary>BibTeX</summary><pre class="code">${esc(d.bibtex)}</pre></details>`:''}</article>`;
- setTimeout(()=>{if(focus){const el=document.getElementById(`ds-${slug(focus)}`);if(el)el.scrollIntoView();}},0);
+ const items=DATASETS.length?DATASETS:[],open=focus?slug(focus):'';
+ const field=(k,v)=>v?`<div class="field-row"><dt>${k}</dt><dd>${v}</dd></div>`:'';
+ const item=d=>{const lic=`${d.license?`<span class="lic">${esc(d.license)}</span>`:''}${d.content_license&&d.content_license!==d.license?`<span class="lic soft" title="Licence of the text or images inside the dataset">content ${esc(d.content_license)}</span>`:''}`;
+  const body=`<dl class="fields">${field('Used for',`<span class="badges wrap">${d.tasks.map(t=>`<a class="badge link" href="${taskHref(t)}">${esc(t)} · ${esc(taskName(t))}</a>`).join('')}</span>`)}${field('What a row is',esc(d.content||''))}${field('Answers from',esc(d.labelled_by||''))}${field('How rows were chosen',esc(d.selection||''))}${field('What we changed',esc(d.changes||''))}${field('Terms of the material',esc(d.content_terms||''))}${field('Cite',d.citation?`<span class="muted">${esc(d.citation)}</span>`:'')}</dl><div class="acc-links">${d.homepage?ext(d.homepage,`${icon('ext')}Dataset homepage`):''}${d.license_url?ext(d.license_url,`${icon('ext')}Licence`):''}</div>${d.bibtex?`<details class="adv"><summary>BibTeX</summary><pre class="code">${esc(d.bibtex)}</pre></details>`:''}`;
+  return accItem(`ds-${slug(d.id)}`,`<strong>${esc(d.name)}</strong>${lic}`,`${plural(d.tasks.length,'task')} · ${plural(d.rows.length,'row')}`,body,slug(d.id)===open);};
+ const groups=categoryOrder().map(k=>[k,items.filter(d=>taskCat(d.tasks[0])===k)]).filter(([,ds])=>ds.length);
+ const rest=items.filter(d=>!groups.some(([,ds])=>ds.includes(d)));if(rest.length)groups.push(['',rest]);
+ setTimeout(()=>{if(focus){const el=document.getElementById(`ds-${slug(focus)}`);if(el)el.scrollIntoView({block:'center'});}},0);
+ const ghOk=REPO&&!REPO.includes('OWNER');
  return pageHead('Data',`${items.length} public datasets supply every row. Each keeps its own licence; the code is MIT. A dataset is used only when both its licence and the terms of the material inside it allow anyone to copy, change and redistribute it, commercially too.`)+
-  `<div class="downloads" style="margin-bottom:8px"><a href="corpus.json" download><span>All rows with answer keys</span><span class="k">JSON</span></a><a href="datasets.json" download><span>Dataset records</span><span class="k">JSON</span></a>${REPO&&!REPO.includes('OWNER')?`<a href="${esc(gh('data/SOURCES.md'))}" target="_blank" rel="noopener"><span>Sources and attribution</span><span class="k">GitHub</span></a><a href="${esc(ghIssue('data-removal.yml'))}" target="_blank" rel="noopener"><span>Ask for a row to be removed</span><span class="k">Issue</span></a>`:''}</div>`+items.map(card).join('');
+  dlTiles([['corpus.json','All rows','Every row with its answer key','JSON','download'],['datasets.json','Dataset records','Licences, terms and citations','JSON','download'],...(ghOk?[[gh('data/SOURCES.md'),'Sources','Attribution for every dataset','GitHub','target="_blank" rel="noopener"'],[ghIssue('data-removal.yml'),'Request removal','Ask for a row to be taken out','Issue','target="_blank" rel="noopener"']]:[])])+
+  groups.map(([k,ds])=>`<section class="acc-group"><h2>${esc(k?catInfo(k).name:'Other')}<span class="badge secondary num">${ds.length}</span></h2><div class="acc-card">${ds.map(item).join('')}</div></section>`).join('');
 }
 
 /* ---------- Methodology ---------- */
 function methodology(){
  const rows=allCases.length,tasks=taskOrder().length,cats=categoryOrder().length,ds=DATASETS.length,imgs=allCases.filter(c=>isImageTask(c.task)).length;
  const prompt=data.prompt?.system||'';
- const toc=[['what','What is measured'],['rows','Where rows come from'],['sees','What the model sees'],['metrics','Metrics'],['verdict','The fit verdict'],['limits','Limits'],['submit','Results and citing']];
+ const openId=route.id||'what';
  const step=(n,h,p)=>`<div class="step"><b>${n}</b><h4>${h}</h4><p>${p}</p></div>`;
- const body=`<div class="method">
-<h2 id="m-what">What is measured</h2>
-<p>Whether a model makes the same call a human or an objective record made on a real piece of work. Each row is one record with one question and a short fixed list of options; the model picks one and states a probability for each. Nothing is generated or graded by another model.</p>
-<p><strong>${num(rows)} rows · ${tasks} tasks · ${cats} use cases · ${ds} datasets</strong>${imgs?` · ${num(imgs)} rows carry an image`:''}. The corpus is frozen by sha256 and results from different versions are never mixed.</p>
-<div class="steps">${step('1','A real record','From an open-licence dataset, chosen by a written rule in a fixed order.')}${step('2','One question','12 words or fewer, 2–10 options, each described in one line.')}${step('3','An answer from the source','The dataset’s annotators or an objective record, never a model.')}${step('4','A strict JSON answer','One option plus a probability for each. Anything else is no answer.')}</div>
-<h2 id="m-rows">Where rows come from</h2>
-<ul><li>Every dataset is on the <a href="#/data">Data page</a> with its licence, the terms of the material inside it, who decided the answers, and how rows were chosen.</li><li>Both the dataset and the material inside it must allow copying, changing and redistributing, commercially too. Non-commercial or publisher-copyrighted sources are not used.</li><li>Every option is the answer at least once; no option on more than 60% of a task's rows. Titles are neutral and never sent to models.</li><li>Some labels are derived by rule from the record itself (a version bump from tags, a chart claim checked against the chart's data); those task pages say so.</li></ul>
-<h2 id="m-sees">What the model sees</h2>
-<p>The record, the task instruction and the options in a fixed per-row shuffled order. Never the answer, the rationale, the title or the source. Vision models also receive the row's images; text-only models receive the text rendering instead, and the site marks which was used.</p>
-<details class="adv"><summary>The system prompt sent with every request (${esc(data.prompt?.version||'')})</summary><pre class="code wrap">${esc(prompt)}</pre></details>
+ const stat=(v,l)=>`<div class="stat"><dd class="num">${v}</dd><dt>${l}</dt></div>`;
+ const intro=`<dl class="stats">${stat(num(rows),'rows')}${stat(tasks,'tasks')}${stat(cats,'use cases')}${stat(ds,'datasets')}${imgs?stat(num(imgs),'rows with an image'):''}</dl>
+<div class="steps">${step('1','A real record','From an open-licence dataset, chosen by a written rule in a fixed order.')}${step('2','One question','12 words or fewer, 2–10 options, each described in one line.')}${step('3','An answer from the source','The dataset’s annotators or an objective record, never a model.')}${step('4','A strict JSON answer','One option plus a probability for each. Anything else is no answer.')}</div>`;
+ const parts=[
+['what','What is measured','The same call a person or a record made, on real work',`<p>Whether a model makes the same call a human or an objective record made on a real piece of work. Each row is one record with one question and a short fixed list of options; the model picks one and states a probability for each. Nothing is generated or graded by another model.</p>
+<p>The corpus is frozen by sha256 and results from different versions are never mixed.</p>`],
+['rows','Where rows come from','Open-licence datasets, chosen by written rules',`<ul><li>Every dataset is on the <a href="#/data">Data page</a> with its licence, the terms of the material inside it, who decided the answers, and how rows were chosen.</li><li>Both the dataset and the material inside it must allow copying, changing and redistributing, commercially too. Non-commercial or publisher-copyrighted sources are not used.</li><li>Every option is the answer at least once; no option on more than 60% of a task's rows. Titles are neutral and never sent to models.</li><li>Some labels are derived by rule from the record itself (a version bump from tags, a chart claim checked against the chart's data); those task pages say so.</li></ul>`],
+['sees','What the model sees','The record, the instruction and shuffled options',`<p>The record, the task instruction and the options in a fixed per-row shuffled order. Never the answer, the rationale, the title or the source. Vision models also receive the row's images; text-only models receive the text rendering instead, and the site marks which was used.</p>
 <p>API models use a chat completions endpoint with a JSON schema response format where supported. CLI models run in an empty directory with tools disabled. A response cut off by the token limit, a refusal, a tool call or invalid JSON is <em>no answer</em>: counted as wrong, reported separately.</p>
-<h2 id="m-metrics">Metrics</h2>
-<table class="metric-table"><thead><tr><th>Metric</th><th>Definition</th></tr></thead><tbody>
+<details class="adv"><summary>The system prompt sent with every request (${esc(data.prompt?.version||'')})</summary><pre class="code wrap">${esc(prompt)}</pre></details>`],
+['metrics','Metrics','Accuracy with intervals, calibration, latency and cost',`<table class="metric-table"><thead><tr><th>Metric</th><th>Definition</th></tr></thead><tbody>
 <tr><td>Accuracy</td><td>Share of rows answered as the key does; no answer counts as wrong. Shown with a Wilson 95% interval; models whose intervals overlap share a rank.</td></tr>
 <tr><td>Per use case, per task</td><td>The same, recomputed on that subset of rows.</td></tr>
 <tr><td>Macro F1</td><td>F1 per option averaged within a task, then across tasks. Rewards the rare options.</td></tr>
@@ -590,16 +607,12 @@ function methodology(){
 <tr><td>Cost per 1,000 rows</td><td>Provider-reported cost where the endpoint returns it, else tokens priced at the list prices recorded with the run.</td></tr>
 <tr><td>Tokens</td><td>Input and output tokens per row.</td></tr>
 <tr><td>Paired difference</td><td>Rows where only one of two models is right, with a bootstrap interval over task clusters.</td></tr>
-</tbody></table>
-<h2 id="m-verdict">The fit verdict</h2>
-<p><span class="fit ok">Fits</span> accuracy at or above 90% with the whole 95% interval above 85%. <span class="fit risk">Risky</span> above 80%. <span class="fit no">Not fit</span> below 80%. <span class="fit na">Not run</span> when the model was not sent those rows. Computed from the numbers, never written by hand; a starting point, not a guarantee.</p>
-<h2 id="m-limits">Limits</h2>
-<ul><li><strong>Contamination.</strong> Public datasets may be in training data; each task states its risk.</li><li><strong>Label noise.</strong> Real labels carry error. Arguable rows are dropped by rule where possible and every row links to its source record.</li><li><strong>Small tasks.</strong> 20–40 rows each: read the interval, not the point.</li><li><strong>One prompt for all.</strong> No per-model tuning.</li><li><strong>Not your data.</strong> Research datasets and public records, not a production sample.</li></ul>
-<h2 id="m-submit">Results and citing</h2>
-<p>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, open a PR with that folder. The harness, viewer and selection code are MIT; each row keeps its dataset's licence. Please cite the datasets behind the tasks you use as well as the bench.${REPO&&!REPO.includes('OWNER')?` <a href="${esc(gh('results/README.md'))}" target="_blank" rel="noopener">How to submit</a> · <a href="${esc(gh('CITATION.cff'))}" target="_blank" rel="noopener">Citation</a>.`:''}</p>
-<div class="downloads"><a href="corpus.json" download><span>All rows with answer keys</span><span class="k">JSON</span></a><a href="data.json" download><span>Everything the site shows</span><span class="k">JSON</span></a><a href="datasets.json" download><span>Dataset records</span><span class="k">JSON</span></a><a href="protocol.txt" download><span>Protocol</span><span class="k">Text</span></a>${hasResults()?RUNS.filter(r=>r.files).map(r=>`<a href="${esc(r.files.predictions)}" download><span>${esc(M(keyOf(r)).name)} predictions</span><span class="k">JSONL</span></a>`).join(''):''}</div>
-</div>`;
- return pageHead('Methodology','How the bench is built, what a model sees, how answers are scored, and where the limits are.')+`<div class="method-grid">${body}<nav class="toc" aria-label="On this page">${toc.map(([id,l])=>`<a href="#/methodology/${id}">${esc(l)}</a>`).join('')}</nav></div>`;
+</tbody></table>`],
+['verdict','The fit verdict','Fits, Risky or Not fit, computed from the numbers',`<dl class="verdict-list"><div><dt><span class="fit ok">Fits</span></dt><dd>Accuracy at or above 90% with the whole 95% interval above 85%.</dd></div><div><dt><span class="fit risk">Risky</span></dt><dd>Accuracy above 80%.</dd></div><div><dt><span class="fit no">Not fit</span></dt><dd>Accuracy below 80%.</dd></div><div><dt><span class="fit na">Not run</span></dt><dd>The model was not sent those rows.</dd></div></dl><p>Computed from the numbers, never written by hand; a starting point, not a guarantee.</p>`],
+['limits','Limits','Contamination, label noise, small tasks',`<dl class="verdict-list"><div><dt>Contamination</dt><dd>Public datasets may be in training data; each task states its risk.</dd></div><div><dt>Label noise</dt><dd>Real labels carry error. Arguable rows are dropped by rule where possible and every row links to its source record.</dd></div><div><dt>Small tasks</dt><dd>20–40 rows each: read the interval, not the point.</dd></div><div><dt>One prompt for all</dt><dd>No per-model tuning.</dd></div><div><dt>Not your data</dt><dd>Research datasets and public records, not a production sample.</dd></div></dl>`],
+['submit','Results and citing','Add a model by pull request; cite the datasets',`<p>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, open a PR with that folder. The harness, viewer and selection code are MIT; each row keeps its dataset's licence. Please cite the datasets behind the tasks you use as well as the bench.${REPO&&!REPO.includes('OWNER')?` <a href="${esc(gh('results/README.md'))}" target="_blank" rel="noopener">How to submit</a> · <a href="${esc(gh('CITATION.cff'))}" target="_blank" rel="noopener">Citation</a>.`:''}</p>`]];
+ const downloads=dlTiles([['corpus.json','All rows','Every row with its answer key','JSON','download'],['data.json','Site data','Everything the site shows','JSON','download'],['datasets.json','Dataset records','Licences, terms and citations','JSON','download'],['protocol.txt','Protocol','The frozen protocol','Text','download'],...(hasResults()?RUNS.filter(r=>r.files).map(r=>[r.files.predictions,`${M(keyOf(r)).name}`,'Predictions for every row','JSONL','download']):[])]);
+ return pageHead('Methodology','How the bench is built, what a model sees, how answers are scored, and where the limits are.')+`<div class="method">${intro}<div class="acc-card">${parts.map(([id,t,sub,body])=>accItem(`m-${id}`,`<strong>${esc(t)}</strong><span class="acc-sub">${esc(sub)}</span>`,'',body,id===openId)).join('')}</div><section class="acc-group"><h2>Downloads</h2>${downloads}</section></div>`;
 }
 
 /* ---------- Review mode (maintainers): step through rows, mark each, export ---------- */
@@ -662,6 +675,8 @@ function bindControls(){
  $$('[data-copy]').forEach(b=>b.onclick=()=>{const t=b.parentElement.querySelector('pre')?.textContent||'';navigator.clipboard?.writeText(t).then(()=>{b.textContent='Copied';setTimeout(()=>{b.textContent='Copy';},1500);},()=>{b.textContent='Copy failed';});});
  const toggle=tr=>{const d=document.getElementById(tr.dataset.expand);d.hidden=!d.hidden;tr.setAttribute('aria-expanded',String(!d.hidden));};
  $$('[data-expand]').forEach(tr=>{tr.onclick=e=>{if(e.target.closest('a,button'))return;toggle(tr);};tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(tr);}};});
+ $$('[data-grp]').forEach(b=>b.onclick=()=>{const k=b.dataset.grp,open=b.getAttribute('aria-expanded')!=='true';if(open)collapsedGroups.delete(k);else collapsedGroups.add(k);b.setAttribute('aria-expanded',String(open));b.closest('tbody').classList.toggle('collapsed',!open);});
+ $$('[data-info]').forEach(b=>b.onclick=e=>{e.stopPropagation();openDialog(taskDialog(b.dataset.info));});
  $$('tr.link[data-href]').forEach(tr=>{tr.onclick=e=>{if(e.target.closest('a,button,input,select'))return;location.hash=tr.dataset.href;};});
 }
 function render(keepScroll=false){
@@ -676,13 +691,15 @@ function render(keepScroll=false){
  document.title=`${t} · Decision Bench`;
  drawViz(true);bindControls();if(page==='review')bindReview();
  if(page==='methodology'&&id){const el=document.getElementById(`m-${id}`);if(el)setTimeout(()=>el.scrollIntoView(),0);}
- $('#footer').innerHTML=`<span>Decision Bench ${esc(man().version||'')} · corpus <code>${esc((data.corpus_sha256||'').slice(0,12))}</code> · built ${esc(new Date(data.generated_at).toLocaleDateString())}</span><span>Code MIT · rows keep their <a href="#/data">source licences</a> · <a href="#/review">Review mode</a></span>`;
+ $('#footer').innerHTML=`<span>Decision Bench ${esc(man().version||'')} · corpus <code>${esc((data.corpus_sha256||'').slice(0,12))}</code> · built ${esc(new Date(data.generated_at).toLocaleDateString())}</span><span>Code MIT · rows keep their <a href="#/data">source licences</a> · <a href="#/review">Review mode</a> · <a href="privacy.html">Privacy</a> · <a href="#" data-analytics-preferences>Analytics preferences</a></span>`;
  if(keepScroll)scrollTo(0,y);else if(page!=='methodology')scrollTo(0,0);
 }
 async function load(){
  try{const res=await fetch('data.json',{cache:'no-store'});if(!res.ok)throw Error(`HTTP ${res.status}`);data=await res.json();
   try{const d=await fetch('datasets.json',{cache:'no-store'});datasetsDoc=d.ok?await d.json():null;}catch(e){datasetsDoc=null;}
   MODELS={};ORDER=[];for(const m of data.models||[])registerModel(m,true);for(const r of data.runs||[])registerModel({...(r.model||{}),id:keyOf(r)},false);
+  /* Two evaluated models sharing a short label (e.g. two OpenAI releases both 'Luna API') fall back to their full names. */
+  {const evaluated=[...new Set((data.runs||[]).map(keyOf))].map(k=>MODELS[k]).filter(Boolean),seen={};evaluated.forEach(m=>{(seen[m.short]=seen[m.short]||[]).push(m);});Object.values(seen).filter(g=>g.length>1).forEach(g=>g.forEach(m=>{m.short=m.name;}));}
   allCases=data.cases||[];caseMap=new Map(allCases.map(c=>[c.id,c]));
   recordMap=new Map((data.results||[]).map(r=>[`${r.run_id}:${r.case_id}`,r]));
   statCache.clear();metricCache.clear();
@@ -697,4 +714,6 @@ async function load(){
 }
 function toggleTheme(){const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;const next=dark?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('db-theme',next);}catch(e){}}
 window.addEventListener('hashchange',()=>render());
+/* Dialog: close on ×, on a [data-close] control and on a click on the backdrop. */
+const dlg=$('#dlg');if(dlg?.addEventListener)dlg.addEventListener('click',e=>{if(e.target===dlg||e.target.closest?.('[data-close]'))dlg.close();});
 $('#theme').onclick=toggleTheme;load();

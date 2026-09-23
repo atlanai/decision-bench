@@ -38,9 +38,10 @@
   },
   "harness": {
     "version": "0.3.0",
-    "git_commit": "9f5708a7e5e21757d221585d86792d66da71ceed",
+    "git_commit": "5f96ef1f40f575fdffcd85b5f1e3100c985ff118",
     "git_dirty": true,
     "git_commits": [
+      "5f96ef1f40f575fdffcd85b5f1e3100c985ff118",
       "9f5708a7e5e21757d221585d86792d66da71ceed"
     ]
   },
@@ -48,10 +49,10 @@
     "run_id": "claude-sonnet-5-bench-v4-dc0f874a",
     "status": "completed_with_errors",
     "created_at": "2026-09-23T13:33:55.486142+00:00",
-    "completed_at": "2026-09-23T13:48:27.092776+00:00",
-    "published_at": "2026-09-23T13:59:56.368920+00:00",
-    "executions": 1,
-    "jobs": 4,
+    "completed_at": "2026-09-23T14:20:57.286897+00:00",
+    "published_at": "2026-09-23T14:21:30.936659+00:00",
+    "executions": 2,
+    "jobs": 2,
     "timeout_seconds": 180,
     "max_attempts": 2,
     "endpoint_id": "endpoint-2a0f85ecc26e",
@@ -64,22 +65,22 @@
     "rows_in_corpus": 1071,
     "rows_selected": 1071,
     "rows_completed": 1071,
-    "rows_ok": 799,
-    "rows_error": 272,
+    "rows_ok": 1070,
+    "rows_error": 1,
     "full": true
   },
   "totals": {
-    "correct": 724,
-    "accuracy": 0.6760037348272643,
+    "correct": 992,
+    "accuracy": 0.9262371615312792,
     "wilson95": [
-      0.6473888525589192,
-      0.7033605043695809
+      0.9090130881693816,
+      0.940414399564625
     ],
-    "errors": 272,
-    "cost_usd": 3.919546,
-    "cost_coverage": 0.5498967653131452,
-    "input_tokens": 1659463,
-    "output_tokens": 60062,
-    "latency_p50_ms": 2908.9079159894027
+    "errors": 1,
+    "cost_usd": 5.37457,
+    "cost_coverage": 0.6205098493626883,
+    "input_tokens": 2273255,
+    "output_tokens": 82806,
+    "latency_p50_ms": 3588.1204580073245
   }
 }

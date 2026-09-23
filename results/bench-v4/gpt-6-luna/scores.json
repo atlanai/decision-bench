@@ -1,52 +1,52 @@
 {
   "schema_version": 1,
   "suite": "bench-v4",
-  "model_id": "claude-sonnet-5",
+  "model_id": "gpt-6-luna",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
   "overall": {
     "rows": 1071,
-    "correct": 992,
-    "accuracy": 0.9262371615312792,
+    "correct": 1003,
+    "accuracy": 0.9365079365079365,
     "wilson95": [
-      0.9090130881693816,
-      0.940414399564625
+      0.9202865210150111,
+      0.94960909895355
     ],
-    "errors": 1,
-    "macro_category_accuracy": 0.9261408193451595,
-    "macro_task_f1": 0.9223066659519233
+    "errors": 10,
+    "macro_category_accuracy": 0.9333334629010568,
+    "macro_task_f1": 0.9368419960467363
   },
   "by_category": [
     {
       "id": "agents",
       "name": "AI agents & evals",
       "rows": 154,
-      "correct": 131,
-      "accuracy": 0.8506493506493507,
+      "correct": 140,
+      "accuracy": 0.9090909090909091,
       "wilson95": [
-        0.7858577243873844,
-        0.8983725419048983
+        0.8531934321432111,
+        0.9450752118644521
       ]
     },
     {
       "id": "commerce",
       "name": "Sales & commerce",
       "rows": 90,
-      "correct": 82,
-      "accuracy": 0.9111111111111111,
+      "correct": 87,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.8342928001780631,
-        0.9542700546752215
+        0.9065255864388708,
+        0.9885998163675604
       ]
     },
     {
       "id": "data",
       "name": "Data & analytics",
       "rows": 126,
-      "correct": 126,
-      "accuracy": 1.0,
+      "correct": 125,
+      "accuracy": 0.9920634920634921,
       "wilson95": [
-        0.9704131803674632,
-        1
+        0.9564121255180473,
+        0.9985976710340594
       ]
     },
     {
@@ -64,77 +64,77 @@
       "id": "documents",
       "name": "Documents & meetings",
       "rows": 87,
-      "correct": 79,
-      "accuracy": 0.9080459770114943,
+      "correct": 77,
+      "accuracy": 0.8850574712643678,
       "wilson95": [
-        0.8289125711515433,
-        0.952667674022474
+        0.8011923480274991,
+        0.9363552072775595
       ]
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "rows": 150,
-      "correct": 139,
-      "accuracy": 0.9266666666666666,
+      "correct": 141,
+      "accuracy": 0.94,
       "wilson95": [
-        0.873463014734016,
-        0.9585616131949707
+        0.8899090795570952,
+        0.9681163179946721
       ]
     },
     {
       "id": "finance",
       "name": "Finance",
       "rows": 121,
-      "correct": 119,
-      "accuracy": 0.9834710743801653,
+      "correct": 120,
+      "accuracy": 0.9917355371900827,
       "wilson95": [
-        0.9417321024498186,
-        0.9954555016821374
+        0.9546682408538117,
+        0.9985396642034766
       ]
     },
     {
       "id": "legal",
       "name": "Legal",
       "rows": 126,
-      "correct": 120,
-      "accuracy": 0.9523809523809523,
+      "correct": 117,
+      "accuracy": 0.9285714285714286,
       "wilson95": [
-        0.8999970658645753,
-        0.9779958116107486
+        0.8698134381416339,
+        0.9619692878876204
       ]
     },
     {
       "id": "product",
       "name": "Product management",
       "rows": 60,
-      "correct": 44,
-      "accuracy": 0.7333333333333333,
+      "correct": 52,
+      "accuracy": 0.8666666666666667,
       "wilson95": [
-        0.6099104639810865,
-        0.8286750351292115
+        0.7583460540992789,
+        0.9308597302169036
       ]
     },
     {
       "id": "safety",
       "name": "Trust & safety",
       "rows": 60,
-      "correct": 58,
-      "accuracy": 0.9666666666666667,
+      "correct": 49,
+      "accuracy": 0.8166666666666667,
       "wilson95": [
-        0.8863601247107462,
-        0.9908108735098498
+        0.7008000677353371,
+        0.8944231096286387
       ]
     },
     {
       "id": "support",
       "name": "Customer support",
       "rows": 67,
-      "correct": 64,
-      "accuracy": 0.9552238805970149,
+      "correct": 65,
+      "accuracy": 0.9701492537313433,
       "wilson95": [
-        0.8764196748946068,
-        0.9846563030618481
+        0.8975324995811698,
+        0.991775477652546
       ]
     }
   ],
@@ -144,11 +144,11 @@
       "name": "Which tool to call",
       "category": "agents",
       "rows": 36,
-      "correct": 35,
-      "accuracy": 0.9722222222222222,
+      "correct": 36,
+      "accuracy": 1.0,
       "wilson95": [
-        0.8582996626496918,
-        0.9950797197044302
+        0.9035781695514236,
+        1
       ]
     },
     {
@@ -156,11 +156,11 @@
       "name": "Did the injection succeed?",
       "category": "agents",
       "rows": 30,
-      "correct": 28,
-      "accuracy": 0.9333333333333333,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.7867618227892791,
-        0.9815233646723066
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -168,11 +168,11 @@
       "name": "Did the agent complete the task?",
       "category": "agents",
       "rows": 30,
-      "correct": 23,
-      "accuracy": 0.7666666666666667,
+      "correct": 22,
+      "accuracy": 0.7333333333333333,
       "wilson95": [
-        0.5907132766967574,
-        0.8820776078949878
+        0.5555169795568831,
+        0.8581750444608938
       ]
     },
     {
@@ -180,11 +180,11 @@
       "name": "Is the answer backed by sources?",
       "category": "agents",
       "rows": 30,
-      "correct": 19,
-      "accuracy": 0.6333333333333333,
+      "correct": 27,
+      "accuracy": 0.9,
       "wilson95": [
-        0.45513246433604937,
-        0.7812629779598231
+        0.7437855868473339,
+        0.9654007400402839
       ]
     },
     {
@@ -192,11 +192,11 @@
       "name": "Which reply is better?",
       "category": "agents",
       "rows": 28,
-      "correct": 26,
-      "accuracy": 0.9285714285714286,
+      "correct": 25,
+      "accuracy": 0.8928571428571429,
       "wilson95": [
-        0.7735426157408214,
-        0.9801883525522292
+        0.7280377463234293,
+        0.9628823079452005
       ]
     },
     {
@@ -204,11 +204,11 @@
       "name": "Does this product match the query?",
       "category": "commerce",
       "rows": 30,
-      "correct": 22,
-      "accuracy": 0.7333333333333333,
+      "correct": 27,
+      "accuracy": 0.9,
       "wilson95": [
-        0.5555169795568831,
-        0.8581750444608938
+        0.7437855868473339,
+        0.9654007400402839
       ]
     },
     {
@@ -264,11 +264,11 @@
       "name": "Does the chart support the claim?",
       "category": "data",
       "rows": 32,
-      "correct": 32,
-      "accuracy": 1.0,
+      "correct": 31,
+      "accuracy": 0.96875,
       "wilson95": [
-        0.8928172849426366,
-        1
+        0.8425539219962727,
+        0.9944622826374491
       ]
     },
     {
@@ -300,11 +300,11 @@
       "name": "Decision, action item, or neither?",
       "category": "documents",
       "rows": 30,
-      "correct": 24,
-      "accuracy": 0.8,
+      "correct": 21,
+      "accuracy": 0.7,
       "wilson95": [
-        0.6269395261897256,
-        0.9049502189759876
+        0.5212387898833981,
+        0.8333543735604105
       ]
     },
     {
@@ -312,11 +312,11 @@
       "name": "Which summary is this meeting's?",
       "category": "documents",
       "rows": 27,
-      "correct": 25,
-      "accuracy": 0.9259259259259259,
+      "correct": 26,
+      "accuracy": 0.9629629629629629,
       "wilson95": [
-        0.7663002270926937,
-        0.9794457783026165
+        0.8171614606584348,
+        0.9934320234669025
       ]
     },
     {
@@ -348,11 +348,11 @@
       "name": "What kind of change is this?",
       "category": "engineering",
       "rows": 30,
-      "correct": 26,
-      "accuracy": 0.8666666666666667,
+      "correct": 25,
+      "accuracy": 0.8333333333333334,
       "wilson95": [
-        0.7031831605558306,
-        0.9469043057578189
+        0.6643529481431982,
+        0.9266356575964831
       ]
     },
     {
@@ -360,11 +360,11 @@
       "name": "Which weakness class is this?",
       "category": "engineering",
       "rows": 30,
-      "correct": 29,
-      "accuracy": 0.9666666666666667,
+      "correct": 27,
+      "accuracy": 0.9,
       "wilson95": [
-        0.8332924860304112,
-        0.9940915620051425
+        0.7437855868473339,
+        0.9654007400402839
       ]
     },
     {
@@ -372,11 +372,11 @@
       "name": "Live secret or placeholder?",
       "category": "engineering",
       "rows": 30,
-      "correct": 24,
-      "accuracy": 0.8,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.6269395261897256,
-        0.9049502189759876
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -396,11 +396,11 @@
       "name": "Which part of the 10-K?",
       "category": "finance",
       "rows": 30,
-      "correct": 28,
-      "accuracy": 0.9333333333333333,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.7867618227892791,
-        0.9815233646723066
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -444,11 +444,11 @@
       "name": "Does the NDA say this?",
       "category": "legal",
       "rows": 33,
-      "correct": 30,
-      "accuracy": 0.9090909090909091,
+      "correct": 26,
+      "accuracy": 0.7878787878787878,
       "wilson95": [
-        0.7642705646564897,
-        0.968596628950737
+        0.6224802241287064,
+        0.8932411343356381
       ]
     },
     {
@@ -468,11 +468,11 @@
       "name": "Is this term unfair, and how?",
       "category": "legal",
       "rows": 33,
-      "correct": 31,
-      "accuracy": 0.9393939393939394,
+      "correct": 32,
+      "accuracy": 0.9696969696969697,
       "wilson95": [
-        0.8039341828220181,
-        0.9832194695709291
+        0.8468093832683193,
+        0.9946307279103482
       ]
     },
     {
@@ -492,29 +492,17 @@
       "name": "Which headline won?",
       "category": "product",
       "rows": 30,
-      "correct": 19,
-      "accuracy": 0.6333333333333333,
+      "correct": 22,
+      "accuracy": 0.7333333333333333,
       "wilson95": [
-        0.45513246433604937,
-        0.7812629779598231
+        0.5555169795568831,
+        0.8581750444608938
       ]
     },
     {
       "id": "PRD-2",
       "name": "Major, minor or patch?",
       "category": "product",
-      "rows": 30,
-      "correct": 25,
-      "accuracy": 0.8333333333333334,
-      "wilson95": [
-        0.6643529481431982,
-        0.9266356575964831
-      ]
-    },
-    {
-      "id": "SAF-1",
-      "name": "Attack on the assistant",
-      "category": "safety",
       "rows": 30,
       "correct": 30,
       "accuracy": 1.0,
@@ -524,15 +512,27 @@
       ]
     },
     {
+      "id": "SAF-1",
+      "name": "Attack on the assistant",
+      "category": "safety",
+      "rows": 30,
+      "correct": 20,
+      "accuracy": 0.6666666666666666,
+      "wilson95": [
+        0.48779725813830266,
+        0.807697044731538
+      ]
+    },
+    {
       "id": "SAF-2",
       "name": "Toxic comment or not",
       "category": "safety",
       "rows": 30,
-      "correct": 28,
-      "accuracy": 0.9333333333333333,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.7867618227892791,
-        0.9815233646723066
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -552,11 +552,11 @@
       "name": "What is the complaint about?",
       "category": "support",
       "rows": 32,
-      "correct": 29,
-      "accuracy": 0.90625,
+      "correct": 30,
+      "accuracy": 0.9375,
       "wilson95": [
-        0.7578150066422116,
-        0.9675990373736805
+        0.7985253275199642,
+        0.9826897968048427
       ]
     }
   ],
@@ -565,46 +565,46 @@
       "id": "real",
       "name": "real",
       "rows": 1071,
-      "correct": 992,
-      "accuracy": 0.9262371615312792,
+      "correct": 1003,
+      "accuracy": 0.9365079365079365,
       "wilson95": [
-        0.9090130881693816,
-        0.940414399564625
+        0.9202865210150111,
+        0.94960909895355
       ]
     }
   ],
   "calibration": {
-    "brier": 0.11610406060873056,
-    "log_loss": 0.2522091781417293,
-    "ece": 0.030785613140753346,
-    "high_confidence_errors": 18
+    "brier": 0.09326709755143718,
+    "log_loss": 0.2759418636055547,
+    "ece": 0.019484713616098954,
+    "high_confidence_errors": 31
   },
   "cost": {
-    "usd": 5.37457,
-    "coverage": 0.6205098493626883,
+    "usd": 0.1688888,
+    "coverage": 0.9897388059701493,
     "basis": [
-      "provider_reported",
+      "price_table_estimate",
       "unavailable"
     ],
-    "per_1000_rows_usd": 5.01827264239029
+    "per_1000_rows_usd": 0.15769262371615314
   },
   "latency_ms": {
-    "p50": 3588.1204580073245,
-    "p95": 5991.962542000692,
-    "p99": 7330.018879292761,
-    "mean": 3676.6187188080876
+    "p50": 2012.8145829658024,
+    "p95": 3282.9645834863186,
+    "p99": 4447.510303766464,
+    "mean": 2154.947656173851
   },
   "tokens": {
-    "input": 2273255,
-    "output": 82806,
+    "input": 1229273,
+    "output": 91923,
     "cached_input": 0,
-    "reasoning_output": 1773,
-    "coverage": 0.6205098493626883
+    "reasoning_output": 32000,
+    "coverage": 0.9897388059701493
   },
   "attempts": {
-    "attempts": 1726,
-    "retries": 655,
-    "attempt_errors": 656,
+    "attempts": 1072,
+    "retries": 1,
+    "attempt_errors": 11,
     "incomplete_attempts": 0
   }
 }

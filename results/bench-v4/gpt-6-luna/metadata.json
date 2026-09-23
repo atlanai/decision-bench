@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "gpt-6-luna",
+    "label": "GPT-6 Luna",
+    "short_label": "Luna API",
+    "vendor": "OpenAI",
+    "provider": "openai-compatible",
+    "color": "#109467",
+    "vision": true,
+    "api_model": "gpt-6-luna",
+    "resolved_models": [
+      "gpt-6-luna"
+    ]
+  },
+  "request": {
+    "response_format": "json_schema",
+    "token_limit_field": "max_completion_tokens",
+    "max_output_tokens": 8192,
+    "reasoning_effort": "low",
+    "temperature": null,
+    "json_wrapper_policy": "allow_single_code_fence"
+  },
+  "pricing": {
+    "input_per_mtok": 0.1,
+    "cached_input_per_mtok": 0.01,
+    "output_per_mtok": 0.5,
+    "source_url": "https://docs.litellm.ai/blog/gpt_6_sol_luna",
+    "as_of": "2026-09",
+    "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "4.0.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "4b919ae6f2c97e69dfe05f378c495e8604df994e",
+    "git_dirty": false,
+    "git_commits": [
+      "4b919ae6f2c97e69dfe05f378c495e8604df994e"
+    ]
+  },
+  "run": {
+    "run_id": "gpt-6-luna-bench-v4-a391e023",
+    "status": "completed_with_errors",
+    "created_at": "2026-09-23T13:43:09.256519+00:00",
+    "completed_at": "2026-09-23T14:08:16.953984+00:00",
+    "published_at": "2026-09-23T14:08:17.298377+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-2a0f85ecc26e",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1061,
+    "rows_error": 10,
+    "full": true
+  },
+  "totals": {
+    "correct": 1003,
+    "accuracy": 0.9365079365079365,
+    "wilson95": [
+      0.9202865210150111,
+      0.94960909895355
+    ],
+    "errors": 10,
+    "cost_usd": 0.1688888,
+    "cost_coverage": 0.9897388059701493,
+    "input_tokens": 1229273,
+    "output_tokens": 91923,
+    "latency_p50_ms": 2012.8145829658024
+  }
+}
