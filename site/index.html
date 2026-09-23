@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Decision Bench</title>
+<meta name="description" content="Open benchmark of the everyday decisions inside AI software, built from real public datasets: prompt injection, sensitive data, agent traces, routing, eval judging, contracts and skills.">
+<!-- The one place the repository URL is set. Every GitHub link on the site is derived from it. -->
+<meta name="repo" content="https://github.com/OWNER/decision-bench">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>try{const q=new URLSearchParams(location.search).get('theme');const t=q||localStorage.getItem('db-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main" onclick="event.preventDefault();document.getElementById('main').focus()">Skip to content</a>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#overview" aria-label="Decision Bench home">
+      <svg class="brand-mark" viewBox="0 0 4 5" aria-hidden="true" shape-rendering="crispEdges"><rect x="0" y="0" width=".82" height=".82"/><rect x="1" y="0" width=".82" height=".82"/><rect x="2" y="0" width=".82" height=".82"/><rect x="0" y="1" width=".82" height=".82"/><rect x="3" y="1" width=".82" height=".82"/><rect x="0" y="2" width=".82" height=".82"/><rect x="3" y="2" width=".82" height=".82"/><rect x="0" y="3" width=".82" height=".82"/><rect x="3" y="3" width=".82" height=".82"/><rect x="0" y="4" width=".82" height=".82"/><rect x="1" y="4" width=".82" height=".82"/><rect x="2" y="4" width=".82" height=".82"/></svg>
+      <span>Decision Bench</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#overview" data-page="overview">Leaderboard</a>
+      <a href="#tasks" data-page="tasks">Rows <span id="task-count"></span></a>
+      <a href="#compare" data-page="compare" hidden>Analysis</a>
+      <a href="#failures" data-page="failures" hidden>Failures</a>
+      <a href="#review" data-page="review">Review</a>
+      <a href="#data" data-page="data">Data</a>
+      <a href="#about" data-page="about">About</a>
+    </nav>
+    <div class="nav-tools">
+      <button id="refresh" class="tool" type="button" title="Reload the site data" hidden>Reload</button>
+      <button id="theme" class="theme-toggle" type="button" aria-label="Toggle dark mode"><i></i></button>
+    </div>
+  </div>
+</header>
+<main id="main" tabindex="-1"><div class="empty"><h1>Loading…</h1></div></main>
+<footer id="footer"></footer>
+<div id="tip" class="tip" role="tooltip" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

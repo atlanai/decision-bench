@@ -1,0 +1,1516 @@
+{
+  "files": {
+    "deepset-prompt-injections/test-0.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=test&offset=0&length=100",
+      "bytes": 18237,
+      "sha256": "4bccf0295aeb2bb762acb0e551e6b8770e46b59a79347a7152ebfc42e5c843fa"
+    },
+    "deepset-prompt-injections/test-100.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=test&offset=100&length=100",
+      "bytes": 4304,
+      "sha256": "ef5747b60c19390efcece1ff43a24211e6e438c995b01fe0b5f8a7a68c434531"
+    },
+    "deepset-prompt-injections/train-0.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=train&offset=0&length=100",
+      "bytes": 14482,
+      "sha256": "2c1fc9b234547a1c42c454d345f91c25a5bb87a6999269d8e8a4b6e885fb391d"
+    },
+    "deepset-prompt-injections/train-100.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=train&offset=100&length=100",
+      "bytes": 16169,
+      "sha256": "b4dbd48183186b68f5b33908084d5a02e0303019fac86c49984ca1cf3acab9af"
+    },
+    "deepset-prompt-injections/train-200.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=train&offset=200&length=100",
+      "bytes": 15442,
+      "sha256": "700ff8b60e9dcc6956a7e3c7525e9cd5ab79d68066109aaae462089506f4d229"
+    },
+    "deepset-prompt-injections/train-300.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=train&offset=300&length=100",
+      "bytes": 19015,
+      "sha256": "479a6dff2e4bf48999f9ef895cc867b7d710251d3731783ed655e3d3b7d29b4d"
+    },
+    "deepset-prompt-injections/train-400.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=train&offset=400&length=100",
+      "bytes": 22546,
+      "sha256": "9ac17e8f363890751ba3f120eb642f8169db84e393acac77776bf1456702d677"
+    },
+    "deepset-prompt-injections/train-500.json": {
+      "dataset": "deepset/prompt-injections",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=deepset/prompt-injections&config=default&split=train&offset=500&length=100",
+      "bytes": 14435,
+      "sha256": "aa7347961c6ac6afc3ef046ddff07b095a986f0a57ca17edbd00554ed2d1c982"
+    },
+    "in-the-wild-jailbreak-prompts/jailbreak_2023_12_25-0.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=jailbreak_2023_12_25&split=train&offset=0&length=100",
+      "bytes": 205681,
+      "sha256": "70e894d97c8fa85d3a234413f9f651a026d92887e26c36ba9b40fc92784ae593"
+    },
+    "in-the-wild-jailbreak-prompts/jailbreak_2023_12_25-300.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=jailbreak_2023_12_25&split=train&offset=300&length=100",
+      "bytes": 254473,
+      "sha256": "65e8fd9a9f0e5755e45bb48a22244c75946ffcd8801d3b711134d2fff734f29d"
+    },
+    "in-the-wild-jailbreak-prompts/jailbreak_2023_12_25-600.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=jailbreak_2023_12_25&split=train&offset=600&length=100",
+      "bytes": 269578,
+      "sha256": "5c3662bc188b420a610fca45fb0ee6978f873b7723df8842d97a57631eef9751"
+    },
+    "in-the-wild-jailbreak-prompts/jailbreak_2023_12_25-900.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=jailbreak_2023_12_25&split=train&offset=900&length=100",
+      "bytes": 247830,
+      "sha256": "72e260b8ae298c012e559c3089a82dc5a574071ae66f27162fc81e1e79f6d36b"
+    },
+    "in-the-wild-jailbreak-prompts/jailbreak_2023_12_25-1200.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=jailbreak_2023_12_25&split=train&offset=1200&length=100",
+      "bytes": 427404,
+      "sha256": "22a5e9bda848536cbff6f78d468ae5a818441c4c11d979e2787856e1a00408b6"
+    },
+    "in-the-wild-jailbreak-prompts/regular_2023_12_25-0.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=regular_2023_12_25&split=train&offset=0&length=100",
+      "bytes": 198732,
+      "sha256": "f6cab9bcd27a1955f260ffbce575be5b35ab51b863941bdd9527ae44fce807f1"
+    },
+    "in-the-wild-jailbreak-prompts/regular_2023_12_25-8000.json": {
+      "dataset": "TrustAIRLab/in-the-wild-jailbreak-prompts",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=TrustAIRLab/in-the-wild-jailbreak-prompts&config=regular_2023_12_25&split=train&offset=8000&length=100",
+      "bytes": 222096,
+      "sha256": "73c0ad27a465a94122e50e2526e83700553a515c703bdbcea9ff7784dfec2fd4"
+    },
+    "llmail-inject-challenge/Phase1-7000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=7000&length=30",
+      "bytes": 139982,
+      "sha256": "72a740f996f2264fe87d5cf9ea20c68a46fe860858071bef852a5544ba27ced7"
+    },
+    "llmail-inject-challenge/Phase1-37000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=37000&length=30",
+      "bytes": 139092,
+      "sha256": "cfb78b85f1c94e2658e07999fc51757210f657f8d95e8fa5e74bbe5d9dfe8c41"
+    },
+    "llmail-inject-challenge/Phase1-67000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=67000&length=30",
+      "bytes": 99231,
+      "sha256": "5492fd59e177738540d9514d0779220a776132583d886a4569d32bb446b2d9ec"
+    },
+    "llmail-inject-challenge/Phase1-97000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=97000&length=30",
+      "bytes": 100042,
+      "sha256": "0703b77fddce9bd03c065401ed23c5573d7ea6f23a2aacdd29897c1f14a6f4bc"
+    },
+    "llmail-inject-challenge/Phase1-127000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=127000&length=30",
+      "bytes": 241761,
+      "sha256": "d4bbdd11e51b50408963439b01d99bbe1d285f6a2bbb146285cdf7146d8a54b7"
+    },
+    "llmail-inject-challenge/Phase1-157000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=157000&length=30",
+      "bytes": 233126,
+      "sha256": "b90cb8258c3d64224fa942dd2a53af57c99da9cb8908a152ff17590a86710cc7"
+    },
+    "llmail-inject-challenge/Phase1-187000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=187000&length=30",
+      "bytes": 82571,
+      "sha256": "47fa17711f1c14244e0ddce621515aa0ff59b2a949a9f9f302a7db60d8acbfd3"
+    },
+    "llmail-inject-challenge/Phase1-217000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=217000&length=30",
+      "bytes": 165113,
+      "sha256": "c5e6547850a6f5d2a2ce31d1f07a3a511605f1f66b22968608b4f0984d31ea7c"
+    },
+    "llmail-inject-challenge/Phase1-247000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=247000&length=30",
+      "bytes": 82594,
+      "sha256": "0238c4fc9a4016b909f51f289950fca6117461955d10d46f011ab05ebf171203"
+    },
+    "llmail-inject-challenge/Phase1-277000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=277000&length=30",
+      "bytes": 68091,
+      "sha256": "569bdd0892bd84e5bcd70e2b55b123bb92c7561028e57b92b9297b26bbe6c0da"
+    },
+    "llmail-inject-challenge/Phase1-307000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=307000&length=30",
+      "bytes": 88463,
+      "sha256": "5dcd46d6022690dab7e6423ee6f92181f543a6cec5d29695ed8928a78e2e19ec"
+    },
+    "llmail-inject-challenge/Phase1-337000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase1&offset=337000&length=30",
+      "bytes": 262554,
+      "sha256": "71a528e03a262caf3e87c5b84b2d3926e7c48b2af8aa98101e5ab7bfb299d7e9"
+    },
+    "llmail-inject-challenge/Phase2-3000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=3000&length=30",
+      "bytes": 45763,
+      "sha256": "13178a36a8671faca514b029770f165b900c8ea66777b0b0b63f830c3e88fef5"
+    },
+    "llmail-inject-challenge/Phase2-10500.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=10500&length=30",
+      "bytes": 64486,
+      "sha256": "fa0ddf95699dfda0ae6b1cdd36df2693864ffd68b8d8939db43227e54d003688"
+    },
+    "llmail-inject-challenge/Phase2-18000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=18000&length=30",
+      "bytes": 89934,
+      "sha256": "237128df4b9cacd6ba274e446a0e8dd26c657fcfaa7540b7e2e951725e3bd880"
+    },
+    "llmail-inject-challenge/Phase2-25500.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=25500&length=30",
+      "bytes": 62070,
+      "sha256": "3420e94511b216a1729644014f011c7b9722073456c823f34a7ff562a295653b"
+    },
+    "llmail-inject-challenge/Phase2-33000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=33000&length=30",
+      "bytes": 81572,
+      "sha256": "46f04afc9610d9f5590e7d3f0e6621069ba7eae85ef03af8a0f751c29e24ed94"
+    },
+    "llmail-inject-challenge/Phase2-40500.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=40500&length=30",
+      "bytes": 56310,
+      "sha256": "c4db17639a2acc16c0f42707bbadd01a6ab0ee6b50b6b2790465258dc22aa699"
+    },
+    "llmail-inject-challenge/Phase2-48000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=48000&length=30",
+      "bytes": 80223,
+      "sha256": "5db1af07d024e432d7ade4f2ef6a14b16b7d1d5459fc1d4186efbe8d2df47ec9"
+    },
+    "llmail-inject-challenge/Phase2-55500.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=55500&length=30",
+      "bytes": 86540,
+      "sha256": "ff4e77694c03e1878fe943a4fa7c885ef5eca99b9db88de8a7dadc16def77616"
+    },
+    "llmail-inject-challenge/Phase2-63000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=63000&length=30",
+      "bytes": 55512,
+      "sha256": "ce9081a3e7295146daa7c0af99340824ac1d88bf7a1d26ca78fc2b27ad2ec090"
+    },
+    "llmail-inject-challenge/Phase2-70500.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=70500&length=30",
+      "bytes": 98731,
+      "sha256": "fcf0d42d72d5e3941130066db22fa05758d239917771e8e7df474120e23c8773"
+    },
+    "llmail-inject-challenge/Phase2-78000.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=78000&length=30",
+      "bytes": 74512,
+      "sha256": "6c6b3eac4924119c42126ec6c5fc1c6c07f78ce9897037089494f8b9e578aea6"
+    },
+    "llmail-inject-challenge/Phase2-85500.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=microsoft/llmail-inject-challenge&config=default&split=Phase2&offset=85500&length=30",
+      "bytes": 65497,
+      "sha256": "b9260dc3a9e2dc685e05311b3d57aa256fa1679997ce8b6854d4a55eff4efa60"
+    },
+    "llmail-inject-challenge/scenarios.json": {
+      "dataset": "microsoft/llmail-inject-challenge",
+      "url": "https://huggingface.co/datasets/microsoft/llmail-inject-challenge/resolve/main/data/scenarios.json",
+      "bytes": 38812,
+      "sha256": "3d7c55fd04826dd29fa11b9f9912ae270fffb16a6c52a7eb2bff00457d378e4f"
+    },
+    "creddata/LICENSE": {
+      "dataset": "Samsung CredData",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/LICENSE",
+      "bytes": 11560,
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+    },
+    "creddata/meta/e3377359.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/e3377359.csv",
+      "bytes": 16023,
+      "sha256": "711d736cf8e87d94ee8629c1118516cb8c31da52b88850b48b78f0de2c20f8fb"
+    },
+    "creddata/meta/90aebe4a.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/90aebe4a.csv",
+      "bytes": 8137,
+      "sha256": "51ad80f3659f6c71a68f9b8c38fa699c54105ab56ec31d8ed52361ddaae4d213"
+    },
+    "creddata/meta/6aae1316.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/6aae1316.csv",
+      "bytes": 33178,
+      "sha256": "b7e17a66e253fd50e0c4a764e341ba9239a93c2b79eecec55a9b7d8a3d3abcbe"
+    },
+    "creddata/meta/22548287.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/22548287.csv",
+      "bytes": 6735,
+      "sha256": "3184de053787fd16d4c431aca4386a75b814b967b66f96e1ad45764b6b803f57"
+    },
+    "creddata/meta/798d34aa.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/798d34aa.csv",
+      "bytes": 14150,
+      "sha256": "ac1d4c5c04283acdc868c07f36a546006de9417721553a9c291212a813676203"
+    },
+    "creddata/meta/b88a4e51.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/b88a4e51.csv",
+      "bytes": 12216,
+      "sha256": "5bf4780934ba335cd50427bbb3c04f85c99f4f2e97113247cd089cfee0ebed69"
+    },
+    "creddata/meta/372310b3.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/372310b3.csv",
+      "bytes": 10686,
+      "sha256": "6fd250608e42e0570475bcca032c45b84b094249e97e74506225edc9e6ffddec"
+    },
+    "creddata/meta/1809c1ce.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/1809c1ce.csv",
+      "bytes": 11360,
+      "sha256": "522a009c7aa08ba4e26ce17cf5cc7e84a5730038c2dc8e644db2174a7986afee"
+    },
+    "creddata/meta/28728ab4.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/28728ab4.csv",
+      "bytes": 76123,
+      "sha256": "42fc7721ad57e4e506f340527e3942d081fff486e0b63d940da8cb777aefe1ac"
+    },
+    "creddata/meta/afdd01d8.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/afdd01d8.csv",
+      "bytes": 3034,
+      "sha256": "7f20c8ad48c81141183fa3968c63203431ac5875d1537022f9e849d77b2c2330"
+    },
+    "creddata/meta/6a132a15.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/6a132a15.csv",
+      "bytes": 5309,
+      "sha256": "fc500533c33134c75744b24f421ca4dcf5c57c5278ff62cdf3aeb161c3cc1d8f"
+    },
+    "creddata/meta/2df212a2.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/2df212a2.csv",
+      "bytes": 10709,
+      "sha256": "677be984915813095a93c372a0b07b02d0ad0c97d62f9f293e1dbd2f9b58bf33"
+    },
+    "creddata/meta/255bae6f.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/255bae6f.csv",
+      "bytes": 30216,
+      "sha256": "b42eed8bed58f9c477d82d78812fdb75f3de4ac45e1071297aa678366ff0d79b"
+    },
+    "creddata/meta/ab473e6e.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/ab473e6e.csv",
+      "bytes": 2231,
+      "sha256": "0f2815cd17638ef7f3d3347da358fb77e7641651ef1c200fc5c348e1df6c635d"
+    },
+    "creddata/meta/a5c3685e.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/a5c3685e.csv",
+      "bytes": 27548,
+      "sha256": "fcf491dac16264f16db8d5f6eecc5c879730b2da0991f9a5f121a6550872ccec"
+    },
+    "creddata/meta/4997f5e1.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/4997f5e1.csv",
+      "bytes": 22042,
+      "sha256": "4e996956c253990697ca1d7fe6574a40020bc457134d481097a38e21ae20efb4"
+    },
+    "creddata/meta/2ba83c6a.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/2ba83c6a.csv",
+      "bytes": 890304,
+      "sha256": "fd12f0b79ece8353e19e437e5e42059be7ce0f22fbf221dd104ecef3bc6718fe"
+    },
+    "creddata/meta/71455799.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/71455799.csv",
+      "bytes": 19312,
+      "sha256": "8108e3f6dcbe5bc68ef2572af36b7109fec5e3cefdff874de4a6eef0189bb480"
+    },
+    "creddata/meta/fd501154.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/fd501154.csv",
+      "bytes": 80387,
+      "sha256": "a3c73312e48351baf4de6d0acd66a91ad125811cde41352a06b213dd1f55cb66"
+    },
+    "creddata/meta/3b7cbdd3.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/3b7cbdd3.csv",
+      "bytes": 8058,
+      "sha256": "798d2b5a6ac8c7f6a37c47b56687970b7ddbd584522127c61a517739f4e2175b"
+    },
+    "creddata/meta/b6b2487d.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/b6b2487d.csv",
+      "bytes": 179642,
+      "sha256": "d5d2a16f70630171cbcad649a34f00402b91a12e123e56aeece426d92ea24bba"
+    },
+    "creddata/meta/eff6e29a.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/eff6e29a.csv",
+      "bytes": 5904,
+      "sha256": "a5032c1045f6172ea23ee7f1a87ad1e2a282228cac79c3fd269c48e90d5c822b"
+    },
+    "creddata/meta/c5867a40.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/c5867a40.csv",
+      "bytes": 45823,
+      "sha256": "c05e48e79e4b4daebf72e1b6c702f39fd63856cb794954d329ff7b6f7c780d76"
+    },
+    "creddata/meta/16fc0238.csv": {
+      "dataset": "Samsung CredData (metadata)",
+      "url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/meta/16fc0238.csv",
+      "bytes": 11372,
+      "sha256": "dc1793b16e9cfabbdf3486fd93ae894db5635f4c68c885945ab42e637ec4b6db"
+    },
+    "whoandwhen/LICENSE": {
+      "dataset": "Who&When",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/LICENSE",
+      "bytes": 1065,
+      "sha256": "d82c84135b6bbb59e541aa9a81727e0a6c5f55d4e9247dafc054a632a74a6ab0"
+    },
+    "whoandwhen/Algorithm-Generated/99.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/99.json",
+      "bytes": 18138,
+      "sha256": "b44459a5a6f00a3224b62601d58f77bf718ead5fea796af13d5b8d10ebac9208"
+    },
+    "whoandwhen/Algorithm-Generated/100.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/100.json",
+      "bytes": 21094,
+      "sha256": "2fffcaae6cac96e4a9ae7595a28063b590888baa73d08cdf9c0054adac4c9aa6"
+    },
+    "whoandwhen/Algorithm-Generated/101.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/101.json",
+      "bytes": 14062,
+      "sha256": "765a5c7040a7007afd6d9c8faf83c23bab300243d531d3e53b135baa7e9186cc"
+    },
+    "whoandwhen/Algorithm-Generated/102.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/102.json",
+      "bytes": 9293,
+      "sha256": "935774d2cb98bf7e6453a7a6aff94fe2bd98267274728a0417f1c441e7b312e8"
+    },
+    "whoandwhen/Algorithm-Generated/103.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/103.json",
+      "bytes": 32540,
+      "sha256": "f0f8d82f14a673ae00c24aca1e771827049844f6cfa15d61d4b72c74affe98c4"
+    },
+    "whoandwhen/Algorithm-Generated/104.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/104.json",
+      "bytes": 27525,
+      "sha256": "af8a08cdf6d265bc060ecae77ed99caa5b5733f7aa663f4d8bc766cf650a7b20"
+    },
+    "whoandwhen/Algorithm-Generated/105.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/105.json",
+      "bytes": 14915,
+      "sha256": "8a91aa3665b1591c5398dc9fcdedb00fba2606a7b1bb61e373302461c92cdb00"
+    },
+    "whoandwhen/Algorithm-Generated/106.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/106.json",
+      "bytes": 13853,
+      "sha256": "6ee195b9ce76f789e0b36fad153a353ff8fd28641bd79e6c9bbe2a8fd3444e20"
+    },
+    "whoandwhen/Algorithm-Generated/107.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/107.json",
+      "bytes": 20172,
+      "sha256": "6fe95191a37d81f0432c0c362358d6cc01612c10f1ef5dd3af8dcc40e83dcdd6"
+    },
+    "whoandwhen/Algorithm-Generated/109.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/109.json",
+      "bytes": 32977,
+      "sha256": "66dfd5cdafa2dc50f1283b55f9e935f617b9d80a69b4bbf474de604c1ff8b1c3"
+    },
+    "whoandwhen/Algorithm-Generated/111.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/111.json",
+      "bytes": 24084,
+      "sha256": "facf13a0720f86bd6bfc0007a9212b1421532713443a359ca7f11f7109c4ff81"
+    },
+    "whoandwhen/Algorithm-Generated/112.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/112.json",
+      "bytes": 20762,
+      "sha256": "48e2eb4577bf8e09f2d6618561bd5977d535fabfb9ef5c9deb89ad5f1a04c1d1"
+    },
+    "whoandwhen/Algorithm-Generated/113.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/113.json",
+      "bytes": 25204,
+      "sha256": "a9957b1fb43af7e76f59013a66024da0ef3a281a4843343f45d7d1cc8a6b651e"
+    },
+    "whoandwhen/Algorithm-Generated/114.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/114.json",
+      "bytes": 22124,
+      "sha256": "24948fd74affe6245b8ade2d5aef16717b30aaf6892ff786cbc847fe82d293a6"
+    },
+    "whoandwhen/Algorithm-Generated/115.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/115.json",
+      "bytes": 18081,
+      "sha256": "7c733ad545d325537e73fa8ededb05db9ebe238128c3ec64d7b29f4763f4bb1a"
+    },
+    "whoandwhen/Algorithm-Generated/116.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/116.json",
+      "bytes": 22322,
+      "sha256": "f2256cbc9c5789a0f02af1b60b697064d4785092d5b2c867c5477ed94e7f7dcb"
+    },
+    "whoandwhen/Algorithm-Generated/117.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/117.json",
+      "bytes": 18231,
+      "sha256": "b5d1c09a002433e5659f3ac661e8b216a5a3b57dfc13c9bd0e856b224d323854"
+    },
+    "whoandwhen/Algorithm-Generated/118.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/118.json",
+      "bytes": 19744,
+      "sha256": "638fc3382279bd5ee7bf32e763192ca2621845b2a9eb874751648decfe4a3ffa"
+    },
+    "whoandwhen/Algorithm-Generated/119.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/119.json",
+      "bytes": 19436,
+      "sha256": "ea5043b639c87444994e59a256f7048613e6c86f36c84431c6d12852c0b3b8a6"
+    },
+    "whoandwhen/Algorithm-Generated/120.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/120.json",
+      "bytes": 25048,
+      "sha256": "d184a3fb08d6746c471464f03f3bb6a3cbb46b58ebb80e8bfbd5f94b000c0108"
+    },
+    "whoandwhen/Algorithm-Generated/121.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/121.json",
+      "bytes": 18017,
+      "sha256": "4de401eab6dbacc2cdec156461216c1d4f2985c7e904b45c1975e5267115d606"
+    },
+    "whoandwhen/Algorithm-Generated/122.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/122.json",
+      "bytes": 33678,
+      "sha256": "624e1d0fd0d1816d7c0f1eea19965b4b59e1e18480c0f005a57e6660a0713801"
+    },
+    "whoandwhen/Algorithm-Generated/123.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/123.json",
+      "bytes": 15172,
+      "sha256": "62b99f81a05eb3c3fe53d19b81c233a510380158941696e3c1ced98fc350dbaa"
+    },
+    "whoandwhen/Algorithm-Generated/124.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/124.json",
+      "bytes": 14663,
+      "sha256": "8fe2c5197951120518f150b7be1bbcf92ea1d89bc1c90e048ad8e31bf7ae172d"
+    },
+    "whoandwhen/Algorithm-Generated/125.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/125.json",
+      "bytes": 14245,
+      "sha256": "633757f1828f3e5bed9b5588a9de064a8f7be3970fb784a713dd59dc995ef3c8"
+    },
+    "whoandwhen/Algorithm-Generated/126.json": {
+      "dataset": "Who&When, Algorithm-Generated",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Algorithm-Generated/126.json",
+      "bytes": 17392,
+      "sha256": "0f498748c12decb5ecdc07ceedc37c3f54d989a4181c913bb6faf756f33d00c6"
+    },
+    "whoandwhen/Hand-Crafted/1.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/1.json",
+      "bytes": 34160,
+      "sha256": "d60c09368991cb7b978a26a4862664389bc937070bd6e0f6c3f7055ed6aac9e4"
+    },
+    "whoandwhen/Hand-Crafted/4.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/4.json",
+      "bytes": 25225,
+      "sha256": "034fbe1e3c3834734698ea0adcab148dacaadb0582e2cda47acb33ad119d6e61"
+    },
+    "whoandwhen/Hand-Crafted/6.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/6.json",
+      "bytes": 10777,
+      "sha256": "327bd6287d08a61ac20f499c742d2e783d2703ba116f1028e72f499bbbd5edf0"
+    },
+    "whoandwhen/Hand-Crafted/16.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/16.json",
+      "bytes": 34678,
+      "sha256": "97974208fbd774ad3ad20ddba7c9aa1932ec32e8649022f8695c59ecb9b662b6"
+    },
+    "whoandwhen/Hand-Crafted/28.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/28.json",
+      "bytes": 39941,
+      "sha256": "128fb336ae1f34c82b1074f485a69a2da81d4b382145877509e43c72f9d240b1"
+    },
+    "whoandwhen/Hand-Crafted/31.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/31.json",
+      "bytes": 34608,
+      "sha256": "0141a9984487dd1e4f06d5a55161011355b3582e3a7c82c4d7e224be9ca06894"
+    },
+    "whoandwhen/Hand-Crafted/32.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/32.json",
+      "bytes": 16037,
+      "sha256": "a9153a356ef18a6bec30c25d233bd25c57c32c4f4cb3602b7dc6399ee8afc88c"
+    },
+    "whoandwhen/Hand-Crafted/40.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/40.json",
+      "bytes": 32370,
+      "sha256": "b79692d54dc692611d74981d1f54983c983869394d2bb64a0abdc0ff0a184037"
+    },
+    "whoandwhen/Hand-Crafted/48.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/48.json",
+      "bytes": 13308,
+      "sha256": "65332c6b4028c12802876ffd8293dfdc16d1d2545461810bb8de77ef9de8ba82"
+    },
+    "whoandwhen/Hand-Crafted/52.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/52.json",
+      "bytes": 28017,
+      "sha256": "d514e4a0f086a25f836e28145300da3cc6849d456cf40c9f04a1527b9ecc89a9"
+    },
+    "whoandwhen/Hand-Crafted/57.json": {
+      "dataset": "Who&When, Hand-Crafted",
+      "url": "https://raw.githubusercontent.com/mingyin1/Agents_Failure_Attribution/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/Who%26When/Hand-Crafted/57.json",
+      "bytes": 21856,
+      "sha256": "e192ded3dc999a79dbd2378728216abd928068697c1aa953cc1cfcc8af428f50"
+    },
+    "swe-agent-trajectories/rows-00000.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=0&length=2",
+      "bytes": 260933,
+      "sha256": "955f5972972320cd961fd41fdc3124807ca600fa56c0f9d8de5c72b62948e0f0"
+    },
+    "swe-agent-trajectories/rows-01250.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=1250&length=2",
+      "bytes": 106693,
+      "sha256": "19d6e1fafd61306535e950b9afe2d88caaee74cecc29f7119639a27164a49b5b"
+    },
+    "swe-agent-trajectories/rows-02501.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=2501&length=2",
+      "bytes": 103560,
+      "sha256": "d3589ef69e7f9db9a5701df7c7d4e47efc27393c2b4e014a2161b6f68e3f1886"
+    },
+    "swe-agent-trajectories/rows-03751.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=3751&length=2",
+      "bytes": 124815,
+      "sha256": "6f72f2b0057cc286301d23fe8e437dbd6ad62b4111cb325363759c87dc2ea5dd"
+    },
+    "swe-agent-trajectories/rows-05002.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=5002&length=2",
+      "bytes": 54239,
+      "sha256": "b7ae286433d48fab62176f6405d5df49c22ace40869471aae2972cd2b6d7b237"
+    },
+    "swe-agent-trajectories/rows-06252.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=6252&length=2",
+      "bytes": 115472,
+      "sha256": "e1fa8339f040694e97767922d5705b95e0e6711adca946e82fa71ff5d4cb0f6c"
+    },
+    "swe-agent-trajectories/rows-07503.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=7503&length=2",
+      "bytes": 264990,
+      "sha256": "0431a8d106e228301b6e1b16e5b5e66c489032c3c1fc258abbffeb07696c582f"
+    },
+    "swe-agent-trajectories/rows-08753.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=8753&length=2",
+      "bytes": 99216,
+      "sha256": "d825e6c1ff11931d25518cf086502915c8436fb8a504d86ba7c7a01e008c992d"
+    },
+    "swe-agent-trajectories/rows-10004.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=10004&length=2",
+      "bytes": 311324,
+      "sha256": "681100b75b2c11830b86bf225732a121d21039ced1edfd2a63775f8faf551b1a"
+    },
+    "swe-agent-trajectories/rows-11255.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=11255&length=2",
+      "bytes": 43111,
+      "sha256": "26ec5000c50bc80a73db2cd8604c66fb2deb36a7dc2501534cb1df3f0665ef69"
+    },
+    "swe-agent-trajectories/rows-12505.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=12505&length=2",
+      "bytes": 150486,
+      "sha256": "bfa03d6d395cada8db1690aeeab77b5147c36e4c0ce4ebeff4899591ad7c52a5"
+    },
+    "swe-agent-trajectories/rows-13756.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=13756&length=2",
+      "bytes": 174005,
+      "sha256": "dc2e73e21e73ad5119d5d210c81a59a2656242ce31b453c00f08ed90a38fe558"
+    },
+    "swe-agent-trajectories/rows-15006.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=15006&length=2",
+      "bytes": 108910,
+      "sha256": "28dc54fc4a8649578bbd1a5ddc4e9194194445188653a8faa6f4b6bc62b3efd5"
+    },
+    "swe-agent-trajectories/rows-16257.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=16257&length=2",
+      "bytes": 79485,
+      "sha256": "47338e2b2b55a51eff381bef6dfbd60d9fd65fc6010eb0db6bb710dd3eaedc92"
+    },
+    "swe-agent-trajectories/rows-17507.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=17507&length=2",
+      "bytes": 96054,
+      "sha256": "ee095d48bc4eec08f3ed7af6ef3f638c2d8b0b1cac5d452d73a63811e31f6c7a"
+    },
+    "swe-agent-trajectories/rows-18758.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=18758&length=2",
+      "bytes": 79767,
+      "sha256": "263757e0ee38f3bffc872e299e0132aaaaebda4aee58ff520e63cf52518ee2bf"
+    },
+    "swe-agent-trajectories/rows-20009.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=20009&length=2",
+      "bytes": 197206,
+      "sha256": "5f638bd6e1eb101e254c6113cefe6fd9a631d11923fa562dc5343734a3be705d"
+    },
+    "swe-agent-trajectories/rows-21259.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=21259&length=2",
+      "bytes": 151883,
+      "sha256": "ed4da23adb692e0abf8d3ba97dbb0a67fed5877b3add2206a3f6bd591d2de22f"
+    },
+    "swe-agent-trajectories/rows-22510.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=22510&length=2",
+      "bytes": 67621,
+      "sha256": "a7126cf3abb3d8a10869d5ff21b6f34d89556d00d4a53fbae48179d80ee26e66"
+    },
+    "swe-agent-trajectories/rows-23760.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=23760&length=2",
+      "bytes": 141702,
+      "sha256": "880b3f2f2d2519e3515d4b9f325a21bc3bb1d1daf6570557613e68c1d5c3a519"
+    },
+    "swe-agent-trajectories/rows-25011.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=25011&length=2",
+      "bytes": 72416,
+      "sha256": "f59d65358351ec0bd357ef17a90ab1c32f951521a91c3a6f2b0cb980dd5e34b5"
+    },
+    "swe-agent-trajectories/rows-26261.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=26261&length=2",
+      "bytes": 270318,
+      "sha256": "b798d3159010dbd0ffe30f939d75accd889e56f0a35487940aa05ba26f229549"
+    },
+    "swe-agent-trajectories/rows-27512.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=27512&length=2",
+      "bytes": 81572,
+      "sha256": "b153140bce2513248a79656ae1b0c3e2caabc3aa9692e8cb86ffaecc118dbb48"
+    },
+    "swe-agent-trajectories/rows-28762.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=28762&length=2",
+      "bytes": 189374,
+      "sha256": "70980f4990178074f1689bd53129b3497e2f419f97b5e93574f827707a569858"
+    },
+    "swe-agent-trajectories/rows-30013.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=30013&length=2",
+      "bytes": 77498,
+      "sha256": "7339bee494171e021166894ddf65c74fa61f24c2f4bb4f440652164b6e5e816d"
+    },
+    "swe-agent-trajectories/rows-31264.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=31264&length=2",
+      "bytes": 233092,
+      "sha256": "efa5963dbca90a6cd6e2e895a2bf8d636e4412c5e0658a4ea1f85f89d02d0de2"
+    },
+    "swe-agent-trajectories/rows-32514.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=32514&length=2",
+      "bytes": 225690,
+      "sha256": "3da80f55be5f32ecf1d699511d1953c11b0be64bb043d3b782a9e285a665fcb0"
+    },
+    "swe-agent-trajectories/rows-33765.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=33765&length=2",
+      "bytes": 157601,
+      "sha256": "94891f90883f9ba0993d73e8c610496e71e8e76c26f5fb6044d82c2c21cb0f33"
+    },
+    "swe-agent-trajectories/rows-35015.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=35015&length=2",
+      "bytes": 250381,
+      "sha256": "02db775b8a73f7e5453dbf623e5d44e02f7e1567c4af008f998fe7657a4c74e5"
+    },
+    "swe-agent-trajectories/rows-36266.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=36266&length=2",
+      "bytes": 131687,
+      "sha256": "8d5bd497227851170d16c27cc9cb2b7b1108fcf74b4cb65507cffa288e1b82a9"
+    },
+    "swe-agent-trajectories/rows-37516.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=37516&length=2",
+      "bytes": 84393,
+      "sha256": "00a634acb90e371b2af8fd5fe506b881ddd520b517628a0351efd8aaaa813df9"
+    },
+    "swe-agent-trajectories/rows-38767.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=38767&length=2",
+      "bytes": 109826,
+      "sha256": "3463284061a6928102cc426e3bbbc914990f1e8f79d77559a5d8f2ca02a54a91"
+    },
+    "swe-agent-trajectories/rows-40018.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=40018&length=2",
+      "bytes": 276831,
+      "sha256": "0231934a078fd5d5ad5e23a3290ec69de75447142043b1069f8e7abda83a403e"
+    },
+    "swe-agent-trajectories/rows-41268.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=41268&length=2",
+      "bytes": 217497,
+      "sha256": "d5d0eafac11f0e14fc42169e6eccb106151ebbec1bdc63c16da3d190d3e5dd8c"
+    },
+    "swe-agent-trajectories/rows-42519.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=42519&length=2",
+      "bytes": 282337,
+      "sha256": "4c4086836cb61adcd9a27cc27cece043253fd4cc8e1c4d7a71a80196b604ec48"
+    },
+    "swe-agent-trajectories/rows-43769.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=43769&length=2",
+      "bytes": 47320,
+      "sha256": "55b53bb7e24729b0ef02955f1d9d509f9bc38518bfe016312463998c8d6f516d"
+    },
+    "swe-agent-trajectories/rows-45020.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=45020&length=2",
+      "bytes": 54135,
+      "sha256": "08891dda28f830444c9f045535174fe3a10ffed9f19cf0b02ad2ee20c802b244"
+    },
+    "swe-agent-trajectories/rows-46270.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=46270&length=2",
+      "bytes": 104852,
+      "sha256": "e5867134f7f4095d2b0a54643ee469ed9a45826c7fdc6a3d6561347b9764aae3"
+    },
+    "swe-agent-trajectories/rows-47521.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=47521&length=2",
+      "bytes": 244876,
+      "sha256": "45379799861cb8663cf9291df51c092e080923ac08dc4b4469bb7edceda1e629"
+    },
+    "swe-agent-trajectories/rows-48771.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=48771&length=2",
+      "bytes": 76961,
+      "sha256": "2d87efcd1c7e144450966d6693ef741def1e4567d07519f335387d00eb96a5ce"
+    },
+    "swe-agent-trajectories/rows-50022.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=50022&length=2",
+      "bytes": 150549,
+      "sha256": "29f9d0b505a3dfaf56fd7911ac7e15dea6c587b539c4a3e8bc2c380eb7f19c6f"
+    },
+    "swe-agent-trajectories/rows-51273.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=51273&length=2",
+      "bytes": 109021,
+      "sha256": "3e26e697b16946ef81fb503001ec4682e8a8aa70862e45d44c6abc93d7619584"
+    },
+    "swe-agent-trajectories/rows-52523.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=52523&length=2",
+      "bytes": 134612,
+      "sha256": "169f5c1e5c57837b20d234564b35ac5e428f41a481d3877f0ef1ae5fdefcb9be"
+    },
+    "swe-agent-trajectories/rows-53774.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=53774&length=2",
+      "bytes": 64047,
+      "sha256": "3ff6b19bf4249bd497e766a9ed8e871c5f0286bf0cba8bf90e9e9122255c2619"
+    },
+    "swe-agent-trajectories/rows-55024.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=55024&length=2",
+      "bytes": 187625,
+      "sha256": "45ef7debd0d589dbf965255cf5b135f8e25eaf9be66c03ef800b8eef1dcba227"
+    },
+    "swe-agent-trajectories/rows-56275.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=56275&length=2",
+      "bytes": 85024,
+      "sha256": "d18f207943eb3bc07c8ca5684df42084acfc02d6b7bcca474497697ae24b74a1"
+    },
+    "swe-agent-trajectories/rows-57525.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=57525&length=2",
+      "bytes": 172418,
+      "sha256": "364d28799df6ea9812de779c1adfbd06f22ba4b1648cf71340f0265ede8ce7df"
+    },
+    "swe-agent-trajectories/rows-58776.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=58776&length=2",
+      "bytes": 198766,
+      "sha256": "01bd03bd57c3e3d5c4181a281d5bfa8ef820a800ed6bd16c96bdb1f403d8215f"
+    },
+    "swe-agent-trajectories/rows-60027.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=60027&length=2",
+      "bytes": 264771,
+      "sha256": "1de7b1547e69d85de0ffde612a4f12b5fb3ff92a0fea0838e95f624c7bf5dfe0"
+    },
+    "swe-agent-trajectories/rows-61277.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=61277&length=2",
+      "bytes": 63658,
+      "sha256": "abf6c1f258fbd311cb0dc91ced1049c61754b4f9f18bf7473da3be341a9bd40b"
+    },
+    "swe-agent-trajectories/rows-62528.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=62528&length=2",
+      "bytes": 203730,
+      "sha256": "3b73f760f3b5af02474e57eae201571ffa6ff7161354c8d4c9aac420f8c47e55"
+    },
+    "swe-agent-trajectories/rows-63778.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=63778&length=2",
+      "bytes": 69725,
+      "sha256": "2ec924fb73c06bc921ec647abc4c6836ae2d3d893b336c4eb36cf77b3b8c6290"
+    },
+    "swe-agent-trajectories/rows-65029.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=65029&length=2",
+      "bytes": 63253,
+      "sha256": "1b56f454b037368d7cca54429cb41f7ffb7b2195d2b0473a39ba6610608a2f5c"
+    },
+    "swe-agent-trajectories/rows-66279.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=66279&length=2",
+      "bytes": 201183,
+      "sha256": "989590e7f29798e7be3cc07784008f23c0126a7e5eab643defecd2341bcc73bf"
+    },
+    "swe-agent-trajectories/rows-67530.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=67530&length=2",
+      "bytes": 206701,
+      "sha256": "8158f7a850cbd64ff1f13a93f0c979029b93f00d015e903f715eb199ccb211b7"
+    },
+    "swe-agent-trajectories/rows-68780.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=68780&length=2",
+      "bytes": 55828,
+      "sha256": "f1286e88081acc947d02d2fbf15758d23283fe776ff1768824a397f69f15e3ea"
+    },
+    "swe-agent-trajectories/rows-70031.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=70031&length=2",
+      "bytes": 161572,
+      "sha256": "808f5d927fa7baca5e28ee46a80fada83bd7c95004f0c6a5aade7dcfd5fe0c98"
+    },
+    "swe-agent-trajectories/rows-71282.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=71282&length=2",
+      "bytes": 256927,
+      "sha256": "2eadefa732867cde0c897100631e1033f3137e5d394e9031d43a52564e39eadd"
+    },
+    "swe-agent-trajectories/rows-72532.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=72532&length=2",
+      "bytes": 87047,
+      "sha256": "405ed6137ba80b3c418162ebaa1b044661b70ab03ad8995f3a24f83a699b71c6"
+    },
+    "swe-agent-trajectories/rows-73783.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=73783&length=2",
+      "bytes": 181358,
+      "sha256": "77b5ea358fb9b2d9eefb999dc5a4073bd14e69da242ad31b5f820a4410ef47df"
+    },
+    "swe-agent-trajectories/rows-75033.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=75033&length=2",
+      "bytes": 209871,
+      "sha256": "32b4dabd8ea08975bb26e5b34cac6e1d3120a09c8ba86168f4718955cfb5fa05"
+    },
+    "swe-agent-trajectories/rows-76284.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=76284&length=2",
+      "bytes": 50125,
+      "sha256": "108b0b57759822f45e787e7816dc41ac4b98f5c0b100e26cf927f3f670d8f262"
+    },
+    "swe-agent-trajectories/rows-77534.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=77534&length=2",
+      "bytes": 173157,
+      "sha256": "63fa8b3b8d9c228ef2ece2d28a17e3481d0b997f7add764486b41bbc958cc08e"
+    },
+    "swe-agent-trajectories/rows-78785.json": {
+      "dataset": "nebius/SWE-agent-trajectories, rows API window",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=nebius/SWE-agent-trajectories&config=default&split=train&offset=78785&length=2",
+      "bytes": 166156,
+      "sha256": "1a96692e64b78468d6fc6b5f72c0f42690e75a60be6d7a028181520f54b15a29"
+    },
+    "bfcl/BFCL_v3_live_multiple.json": {
+      "dataset": "BFCL v3 Live",
+      "url": "https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard/resolve/main/BFCL_v3_live_multiple.json",
+      "bytes": 3891342,
+      "sha256": "af2520ac5bb0b05aa9b8abe14a79b87198e5a3137a707d4f5633c792330f0cee"
+    },
+    "bfcl/possible_answer/BFCL_v3_live_multiple.json": {
+      "dataset": "BFCL v3 Live",
+      "url": "https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard/resolve/main/possible_answer/BFCL_v3_live_multiple.json",
+      "bytes": 199668,
+      "sha256": "97e90d59c5bd76c55a2920ce93e5566e9046307d3f558578f085f9d3a56c3084"
+    },
+    "bfcl/BFCL_v3_live_irrelevance.json": {
+      "dataset": "BFCL v3 Live",
+      "url": "https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard/resolve/main/BFCL_v3_live_irrelevance.json",
+      "bytes": 2202715,
+      "sha256": "0d259e1c3ab6ba06c2a51911e2f49ecaa2eac3723a4a14f183a7687955e61338"
+    },
+    "banking77/test.csv": {
+      "dataset": "BANKING77",
+      "url": "https://raw.githubusercontent.com/PolyAI-LDN/task-specific-datasets/master/banking_data/test.csv",
+      "bytes": 239961,
+      "sha256": "d12d6e3bc4c3103966ae786dc435913c0c563dfa328f5a3646d0e62cfeeb474d"
+    },
+    "cfpb/rows-0050000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=50000&length=100",
+      "bytes": 170902,
+      "sha256": "f3e6c3fceec9f7dfd675df12f134e7eb919099fc5509850df81131b6364f7154"
+    },
+    "cfpb/rows-0150000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=150000&length=100",
+      "bytes": 160641,
+      "sha256": "e3b54486a2c649b8fc3723d42deb1de1557af78f97b69a626dfc3f5992acf6db"
+    },
+    "cfpb/rows-0250000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=250000&length=100",
+      "bytes": 169724,
+      "sha256": "7ea9cfa9f77917d2398a1946747fc003dfbf9073f9d6a6ffd85d91bf0edab950"
+    },
+    "cfpb/rows-0350000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=350000&length=100",
+      "bytes": 191764,
+      "sha256": "fa560d598c595f90949d5f7b60549b7c10058d1da6a1a7b212d141b81f482bec"
+    },
+    "cfpb/rows-0450000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=450000&length=100",
+      "bytes": 185800,
+      "sha256": "3239e80d103e6fec481d230d5a2580441ed6e5a628ada48517c4081ece3c55dd"
+    },
+    "cfpb/rows-0550000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=550000&length=100",
+      "bytes": 153262,
+      "sha256": "15ea8722978d4aa240d5d46bec97a878752da338f282908f4cdbb125ad2d98b2"
+    },
+    "cfpb/rows-0650000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=650000&length=100",
+      "bytes": 180991,
+      "sha256": "4c0247db8febc9d893c727294b590af6404cec5ff48271f86e14dab56bff2ad9"
+    },
+    "cfpb/rows-0750000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=750000&length=100",
+      "bytes": 186454,
+      "sha256": "eef5f85dd98f38c642f7975b92ae7c4bdb50acc57dc62c9d0430092f89f1da98"
+    },
+    "cfpb/rows-0850000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=850000&length=100",
+      "bytes": 179069,
+      "sha256": "6471b5d4ac53663f393a49616caca4313eeecf9165f15086de44f872f0a63688"
+    },
+    "cfpb/rows-0950000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=950000&length=100",
+      "bytes": 154161,
+      "sha256": "40c494c5d3572a6f2a4ab1cb0844989e1204dab15f2b42e7158f20bf77db5ae3"
+    },
+    "cfpb/rows-1050000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=1050000&length=100",
+      "bytes": 190623,
+      "sha256": "69e7b3fee9147215618f5678b746ba82f943c530acbe74703823221c130b210e"
+    },
+    "cfpb/rows-1150000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=1150000&length=100",
+      "bytes": 197888,
+      "sha256": "872f66d1e310e45c1dba5b6c660497595dcd5e23bd703d0ec5eb8e6b69931de2"
+    },
+    "cfpb/rows-1250000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=1250000&length=100",
+      "bytes": 181647,
+      "sha256": "287a273c5a0fd74fde79904247bce7989c6102538696cf12ecd5074eaeabdd03"
+    },
+    "cfpb/rows-1350000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=1350000&length=100",
+      "bytes": 185241,
+      "sha256": "0dd22c5a52355aa3363b8fa34420e423ccff01853eca697200d9a1fc02fe321a"
+    },
+    "cfpb/rows-1450000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=1450000&length=100",
+      "bytes": 163428,
+      "sha256": "19ad2fe3a56792bc1bb544216eedd08339509e4e158e200c0040c39db3961979"
+    },
+    "cfpb/rows-1550000.json": {
+      "dataset": "CFPB Consumer Complaint Database",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=BEE-spoke-data%2Fconsumer-finance-complaints&config=has-text&split=train&offset=1550000&length=100",
+      "bytes": 150518,
+      "sha256": "0cf09086a15dd4fda561915ae3ce694722eeeab5114fe404c569812b8515c272"
+    },
+    "contractnli/test.json": {
+      "dataset": "ContractNLI v1.0, test split",
+      "url": "https://stanfordnlp.github.io/contract-nli/resources/contract-nli.zip",
+      "bytes": 2260203,
+      "sha256": "460267b56052a2dc5aead98eb35eadef9e6734d5723d37b4a9790e410f812387"
+    },
+    "agentrx/LICENSE": {
+      "dataset": "AgentRx",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/LICENSE.txt",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383"
+    },
+    "agentrx/tau_ground_truth.json": {
+      "dataset": "AgentRx, \u03c4-bench labels",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/ground_truth/tau_ground_truth.json",
+      "bytes": 33335,
+      "sha256": "58067689b2ec42f9cbfec2a84ec08d39cea4d8270617b55d0185862753642d16"
+    },
+    "agentrx/tau_dataset_failed.json": {
+      "dataset": "AgentRx, \u03c4-bench runs",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/tau_retail/tau_dataset_failed.json",
+      "bytes": 900014,
+      "sha256": "17f8b3356d1124274cc7ed0215b5ff696970073dbed57394c60e775d5f85d717"
+    },
+    "agentrx/magentic_one_ground_truth.json": {
+      "dataset": "AgentRx, Magentic-One labels",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/ground_truth/magentic_one_ground_truth.json",
+      "bytes": 174086,
+      "sha256": "d10edefb004a2f1e59e8f487a0f0de5f4e6a60c1f2f713b49e6a422402019eae"
+    },
+    "agentrx/magentic_dataset/c7afe00869f98cf363fd83677ac41757ed5e57f03eacc3d1304feb0a92084bd1.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/c7afe00869f98cf363fd83677ac41757ed5e57f03eacc3d1304feb0a92084bd1.json",
+      "bytes": 134246,
+      "sha256": "06964e63799784640839c733cc76ada32690694ce16eaa1acc0a316e026ce72e"
+    },
+    "agentrx/magentic_dataset/52f7224e9c79431e7926afe317782711a0028750693e7456cde22ef6f4bd8bd5.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/52f7224e9c79431e7926afe317782711a0028750693e7456cde22ef6f4bd8bd5.json",
+      "bytes": 33378,
+      "sha256": "e86b0d2263ddc184665f180a202bae7924f4a950681e78be74abb4965df0edda"
+    },
+    "agentrx/magentic_dataset/ccec2229ced20a4b0cb4897e3a99120a3017ea030903e01c9bda6b13d40b0b14.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/ccec2229ced20a4b0cb4897e3a99120a3017ea030903e01c9bda6b13d40b0b14.json",
+      "bytes": 51573,
+      "sha256": "fe8d9abd858d80cd980d9c2300d4af08dffb95e1608dd12e71d4c0a48a232b94"
+    },
+    "agentrx/magentic_dataset/6b06d186921b8b390c65aebd0d16f09f60a47d2f1288ebe36953f734e84c0a3c.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/6b06d186921b8b390c65aebd0d16f09f60a47d2f1288ebe36953f734e84c0a3c.json",
+      "bytes": 31197,
+      "sha256": "343c2ad9922a5ef7a24884b0a0324e778324446abe993f45bdf70001b5e4fc39"
+    },
+    "agentrx/magentic_dataset/8ad84bd6fe38481ba49e7ad1f6fbd43219a999074e5c6fc940003281f55ec65b.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/8ad84bd6fe38481ba49e7ad1f6fbd43219a999074e5c6fc940003281f55ec65b.json",
+      "bytes": 60392,
+      "sha256": "b22f5b9b401c141de56357b3f2b75c4c000a72a666bab524e8def759628d76ca"
+    },
+    "agentrx/magentic_dataset/2ddae3b7a208e3c25f14d82d7a1faaaa1832fbf950b4dac345e755c4c361f294.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/2ddae3b7a208e3c25f14d82d7a1faaaa1832fbf950b4dac345e755c4c361f294.json",
+      "bytes": 330993,
+      "sha256": "aa69dec3309224970978405ac95a3a05b4439881584cb9e7699d5ef6362cd0e0"
+    },
+    "agentrx/magentic_dataset/0ec4371851b96837b0a81b3dd3df401415061bb532fbafeb4609f3337c358508.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/0ec4371851b96837b0a81b3dd3df401415061bb532fbafeb4609f3337c358508.json",
+      "bytes": 33056,
+      "sha256": "fac852e03b997fe7b2d3df23242ddf1d73d946ab4d679dd24731e931be0749fc"
+    },
+    "agentrx/magentic_dataset/6e3be83d1949fa52cba03fb1ce4b5b3bf7e37a83fd7d67694b10b2e439d90cf8.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/6e3be83d1949fa52cba03fb1ce4b5b3bf7e37a83fd7d67694b10b2e439d90cf8.json",
+      "bytes": 32851,
+      "sha256": "a289f6aa7098b0d6d3dfa9b6c522e1e0a073e2ac9f4ef97b54be3e8c6c2e2951"
+    },
+    "agentrx/magentic_dataset/797f7a5b65ca28b7e7156e7db1e9f117bd4a021de0cd512bfdbb0be897d89eab.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/797f7a5b65ca28b7e7156e7db1e9f117bd4a021de0cd512bfdbb0be897d89eab.json",
+      "bytes": 140147,
+      "sha256": "a5db373ee6cc836be8659023c262a4790759c6896c8a662a53a553e061b93631"
+    },
+    "agentrx/magentic_dataset/55f4258484c5b398956133128a50462a767da211f8f72aa5ac5bbffb9bcbba1a.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/55f4258484c5b398956133128a50462a767da211f8f72aa5ac5bbffb9bcbba1a.json",
+      "bytes": 100098,
+      "sha256": "a35e8e1d96c3ba5cdf3fbf26a39822afaa63440f12453acbff9bad7cc9f0f24e"
+    },
+    "agentrx/magentic_dataset/557e78eceec08ca8b0da5f9fdaca6e1c7ec6140a8ce600983ee716327dab005e.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/557e78eceec08ca8b0da5f9fdaca6e1c7ec6140a8ce600983ee716327dab005e.json",
+      "bytes": 38650,
+      "sha256": "705a14266fa44aa6dc546933ee9f69f59771d57fac983c0fad01478712cc7779"
+    },
+    "agentrx/magentic_dataset/929b45f34805280d77c61d1e093e3d4e551d77ddb6ecd73552b12b1af286388d.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/929b45f34805280d77c61d1e093e3d4e551d77ddb6ecd73552b12b1af286388d.json",
+      "bytes": 15175,
+      "sha256": "8fdb1a83be3dd05a4c1499ef73f49c4c3c1dcd6e3877af9eb61caee3b282b8ac"
+    },
+    "agentrx/magentic_dataset/748899d9d70c09beb3bd48ac8a3658bdcfd2f9114fe6dc4c4b8d2f9541ef4607.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/748899d9d70c09beb3bd48ac8a3658bdcfd2f9114fe6dc4c4b8d2f9541ef4607.json",
+      "bytes": 130556,
+      "sha256": "e3bc50f6868626b2b0ab362c1ac66f76f7aacff50d55fc25888a74341bebdfb4"
+    },
+    "agentrx/magentic_dataset/9baaa267c95f9d8b75741ee9169c50563d297cfa592c20deaffd30dbc5984c74.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/9baaa267c95f9d8b75741ee9169c50563d297cfa592c20deaffd30dbc5984c74.json",
+      "bytes": 57438,
+      "sha256": "563aa312b0f60fdfecff535892cd72a1d3401f7058563bdd12eb6f8e34248542"
+    },
+    "agentrx/magentic_dataset/b36ef2d8f2643b80e74a44ce3403f674ecb2aed7fd36afeaa289061a59feef92.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/b36ef2d8f2643b80e74a44ce3403f674ecb2aed7fd36afeaa289061a59feef92.json",
+      "bytes": 26948,
+      "sha256": "adb7d25b36c9429481255e3dd1e134ea38e4c3b958a892b1f8dfc9f937f326c8"
+    },
+    "agentrx/magentic_dataset/9e31099fffa6a3891c94934fd4fc2f3f522d51c1904ff3561f3a10e4bf245821.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/9e31099fffa6a3891c94934fd4fc2f3f522d51c1904ff3561f3a10e4bf245821.json",
+      "bytes": 182206,
+      "sha256": "24d28ee132903fd2e34aef9942d73aec1cf3fd993a2d1a70935b7e2dbfa4c429"
+    },
+    "agentrx/magentic_dataset/57d9dc6935e8a40b02e7f8ec81768fe70e68a0c05f6866927c9fda38db38a486.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/57d9dc6935e8a40b02e7f8ec81768fe70e68a0c05f6866927c9fda38db38a486.json",
+      "bytes": 43311,
+      "sha256": "0ae3bfd88b85ee9c30bf7dd2bfd5571368a01298d6781e9c809750bb97bc350f"
+    },
+    "agentrx/magentic_dataset/a9074997e698f912b9e751779ea19c1e92fa148404e90e0ae997acea3f9559b0.json": {
+      "dataset": "AgentRx, Magentic-One run",
+      "url": "https://raw.githubusercontent.com/microsoft/AgentRx/7a18c79708e7671be15124460f4f7296107c2a55/data/magentic_dataset/a9074997e698f912b9e751779ea19c1e92fa148404e90e0ae997acea3f9559b0.json",
+      "bytes": 102860,
+      "sha256": "9b035aca5b89d6624b90b850e7be91b4c82d78a355520d143aeead3c84a2de91"
+    },
+    "hagrid/dev.jsonl": {
+      "dataset": "HAGRID, English dev split",
+      "url": "https://huggingface.co/datasets/miracl/hagrid/resolve/b2a085913606be3c4f2f1a8bff1810e38bade8fa/hagrid-v1.0-en/dev.jsonl",
+      "bytes": 2649133,
+      "sha256": "b4ab48abe3447570c03005e50003339a631ecdb8709189afbbd31c4355fc7caf"
+    },
+    "hagrid/LICENSE": {
+      "dataset": "HAGRID",
+      "url": "https://raw.githubusercontent.com/project-miracl/hagrid/7ffab03942e93d3138b0dbd14ad0a844f8a075d5/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "begin/begin_dev_wow.tsv": {
+      "dataset": "BEGIN, Wizard of Wikipedia dev",
+      "url": "https://raw.githubusercontent.com/google/BEGIN-dataset/6e65f0d5a1ed1b9574643a7640ff1678d4e979b5/wow/begin_dev_wow.tsv",
+      "bytes": 147417,
+      "sha256": "2ebfc95a1ff267e12dcce3250da4d158e1811c62e9e1a0d56f110efc9ace0178"
+    },
+    "begin/begin_test_wow.tsv": {
+      "dataset": "BEGIN, Wizard of Wikipedia test",
+      "url": "https://raw.githubusercontent.com/google/BEGIN-dataset/6e65f0d5a1ed1b9574643a7640ff1678d4e979b5/wow/begin_test_wow.tsv",
+      "bytes": 1241097,
+      "sha256": "d5c106a42042c3abd481563f1157e07c95c107dbcdf67f23564d874e8a4d6e7e"
+    },
+    "begin/LICENSE": {
+      "dataset": "BEGIN",
+      "url": "https://raw.githubusercontent.com/google/BEGIN-dataset/6e65f0d5a1ed1b9574643a7640ff1678d4e979b5/wow/LICENSE",
+      "bytes": 18566,
+      "sha256": "5cae4a69c3c71bfec6251130e2a413bcaea051467f9805c2580dcf771a76361f"
+    },
+    "begin/NOTICE": {
+      "dataset": "BEGIN",
+      "url": "https://raw.githubusercontent.com/google/BEGIN-dataset/6e65f0d5a1ed1b9574643a7640ff1678d4e979b5/wow/NOTICE",
+      "bytes": 19286,
+      "sha256": "3206f4c41ec756667ee8cd0300fd6114fc5bfb370799b46cdf9d3050fcc9a938"
+    },
+    "mt-bench-human-judgments/rows/human-00000.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=0&length=100",
+      "bytes": 556817,
+      "sha256": "251bf77c6f75526fdf64f18e9c735992fb53d5c2c6e6d53a8250054ec5f00811"
+    },
+    "mt-bench-human-judgments/rows/human-00100.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=100&length=100",
+      "bytes": 496060,
+      "sha256": "23ce3088f6e01b314fdb713a03230231523a67412d542b36bd257547acceecd7"
+    },
+    "mt-bench-human-judgments/rows/human-00200.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=200&length=100",
+      "bytes": 391315,
+      "sha256": "eda2392a6473c2925d0b056484ead7846cd75930955192e6b7b27ce858ca6073"
+    },
+    "mt-bench-human-judgments/rows/human-00300.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=300&length=100",
+      "bytes": 259431,
+      "sha256": "8f8980c092dbe7fb4bb2bdb1af7f66e391330f6815acc0afeb92d5b425985209"
+    },
+    "mt-bench-human-judgments/rows/human-00400.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=400&length=100",
+      "bytes": 323939,
+      "sha256": "da6524b5f7710f9e63cc9f659edaff0b1dfead24ed652e8b99855c48d251a905"
+    },
+    "mt-bench-human-judgments/rows/human-00500.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=500&length=100",
+      "bytes": 494022,
+      "sha256": "0ff639f59cff68a23af6d813c649fc48c46119181fdf7a544b5322c6974315a4"
+    },
+    "mt-bench-human-judgments/rows/human-00600.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=600&length=100",
+      "bytes": 612343,
+      "sha256": "ec1ca647c4a7842f8716272a8a6f84ee089e38467db6662251525a4094b5728c"
+    },
+    "mt-bench-human-judgments/rows/human-00700.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=700&length=100",
+      "bytes": 298697,
+      "sha256": "f10c918e76864c65c8fd62db4eb69b57878134ef07feb920109b3513ea06184a"
+    },
+    "mt-bench-human-judgments/rows/human-00800.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=800&length=100",
+      "bytes": 270730,
+      "sha256": "60949ab663c32ca19bf5d65bac70d55b59551bf4e588353469541ecd1c6389bd"
+    },
+    "mt-bench-human-judgments/rows/human-00900.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=900&length=100",
+      "bytes": 330609,
+      "sha256": "dd8d941219a535d70ee8770a3bf180a4d3000e8a953225c30fe575cf2a5fbebd"
+    },
+    "mt-bench-human-judgments/rows/human-01000.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1000&length=100",
+      "bytes": 260853,
+      "sha256": "b1971005cd76b4b028bf686df4c680b3b30e08f4da2777e91dabfb4f8bfdb05e"
+    },
+    "mt-bench-human-judgments/rows/human-01100.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1100&length=100",
+      "bytes": 193148,
+      "sha256": "97d94ed6727598079c2a43d5ec7f9fc7be89c1bb8063eb11e5f06a148d278db5"
+    },
+    "mt-bench-human-judgments/rows/human-01200.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1200&length=100",
+      "bytes": 410701,
+      "sha256": "6cfdd8f14ff0a21db5e7c5384651f31a1ec64e32302d1781cddecdf79ef4a0b9"
+    },
+    "mt-bench-human-judgments/rows/human-01300.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1300&length=100",
+      "bytes": 286921,
+      "sha256": "9d98788830dd05f5c2b1c5762a492882e1b1dac461ec0a2dd86b11f15cd0d80d"
+    },
+    "mt-bench-human-judgments/rows/human-01400.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1400&length=100",
+      "bytes": 295013,
+      "sha256": "3c11893a4346ccd960d7c1124d6821e96dce82ad8b2853994e34637aae6c47bf"
+    },
+    "mt-bench-human-judgments/rows/human-01500.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1500&length=100",
+      "bytes": 220574,
+      "sha256": "89d4d7ff7950cf1d43b0d1f4b0e3337daddef34c4cbf7770a8e0aa486eced322"
+    },
+    "mt-bench-human-judgments/rows/human-01600.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1600&length=100",
+      "bytes": 257763,
+      "sha256": "58fd016d82916938f61a908104c3995654247b7f55ecdf51c35b335ba816aea1"
+    },
+    "mt-bench-human-judgments/rows/human-01700.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1700&length=100",
+      "bytes": 519166,
+      "sha256": "3eb7a90b335ffe0e8296dbe5528b8df13f3ccedefb20ccde91f7791cb5de4c72"
+    },
+    "mt-bench-human-judgments/rows/human-01800.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1800&length=100",
+      "bytes": 609225,
+      "sha256": "f47aed6a9f44b53794cfa221d24f7d7294703abe2e0d555e399d5b4d3cb500a6"
+    },
+    "mt-bench-human-judgments/rows/human-01900.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=1900&length=100",
+      "bytes": 527111,
+      "sha256": "0a20997338ac1d032568fed2dcfd9a98da0ad7a1b3037d11f3cdcd8acd48bbac"
+    },
+    "mt-bench-human-judgments/rows/human-02000.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2000&length=100",
+      "bytes": 421000,
+      "sha256": "5ce1f17d6861f43bb7eecd768374e3ad0cdc8518407ae956bccfd7dccd4cc88b"
+    },
+    "mt-bench-human-judgments/rows/human-02100.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2100&length=100",
+      "bytes": 473451,
+      "sha256": "5039c36251028bea913065539c62807077f74ddaa27de33f147d343abf580e72"
+    },
+    "mt-bench-human-judgments/rows/human-02200.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2200&length=100",
+      "bytes": 343677,
+      "sha256": "f6cbbd001b4625ff26c990b0d3a67323280f6dcf1c9f0d13cf6e4963b8158815"
+    },
+    "mt-bench-human-judgments/rows/human-02300.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2300&length=100",
+      "bytes": 396487,
+      "sha256": "650e7d36863a60066971f81966657d404ec550489c2e3a65addb11f617417f01"
+    },
+    "mt-bench-human-judgments/rows/human-02400.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2400&length=100",
+      "bytes": 638301,
+      "sha256": "73f3a40d09365f19334638e33f9dd7a25f46b858e658a67ea8dfd8b2d3a8ed6d"
+    },
+    "mt-bench-human-judgments/rows/human-02500.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2500&length=100",
+      "bytes": 739568,
+      "sha256": "d6c85111329fed0a697010097cb48b5d914337fc59069f85fe397898b0ab7403"
+    },
+    "mt-bench-human-judgments/rows/human-02600.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2600&length=100",
+      "bytes": 600082,
+      "sha256": "e078ce8411e72b11c0aacbbedbf6e0310e0b8497ea56cf310ca4e93a4786954a"
+    },
+    "mt-bench-human-judgments/rows/human-02700.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2700&length=100",
+      "bytes": 686160,
+      "sha256": "c19305e09699b830e158e1b79eb0932583563b8a9ed550ca9bdcc2fd4469dae8"
+    },
+    "mt-bench-human-judgments/rows/human-02800.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2800&length=100",
+      "bytes": 725128,
+      "sha256": "d8b18e947a39e42ede607270acbdd4d4eb5a1a0745f3c6c89162dd25c1a51dfe"
+    },
+    "mt-bench-human-judgments/rows/human-02900.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=2900&length=100",
+      "bytes": 689221,
+      "sha256": "aa96e441c0a252aa433073c5199f3097c4a464c4f5d1dba1c4f1a81d3d8c0ed3"
+    },
+    "mt-bench-human-judgments/rows/human-03000.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=3000&length=100",
+      "bytes": 914009,
+      "sha256": "c094bce261889a84e8b497265782740c5c5092e9375b4b8b592e01fcc7b40abc"
+    },
+    "mt-bench-human-judgments/rows/human-03100.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=3100&length=100",
+      "bytes": 757893,
+      "sha256": "6fc900c5a3458ef39ec921bfb9f39fb0ac4bb2b3857c42ea8971d4cb27344ed5"
+    },
+    "mt-bench-human-judgments/rows/human-03200.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=3200&length=100",
+      "bytes": 778038,
+      "sha256": "5e5105923aa3fb792f1f7e1ace8eeab04cd538c55f9a0b1c14e7ba243400f7ac"
+    },
+    "mt-bench-human-judgments/rows/human-03300.json": {
+      "dataset": "MT-Bench human judgments, human split, rows API page",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=lmsys/mt_bench_human_judgments&config=default&split=human&offset=3300&length=100",
+      "bytes": 318897,
+      "sha256": "5136dc75f58587f8c8de6145db3b1a8cc66ffe65b4248b20f625557b5e296d45"
+    },
+    "mt-bench-human-judgments/README.md": {
+      "dataset": "MT-Bench human judgments (dataset card, states the license)",
+      "url": "https://huggingface.co/datasets/lmsys/mt_bench_human_judgments/raw/f7d2896d2cc5d80f8b55c2bbc722613555233c25/README.md",
+      "bytes": 2000,
+      "sha256": "4ef7507ea4d9b7b9e85db9c31742e5295c2f6d1b8c712d392705fd641c348fc4"
+    },
+    "mt-bench-human-judgments/FASTCHAT-LICENSE": {
+      "dataset": "FastChat (MT-Bench questions)",
+      "url": "https://raw.githubusercontent.com/lm-sys/FastChat/587d5cfa1609a43d192cedb8441cac3c17db105d/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    }
+  }
+}

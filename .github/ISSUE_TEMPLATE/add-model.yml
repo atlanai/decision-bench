@@ -1,0 +1,48 @@
+name: Add a model or submit results
+description: Propose a model for config/models.json, or tell us about a results pull request.
+title: "Model: <name>"
+labels: ["model"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The fastest route is a pull request that adds the entry to `config/models.json` and the published
+        `results/<suite>/<model-id>/` folder. See results/README.md and docs/running.md.
+  - type: input
+    id: model
+    attributes:
+      label: Model and vendor
+      placeholder: "Example: Llama 5 8B Instruct (Meta)"
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider type
+      options:
+        - openai-compatible (OpenAI, OpenRouter, LiteLLM, vLLM, ...)
+        - typesafe
+        - claude-cli
+        - codex-cli
+        - Needs a new adapter
+    validations:
+      required: true
+  - type: input
+    id: model_name
+    attributes:
+      label: Model name sent to the endpoint
+      placeholder: "meta-llama/llama-5-8b-instruct"
+  - type: textarea
+    id: options
+    attributes:
+      label: Request options and pricing
+      description: Response format support (json_schema / json_object), token limit field, reasoning effort, and a public price page URL if you want cost estimates.
+  - type: input
+    id: pr
+    attributes:
+      label: Results pull request (if any)
+  - type: textarea
+    id: notes
+    attributes:
+      label: How the run was made
+      description: Endpoint type (not its URL), hardware if self-hosted, anything unusual. Never paste keys or private hostnames.
