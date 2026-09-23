@@ -28,7 +28,8 @@ const SubmitLink = () => B.repoOk() ? <Link href={B.gh('results/README.md')}>How
 /* ---------- Banner ---------- */
 /* Rows by use case as a small pixel bar chart, one square per eight rows. Each line filters the leaderboard.
    On hover a wave runs across the squares (see .px-* in index.html) and the caption under the list says what the
-   use case covers, in place, so nothing floats over the chart. */
+   use case covers, in place, so nothing floats over the chart. The caption keeps a fixed two-line height: the block
+   is centred in the banner, so a caption that grew or shrank would shift the whole list. */
 const PER = 8;
 function UseCases({route}) {
   const cur = route.q.get('category') || '', counts = B.categoryOrder().map(k => [k, B.allCases.filter(c => B.catKey(c) === k).length]);
@@ -51,9 +52,9 @@ function UseCases({route}) {
             <span className="px-n text-right tabular-nums">{n}</span>
           </a></li>; })}
       </ul>
-      <p id="use-case-note" aria-live="polite" className="mt-3 min-h-10 border-t pt-3 text-[13px] leading-snug text-muted-foreground">
+      <p id="use-case-note" aria-live="polite" className="mt-3 box-content h-[2.75em] border-t pt-3 text-[13px] leading-snug text-muted-foreground"><span className="line-clamp-2">
         {shown ? <><span className="font-medium text-foreground">{B.catInfo(shown).name}.</span> {B.catInfo(shown).description}{cur === shown && !hot && <> <a href={href('', {modality: route.q.get('modality') || ''})} className="text-foreground underline-offset-4 hover:underline">Show all</a></>}</> : 'Pick a use case to filter the leaderboard to its rows.'}
-      </p>
+      </span></p>
     </div>
   );
 }
@@ -267,7 +268,7 @@ export function Home({route}) {
     <Banner route={route} />
     <div className="mx-auto max-w-[1240px] px-4 pb-20 md:px-8">
       {cat && <div className="pt-10"><div className="text-sm font-medium text-muted-foreground">Use case</div><h2 className="mt-1 text-3xl font-semibold tracking-tight">{B.catInfo(cat).name}</h2><p className="mt-2 text-[15px] text-muted-foreground">{B.catInfo(cat).description} <Link href={href('tasks', {category: cat})}>See the tasks</Link></p></div>}
-      <div className="z-30 -mx-4 mt-6 flex md:sticky md:top-14 flex-wrap items-center gap-2 border-b bg-background/85 px-4 py-3 backdrop-blur-md md:-mx-8 md:px-8">
+      <div className="z-30 -mx-4 mt-6 flex md:sticky md:top-14 flex-wrap items-center gap-2 bg-background/85 px-4 py-3 backdrop-blur-md md:-mx-8 md:px-8">
         <UseCaseSelect route={route} className="min-w-44" />
         {B.allCases.some(c => B.isImageTask(c.task)) && <ModalityTabs route={route} />}
         {B.RUNS.length > 0 && <ModelPicker route={route} />}

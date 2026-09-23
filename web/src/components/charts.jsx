@@ -1,9 +1,9 @@
 /* SVG charts drawn at the container's measured width. Hover and focus details come from data-tip (see tip.jsx). */
-import {useLayoutEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {M, result, okOf, answered, caseTitle, taskName, goldText, ident, runName, runColor, keyOf, subsetMetrics, catKey, catInfo, answerOf} from '@/lib/bench';
 import {pct, pct0, clip} from '@/lib/format';
 import {rowHref} from '@/lib/route';
-import {tip} from '@/components/tip';
+import {tip, showTip, moveTip, hideTip} from '@/components/tip';
 import {cn} from '@/lib/utils';
 
 const SVG_CLS = 'block overflow-visible font-sans text-[12px] [&_text]:fill-muted-foreground [&_.t-ink]:fill-foreground/80 [&_.t-value]:fill-foreground [&_.t-value]:tabular-nums [&_.grid]:stroke-border [&_.minor]:opacity-50 [&_.axis]:stroke-foreground/20 [&_.ref]:stroke-muted-foreground/60 [&_.ref]:[stroke-dasharray:3_3] [&_.hit]:fill-transparent [&_.whisker]:fill-none [&_.whisker]:stroke-foreground/70 [&_.ghost]:fill-none [&_.ghost]:stroke-foreground/15 [&_g[data-tip]:hover_.hit]:fill-foreground/5';
@@ -117,33 +117,86 @@ export function Risk({runs, cases, focus, label}) {
   }}</Chart>;
 }
 
-/* Every row as one cell. Column i is the same row for every model. */
+/* Every row as one cell: column i is the same row for every model. Drawn on one canvas, because 12k cells as SVG
+   made the whole page slow to restyle (theme switches, menus). Hover marks the column and shows the row at once;
+   click opens it. */
+const HEAD = 18, SH = 20, ROWH = 20, RGAP = 2, RH = 13, TOP = SH + 6;
+const cssVar = (el, v) => getComputedStyle(el).getPropertyValue(v).trim();
+function hatchPattern(ctx, color) {
+  const c = document.createElement('canvas'); c.width = c.height = 4;
+  const g = c.getContext('2d'); g.strokeStyle = color; g.lineWidth = 1.2; g.beginPath(); g.moveTo(0, 4); g.lineTo(4, 0); g.moveTo(-1, 1); g.lineTo(1, -1); g.moveTo(3, 5); g.lineTo(5, 3); g.stroke();
+  return ctx.createPattern(c, 'repeat');
+}
 export function RecordGrid({runs, cases}) {
-  const [ref, w] = useWidth();
+  const [ref, w] = useWidth(), cv = useRef(null), band = useRef(null), L = useRef(null);
   let body = null;
   if (w > 0) {
     const LW = w < 640 ? 132 : 228, groups = [];
     for (const c of cases) { const g = groups.at(-1), name = catInfo(catKey(c)).name; if (g && g.name === name) g.cases.push(c); else groups.push({name, cases: [c]}); }
-    const avail = w - LW - 4, gaps = Math.max(1, groups.length - 1), pitch = Math.max(3, Math.min(12, Math.floor((avail - 7 * gaps) / cases.length))), GAP = groups.length > 1 ? Math.max(7, Math.min(22, Math.floor((avail - pitch * cases.length) / gaps))) : 0, cell = Math.max(2, pitch - 1), RH = 13;
+    const avail = w - LW - 4, gaps = Math.max(1, groups.length - 1), pitch = Math.max(3, Math.min(12, Math.floor((avail - 7 * gaps) / cases.length))), GAP = groups.length > 1 ? Math.max(7, Math.min(22, Math.floor((avail - pitch * cases.length) / gaps))) : 0, cell = Math.max(2, pitch - 1);
     const xs = []; let x = 0; for (const g of groups) { g.x = x; for (const _ of g.cases) { xs.push(x); x += pitch; } g.w = x - g.x - 1; x += GAP; }
-    const W = x - GAP, res = runs.map(r => cases.map(c => result(r.id, c.id)));
-    const wrong = cases.map((c, i) => { let k = 0, m = 0; res.forEach(row => { const v = row[i]; if (!v) return; m++; if (!okOf(v)) k++; }); return [k, m]; });
-    const SH = 20, label = 'sticky left-0 z-[2] flex shrink-0 items-center justify-between gap-2 overflow-hidden bg-card pr-3 text-[13px]';
-    body = <div className="relative flex w-max min-w-full flex-col gap-0.5">
-      <div className="flex items-center"><div className={label} style={{width: LW}} />
-        <svg width={W} height={18} aria-hidden="true" className={SVG_CLS}>{groups.map(g => { const fit = Math.floor(g.w / 6.3), short = g.name.split(/\s+/)[0], t = g.name.length <= fit ? g.name : short.length <= fit ? short : fit >= 4 ? clip(short, fit) : ''; return <g key={g.name} data-tip={tip(g.name, [['Rows', g.cases.length]])}><rect className="hit" x={g.x} y="0" width={g.w + 1} height="18" />{t && <text className="t-ink" x={g.x} y="10">{t}</text>}<line className="axis" x1={g.x} x2={g.x + g.w} y1="16.5" y2="16.5" /></g>; })}</svg>
-      </div>
-      <div className="mb-1 flex items-center"><div className={cn(label, 'text-xs text-muted-foreground')} style={{width: LW}}>Models wrong</div>
-        <svg width={W} height={SH} aria-hidden="true" className={SVG_CLS}>{cases.map((c, i) => { const [k, m] = wrong[i], hh = m ? Math.round((SH - 3) * k / m) : 0; return <a key={c.id} href={rowHref(c)} tabIndex={-1} data-tip={tip(caseTitle(c), [['Models wrong', `${k} of ${m}`], ['Answer key', goldText(c)]])}><rect className="hit" x={xs[i]} y="0" width={pitch} height={SH} /><rect x={xs[i]} y={SH - 1} width={cell} height="1" fill="var(--border)" />{hh > 0 && <rect x={xs[i]} y={SH - 1 - hh} width={cell} height={hh} fill="var(--bad)" />}</a>; })}</svg>
-      </div>
-      {runs.map((r, ri) => { let n = 0; const cells = cases.map((c, i) => { const v = res[ri][i], ok = okOf(v), err = v && !answered(v); if (v && !ok) n++; const inset = !v || err ? .5 : 0;
-          return <a key={c.id} href={rowHref(c)} tabIndex={-1} data-tip={tip(caseTitle(c), [['Task', taskName(c.task)], ['Answer key', goldText(c)], [ident(r).name, answerOf(v)]])}><rect x={xs[i] + inset} y={inset} width={cell - 2 * inset} height={RH - 2 * inset} rx=".75" fill={!v ? 'none' : err ? 'url(#hatch)' : ok ? 'var(--grid-ok)' : 'var(--bad)'} stroke={!v ? 'var(--border)' : err ? 'var(--bad)' : undefined} /></a>; });
-        return <div key={r.id} className="flex items-center"><div className={label} style={{width: LW}} title={runName(r)}>
+    const W = x - GAP, H = TOP + runs.length * (ROWH + RGAP) - RGAP, res = runs.map(r => cases.map(c => result(r.id, c.id)));
+    /* 0 not run, 1 right, 2 wrong, 3 no valid answer */
+    const codes = res.map(row => Uint8Array.from(row, v => !v ? 0 : !answered(v) ? 3 : okOf(v) ? 1 : 2));
+    const wrong = cases.map((_, i) => { let k = 0, m = 0; for (const row of codes) { if (!row[i]) continue; m++; if (row[i] !== 1) k++; } return [k, m]; });
+    L.current = {xs, pitch, cell, W, H, codes, wrong, runs, cases, res};
+    body = <div className="relative flex w-max min-w-full">
+      <div className="sticky left-0 z-[2] shrink-0 bg-card pr-3" style={{width: LW}}>
+        <div style={{height: HEAD + 2}} />
+        <div className="flex items-center text-xs text-muted-foreground" style={{height: SH, marginBottom: TOP - SH}}>Models wrong</div>
+        {runs.map((r, ri) => <div key={r.id} className="flex items-center justify-between gap-2 overflow-hidden text-[13px]" style={{height: ROWH, marginBottom: RGAP}} title={runName(r)}>
           <span className="inline-flex min-w-0 items-center gap-2"><i className="size-2 shrink-0 rounded-full" style={{background: ident(r).color}} /><span className="truncate font-medium">{w < 640 ? ident(r).short : ident(r).name}</span></span>
-          <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground tabular-nums">{n} wrong</span></div>
-          <svg width={W} height={RH} aria-hidden="true" className={cn(SVG_CLS, 'relative z-[1]')}><Hatch />{cells}</svg></div>; })}
+          <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground tabular-nums">{codes[ri].reduce((n, v) => n + (v > 1), 0)} wrong</span>
+        </div>)}
+      </div>
+      <div className="relative" style={{width: W}}>
+        <svg width={W} height={HEAD} aria-hidden="true" className={cn(SVG_CLS, 'mb-0.5')}>{groups.map(g => { const fit = Math.floor(g.w / 6.3), short = g.name.split(/\s+/)[0], t = g.name.length <= fit ? g.name : short.length <= fit ? short : fit >= 4 ? clip(short, fit) : ''; return <g key={g.name} data-tip={tip(g.name, [['Rows', g.cases.length]])}><rect className="hit" x={g.x} y="0" width={g.w + 1} height="18" />{t && <text className="t-ink" x={g.x} y="10">{t}</text>}<line className="axis" x1={g.x} x2={g.x + g.w} y1="16.5" y2="16.5" /></g>; })}</svg>
+        <div ref={band} aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 z-[1] rounded-[3px] bg-foreground/[.08] opacity-0 ring-1 ring-foreground/15" style={{top: HEAD + 2, width: 0}} />
+        <canvas ref={cv} className="relative block cursor-pointer" style={{width: W, height: H}} />
+      </div>
     </div>;
   }
+  useEffect(() => {
+    const c = cv.current, g = L.current; if (!c || !g) return;
+    const {xs, pitch, cell, W, H, codes, wrong} = g, n = xs.length, ctx = c.getContext('2d');
+    const dpr = Math.min(2, devicePixelRatio || 1); c.width = Math.ceil(W * dpr); c.height = Math.ceil(H * dpr);
+    const draw = () => {
+      const ok = cssVar(c, '--grid-ok'), bad = cssVar(c, '--bad'), line = cssVar(c, '--border'), hatch = hatchPattern(ctx, bad);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = line; for (let i = 0; i < n; i++) ctx.fillRect(xs[i], SH - 1, cell, 1);
+      ctx.fillStyle = bad; for (let i = 0; i < n; i++) { const [k, m] = wrong[i]; if (k && m) { const hh = Math.round((SH - 3) * k / m); ctx.fillRect(xs[i], SH - 1 - hh, cell, hh); } }
+      codes.forEach((row, ri) => {
+        const y = TOP + ri * (ROWH + RGAP) + (ROWH - RH) / 2;
+        for (const [code, style] of [[1, ok], [2, bad], [3, hatch]]) { ctx.fillStyle = style; for (let i = 0; i < n; i++) if (row[i] === code) ctx.fillRect(xs[i], y, cell, RH); }
+        ctx.lineWidth = 1;
+        for (const [code, style] of [[0, line], [3, bad]]) { ctx.strokeStyle = style; for (let i = 0; i < n; i++) if (row[i] === code) ctx.strokeRect(xs[i] + .5, y + .5, Math.max(0, cell - 1), RH - 1); }
+      });
+    };
+    /* Which row and model sit under the pointer. */
+    const at = e => {
+      const r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      let lo = 0, hi = n - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (xs[m] <= x) lo = m; else hi = m - 1; }
+      if (!(x >= xs[lo] && x < xs[lo] + pitch)) return null;
+      if (y < SH) return {i: lo, ri: -1};
+      const ri = Math.floor((y - TOP) / (ROWH + RGAP)); return y >= TOP && ri < codes.length ? {i: lo, ri} : null;
+    };
+    let key = '';
+    const mark = i => { const b = band.current; if (!b) return; if (i < 0) { b.style.opacity = '0'; return; } b.style.transform = `translateX(${xs[i] - 2}px)`; b.style.width = `${cell + 4}px`; b.style.opacity = '1'; };
+    const move = e => {
+      const h = at(e), k = h ? `${h.i}:${h.ri}` : '';
+      if (!h) { if (key) { hideTip(); mark(-1); } key = ''; return; }
+      if (k === key) { moveTip(e.clientX, e.clientY); return; }
+      key = k; mark(h.i);
+      const cs = g.cases[h.i], [nk, nm] = wrong[h.i];
+      showTip({t: caseTitle(cs), r: h.ri < 0 ? [['Models wrong', `${nk} of ${nm}`], ['Answer key', goldText(cs)]] : [['Task', taskName(cs.task)], ['Answer key', goldText(cs)], [ident(g.runs[h.ri]).name, answerOf(g.res[h.ri][h.i])]]}, e.clientX, e.clientY);
+    };
+    const leave = () => { key = ''; hideTip(); mark(-1); };
+    const click = e => { const h = at(e); if (h) location.hash = rowHref(g.cases[h.i]); };
+    draw();
+    const mo = new MutationObserver(draw); mo.observe(document.documentElement, {attributes: true, attributeFilter: ['class']});
+    c.addEventListener('pointermove', move); c.addEventListener('pointerleave', leave); c.addEventListener('click', click);
+    return () => { mo.disconnect(); c.removeEventListener('pointermove', move); c.removeEventListener('pointerleave', leave); c.removeEventListener('click', click); hideTip(); };
+  }, [w, runs, cases]);
   return <div ref={ref} role="img" aria-label="Result of every model on every row" className="w-full min-w-0 overflow-x-auto pb-1">{body}</div>;
 }
 

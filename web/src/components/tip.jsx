@@ -3,6 +3,11 @@
 import {useEffect, useRef, useState} from 'react';
 
 export const tip = (t, r = []) => JSON.stringify({t, r});
+/* For canvases, which have no element per cell: show, move and hide the same tooltip directly. */
+let api = null;
+export const showTip = (body, x, y) => api?.show(body, x, y);
+export const moveTip = (x, y) => api?.move(x, y);
+export const hideTip = () => api?.hide();
 
 export function ChartTip() {
   const box = useRef(null), [body, setBody] = useState(null);
@@ -21,9 +26,10 @@ export function ChartTip() {
     const move = e => { if (cur && e.target.closest?.('[data-tip]') === cur) place(e.clientX, e.clientY); };
     const out = e => { const el = e.target.closest?.('[data-tip]'); if (el && !el.contains(e.relatedTarget)) hide(); };
     const focus = e => { const el = e.target.closest?.('[data-tip]'); if (el) { const b = el.getBoundingClientRect(); show(el, b.right, b.bottom); } };
+    api = {show: (b, x, y) => { cur = null; setBody(b); requestAnimationFrame(() => place(x, y)); }, move: place, hide};
     document.addEventListener('pointerover', over); document.addEventListener('pointermove', move); document.addEventListener('pointerout', out);
     document.addEventListener('focusin', focus); document.addEventListener('focusout', hide); addEventListener('scroll', hide, {passive: true}); addEventListener('hashchange', hide);
-    return () => { document.removeEventListener('pointerover', over); document.removeEventListener('pointermove', move); document.removeEventListener('pointerout', out); document.removeEventListener('focusin', focus); document.removeEventListener('focusout', hide); removeEventListener('scroll', hide); removeEventListener('hashchange', hide); };
+    return () => { api = null; document.removeEventListener('pointerover', over); document.removeEventListener('pointermove', move); document.removeEventListener('pointerout', out); document.removeEventListener('focusin', focus); document.removeEventListener('focusout', hide); removeEventListener('scroll', hide); removeEventListener('hashchange', hide); };
   }, []);
   return (
     <div ref={box} role="tooltip" hidden={!body} className="pointer-events-none fixed z-[60] max-w-xs rounded-md bg-foreground px-3 py-2 text-xs leading-relaxed text-background shadow-lg">
