@@ -22,12 +22,12 @@ export function TaskDialog({t, onOpenChange}) {
       <DialogHeader>
         <div className="flex items-center gap-2 text-xs text-muted-foreground"><span>{B.catInfo(B.taskCat(t)).name}</span><span className="font-mono">{t}</span></div>
         <DialogTitle>{B.taskName(t)}</DialogTitle>
-        <DialogDescription>{B.taskAsk(t)}</DialogDescription>
+        <DialogDescription>{B.taskBlurb(t)}</DialogDescription>
       </DialogHeader>
       <div className="space-y-5 border-t pt-5">
         <div>
           <h3 className="mb-2.5 text-xs font-medium text-muted-foreground">Options</h3>
-          {i.per_row_options ? <p className="text-sm text-muted-foreground">The options differ per row and come from the record.</p> :
+          {i.per_row_options ? <p className="text-sm text-foreground/80">{B.taskPicks(t) || 'The options'}, offered with each row.</p> :
             <ul className="space-y-2">{B.taskOptions(t).map(o => <li key={o} className="grid grid-cols-[minmax(88px,max-content)_1fr] items-baseline gap-3 text-sm"><Badge variant="outline" className="justify-self-start">{human(o)}</Badge><span className="text-foreground/80">{q0?.options?.[o]}</span></li>)}</ul>}
         </div>
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">{facts.map(([k, v]) => <div key={k}><dt className="text-xs text-muted-foreground">{k}</dt><dd className="mt-0.5 text-sm font-medium">{v}</dd></div>)}</dl>
@@ -56,7 +56,7 @@ export function TaskDialog({t, onOpenChange}) {
 export function Tasks({route}) {
   const [closed, setClosed] = useState(() => new Set()), [info, setInfo] = useState(null);
   const cat = route.q.get('category') || '', mod = route.q.get('modality') || '', q = (route.q.get('q') || '').toLowerCase();
-  const tasks = B.taskOrder().filter(t => (!cat || B.taskCat(t) === cat) && (!mod || (mod === 'image') === B.isImageTask(t)) && (!q || `${t} ${B.taskName(t)} ${B.taskAsk(t)} ${B.catInfo(B.taskCat(t)).name} ${B.taskInfo(t).input_type || ''} ${B.datasetsOfTask(t).map(d => d.name).join(' ')}`.toLowerCase().includes(q)));
+  const tasks = B.taskOrder().filter(t => (!cat || B.taskCat(t) === cat) && (!mod || (mod === 'image') === B.isImageTask(t)) && (!q || `${t} ${B.taskName(t)} ${B.taskBlurb(t)} ${B.taskAsk(t)} ${B.catInfo(B.taskCat(t)).name} ${B.taskInfo(t).input_type || ''} ${B.datasetsOfTask(t).map(d => d.name).join(' ')}`.toLowerCase().includes(q)));
   const groups = B.categoryOrder().map(k => [k, tasks.filter(t => B.taskCat(t) === k)]).filter(([, ts]) => ts.length);
   const toggle = k => setClosed(s => { const n = new Set(s); n.has(k) ? n.delete(k) : n.add(k); return n; });
   const H = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground';
@@ -72,15 +72,16 @@ export function Tasks({route}) {
     <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] table-fixed text-sm">
-          <colgroup><col className="w-[84px] max-md:w-0" /><col /><col className="w-[220px] max-lg:w-0" /><col className="w-[84px] max-lg:w-0" /><col className="w-[64px]" /><col className="w-[124px] max-md:w-0" /><col className="w-[108px]" /><col className="w-[52px]" /></colgroup>
+          <colgroup><col /><col className="w-[220px] max-lg:w-0" /><col className="w-[84px] max-lg:w-0" /><col className="w-[64px]" /><col className="w-[124px] max-md:w-0" /><col className="w-[108px]" /><col className="w-[52px]" /></colgroup>
+          {/* Task names line up with the group heading, which sits after its chevron: 20px padding + 16px icon + 8px gap. */}
           <thead><tr className="border-b">
-            <th className={cn(H, 'pl-5 max-md:hidden')}>ID</th><th className={cn(H, 'max-md:pl-5')}>Task</th><th className={cn(H, 'max-lg:hidden')}>Input</th><th className={cn(H, 'text-right max-lg:hidden')}>Options</th>
+            <th className={cn(H, 'pl-11')}>Task</th><th className={cn(H, 'max-lg:hidden')}>Input</th><th className={cn(H, 'text-right max-lg:hidden')}>Options</th>
             <th className={cn(H, 'text-right')}>Rows</th><th className={cn(H, 'max-md:hidden')}>Best model</th><th className={H}>Verdict</th><th className={H}><span className="sr-only">Details</span></th>
           </tr></thead>
           {groups.map(([k, ts]) => { const open = !closed.has(k) || !!q; return (
             <tbody key={k}>
               <tr className="border-b bg-muted/50">
-                <td colSpan={8} className="p-0">
+                <td colSpan={7} className="p-0">
                   <button type="button" onClick={() => toggle(k)} aria-expanded={open} className="flex h-10 w-full cursor-pointer items-center gap-2 px-5 text-left text-sm outline-none focus-visible:bg-muted">
                     <ChevronRightIcon className={cn('size-4 text-muted-foreground transition-transform', open && 'rotate-90')} />
                     <span className="font-semibold whitespace-nowrap">{B.catInfo(k).name}</span>
@@ -91,10 +92,9 @@ export function Tasks({route}) {
               </tr>
               {open && ts.map(t => { const i = B.taskInfo(t), b = B.bestOn(t), opts = B.taskOptions(t);
                 return <tr key={t} onClick={e => { if (!e.target.closest('a,button')) location.hash = taskHref(t); }} className="group cursor-pointer border-b transition-colors last:border-0 hover:bg-muted/40">
-                  <td className="py-2.5 pl-5 font-mono text-xs text-muted-foreground max-md:hidden">{t}</td>
-                  <td className="min-w-0 px-3 py-2.5 max-md:pl-5">
+                  <td className="min-w-0 py-2.5 pr-3 pl-11">
                     <a href={taskHref(t)} className="block truncate font-medium hover:underline max-md:whitespace-normal">{B.taskName(t)}</a>
-                    <span className="block truncate text-[13px] text-muted-foreground max-md:whitespace-normal">{B.taskAsk(t)}</span>
+                    <span className="block truncate text-[13px] text-muted-foreground max-md:whitespace-normal">{B.taskBlurb(t)}</span>
                   </td>
                   <td className="px-3 py-2.5 max-lg:hidden">{i.input_type && <Badge variant="outline" className="max-w-full font-normal text-foreground/80">{B.isImageTask(t) && <ImageIcon className="text-muted-foreground" />}<span className="truncate">{i.input_type}</span></Badge>}</td>
                   <td className="px-3 py-2.5 text-right tabular-nums max-lg:hidden">{i.per_row_options ? <span className="text-[13px] text-muted-foreground" title="The options come from each record">varies</span> :
@@ -105,7 +105,7 @@ export function Tasks({route}) {
                   <td className="py-2.5 pr-3 text-right"><Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setInfo(t)} aria-label={`Details and source for ${B.taskName(t)}`}><InfoIcon /></Button></td>
                 </tr>; })}
             </tbody>); })}
-          {!groups.length && <tbody><tr><td colSpan={8} className="px-5 py-12 text-center text-sm text-muted-foreground">No task matches these filters.</td></tr></tbody>}
+          {!groups.length && <tbody><tr><td colSpan={7} className="px-5 py-12 text-center text-sm text-muted-foreground">No task matches these filters.</td></tr></tbody>}
         </table>
       </div>
     </div>

@@ -32,7 +32,7 @@
   },
   "prompt_version": "choice-v1",
   "corpus": {
-    "version": "4.0.0",
+    "version": "1.0",
     "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
     "current": true
   },

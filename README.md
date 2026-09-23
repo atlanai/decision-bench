@@ -274,7 +274,7 @@ Copyable citation for the version recorded in `CITATION.cff`:
 @software{decision_bench_v4,
   author  = {{Decision Bench contributors}},
   title   = {Decision Bench: bounded decisions on real public data},
-  version = {4.0.0}
+  version = {1.0}
 }
 ```
 

@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
-import {ArrowDownIcon, ArrowUpIcon} from 'lucide-react';
+import {ArrowDownIcon, ArrowUpIcon, ChevronDownIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, compact, num, metric, plural, secs, ciText} from '@/lib/format';
 import {href, withQ, rowHref, taskHref, catHref} from '@/lib/route';
 import {tip} from '@/components/tip';
 import {cn} from '@/lib/utils';
-import {ModelName, Section, Notice, Dash} from '@/components/common';
+import {ModelName, Section, Notice, Dash, Notes} from '@/components/common';
 import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns} from '@/components/filters';
 import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
@@ -23,23 +23,27 @@ export const ChartCard = ({title, description, foot, children, className}) => (
 );
 const Link = ({href, children}) => <a href={href} className="text-brand underline-offset-4 hover:underline">{children}</a>;
 const HowToAdd = () => <>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, and open a PR. {B.repoOk() && <Link href={B.gh('results/README.md')}>How to submit results</Link>}</>;
+const SubmitLink = () => B.repoOk() ? <Link href={B.gh('results/README.md')}>How to submit results</Link> : null;
 
 /* ---------- Banner ---------- */
 /* Rows by use case as a small pixel bar chart, one square per eight rows. Each line filters the leaderboard.
-   On hover a wave runs across the squares (see .px-* in index.html). */
+   On hover a wave runs across the squares (see .px-* in index.html) and the caption under the list says what the
+   use case covers, in place, so nothing floats over the chart. */
 const PER = 8;
 function UseCases({route}) {
   const cur = route.q.get('category') || '', counts = B.categoryOrder().map(k => [k, B.allCases.filter(c => B.catKey(c) === k).length]);
+  const [hot, setHot] = useState(''), shown = hot || cur;
   return (
     <div data-no-trail className="w-full lg:max-w-[400px] lg:justify-self-end">
       <div className="mb-3 flex items-baseline justify-between gap-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">
         <span>Browse by use case</span>
         <span className="inline-flex items-center gap-1.5"><i className="inline-block size-[6px] bg-foreground/70" />= {PER} rows</span>
       </div>
-      <ul className="px-strip -mx-2">
+      <ul className="px-strip -mx-2" onPointerLeave={() => setHot('')}>
         {counts.map(([k, n]) => { const on = cur === k, sq = Math.max(1, Math.round(n / PER)), w = sq * 8 - 2;
-          return <li key={k}><a href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} title={B.catInfo(k).description} data-on={on || undefined} aria-current={on || undefined}
-            className="px-chip grid grid-cols-[10rem_minmax(0,1fr)_2.25rem] items-center gap-3 rounded-md px-2 py-[5px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-foreground/[.03]">
+          return <li key={k}><a href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} aria-describedby="use-case-note" data-on={on || undefined} aria-current={on || undefined}
+            onPointerEnter={() => setHot(k)} onFocus={() => setHot(k)} onBlur={() => setHot('')}
+            className="px-chip grid grid-cols-[10rem_minmax(0,1fr)_2.25rem] items-center gap-3 rounded-md px-2 py-[5px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-foreground/[.04]">
             <span className="px-label truncate">{B.catInfo(k).name}</span>
             <svg width={w} height="6" viewBox={`0 0 ${w} 6`} aria-hidden="true" className="overflow-visible">
               {Array.from({length: sq}, (_, i) => <rect key={i} x={i * 8} y="0" width="6" height="6" className="px px-on" style={{'--d': `${i * 22}ms`}} />)}
@@ -47,6 +51,9 @@ function UseCases({route}) {
             <span className="px-n text-right tabular-nums">{n}</span>
           </a></li>; })}
       </ul>
+      <p id="use-case-note" aria-live="polite" className="mt-3 min-h-10 border-t pt-3 text-[13px] leading-snug text-muted-foreground">
+        {shown ? <><span className="font-medium text-foreground">{B.catInfo(shown).name}.</span> {B.catInfo(shown).description}{cur === shown && !hot && <> <a href={href('', {modality: route.q.get('modality') || ''})} className="text-foreground underline-offset-4 hover:underline">Show all</a></>}</> : 'Pick a use case to filter the leaderboard to its rows.'}
+      </p>
     </div>
   );
 }
@@ -126,9 +133,20 @@ function Banner({route}) {
 }
 
 /* ---------- Leaderboard ---------- */
+/* One-word column labels so the header stays on a single line; the full name is in the tooltip */
+const SHORT_CAT = {'AI agents': 'Agents', 'Customer support': 'Support', 'Product management': 'Product'};
+const shortCat = name => { const n = name.split(' & ')[0]; return SHORT_CAT[n] || n; };
 const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
-function Leaderboard({route, runs, cases}) {
-  const [sort, setSort] = useState({key: 'accuracy', dir: 'desc'}), [more, setMore] = useState(false);
+/* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
+function LeaderboardSection({route, runs, cases}) {
+  const [more, setMore] = useState(false), cat = route.q.get('category') || '';
+  const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground" title="Tokens, macro F1, calibration and errors" aria-expanded={more} onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
+  return <Section id="leaderboard" title="Leaderboard" actions={toggle} description={`${cat ? `${B.catInfo(cat).name} rows` : 'All rows'}${route.q.get('modality') ? ` · ${route.q.get('modality')} inputs` : ''}. Click a column to re-sort.`} className="mt-8">
+    <Leaderboard route={route} runs={runs} cases={cases} more={more} />
+  </Section>;
+}
+function Leaderboard({route, runs, cases, more}) {
+  const [sort, setSort] = useState({key: 'accuracy', dir: 'desc'});
   const cat = route.q.get('category') || '', cols = cat ? B.taskOrder().filter(t => cases.some(c => c.task === t)) : B.categoryOrder().filter(k => cases.some(c => B.catKey(c) === k));
   const colCases = k => cases.filter(c => (cat ? c.task : B.catKey(c)) === k), colName = k => cat ? B.taskName(k) : B.catInfo(k).name, colHref = k => cat ? taskHref(k) : catHref(k);
   const tasks = [...new Set(cases.map(c => c.task))];
@@ -150,7 +168,7 @@ function Leaderboard({route, runs, cases}) {
           <thead><tr className="border-b text-left align-bottom [&>th]:py-2">
             <Th title="1 + the number of models whose 95% interval lies entirely above this one" className="w-10">#</Th><Th>Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
-            {cols.map(k => <Th key={k} k={`col:${k}`} className="px-1.5 text-right text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right" title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : colName(k).split(' & ')[0]}</Th>)}
+            {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
             <Th k="cost" className="text-right" title="Cost per 1,000 rows: provider-reported, else estimated from list prices">$ / 1k</Th>
             {more && <><Th k="tokens" className="text-right" title="Input + output tokens per row">Tokens</Th><Th k="macro" className="text-right" title="Mean F1 across tasks">Macro F1</Th><Th k="ece" className="text-right" title="Expected calibration error; lower is better">ECE</Th><Th k="brier" className="text-right" title="Squared error of the stated probabilities; lower is better">Brier</Th><Th k="errors" className="text-right" title="Rows with no valid answer; counted as wrong">No answer</Th></>}
@@ -175,10 +193,13 @@ function Leaderboard({route, runs, cases}) {
         </table>
       </div>
     </div>
-    <div className="mt-3 flex flex-wrap items-start justify-between gap-x-6 gap-y-2 text-xs text-muted-foreground">
-      <Button variant="link" size="xs" className="h-auto px-0" onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns: tokens, macro F1, calibration, errors'}</Button>
-      <span className="max-w-3xl">{partial && '* Cost known for only part of the rows. '}Models whose 95% intervals overlap share a rank. Image tasks are scored only for models that were sent the image.</span>
-    </div>
+    <Notes items={[
+      'Overlapping 95% intervals share a rank.',
+      B.allCases.some(c => B.isImageTask(c.task)) && 'Image tasks count only for models sent the image.',
+      partial && '* Cost known for part of the rows.',
+      B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
+      B.unevaluated().length > 0 && <>Not yet evaluated: {B.unevaluated().map(k => B.M(k).short).join(', ')}. <SubmitLink /></>,
+    ]} />
   </>;
 }
 
@@ -256,11 +277,7 @@ export function Home({route}) {
         <Section title="Leaderboard"><Notice>No model has been evaluated on this version yet. <HowToAdd /></Notice></Section>
         <Section title="What the bench covers" description={`${plural(B.allCases.length, 'row')} in ${B.taskOrder().length} tasks. Open a task to read its rows.`}><Coverage /></Section>
       </> : !runs.length ? <Section title="Leaderboard"><Notice>No selected model has results on these rows.</Notice></Section> : <>
-        <Section id="leaderboard" title="Leaderboard" description={`${cat ? `${B.catInfo(cat).name} rows` : 'All rows'}${route.q.get('modality') ? ` · ${route.q.get('modality')} inputs` : ''}. Click a column to re-sort.`} className="mt-8">
-          <Leaderboard route={route} runs={runs} cases={cases} />
-          {B.PARTIAL.length > 0 && <p className="mt-2 text-xs text-muted-foreground">Partial runs, not ranked: {B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.</p>}
-          {B.unevaluated().length > 0 && <p className="mt-2 text-xs text-muted-foreground">Configured but not evaluated yet: {B.unevaluated().map(k => B.M(k).short).join(', ')}. <HowToAdd /></p>}
-        </Section>
+        <LeaderboardSection route={route} runs={runs} cases={cases} />
         <Section title="Accuracy, speed and cost"><Headline runs={runs} cases={cases} /></Section>
         <Section title="Accuracy by task" description="Only misses are coloured; faded cells are at or above 95%. Click a task to open it."><HeatTasks runs={runs} cases={cases} /></Section>
         <Section title="Trade-offs"><Tradeoffs runs={runs} cases={cases} /></Section>

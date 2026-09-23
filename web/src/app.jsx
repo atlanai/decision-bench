@@ -17,14 +17,35 @@ import {Review} from '@/pages/review';
 
 const TITLES = {home: 'Leaderboard', tasks: 'Tasks', models: 'Models', compare: 'Compare', data: 'Data', methodology: 'Methodology', review: 'Review'};
 
+/* The loading screen lives in index.html, outside React. */
+const boot = (msg, f) => window.dbBoot?.(msg, f);
+function hideBoot() { const el = document.getElementById('boot'); if (!el || el.dataset.done != null) return; boot('Ready', 1); el.dataset.done = ''; setTimeout(() => el.remove(), 400); }
+/* The Tailwind runtime writes the stylesheet after the page mounts, so the first layout is unstyled and charts
+   measure the wrong width until their ResizeObserver catches up. Lift the loading screen once the stylesheet has
+   been quiet for a moment, the fonts are in and two frames have let the charts re-measure. */
+function hideBootWhenSettled() {
+  let t;
+  const mo = new MutationObserver(() => quiet()), done = () => { mo.disconnect(); clearTimeout(t); clearTimeout(cap); hideBoot(); };
+  const sized = () => [...document.querySelectorAll('[role=img] > svg[width]')].every(s => Math.abs(+s.getAttribute('width') - Math.max(220, s.parentElement.clientWidth)) <= 1);
+  const check = () => sized() ? done() : requestAnimationFrame(check);
+  const quiet = () => { clearTimeout(t); t = setTimeout(() => (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(() => requestAnimationFrame(check))), 150); };
+  const cap = setTimeout(done, 5000);
+  mo.observe(document.head, {subtree: true, childList: true, characterData: true});
+  boot('Drawing the charts', .85); quiet();
+}
+
 function useBench() {
   const [state, setState] = useState({ready: false, error: null});
   useEffect(() => {
     (async () => {
       try {
+        boot('Fetching results', .25);
         const res = await fetch('data.json', {cache: 'no-store'}); if (!res.ok) throw Error(`HTTP ${res.status}`);
         const json = await res.json();
+        boot('Fetching datasets', .45);
         let ds = null; try { const d = await fetch('datasets.json', {cache: 'no-store'}); ds = d.ok ? await d.json() : null; } catch {}
+        boot('Scoring the models', .6);
+        await new Promise(r => setTimeout(r));
         init(json, ds); setState({ready: true, error: null});
       } catch (e) { console.error(e); setState({ready: false, error: e.message}); }
     })();
@@ -60,8 +81,10 @@ export function App() {
     document.title = `${t} · Decision Bench`;
   }, [ready, route]);
 
+  useEffect(() => { if (ready) hideBootWhenSettled(); else if (error) hideBoot(); }, [ready, error]);
+
   if (error) return <EmptyPage title="Results are not built yet">Run <code>python3 -m decision_bench report</code>, then refresh.<div className="mt-2 opacity-70">{error}</div></EmptyPage>;
-  if (!ready) return <div className="grid min-h-[80vh] place-items-center text-sm text-muted-foreground">Loading Decision Bench…</div>;
+  if (!ready) return null;
   const wide = route.page === 'home';
   return (
     <TooltipProvider>

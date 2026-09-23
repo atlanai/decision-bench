@@ -1,27 +1,29 @@
 /* Filter controls bound to the URL: use case, input modality, which models are shown, search. */
-import {useEffect, useRef, useState} from 'react';
+import {startTransition, useEffect, useRef, useState} from 'react';
 import {ChevronDownIcon, SearchIcon} from 'lucide-react';
 import {categoryOrder, catInfo, RUNS, keyOf} from '@/lib/bench';
 import {withQ, go, replace} from '@/lib/route';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectSeparator} from '@/components/ui/select';
+import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
-import {Checkbox} from '@/components/ui/checkbox';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {ModelName} from '@/components/common';
+import {cn} from '@/lib/utils';
 
+/* Looks like a select, behaves like a non-modal menu (see ui/dropdown-menu), so opening it costs nothing. */
 export function UseCaseSelect({route, className}) {
-  const cur = route.q.get('category') || 'all';
+  const cur = route.q.get('category') || '';
   return (
-    <Select value={cur} onValueChange={v => go(withQ(route, {category: v === 'all' ? '' : v}))}>
-      <SelectTrigger className={className} aria-label="Use case"><SelectValue /></SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">All use cases</SelectItem>
-        <SelectSeparator />
-        {categoryOrder().map(k => <SelectItem key={k} value={k}>{catInfo(k).name}</SelectItem>)}
-      </SelectContent>
-    </Select>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild><Button variant="outline" className={cn('justify-between font-normal', className)} aria-label="Use case">{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-(--radix-dropdown-menu-trigger-width)">
+        <DropdownMenuRadioGroup value={cur || 'all'} onValueChange={v => go(withQ(route, {category: v === 'all' ? '' : v}))}>
+          <DropdownMenuRadioItem value="all">All use cases</DropdownMenuRadioItem>
+          <DropdownMenuSeparator />
+          {categoryOrder().map(k => <DropdownMenuRadioItem key={k} value={k}>{catInfo(k).name}</DropdownMenuRadioItem>)}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -35,26 +37,27 @@ export function ModalityTabs({route}) {
 
 export const selectedRuns = route => { const sel = route.q.get('models'); if (!sel) return RUNS; const set = new Set(sel.split(',')); return RUNS.filter(r => set.has(keyOf(r))); };
 
+/* Which models the leaderboard shows: one "All models" row that selects or clears everything (and shows a dash
+   for a partial selection), then one checkbox per model. The ticks update at once; the page follows in a transition. */
 export function ModelPicker({route}) {
-  const sel = selectedRuns(route), n = sel.length;
-  const set = keys => go(withQ(route, {models: keys.length === RUNS.length ? '' : keys.length ? keys.join(',') : 'none'}));
-  const toggle = (k, on) => { const s = new Set(sel.map(keyOf)); on ? s.add(k) : s.delete(k); set(RUNS.map(keyOf).filter(x => s.has(x))); };
+  const fromUrl = selectedRuns(route).map(keyOf), [keys, setKeys] = useState(fromUrl), all = RUNS.map(keyOf);
+  const url = route.q.get('models') || '';
+  useEffect(() => { setKeys(selectedRuns(route).map(keyOf)); }, [url]); // eslint-disable-line react-hooks/exhaustive-deps
+  const set = next => { setKeys(next); startTransition(() => go(withQ(route, {models: next.length === all.length ? '' : next.length ? next.join(',') : 'none'}))); };
+  const n = keys.length, allOn = n === all.length ? true : n ? 'indeterminate' : false;
+  const keep = e => e.preventDefault();
   return (
-    <Popover>
-      <PopoverTrigger asChild><Button variant="outline">Models <span className="text-muted-foreground tabular-nums">{n}{n < RUNS.length ? ` of ${RUNS.length}` : ''}</span><ChevronDownIcon className="opacity-50" /></Button></PopoverTrigger>
-      <PopoverContent align="start" className="w-72 p-1">
-        <div className="flex gap-1 border-b p-1 pb-2">
-          <Button size="xs" variant="ghost" onClick={() => set(RUNS.map(keyOf))}>Select all</Button>
-          <Button size="xs" variant="ghost" onClick={() => set([])}>Clear</Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild><Button variant="outline" className="font-normal">Models <span className="text-muted-foreground tabular-nums">{n === all.length ? 'All' : `${n} of ${all.length}`}</span><ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
+      <DropdownMenuContent className="w-72">
+        <DropdownMenuCheckboxItem checked={allOn} onSelect={keep} onCheckedChange={() => set(allOn === true ? [] : all)} className="font-medium">All models<span className="ml-auto text-xs font-normal text-muted-foreground tabular-nums">{n}/{all.length}</span></DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        <div className="max-h-80 overflow-y-auto">
+          {RUNS.map(r => { const k = keyOf(r), on = keys.includes(k);
+            return <DropdownMenuCheckboxItem key={k} checked={on} onSelect={keep} onCheckedChange={v => set(all.filter(x => x === k ? v : keys.includes(x)))}><ModelName k={k} link={false} /></DropdownMenuCheckboxItem>; })}
         </div>
-        <div className="max-h-80 overflow-y-auto py-1">
-          {RUNS.map(r => { const k = keyOf(r), on = sel.includes(r);
-            return <label key={k} className="flex cursor-pointer items-center gap-3 rounded-sm px-2 py-1.5 text-sm hover:bg-accent">
-              <Checkbox checked={on} onCheckedChange={v => toggle(k, !!v)} /><ModelName k={k} link={false} />
-            </label>; })}
-        </div>
-      </PopoverContent>
-    </Popover>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

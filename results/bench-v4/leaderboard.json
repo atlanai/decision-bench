@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "suite": "bench-v4",
-  "corpus_version": "4.0.0",
+  "corpus_version": "1.0",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
   "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
   "models": [

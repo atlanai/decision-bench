@@ -1,7 +1,7 @@
 /* Hash routing: every view has a shareable URL. #/, #/tasks, #/task/<id>, #/row/<id>, #/models, #/model/<id>,
    #/compare, #/data, #/data/<dataset>, #/methodology, #/methodology/<section>, #/review/<row>.
    Filters live in the query string after the path. */
-import {useEffect, useState} from 'react';
+import {startTransition, useEffect, useState} from 'react';
 
 export const PAGES = ['tasks', 'task', 'row', 'models', 'model', 'compare', 'data', 'methodology', 'review'];
 
@@ -33,7 +33,8 @@ export function parseRoute() {
 export function useRoute() {
   const [route, setRoute] = useState(parseRoute);
   useEffect(() => {
-    const on = () => setRoute(parseRoute());
+    /* A transition, so the click that changed the URL (a menu closing, a tick) paints before the page re-renders. */
+    const on = () => { const r = parseRoute(); startTransition(() => setRoute(r)); };
     addEventListener('hashchange', on);
     return () => removeEventListener('hashchange', on);
   }, []);

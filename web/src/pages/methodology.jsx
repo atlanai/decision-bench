@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
-import {DownloadIcon} from 'lucide-react';
+import {ChartColumnIcon, DatabaseIcon, DownloadIcon, ScaleIcon, ScrollTextIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
 import {num} from '@/lib/format';
-import {PageHeader, Stat, Fit} from '@/components/common';
+import {PageHeader, Stat, Fit, Logo} from '@/components/common';
 import {Code} from '@/components/record';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 
@@ -42,8 +42,8 @@ export function Methodology({id}) {
     ['limits', 'Limits', 'Contamination, label noise, small tasks', <Terms items={[['Contamination', 'Public datasets may be in training data; each task states its risk.'], ['Label noise', 'Real labels carry error. Arguable rows are dropped by rule where possible and every row links to its source record.'], ['Small tasks', '20–40 rows each: read the interval, not the point.'], ['One prompt for all', 'No per-model tuning.'], ['Not your data', 'Research datasets and public records, not a production sample.']]} />],
     ['submit', 'Results and citing', 'Add a model by pull request; cite the datasets', <p>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, open a PR with that folder. The harness, viewer and selection code are MIT; each row keeps its dataset's licence. Please cite the datasets behind the tasks you use as well as the bench.{B.repoOk() && <> <A href={B.gh('results/README.md')}>How to submit</A> · <A href={B.gh('CITATION.cff')}>Citation</A>.</>}</p>],
   ];
-  const downloads = [['corpus.json', 'All rows', 'Every row with its answer key', 'JSON'], ['data.json', 'Site data', 'Everything the site shows', 'JSON'], ['datasets.json', 'Dataset records', 'Licences, terms and citations', 'JSON'], ['protocol.txt', 'Protocol', 'The frozen protocol', 'Text'],
-    ...B.RUNS.filter(r => r.files).map(r => [r.files.predictions, B.M(B.keyOf(r)).name, 'Predictions for every row', 'JSONL'])];
+  const files = [[DatabaseIcon, 'corpus.json', 'All rows', 'Every row with its answer key', 'JSON'], [ChartColumnIcon, 'data.json', 'Site data', 'Everything the site shows', 'JSON'], [ScaleIcon, 'datasets.json', 'Dataset records', 'Licences, terms and citations', 'JSON'], [ScrollTextIcon, 'protocol.txt', 'Protocol', 'The frozen protocol', 'TXT']];
+  const preds = B.RUNS.filter(r => r.files?.predictions);
   const steps = [['A real record', 'From an open-licence dataset, chosen by a written rule in a fixed order.'], ['One question', '12 words or fewer, 2–10 options, each described in one line.'], ['An answer from the source', 'The dataset’s annotators or an objective record, never a model.'], ['A strict JSON answer', 'One option plus a probability for each. Anything else is no answer.']];
   return <div className="max-w-4xl">
     <PageHeader title="Methodology" description="How the bench is built, what a model sees, how answers are scored, and where the limits are." />
@@ -61,8 +61,19 @@ export function Methodology({id}) {
         <AccordionContent className="prose-db max-w-3xl pb-6">{body}</AccordionContent>
       </AccordionItem>)}
     </Accordion>
-    <h2 className="mt-12 mb-4 text-lg font-semibold tracking-tight">Downloads</h2>
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{downloads.map(([h, l, s, k]) => <a key={h} href={h} download className="group flex items-center gap-3 rounded-xl border bg-card p-4 shadow-xs transition-colors hover:bg-muted/40">
-      <DownloadIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" /><span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{l}</span><span className="block truncate text-xs text-muted-foreground">{s}</span></span><span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">{k}</span></a>)}</div>
+    <h2 className="mt-12 text-lg font-semibold tracking-tight">Downloads</h2>
+    <p className="mt-1 text-sm text-muted-foreground">Everything behind the site, as plain files.</p>
+    <h3 className="mt-6 mb-3 text-xs font-medium text-muted-foreground">The bench</h3>
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{files.map(([Icon, h, l, s, k]) => <a key={h} href={h} download className="group flex flex-col rounded-xl border bg-card p-4 shadow-xs transition-colors hover:bg-muted/40">
+      <span className="flex items-center justify-between"><span className="grid size-8 place-items-center rounded-lg border bg-background text-muted-foreground group-hover:text-foreground"><Icon className="size-4" /></span><DownloadIcon className="size-4 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground" /></span>
+      <span className="mt-3 text-sm font-medium">{l}</span><span className="mt-0.5 text-xs text-muted-foreground">{s}</span>
+      <span className="mt-3 font-mono text-[11px] text-muted-foreground">{h}</span></a>)}</div>
+    {preds.length > 0 && <>
+      <h3 className="mt-8 mb-3 flex items-baseline justify-between gap-4 text-xs font-medium text-muted-foreground"><span>Predictions by model</span><span className="font-normal">JSONL · the answer and confidence for every row</span></h3>
+      <ul className="grid rounded-xl border bg-card p-1.5 shadow-xs sm:grid-cols-2 lg:grid-cols-3">{preds.map(r => { const k = B.keyOf(r), m = B.M(k);
+        return <li key={r.id}><a href={r.files.predictions} download className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/60">
+          <Logo k={k} size={20} /><span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium">{m.name}</span><span className="block truncate text-xs text-muted-foreground">{[m.vendor, m.iface && m.iface !== 'API' && m.iface].filter(Boolean).join(' · ') || 'Predictions'}</span></span>
+          <DownloadIcon className="size-4 shrink-0 text-muted-foreground/60 group-hover:text-foreground" /></a></li>; })}</ul>
+    </>}
   </div>;
 }

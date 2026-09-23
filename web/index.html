@@ -27,7 +27,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
 <script>try{const q=new URLSearchParams(location.search).get('theme'),s=q==='light'||q==='dark'?q:localStorage.getItem('db-theme');document.documentElement.classList.toggle('dark',s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches);}catch(e){}</script>
-<style>html{background:#fff;color:#0a0a0a;font-family:Geist,system-ui,sans-serif}html.dark{background:#0a0a0a;color:#fafafa;color-scheme:dark}.boot{display:grid;place-items:center;min-height:80vh;font-size:14px;opacity:.6}</style>
+<style>html{background:#fff;color:#0a0a0a;font-family:Geist,system-ui,sans-serif}html.dark{background:#19191b;color:#f1f1f3;color-scheme:dark}</style>
+<!-- Loading screen. Plain CSS, because the Tailwind runtime below only styles the page after React mounts;
+     app.jsx keeps this up until that stylesheet and the fonts have settled, so no half-styled frame shows.
+     Only transform and opacity animate, so it keeps moving while the main thread builds the page. -->
+<style>
+#boot{--ink:#0a0a0a;position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#fff;transition:opacity .35s ease,visibility 0s linear .35s}
+html.dark #boot{--ink:#f1f1f3;background:#19191b}
+#boot[data-done]{opacity:0;visibility:hidden}
+#boot .in{display:flex;flex-direction:column;align-items:center;gap:22px;transition:transform .35s ease}
+#boot[data-done] .in{transform:scale(.97)}
+#boot .mark{display:grid;grid-template-columns:repeat(11,10px);gap:3px}
+#boot .mark i,#boot .bar i{display:block;width:10px;height:10px;border-radius:1px;background:var(--ink);opacity:.08}
+#boot .mark i.on{opacity:1;animation:boot-in .55s cubic-bezier(.34,1.56,.64,1) var(--d) both,boot-wave 1.8s ease-in-out calc(var(--d) + .9s) infinite}
+#boot .mark i:not(.on){animation:boot-twinkle 2.6s steps(1) var(--r) infinite}
+#boot .word{font:500 13px/1 "Geist Pixel","Geist Mono",ui-monospace,monospace;letter-spacing:.2em;color:var(--ink)}
+#boot .bar{display:flex;gap:2px}
+#boot .bar i{width:8px;height:8px;transition:opacity .2s ease}
+#boot .bar i.on{opacity:1}
+#boot .bar i.next{animation:boot-blink .7s steps(1) infinite}
+#boot .msg{min-height:14px;font:500 11px/14px "Geist Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.5}
+@keyframes boot-in{0%{opacity:0;transform:translateY(-14px) scale(.4)}100%{opacity:1;transform:none}}
+@keyframes boot-wave{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes boot-twinkle{0%,88%{opacity:.08}89%,100%{opacity:.3}}
+@keyframes boot-blink{0%{opacity:.55}50%{opacity:.08}}
+@media (prefers-reduced-motion:reduce){#boot *{animation:none!important}}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
 <style type="text/tailwindcss">
 @custom-variant dark (&:where(.dark, .dark *));
@@ -108,36 +133,38 @@
   --bad-soft: #fef2f2;
   --grid-ok: oklch(.9 0 0);
 }
+/* Dark: a soft charcoal with a faint cool cast (Linear, Raycast), not near-black. Cards sit one step lighter than
+   the page so they read as raised; tints are mixed from the page colour so they never glow. */
 .dark {
-  --background: oklch(.145 0 0);
-  --foreground: oklch(.985 0 0);
-  --card: oklch(.178 0 0);
-  --card-foreground: oklch(.985 0 0);
-  --popover: oklch(.205 0 0);
-  --popover-foreground: oklch(.985 0 0);
-  --primary: oklch(.922 0 0);
-  --primary-foreground: oklch(.205 0 0);
-  --secondary: oklch(.269 0 0);
-  --secondary-foreground: oklch(.985 0 0);
-  --muted: oklch(.269 0 0);
-  --muted-foreground: oklch(.708 0 0);
-  --accent: oklch(.269 0 0);
-  --accent-foreground: oklch(.985 0 0);
+  --background: oklch(.215 .004 286);
+  --foreground: oklch(.96 .002 286);
+  --card: oklch(.24 .005 286);
+  --card-foreground: oklch(.96 .002 286);
+  --popover: oklch(.265 .005 286);
+  --popover-foreground: oklch(.96 .002 286);
+  --primary: oklch(.93 .003 286);
+  --primary-foreground: oklch(.24 .005 286);
+  --secondary: oklch(.3 .006 286);
+  --secondary-foreground: oklch(.96 .002 286);
+  --muted: oklch(.3 .006 286);
+  --muted-foreground: oklch(.73 .008 286);
+  --accent: oklch(.31 .006 286);
+  --accent-foreground: oklch(.96 .002 286);
   --destructive: oklch(.704 .191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(.556 0 0);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(.6 .01 286);
   --brand: #a4a9ff;
-  --brand-soft: #1c1e3a;
+  --brand-soft: color-mix(in oklab, var(--brand) 15%, var(--background));
   --pink: #F34D77;
-  --pink-soft: #3a1621;
+  --pink-soft: color-mix(in oklab, var(--pink) 15%, var(--background));
   --good: #4ade80;
-  --good-soft: #0f2417;
+  --good-soft: color-mix(in oklab, var(--good) 12%, var(--background));
   --warn: #fbbf24;
-  --warn-soft: #271f0c;
+  --warn-soft: color-mix(in oklab, var(--warn) 12%, var(--background));
   --bad: #f87171;
-  --bad-soft: #2a1414;
-  --grid-ok: oklch(.32 0 0);
+  --bad-soft: color-mix(in oklab, var(--bad) 13%, var(--background));
+  --grid-ok: oklch(.39 .006 286);
 }
 
 @keyframes accordion-down { from { height: 0 } to { height: var(--radix-accordion-content-height) } }
@@ -172,8 +199,8 @@
   .px-n { color: var(--muted-foreground); transition: color .2s ease; }
   .px-chip[data-on] { color: var(--brand); }
   .px-chip[data-on] .px-on { fill: var(--brand); }
-  .px-chip:is(:hover, :focus-visible) { color: var(--pink); }
-  .px-chip:is(:hover, :focus-visible) .px-n { color: color-mix(in oklab, var(--pink) 70%, transparent); }
+  .px-chip:is(:hover, :focus-visible) { color: var(--foreground); }
+  .px-chip:is(:hover, :focus-visible) .px-n { color: var(--foreground); }
   .px-chip:is(:hover, :focus-visible) .px-on { fill: var(--pink); animation: px-pop .7s cubic-bezier(.34, 1.56, .64, 1) var(--d) both; }
   .px-strip:has(.px-chip:hover) .px-chip:not(:hover):not([data-on]) { opacity: .45; filter: saturate(0); }
   @keyframes px-pop { 0% { transform: none } 25% { transform: translateY(-5px) scale(1.45) rotate(8deg) } 55% { transform: translateY(1px) scale(.9) rotate(-3deg) } 80% { transform: translateY(-1px) scale(1.06) } 100% { transform: none } }
@@ -188,7 +215,19 @@
 </style>
 </head>
 <body>
-<div id="root"><div class="boot">Loading Decision Bench…</div></div>
+<div id="boot" role="status" aria-live="polite"><div class="in"><div class="mark" aria-hidden="true"></div><div class="word">DECISION BENCH</div><div class="bar" aria-hidden="true"></div><div class="msg">Loading the app</div></div></div>
+<script>
+/* "DB" in a 5×7 pixel face. Lit pixels drop in column by column, then a wave runs across them; the rest twinkle. */
+(function(){
+  var g=['11110011110','10001010001','10001010001','10001011110','10001010001','10001010001','11110011110'],b=document.getElementById('boot'),m=b.querySelector('.mark'),bar=b.querySelector('.bar'),h='',n=20;
+  g.forEach(function(row,y){for(var x=0;x<row.length;x++)h+=row[x]==='1'?'<i class="on" style="--d:'+(x*45+y*18)+'ms"></i>':'<i style="--r:'+(-Math.random()*2.6).toFixed(2)+'s"></i>';});
+  m.innerHTML=h;for(var i=0,s='';i<n;i++)s+='<i></i>';bar.innerHTML=s;
+  /* app.jsx reports progress through this: a message and how far along, 0 to 1. */
+  window.dbBoot=function(msg,f){var k=Math.round(Math.max(0,Math.min(1,f))*n);if(msg)b.querySelector('.msg').textContent=msg;[].forEach.call(bar.children,function(e,j){e.className=j<k?'on':j===k?'next':'';});};
+  window.dbBoot('',.1);
+})();
+</script>
+<div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
 <script src="analytics.js"></script>
 </body>

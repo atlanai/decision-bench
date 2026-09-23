@@ -10,14 +10,26 @@ import {Tip} from '@/components/ui/tooltip';
 const NAV = [['home', '#/', 'Leaderboard'], ['tasks', '#/tasks', 'Tasks'], ['models', '#/models', 'Models'], ['data', '#/data', 'Data'], ['methodology', '#/methodology', 'Methodology']];
 const SECTION = {task: 'tasks', row: 'tasks', review: 'tasks', model: 'models', compare: 'models'};
 
+/* Switch themes with every transition off for one frame. Otherwise each element with transition-colors animates
+   from the old palette to the new one, thousands at once, and the blurred sticky header can stay stuck halfway
+   until something repaints it. */
+function setTheme(dark) {
+  const root = document.documentElement, off = document.createElement('style');
+  off.textContent = '*,*::before,*::after{transition:none!important}';
+  document.head.appendChild(off);
+  root.classList.toggle('dark', dark);
+  void getComputedStyle(root).color;
+  setTimeout(() => off.remove(), 1);
+}
+
 function ThemeToggle() {
   const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'));
   useEffect(() => {
     const mq = matchMedia('(prefers-color-scheme: dark)');
-    const on = e => { let s = null; try { s = localStorage.getItem('db-theme'); } catch {} if (!s) { document.documentElement.classList.toggle('dark', e.matches); setDark(e.matches); } };
+    const on = e => { let s = null; try { s = localStorage.getItem('db-theme'); } catch {} if (!s) { setTheme(e.matches); setDark(e.matches); } };
     mq.addEventListener('change', on); return () => mq.removeEventListener('change', on);
   }, []);
-  const flip = () => { const next = !dark; document.documentElement.classList.toggle('dark', next); setDark(next); try { localStorage.setItem('db-theme', next ? 'dark' : 'light'); } catch {} };
+  const flip = () => { const next = !dark; setTheme(next); setDark(next); try { localStorage.setItem('db-theme', next ? 'dark' : 'light'); } catch {} };
   return <Tip content={dark ? 'Light mode' : 'Dark mode'}><Button variant="ghost" size="icon-sm" onClick={flip} aria-label="Toggle dark mode">{dark ? <SunIcon /> : <MoonIcon />}</Button></Tip>;
 }
 

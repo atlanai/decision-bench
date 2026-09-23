@@ -6,7 +6,7 @@ import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, compact, human, hostOf, plural} from '@/lib/format';
 import {href, rowHref, taskHref, dataHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {Crumbs, Section, Notice, ModelName, EmptyPage, Ext} from '@/components/common';
+import {Crumbs, Section, Notice, ModelName, EmptyPage, Ext, Notes} from '@/components/common';
 import {Code, CopyButton, exactInput} from '@/components/record';
 import {RecordView} from '@/components/records/views';
 import {TableCard} from '@/pages/task';
@@ -78,7 +78,7 @@ function SourceCard({c}) {
   ].filter(([, v]) => v) : [];
   return (
     <div className="rounded-xl border bg-card shadow-xs">
-      {q.rationale && <div className="px-5 py-4"><div className="text-xs font-medium text-muted-foreground">Why this is the answer</div><p className="mt-1.5 text-[13px] leading-relaxed text-foreground/85">{q.rationale}</p>{c.note && <p className="mt-2 border-l-2 pl-3 text-[13px] leading-relaxed text-muted-foreground">{c.note}</p>}</div>}
+      {q.rationale && <div className="px-5 py-4 [overflow-wrap:anywhere]"><div className="text-xs font-medium text-muted-foreground">Why this is the answer</div><p className="mt-1.5 text-[13px] leading-relaxed text-foreground/85">{q.rationale}</p>{c.note && <p className="mt-2 border-l-2 pl-3 text-[13px] leading-relaxed text-muted-foreground">{c.note}</p>}</div>}
       {facts.length > 0 && <dl className={cn('space-y-2.5 px-5 py-4 text-[13px]', q.rationale && 'border-t')}>
         {facts.map(([k, v]) => <div key={k} className="grid grid-cols-[112px_minmax(0,1fr)] gap-3"><dt className="text-muted-foreground">{k}</dt><dd className="min-w-0">{v}</dd></div>)}
       </dl>}
@@ -140,7 +140,7 @@ function Answers({c}) {
           </Fragment>; })}</tbody>
       </table>
     </TableCard>
-    <p className="mt-2 text-xs text-muted-foreground">Wrong answers first. Select a model for its probabilities and raw response. Confidence is the probability the model gave its own answer.</p>
+    <Notes items={['Wrong answers first; select a model for its probabilities and raw response.', 'Confidence is the probability the model gave its own answer.']} />
   </>;
 }
 

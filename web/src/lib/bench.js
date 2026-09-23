@@ -1,6 +1,7 @@
 /* The benchmark as the site sees it: data.json (schema 2, from `python3 -m decision_bench report`) and datasets.json,
    indexed once at load. Everything here is read-only after init(), so pages call these helpers directly. */
 import {slug, human, clip} from './format.js';
+import {TASK_COPY} from './names.js';
 
 export let data = null;
 export let allCases = [];
@@ -58,8 +59,11 @@ export const answerOf = v => !v ? 'Not run' : !answered(v) ? 'No valid answer' :
 export const catKey = c => c.category;
 export const taskInfo = t => man().tasks?.[t] || {};
 export const taskRows = t => rowsByTask.get(t) || [];
-export const taskName = t => taskInfo(t).name || taskRows(t)[0]?.task_name || t;
+export const taskName = t => TASK_COPY[t]?.[0] || taskInfo(t).name || taskRows(t)[0]?.task_name || t;
+/* The exact question the model is asked; taskBlurb says in plain words what the task is, taskPicks what it chooses between. */
 export const taskAsk = t => taskInfo(t).ask || taskRows(t)[0]?.questions[0].ask || '';
+export const taskBlurb = t => TASK_COPY[t]?.[1] || taskAsk(t);
+export const taskPicks = t => TASK_COPY[t]?.[2] || '';
 export const taskCat = t => taskInfo(t).category || taskRows(t)[0]?.category;
 export const isImageTask = t => (taskInfo(t).modality || (taskRows(t).some(c => c.assets?.length) ? 'image' : 'text')) !== 'text';
 export const caseTitle = c => c.title || c.id;

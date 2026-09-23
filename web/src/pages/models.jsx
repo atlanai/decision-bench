@@ -4,7 +4,7 @@ import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, metric, plural, ciText} from '@/lib/format';
 import {href, modelHref, catHref, taskHref, rowHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {PageHeader, Crumbs, Section, Notice, ModelName, Fit, Meter, Stat, EmptyPage, Dash} from '@/components/common';
+import {PageHeader, Crumbs, Section, Notice, ModelName, Fit, Meter, Stat, EmptyPage, Dash, Notes} from '@/components/common';
 import {Reliability, Risk} from '@/components/charts';
 import {Code} from '@/components/record';
 import {ChartCard, HowToAdd} from '@/pages/home';
@@ -37,7 +37,7 @@ export function Models() {
           </tr>; })}</tbody>
       </table>
     </TableCard>
-    <p className="mt-3 max-w-3xl text-xs text-muted-foreground">Vendor marks identify the model's maker and remain their property. Prices are list prices at the time of the run; provider-reported cost is used where the endpoint returns it.</p>
+    <Notes items={['Cost is provider-reported where the endpoint returns it, else list price at the time of the run.', "Vendor marks identify the model's maker and remain their property."]} />
   </>;
 }
 

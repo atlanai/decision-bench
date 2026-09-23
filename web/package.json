@@ -1,7 +1,7 @@
 {
   "name": "decision-bench-site",
   "private": true,
-  "version": "4.0.0",
+  "version": "1.0",
   "type": "module",
   "description": "The Decision Bench viewer. Builds into ../site next to the data that `python3 -m decision_bench report` writes.",
   "scripts": {

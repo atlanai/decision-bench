@@ -50,6 +50,11 @@ export function PageHeader({title, description, eyebrow, actions, className}) {
   );
 }
 
+/* Short notes under a table: one quiet line that wraps, each note on its own. Falsy items are skipped. */
+export function Notes({items, className}) {
+  const list = items.filter(Boolean);
+  return list.length ? <ul className={cn('mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground', className)}>{list.map((n, i) => <li key={i}>{n}</li>)}</ul> : null;
+}
 export function Section({title, description, actions, children, id, className}) {
   return (
     <section id={id} className={cn('mt-14 scroll-mt-20', className)}>
