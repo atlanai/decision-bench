@@ -18,13 +18,16 @@ const Figure = ({c, className}) => (c.assets || []).filter(a => String(a.mime_ty
     <figcaption className="mt-2 text-xs text-muted-foreground">Sent as an image to vision models; text-only models receive the text rendering.</figcaption>
   </figure>
 ));
-const SPEAKER = ['text-brand', 'text-emerald-600 dark:text-emerald-400', 'text-amber-600 dark:text-amber-400', 'text-pink-600 dark:text-pink-400', 'text-sky-600 dark:text-sky-400'];
-const speakerTone = who => { const m = String(who).match(/\(([A-Z])\)/); return SPEAKER[m ? (m[1].charCodeAt(0) - 65) % SPEAKER.length : 0]; };
+/* Speakers are told apart by a grey initials avatar (one shade per speaker letter), not by colour. */
+const SHADES = ['bg-foreground text-background', 'bg-foreground/55 text-background', 'bg-foreground/15 text-foreground', 'border border-foreground/40 text-foreground', 'bg-muted text-muted-foreground'];
+const speakerShade = who => { const m = String(who).match(/\(([A-Z])\)/); return SHADES[m ? (m[1].charCodeAt(0) - 65) % SHADES.length : SHADES.length - 1]; };
+const initials = who => String(who).replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?';
+const Avatar = ({who}) => <span aria-hidden="true" className={cn('grid size-6 shrink-0 place-items-center rounded-full text-[10px] font-semibold', speakerShade(who))}>{initials(who)}</span>;
 function Turns({turns, hot}) {
   return <ol className="overflow-hidden rounded-lg border">{turns.map((t, i) => { const on = i === hot;
-    return <li key={i} id={on ? 'hot-turn' : undefined} className={cn('grid scroll-mt-28 gap-x-4 gap-y-0.5 border-b px-3.5 py-2 text-sm last:border-0 sm:grid-cols-[180px_minmax(0,1fr)]', on ? 'relative z-[1] bg-pink-soft py-3 ring-2 ring-pink ring-inset' : hot >= 0 && 'text-foreground/70')}>
-      <span className={cn('truncate text-[13px] font-medium', speakerTone(t.speaker))} title={t.speaker}>{t.speaker}</span>
-      <span className={cn('leading-relaxed break-words', on && 'font-medium text-foreground')}>{t.text}{on && <Badge className="ml-2 border-transparent bg-pink align-middle text-white">Highlighted</Badge>}</span>
+    return <li key={i} id={on ? 'hot-turn' : undefined} className={cn('grid scroll-mt-28 items-start gap-x-4 gap-y-1 border-b px-3.5 py-2 text-sm last:border-0 sm:grid-cols-[200px_minmax(0,1fr)]', on && 'bg-muted/70 ring-1 ring-foreground/15 ring-inset')}>
+      <span className="flex min-w-0 items-center gap-2" title={t.speaker}><Avatar who={t.speaker} /><span className="truncate text-[13px] text-muted-foreground">{t.speaker}</span></span>
+      <span className={cn('pt-0.5 leading-relaxed break-words', on ? 'font-medium text-foreground' : 'text-foreground/85')}>{t.text}{on && <Badge variant="outline" className="ml-2 bg-background align-middle font-normal text-muted-foreground">Highlighted</Badge>}</span>
     </li>; })}</ol>;
 }
 const Chips = ({items, mono}) => <div className="flex flex-wrap gap-1.5">{items.map(x => <Badge key={x} variant="outline" className={cn('font-normal', mono && 'font-mono')}>{x}</Badge>)}</div>;
@@ -306,8 +309,8 @@ function DOC2({s}) {
   const u = String(s.highlighted_utterance || ''), cut = u.indexOf(':');
   return <Stack>
     <Block label="Meeting"><p className="text-sm text-muted-foreground">{s.meeting}</p></Block>
-    <Block label="Utterance to classify" aside={hot >= 0 && <a href="#hot-turn" onClick={e => { e.preventDefault(); document.getElementById('hot-turn')?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="font-medium text-pink hover:underline">Turn {hot + 1} of {turns.length}</a>}>
-      <div className="rounded-lg border border-pink/30 bg-pink-soft px-4 py-3"><div className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-pink"><MessageSquareIcon className="size-3.5" />{cut > 0 ? u.slice(0, cut) : 'Utterance'}</div><div className="text-sm leading-relaxed font-medium">{cut > 0 ? u.slice(cut + 1).trim() : u}</div></div>
+    <Block label="Utterance to classify" aside={hot >= 0 && <a href="#hot-turn" onClick={e => { e.preventDefault(); document.getElementById('hot-turn')?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="hover:text-foreground hover:underline">Turn {hot + 1} of {turns.length}</a>}>
+      <div className="flex items-start gap-3 rounded-lg border bg-muted/40 px-4 py-3"><Avatar who={cut > 0 ? u.slice(0, cut) : ''} /><div className="min-w-0"><div className="text-xs text-muted-foreground">{cut > 0 ? u.slice(0, cut) : 'Utterance'}</div><div className="mt-0.5 text-sm leading-relaxed font-medium">{cut > 0 ? u.slice(cut + 1).trim() : u}</div></div></div>
     </Block>
     <Block label="Transcript around it"><Turns turns={turns} hot={hot} /></Block>
   </Stack>;
