@@ -6,7 +6,7 @@ import {rowHref} from '@/lib/route';
 import {tip, showTip, moveTip, hideTip} from '@/components/tip';
 import {cn} from '@/lib/utils';
 
-const SVG_CLS = 'block overflow-visible font-sans text-[12px] [&_text]:fill-muted-foreground [&_.t-ink]:fill-foreground/80 [&_.t-value]:fill-foreground [&_.t-value]:tabular-nums [&_.grid]:stroke-border [&_.minor]:opacity-50 [&_.axis]:stroke-foreground/20 [&_.ref]:stroke-muted-foreground/60 [&_.ref]:[stroke-dasharray:3_3] [&_.hit]:fill-transparent [&_.whisker]:fill-none [&_.whisker]:stroke-foreground/70 [&_.ghost]:fill-none [&_.ghost]:stroke-foreground/15 [&_g[data-tip]:hover_.hit]:fill-foreground/5';
+const SVG_CLS = 'block overflow-visible font-sans text-[12px] [&_text]:fill-muted-foreground [&_text]:tabular-nums [&_.t-ink]:fill-foreground/80 [&_.t-value]:fill-foreground [&_.t-value]:tabular-nums [&_.grid]:stroke-border [&_.minor]:opacity-50 [&_.axis]:stroke-foreground/20 [&_.ref]:stroke-muted-foreground/60 [&_.ref]:[stroke-dasharray:3_3] [&_.hit]:fill-transparent [&_.whisker]:fill-none [&_.whisker]:stroke-foreground/70 [&_.ghost]:fill-none [&_.ghost]:stroke-foreground/15 [&_g[data-tip]:hover_.hit]:fill-foreground/5';
 
 export function useWidth(min = 220) {
   const ref = useRef(null), [w, setW] = useState(0);
@@ -60,16 +60,14 @@ export function RowsChart({items, fmt, tickFmt = fmt, max, min = 0, label}) {
 /* Scatter with short-name labels placed to avoid collisions. items: {key,x,y,lo,hi,color,tip} */
 export function Scatter({items, xFmt, xLabel, label}) {
   return <Chart label={label}>{w => {
-    const h = 340, L = 44, R = 16, T = 14, B = 40, pw = w - L - R, ph = h - T - B;
+    const h = 340, L = 44, R = 22, T = 14, B = 40, pw = w - L - R, ph = h - T - B;
     if (!items.length) return <Svg w={w} h={h}><text x={w / 2} y={h / 2} textAnchor="middle">No model has complete data for this view</text></Svg>;
     const [x0, x1] = logDomain(items.map(i => i.x)), x = logS(x0, x1, L, L + pw);
     const [y0] = zoomDomain(items.map(i => i.lo), .05), y = lin(y0, 1, T + ph, T);
     const pts = items.map(it => ({...it, px: x(it.x), py: y(it.y)})), boxes = pts.map(p => ({x0: p.px - 4, x1: p.px + 4, y0: p.py - 4, y1: p.py + 4}));
     const hit = b => boxes.some(o => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
-    /* Every decade gets a label; the 2s and 5s only where they clear their neighbours by 8px. */
-    const xTicks = logTicks([x0, x1]).map(t => ({...t, half: xFmt(t.v).length * 3.4})), taken = [];
-    const fits = t => { const a = x(t.v) - t.half, b = x(t.v) + t.half; return a >= 0 && b <= w && taken.every(([c, d]) => b + 8 <= c || a >= d + 8); };
-    for (const t of [...xTicks.filter(t => t.major), ...xTicks.filter(t => !t.major)]) if (t.show = fits(t)) taken.push([x(t.v) - t.half, x(t.v) + t.half]);
+    /* Label the decades only, with trailing zeros dropped ($0.010 → $0.01, 1.0s → 1s); the 2s and 5s keep their gridlines. */
+    const xTicks = logTicks([x0, x1]), tickText = v => xFmt(v).replace(/(\.\d*?)0+(?=\D*$)/, '$1').replace(/\.(?=\D*$)/, '');
     const labels = [];
     for (const p of pts.slice().sort((a, b) => a.py - b.py)) {
       const t = M(p.key).short, tw = t.length * 6.4 + 2;
@@ -78,8 +76,8 @@ export function Scatter({items, xFmt, xLabel, label}) {
     }
     return <Svg w={w} h={h}>
       {niceTicks(y0, 1, 4).filter(t => t >= y0 - 1e-9).map(t => <g key={t}><line className="grid" x1={L} x2={L + pw} y1={y(t)} y2={y(t)} /><text x={L - 6} y={y(t) + 4} textAnchor="end">{pct0(t)}</text></g>)}
-      {xTicks.map(t => <g key={t.v}><line className={cn('grid', !t.major && 'minor')} x1={x(t.v)} x2={x(t.v)} y1={T} y2={T + ph} />{t.show && <text x={x(t.v)} y={T + ph + 16} textAnchor="middle">{xFmt(t.v)}</text>}</g>)}
-      <line className="axis" x1={L} x2={L + pw} y1={T + ph} y2={T + ph} /><text x={L + pw / 2} y={h - 4} textAnchor="middle">{xLabel} (log scale)</text>
+      {xTicks.map(t => <g key={t.v}><line className={cn('grid', !t.major && 'minor')} x1={x(t.v)} x2={x(t.v)} y1={T} y2={T + ph} />{t.major && <text x={x(t.v)} y={T + ph + 16} textAnchor="middle">{tickText(t.v)}</text>}</g>)}
+      <line className="axis" x1={L} x2={L + pw} y1={T + ph} y2={T + ph} /><text x={L + pw / 2} y={h - 4} textAnchor="middle">{xLabel}</text>
       {pts.map(p => <g key={p.key} data-tip={p.tip} tabIndex={0}><circle className="hit" cx={p.px} cy={p.py} r="12" /><path d={`M${p.px} ${y(p.lo)}V${y(p.hi)}`} stroke={p.color} strokeWidth="1.5" strokeOpacity=".45" /><circle cx={p.px} cy={p.py} r="4.5" fill={p.color} /></g>)}
       {labels}
     </Svg>;

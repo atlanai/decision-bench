@@ -202,7 +202,7 @@ html.dark #boot{--ink:#f1f1f3;background:#19191b}
   .px-chip:is(:hover, :focus-visible) { color: var(--foreground); }
   .px-chip:is(:hover, :focus-visible) .px-n { color: var(--foreground); }
   .px-chip:is(:hover, :focus-visible) .px-on { fill: var(--pink); animation: px-pop .7s cubic-bezier(.34, 1.56, .64, 1) var(--d) both; }
-  .px-strip:has(.px-chip:hover) .px-chip:not(:hover):not([data-on]) { opacity: .45; filter: saturate(0); }
+  .px-strip:has(.px-chip:hover) .px-chip:not(:hover):not([data-on]) { opacity: .4; }
   @keyframes px-pop { 0% { transform: none } 25% { transform: translateY(-5px) scale(1.45) rotate(8deg) } 55% { transform: translateY(1px) scale(.9) rotate(-3deg) } 80% { transform: translateY(-1px) scale(1.06) } 100% { transform: none } }
   /* Analytics consent, rendered by analytics.js. */
   .analytics-choice { @apply fixed right-4 bottom-4 z-[100] max-w-sm rounded-lg border bg-popover p-4 text-sm text-popover-foreground shadow-lg; }

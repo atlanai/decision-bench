@@ -35,7 +35,7 @@ function UseCases({route}) {
   const cur = route.q.get('category') || '', counts = B.categoryOrder().map(k => [k, B.allCases.filter(c => B.catKey(c) === k).length]);
   const [hot, setHot] = useState(''), shown = hot || cur;
   return (
-    <div data-no-trail className="w-full lg:max-w-[400px] lg:justify-self-end">
+    <div data-no-trail className="w-full rounded-xl border bg-background/90 p-4 shadow-xs backdrop-blur-sm lg:max-w-[420px] lg:justify-self-end">
       <div className="mb-3 flex items-baseline justify-between gap-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">
         <span>Browse by use case</span>
         <span className="inline-flex items-center gap-1.5"><i className="inline-block size-[6px] bg-foreground/70" />= {PER} rows</span>
@@ -44,7 +44,7 @@ function UseCases({route}) {
         {counts.map(([k, n]) => { const on = cur === k, sq = Math.max(1, Math.round(n / PER)), w = sq * 8 - 2;
           return <li key={k}><a href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} aria-describedby="use-case-note" data-on={on || undefined} aria-current={on || undefined}
             onPointerEnter={() => setHot(k)} onFocus={() => setHot(k)} onBlur={() => setHot('')}
-            className="px-chip grid grid-cols-[10rem_minmax(0,1fr)_2.25rem] items-center gap-3 rounded-md px-2 py-[5px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-foreground/[.04]">
+            className="px-chip grid grid-cols-[10rem_minmax(0,1fr)_2.25rem] items-center gap-3 rounded-md px-2 py-[5px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-muted focus-visible:bg-muted">
             <span className="px-label truncate">{B.catInfo(k).name}</span>
             <svg width={w} height="6" viewBox={`0 0 ${w} 6`} aria-hidden="true" className="overflow-visible">
               {Array.from({length: sq}, (_, i) => <rect key={i} x={i * 8} y="0" width="6" height="6" className="px px-on" style={{'--d': `${i * 22}ms`}} />)}
@@ -90,8 +90,10 @@ function usePixelTrail(ref, canvasRef) {
       const b = el.getBoundingClientRect(); tx = e.clientX - b.left; ty = e.clientY - b.top;
       if (!inside) { sx = tx; sy = ty; } inside = true;
       const c = Math.floor(tx / CELL), r = Math.floor(ty / CELL);
-      /* No pixels behind the use-case list: its own hover wave is the effect there, and the labels stay legible. */
-      if (e.target.closest?.('[data-no-trail]')) { last = null; kick(); return; }
+      /* No pixels behind the use-case list, and the pink grid and glow fade while the pointer is on it (data-calm):
+         its own hover wave is the effect there, and the labels stay legible. */
+      if (e.target.closest?.('[data-no-trail]')) { if (el.dataset.calm == null) el.dataset.calm = ''; last = null; kick(); return; }
+      if (el.dataset.calm != null) delete el.dataset.calm;
       if (!reduce && (!last || last[0] !== c || last[1] !== r)) {
         /* Fill the cells between the last one and this one, so a fast swipe leaves an unbroken trail. */
         const [c0, r0] = last || [c, r], steps = Math.max(Math.abs(c - c0), Math.abs(r - r0), 1);
@@ -101,7 +103,7 @@ function usePixelTrail(ref, canvasRef) {
       }
       kick();
     };
-    const leave = () => { inside = false; last = null; kick(); };
+    const leave = () => { inside = false; last = null; delete el.dataset.calm; kick(); };
     el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
     return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); ro.disconnect(); cancelAnimationFrame(raf); };
   }, [ref, canvasRef]);
@@ -115,8 +117,8 @@ function Banner({route}) {
     <div ref={box} className={cn('group/banner relative overflow-hidden border-b [--grid-line:var(--border)]', GRID)}>
       <div className="relative bg-gradient-to-b from-background/40 via-background/70 to-background">
         <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute top-0 left-0" />
-        <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
+        <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
         <div className="relative mx-auto grid max-w-[1240px] items-center gap-x-16 gap-y-12 px-4 pt-14 pb-12 md:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
             <p className="mb-5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">Decision Bench · {B.man().version} · real records, open licences</p>
@@ -227,8 +229,8 @@ function Tradeoffs({runs, cases}) {
   const cost = ok.map(([r, m]) => pt(r, m, m.costPer1k, [['$ / 1k rows', money(m.costPer1k)]]));
   return (
     <div className="grid gap-4 lg:grid-cols-2">
-      <ChartCard title="Accuracy against latency" description="Up and to the left is better. Vertical lines are 95% intervals."><Scatter items={lat} xFmt={secs} xLabel="Median seconds per row" label="Accuracy against median latency" /></ChartCard>
-      <ChartCard title="Accuracy against cost" description="Up and to the left is better." foot={ex.length ? `Not plotted, cost unknown or partly known: ${ex.map(([r]) => B.ident(r).short).join(', ')}.` : ''}><Scatter items={cost} xFmt={v => `$${v < .1 ? v.toFixed(3) : v < 1 ? v.toFixed(2) : v.toFixed(v < 10 ? 1 : 0)}`} xLabel="USD per 1,000 rows" label="Accuracy against cost" /></ChartCard>
+      <ChartCard title="Accuracy against latency" description="Up and to the left is better. Log scale; vertical lines are 95% intervals."><Scatter items={lat} xFmt={secs} xLabel="Median seconds per row" label="Accuracy against median latency" /></ChartCard>
+      <ChartCard title="Accuracy against cost" description="Up and to the left is better. Log scale; vertical lines are 95% intervals." foot={ex.length ? `Not plotted (cost unknown or partial): ${ex.map(([r]) => B.ident(r).short).join(', ')}.` : ''}><Scatter items={cost} xFmt={v => `$${v < .1 ? v.toFixed(3) : v < 1 ? v.toFixed(2) : v.toFixed(v < 10 ? 1 : 0)}`} xLabel="USD per 1,000 rows" label="Accuracy against cost" /></ChartCard>
     </div>
   );
 }

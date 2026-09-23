@@ -23,6 +23,21 @@
         "dev"
       ],
       "port": 5173
+    },
+    {
+      "name": "decision-bench-web-mobile",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        ".claude/worktrees/mobile/web",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5174",
+        "--strictPort"
+      ],
+      "port": 5174
     }
   ]
 }
