@@ -1,137 +1,84 @@
 {
-  "suite": "bench-v3",
+  "suite": "bench-v4",
   "datasets": [
     {
-      "id": "deepset-prompt-injections",
-      "name": "deepset/prompt-injections",
+      "id": "swe-bench-verified",
+      "name": "SWE-bench Verified",
       "tasks": [
-        "PI-1"
+        "ENG-1"
       ],
-      "homepage": "https://huggingface.co/datasets/deepset/prompt-injections",
-      "license": "Apache-2.0",
-      "license_url": "https://huggingface.co/datasets/deepset/prompt-injections/blob/4f61ecb038e9c3fb77e21034b22511b523772cdd/README.md",
-      "content": "Short chat prompts in English and German, some benign and some trying to override an assistant's instructions, published by deepset; the card does not say who wrote them.",
-      "content_license": "Apache-2.0",
-      "content_terms": "The card's license field is apache-2.0 (a second, misplaced cc-by-4.0 entry inside its dataset_info block is also permissive). No upstream source or other terms are documented for the prompts.",
-      "labelled_by": "the dataset's human annotators (label 0 benign, 1 injection)",
-      "changes": "None to the text: prompts are shown verbatim. Label 1 is mapped to injection only when an override cue is present and no persona cue is; other label-1 rows are skipped.",
-      "selection": "Records are screened by the written rules in this module's docstring (language, length, a broad offensive-vocabulary block list, no e-mail addresses, phone numbers, web addresses or named private individuals), mapped to an answer by keyword rules, then taken in sha256 order of the record id. Mix: 10 injection, 6 benign (at most 1 German each).",
-      "citation": "deepset, prompt-injections (Hugging Face dataset), 2023.",
-      "bibtex": "@misc{deepset2023promptinjections,\n  author       = {{deepset}},\n  title        = {prompt-injections},\n  year         = {2023},\n  howpublished = {\\url{https://huggingface.co/datasets/deepset/prompt-injections}}\n}"
+      "homepage": "https://huggingface.co/datasets/princeton-nlp/SWE-bench_Verified",
+      "license": "MIT",
+      "license_url": "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE",
+      "content": "The title and body of a GitHub issue from one of the Python projects SWE-bench draws on (django, sympy, sphinx, scikit-learn, astropy, xarray, pytest, requests, seaborn, flask), plus file paths from that project; the answer is the file the merged pull request changed.",
+      "content_license": "BSD-3-Clause",
+      "content_terms": "The SWE-bench project (dataset build code and the released instances) is MIT; the Hugging Face card of SWE-bench Verified carries no separate licence field (read at revision c104f840cc67f8b6eec6f759ebc8b2693d585d4a). Issue text is written by the projects' users on GitHub; this benchmark keeps only projects whose own licence is MIT, Apache-2.0, BSD-2-Clause or BSD-3-Clause and records that licence per row (source.repo_license): django, sympy, scikit-learn, astropy, seaborn and flask are BSD-3-Clause, sphinx BSD-2-Clause, xarray and requests Apache-2.0, pytest MIT. pylint (GPL-2.0) and matplotlib (its own PSF-style licence) are excluded. File paths are facts about the repository.",
+      "labelled_by": "the merged pull request that closed the issue (the SWE-bench gold patch)",
+      "changes": "Issue text longer than 3,500 characters is cut with a visible marker; the hints, tests and patch are not shown. Distractor paths come from other instances' gold patches in the same repository.",
+      "selection": "Instances whose gold patch changes exactly one non-test .py file, in sha256 order of the instance id, at most eight per repository, with four real distractor paths from other directories of the same repository; see the module docstring.",
+      "citation": "Jimenez et al., SWE-bench: Can Language Models Resolve Real-World GitHub Issues?, ICLR 2024; SWE-bench Verified (OpenAI and the SWE-bench authors, 2024), princeton-nlp/SWE-bench_Verified.",
+      "bibtex": "@inproceedings{jimenez2024swebench,\n  title     = {{SWE}-bench: Can Language Models Resolve Real-world Github Issues?},\n  author    = {Carlos E Jimenez and John Yang and Alexander Wettig and Shunyu Yao and Kexin Pei and Ofir Press and Karthik R Narasimhan},\n  booktitle = {The Twelfth International Conference on Learning Representations},\n  year      = {2024},\n  url       = {https://openreview.net/forum?id=VTF8yNQM66}\n}"
     },
     {
-      "id": "in-the-wild-jailbreak-prompts",
-      "name": "In-The-Wild Jailbreak Prompts (JailbreakHub)",
+      "id": "commitpackft",
+      "name": "CommitPackFT",
       "tasks": [
-        "PI-1"
+        "ENG-2",
+        "ENG-5"
       ],
-      "homepage": "https://github.com/verazuo/jailbreak_llms",
+      "homepage": "https://huggingface.co/datasets/bigcode/commitpackft",
       "license": "MIT",
-      "license_url": "https://github.com/verazuo/jailbreak_llms/blob/main/LICENSE",
-      "content": "Prompts that users posted on Reddit, Discord and prompt-sharing websites (FlowGPT, AIPRM, JailbreakChat) between December 2022 and December 2023, collected by the paper's authors.",
+      "license_url": "https://huggingface.co/datasets/bigcode/commitpackft/blob/fc56fe33c030c6daa414c2b112c932b8eed085e6/README.md",
+      "content": "One file's before-and-after contents from a real GitHub commit (Rust, Go and TypeScript files), rendered as a unified diff, and the commit's message; every sample names its repository and the repository's licence.",
       "content_license": "MIT",
-      "content_terms": "User-posted text, released by the collectors under MIT (the Hugging Face card and the GitHub LICENSE both say MIT); no stricter upstream terms are known. The card adds a disclaimer that the repository \"is intended for research purposes only. Any misuse is strictly prohibited.\" The rows used here come from Reddit (r/ChatGPT, r/ChatGPTJailbreak), Discord (ChatGPT Prompt Engineering, LLM Promptwriting) and FlowGPT; each row's original_label names its platform.",
-      "labelled_by": "community tagging on the source site (the collectors' jailbreak flag)",
-      "changes": "None to the text: prompts are shown verbatim.",
-      "selection": "Records are screened by the written rules in this module's docstring (language, length, a broad offensive-vocabulary block list, no e-mail addresses, phone numbers, web addresses or named private individuals), mapped to an answer by keyword rules, then taken in sha256 order of the record id. Jailbreak rows need both an unlock cue and a role-play cue; at most 2 DAN prompts; near-duplicates collapse to one. Mix: 10 jailbreak, 4 benign.",
-      "citation": "Shen, Chen, Backes, Shen and Zhang, \"Do Anything Now\": Characterizing and Evaluating In-The-Wild Jailbreak Prompts on Large Language Models, ACM CCS 2024.",
-      "bibtex": "@inproceedings{shen2024donow,\n  author    = {Xinyue Shen and Zeyuan Chen and Michael Backes and Yun Shen and Yang Zhang},\n  title     = {{``Do Anything Now'': Characterizing and Evaluating In-The-Wild Jailbreak Prompts on Large Language Models}},\n  booktitle = {Proceedings of the 2024 ACM SIGSAC Conference on Computer and Communications Security (CCS '24)},\n  publisher = {ACM},\n  year      = {2024},\n  pages     = {1671--1685},\n  doi       = {10.1145/3658644.3670388}\n}"
+      "content_terms": "The card's licence field is mit and its Licensing Information section says \"Each sample comes from a code repository with a permissive license. The license is provided by the `license` field for each sample.\" This benchmark keeps only samples whose repository licence is mit, apache-2.0, bsd-3-clause, bsd-2-clause, isc, cc0-1.0 or unlicense and records it per row (source.repo_license); mpl, epl, lgpl, agpl, artistic and unknown are skipped.",
+      "labelled_by": "the developer who wrote the commit (ENG-2: the Conventional Commit prefix of their message; ENG-5: the message itself)",
+      "changes": "The diff is computed from the sample's old and new file contents with three lines of context (CommitPackFT stores whole files, not diffs). ENG-2 shows the diff only, never the message. ENG-5 shows the first line of each message. Nothing else is changed.",
+      "selection": "Written rules in the module docstring: prefix, licence and diff-length filters for ENG-2, six rows per prefix in sha256 order; same-repository message sets for ENG-5, one row per repository in sha256 order.",
+      "citation": "Muennighoff et al., OctoPack: Instruction Tuning Code Large Language Models, ICLR 2024 (CommitPackFT).",
+      "bibtex": "@inproceedings{muennighoff2024octopack,\n  title     = {OctoPack: Instruction Tuning Code Large Language Models},\n  author    = {Niklas Muennighoff and Qian Liu and Armel Zebaze and Qinkai Zheng and Binyuan Hui and Terry Yue Zhuo and Swayam Singh and Xiangru Tang and Leandro von Werra and Shayne Longpre},\n  booktitle = {The Twelfth International Conference on Learning Representations},\n  year      = {2024},\n  url       = {https://openreview.net/forum?id=mw1PWNSWZP}\n}"
     },
     {
-      "id": "llmail-inject-challenge",
-      "name": "LLMail-Inject",
+      "id": "nvd",
+      "name": "NVD (National Vulnerability Database)",
       "tasks": [
-        "PI-2"
+        "ENG-3"
       ],
-      "homepage": "https://huggingface.co/datasets/microsoft/llmail-inject-challenge",
-      "license": "MIT",
-      "license_url": "https://github.com/microsoft/llmail-inject-challenge/blob/main/LICENSE",
-      "content": "Attack emails that participants of Microsoft's LLMail-Inject challenge (2024–2025) wrote to hijack a simulated email assistant, and the benign inbox emails the organisers wrote for the challenge scenarios.",
-      "content_license": "MIT",
-      "content_terms": "Participants accepted official rules granting Microsoft \"an irrevocable, royalty-free, worldwide right and license\" to use entries \"for any non-commercial or commercial purpose, including ... inclusion into a public dataset\" (quoted in Abdelnabi et al. 2025, https://arxiv.org/abs/2506.09956); the dataset is published under MIT. contact@contact.com is the challenge's fictional target address.",
-      "labelled_by": "the challenge's own records (every submission is an attacker's email; the benign emails are the organisers' inbox fixtures)",
-      "changes": "None to the text: subject and body are shown verbatim.",
-      "selection": "Attacks: 24 small windows of the Phase 1/Phase 2 logs, kept only when the email names the target address, at most one per team, then the first 12 in sha256 order; benign: the scenario inbox emails of at least 400 characters, de-duplicated by subject, first 12 in sha256 order. Both pass the same content and personal-data screen.",
-      "citation": "Abdelnabi et al., LLMail-Inject: A Dataset from a Realistic Adaptive Prompt Injection Challenge, arXiv:2506.09956, 2025.",
-      "bibtex": "@misc{abdelnabi2025llmailinject,\n  author        = {Sahar Abdelnabi and Aideen Fay and Ahmed Salem and Egor Zverev and Kai-Chieh Liao and Chi-Huang Liu and Chun-Chih Kuo and Jannis Weigend and Danyael Manlangit and Alex Apostolov and Haris Umair and Jo{\\~a}o Donato and Masayuki Kawakita and Athar Mahboob and Tran Huu Bach and Tsun-Han Chiang and Myeongjin Cho and Hajin Choi and Byeonghyeon Kim and Hyeonjin Lee and Benjamin Pannell and Conor McCauley and Mark Russinovich and Andrew Paverd and Giovanni Cherubin},\n  title         = {{LLMail-Inject}: A Dataset from a Realistic Adaptive Prompt Injection Challenge},\n  year          = {2025},\n  eprint        = {2506.09956},\n  archivePrefix = {arXiv},\n  primaryClass  = {cs.CR},\n  url           = {https://arxiv.org/abs/2506.09956}\n}"
+      "homepage": "https://nvd.nist.gov/",
+      "license": "Public domain",
+      "license_url": "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications",
+      "content": "The English description of a CVE record published in 2023, as served by the NVD CVE API 2.0, with the CVE id and publication date; the answer is the CWE that NVD's analysts assigned.",
+      "content_license": "cve-tou",
+      "content_terms": "NVD is a NIST product: NIST says \"Data/works created by NIST employees ... are subject to 17 U.S.C. §105 and generally are not subject to copyright protection within the United States\" (license_url) and its NVD FAQ says \"There are no fees, licensing restrictions, or even a requirement to register\" (https://nvd.nist.gov/general/faq). The CWE assignment is NVD's own analysis. The description text is CVE Record information from the CVE Program, whose Terms of Use (SPDX id cve-tou, https://www.cve.org/Legal/TermsOfUse, text at https://spdx.org/licenses/cve-tou.html) grant \"a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute\" CVE, provided MITRE's copyright designation and the licence are reproduced: CVE is Copyright (c) 1999-2026 The MITRE Corporation; CVE and the CVE logo are registered trademarks of The MITRE Corporation. Rows carry that notice in source.notice. NVD asks that services using the API display: \"This product uses the NVD API but is not endorsed or certified by the NVD.\"",
+      "labelled_by": "NVD analysts (the weakness entry with source nvd@nist.gov and type Primary)",
+      "changes": "None to the text. CWE ids are mapped to six classes by the written table in the module; only records whose primary CWE falls in exactly one class are used.",
+      "selection": "Five nine-day publication windows of 2023 (about 5,000 CVEs), filtered by the written rules, then five per class in sha256 order of the CVE id: four whose description does not name the class and one that does, at most two per reporting CNA per class.",
+      "citation": "National Institute of Standards and Technology, National Vulnerability Database (NVD), CVE API 2.0; descriptions are CVE Records of the CVE Program (MITRE).",
+      "bibtex": "@misc{nvd,\n  author       = {{National Institute of Standards and Technology}},\n  title        = {National Vulnerability Database (NVD), CVE API 2.0},\n  howpublished = {\\url{https://nvd.nist.gov/developers/vulnerabilities}},\n  year         = {2023}\n}"
     },
     {
       "id": "creddata",
       "name": "Samsung CredData",
       "tasks": [
-        "PII-2"
+        "ENG-4"
       ],
       "homepage": "https://github.com/Samsung/CredData",
       "license": "Apache-2.0",
       "license_url": "https://github.com/Samsung/CredData/blob/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/LICENSE",
       "content": "One to five lines of source, config or documentation files from public GitHub repositories, around a line that secret scanners flagged; CredData supplies the labels and line positions.",
       "content_license": "Apache-2.0",
-      "content_terms": "CredData's labels and metadata are Apache-2.0; its README says \"Each file is under the existing project's license\". Each excerpt here keeps its repository's license, read from its license file and recorded per row (source.code_license and code_license_file): MIT, Apache-2.0 or BSD-3-Clause for all 24 rows. The repository and the file's base name are shown (CredData hides both behind ids; the repository is kept for attribution and the base name because it is part of the evidence); nothing that locates the file is.",
+      "content_terms": "CredData's labels and metadata are Apache-2.0; its README says \"Each file is under the existing project's license\". Each excerpt here keeps its repository's licence, read from GitHub's licence detection and the repository's licence file, and recorded per row (source.code_license and source.code_license_file): MIT, Apache-2.0, BSD-3-Clause or ISC for all 30 rows. The repository and the file's base name are shown (CredData hides both behind ids; the repository is kept for attribution and the base name because it is part of the evidence); nothing that locates the file is.",
       "labelled_by": "CredData's reviewers, who manually checked every scanner hit against written ground rules",
-      "changes": "Every value CredData judged a real credential, and any other credential-shaped string in the shown lines, is replaced with a random fake of the same length and shape (AWS keys with AWS's documented example pair; provider prefixes broken with EXAMPLE). Only the flagged line and up to two lines either side are shown. So that no row leads a reader to a live secret, every row (whatever its label, so the shape never hints at the answer) keeps only the repository URL and license, the CredData metadata file and Id, and the file's base name. The scrubbed excerpts are committed; the commit, directory path and line number of the originals are recorded nowhere in this repository.",
-      "selection": "Labelled lines from the 305 CredData repositories with a permissive GitHub license, in sha256 order, 8 per label, at most one per repository, filtered by the written rules in authoring/bench/pii.py; six real-credential lines were dropped after reading (CRED_EXCLUDED).",
+      "changes": "Every value CredData judged a real credential, and any other credential-shaped string in the shown lines, is replaced with a random fake of the same length and character classes (AWS keys with AWS's documented example pair). Only the flagged line and up to two lines either side are shown. So that no row leads a reader to a live secret, every row (whatever its label) keeps only the repository URL and licence, the CredData metadata file and Id, and the file's base name. The scrubbed excerpts are committed in authoring/bench/engineering_creddata.json; the commit, directory path and line number of the originals are recorded nowhere in this repository.",
+      "selection": "Labelled lines from CredData repositories with a permissive GitHub licence, in sha256 order of \"pii-2/<Id>\", 10 per label, at most one per repository, filtered by the written rules in the module docstring; the 24 bench-v3 rows are kept and six added by continuing the same walk. Lines dropped after reading are in CRED_EXCLUDED.",
       "citation": "Yun et al., Project CredData: A Dataset of Credentials for Research, Samsung, 2021.",
       "bibtex": "@misc{sr-cred21,\n  author       = {JaeKu Yun and ShinHyung Choi and YuJeong Lee and Oleksandra Sokol and WooChul Shim and Arkadiy Melkonyan and Dmytro Kuzmenko},\n  title        = {Project {CredData}: A Dataset of Credentials for Research},\n  howpublished = {\\url{https://github.com/Samsung/CredData}},\n  year         = {2021}\n}"
-    },
-    {
-      "id": "agentrx",
-      "name": "AgentRx benchmark",
-      "tasks": [
-        "TC-1"
-      ],
-      "homepage": "https://github.com/microsoft/AgentRx",
-      "license": "MIT",
-      "license_url": "https://github.com/microsoft/AgentRx/blob/7a18c79708e7671be15124460f4f7296107c2a55/LICENSE.txt",
-      "content": "Failed agent runs with the failure steps marked: τ-bench retail customer-service chats (a gpt-4o agent with the store's tools, a simulated customer, the store policy and the customer's hidden instructions) and Magentic-One multi-agent runs on AssistantBench web tasks (the same logs as Who&When's Hand-Crafted set), with the text the agents read from web pages and tools.",
-      "content_license": "MIT",
-      "content_terms": "The GitHub repository (the copy used) is MIT (\"Copyright (c) Microsoft Corporation\"). The Hugging Face copy (microsoft/AgentRx) is CC BY 4.0 and asks visitors to share contact details before downloading; it states no other condition, and it was not used (its terms were not accepted). τ-bench (sierra-research/tau-bench) is MIT; its retail customers, orders and products are synthetic. The Magentic-One logs come from Who&When (MIT) and their tasks from AssistantBench (Apache-2.0, https://huggingface.co/datasets/AssistantBench/AssistantBench); they quote short snippets of third-party web pages (search results, business listings) that the agents retrieved. The agent turns are gpt-4o outputs.",
-      "labelled_by": "AgentRx's human annotators (three annotators, grounded-theory coding; mean pairwise Cohen's kappa 0.89 reported in the paper)",
-      "changes": "Categories are mapped to six options (TC1_CATEGORY). The transcript runs up to one turn after the reviewed step; long turns are cut to a head and a tail with \"…[N chars truncated]\" marked (the same cap for every turn but the reviewed one), and long Magentic-One runs show the task, the plan and the turns just before the step, with the omitted turns marked. Nothing is rewritten.",
-      "selection": "Failure steps whose category maps to an option and whose label passes the re-checks in _tc1 (right speaker, visible evidence, read by hand), in sha256 order, scarcest option first, at most 5 per option, one row per run and per τ-bench customer (two for the scarcest option).",
-      "citation": "Barke et al., AgentRx: Diagnosing AI Agent Failures from Execution Trajectories, arXiv:2602.02475, 2026. Runs from τ-bench (Yao et al., 2024) and Who&When (Zhang et al., 2025).",
-      "bibtex": "@article{barke2026agentrx,\n  title   = {{AgentRx}: Diagnosing {AI} Agent Failures from Execution Trajectories},\n  author  = {Barke, Shraddha and Goyal, Arnav and Khare, Alind and Singh, Avaljot and Nath, Suman and Bansal, Chetan},\n  journal = {arXiv preprint arXiv:2602.02475},\n  year    = {2026},\n  url     = {https://arxiv.org/abs/2602.02475}\n}"
-    },
-    {
-      "id": "whoandwhen",
-      "name": "Who&When",
-      "tasks": [
-        "TC-2"
-      ],
-      "homepage": "https://github.com/mingyin1/Agents_Failure_Attribution",
-      "license": "MIT",
-      "license_url": "https://github.com/mingyin1/Agents_Failure_Attribution/blob/b2bae5c5b06d681d04ea5e9b63b7a30525c04925/LICENSE",
-      "content": "Logs of failed runs of LLM multi-agent teams (CaptainAgent-built AutoGen groups and Magentic-One) on AssistantBench web tasks, with the task, its correct answer and the text the agents read from web pages and tools.",
-      "content_license": "MIT",
-      "content_terms": "The logs are MIT on GitHub; the Hugging Face copy (Kevin355/Who_and_When) states no license. The task and answer come from AssistantBench, whose Hugging Face dataset is apache-2.0 (https://huggingface.co/datasets/AssistantBench/AssistantBench); its GitHub code repository is under the AI Pubs OpenRAIL-S license, which covers its source code, not the task data. Logs quote short snippets of third-party web pages (business listings, search results) that the agents retrieved. GAIA-task logs are not used.",
-      "labelled_by": "Who&When's human annotators",
-      "changes": "Every turn is cut to the same cap (head and tail kept, \"…[N chars truncated]\" marked) so the transcript fits 12,000 characters; turns are numbered; nothing is rewritten.",
-      "selection": "AssistantBench logs of at most 40 KB whose labelled agent speaks the labelled step, in sha256 order, one per question, at most 4 rows with the same answer, 24 rows at most.",
-      "citation": "Zhang et al., Which Agent Causes Task Failures and When? On Automated Failure Attribution of LLM Multi-Agent Systems, ICML 2025. Tasks from AssistantBench (Yoran et al., 2024).",
-      "bibtex": "@inproceedings{zhang2025which,\n  title     = {Which Agent Causes Task Failures and When? On Automated Failure Attribution of {LLM} Multi-Agent Systems},\n  author    = {Shaokun Zhang and Ming Yin and Jieyu Zhang and Jiale Liu and Zhiguang Han and Jingyang Zhang and Beibin Li and Chi Wang and Huazheng Wang and Yiran Chen and Qingyun Wu},\n  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},\n  series    = {Proceedings of Machine Learning Research},\n  volume    = {267},\n  pages     = {76583--76599},\n  publisher = {PMLR},\n  year      = {2025},\n  url       = {https://proceedings.mlr.press/v267/zhang25cq.html}\n}"
-    },
-    {
-      "id": "swe-agent-trajectories",
-      "name": "nebius/SWE-agent-trajectories",
-      "tasks": [
-        "TC-3"
-      ],
-      "homepage": "https://huggingface.co/datasets/nebius/SWE-agent-trajectories",
-      "license": "CC-BY-4.0",
-      "license_url": "https://huggingface.co/datasets/nebius/SWE-agent-trajectories/blob/68195a1450865274106246d0d0296a1d6807b88e/README.md",
-      "content": "Runs of a SWE-agent coding agent (driven by fine-tuned open-weight models) on real GitHub issues from SWE-bench-extra and SWE-bench: the issue text, the agent's actions, what the environment returned (often repository code) and the final patch.",
-      "content_license": "CC-BY-4.0",
-      "content_terms": "The card: \"licensed under the Creative Commons Attribution 4.0 license. However, please respect the license of each specific repository on which a particular instance is based.\" Each row's repository license was read and is recorded as code_license (all MIT, Apache-2.0, BSD-2-Clause or BSD-3-Clause). Issue text was posted by GitHub users. The card also says users of the model outputs \"must comply with the Llama 3.1 License\" (https://www.llama.com/llama3_1/license/); that license's conditions apply to using the agents' outputs to train or improve a model.",
-      "labelled_by": "the repository's own tests (not a human): the dataset's target field",
-      "changes": "Only the issue, the last 6 actions with their observations and the final patch are shown; long text keeps a head and tail with \"…[N chars truncated]\" marked. The hidden tests' logs are never shown.",
-      "selection": "Submitted runs with a patch of at most 5,000 characters from 64 evenly spaced 2-row windows of the dataset, in sha256 order, 12 per outcome, every row from a different repository.",
-      "citation": "Golubev et al., Leveraging training and search for better software engineering agents, Nebius blog, 2024 (Hugging Face dataset nebius/SWE-agent-trajectories).",
-      "bibtex": "@article{golubev2024search,\n  title   = {Leveraging training and search for better software engineering agents},\n  author  = {Golubev, Alexander and Polezhaev, Sergey and Zainullina, Karina and Trofimova, Maria and Badertdinov, Ibragim and Anapolskiy, Yury and Litvintseva, Daria and Karasik, Simon and Fisin, Filipp and Skvortsov, Sergey and Nekrashevich, Maxim and Shevtsov, Anton and Abramov, Sergey and Yangel, Boris},\n  year    = {2024},\n  journal = {Nebius blog},\n  note    = {https://nebius.com/blog/posts/training-and-search-for-software-engineering-agents}\n}"
     },
     {
       "id": "bfcl-v3-live",
       "name": "BFCL v3 Live (Berkeley Function-Calling Leaderboard)",
       "tasks": [
-        "TR-1"
+        "AGT-1"
       ],
       "homepage": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard",
       "license": "Apache-2.0",
@@ -141,51 +88,51 @@
       "content_terms": "The Hugging Face card and the GitHub repository (ShishirPatil/gorilla) are Apache-2.0. The BFCL V2 blog (https://gorilla.cs.berkeley.edu/blogs/12_bfcl_v2_live.html) says the queries are \"real-world user-provided data to our hosted model end-point through partnerships, and public access on our website\", with sensitive information replaced by generic placeholders; no other terms are stated for them.",
       "labelled_by": "the BFCL authors' human-verified ground truth (live_multiple) or their marking that no offered function fits (live_irrelevance)",
       "changes": "Each function is shown as its name, the first sentence of its description and its parameter names; the request is verbatim. A \"none\" option is added.",
-      "selection": "Single-turn English requests with 2–8 offered functions, one per function set and answer, in sha256 order: 18 tool rows, 4 Schema-Guided Dialogue rows, 8 irrelevance rows, minus the records in TR1_SKIP.",
+      "selection": "Single-turn English requests with 2–8 offered functions, one per function set and answer, in sha256 order: 22 tool rows, 5 Schema-Guided Dialogue rows, 9 irrelevance rows, minus the records in AGT1_SKIP.",
       "citation": "Patil et al., The Berkeley Function Calling Leaderboard (BFCL): From Tool Use to Agentic Evaluation of Large Language Models, ICML 2025.",
       "bibtex": "@inproceedings{patil2025bfcl,\n  title     = {The Berkeley Function Calling Leaderboard ({BFCL}): From Tool Use to Agentic Evaluation of Large Language Models},\n  author    = {Shishir G. Patil and Huanzhi Mao and Fanjia Yan and Charlie Cheng-Jie Ji and Vishnu Suresh and Ion Stoica and Joseph E. Gonzalez},\n  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},\n  series    = {Proceedings of Machine Learning Research},\n  volume    = {267},\n  pages     = {48371--48392},\n  publisher = {PMLR},\n  year      = {2025},\n  url       = {https://proceedings.mlr.press/v267/patil25a.html}\n}"
     },
     {
-      "id": "banking77",
-      "name": "BANKING77",
+      "id": "agentdojo",
+      "name": "AgentDojo recorded runs",
       "tasks": [
-        "TR-2"
+        "AGT-2"
       ],
-      "homepage": "https://github.com/PolyAI-LDN/task-specific-datasets",
-      "license": "CC-BY-4.0",
-      "license_url": "https://github.com/PolyAI-LDN/task-specific-datasets/blob/master/LICENSE",
-      "content": "Short English customer-service messages about online banking, each labelled with one of 77 intents, released by PolyAI.",
-      "content_license": "CC-BY-4.0",
-      "content_terms": "Written for the dataset by PolyAI (the Hugging Face card lists language_creators \"expert-generated\"); the whole dataset is CC BY 4.0, with no other upstream terms.",
-      "labelled_by": "the dataset's human annotators",
-      "changes": "None: messages are shown verbatim; ten intents are renamed as queue keys (TR2_QUEUES).",
-      "selection": "Test-split messages of ten confusable intents, in sha256 order of the text, 3 per queue, minus the rows in TR2_SKIP.",
-      "citation": "Casanueva et al., Efficient Intent Detection with Dual Sentence Encoders, NLP4ConvAI 2020.",
-      "bibtex": "@inproceedings{casanueva-etal-2020-efficient,\n  title     = {Efficient Intent Detection with Dual Sentence Encoders},\n  author    = {Casanueva, I{\\~n}igo and Tem{\\v{c}}inas, Tadas and Gerz, Daniela and Henderson, Matthew and Vuli{\\'c}, Ivan},\n  booktitle = {Proceedings of the 2nd Workshop on Natural Language Processing for Conversational AI},\n  year      = {2020},\n  publisher = {Association for Computational Linguistics},\n  pages     = {38--45},\n  doi       = {10.18653/v1/2020.nlp4convai-1.5},\n  url       = {https://aclanthology.org/2020.nlp4convai-1.5/}\n}"
+      "homepage": "https://github.com/ethz-spylab/agentdojo",
+      "license": "MIT",
+      "license_url": "https://github.com/ethz-spylab/agentdojo/blob/089ed468cf3ed0322acc66b0211f26d9d90dbf60/LICENSE",
+      "content": "One recorded run of an LLM agent on an AgentDojo task: the system prompt, the user's task, the prompt injection placed in the environment (email, calendar entry, web page, transaction or Slack message) and the agent's messages, tool calls and tool results, from the runs/ directory of the AgentDojo repository.",
+      "content_license": "MIT",
+      "content_terms": "The task suites, injection texts and environments were written by the AgentDojo authors; the agent turns are model output. Everything in the repository, including runs/, is under the MIT licence (LICENSE at the repository root). The people, companies and accounts in the environments are fictional.",
+      "labelled_by": "AgentDojo's security check, which inspects the environment after the run for the injection goal",
+      "changes": "Turns are numbered; each tool call is shown as name(args) with its result on the next line; user and assistant turns over 1,200 characters and tool results over 500 characters (2,500 when the result carries the injection) are cut with a marker. The system prompt, the user task and the injected text are verbatim.",
+      "selection": "From a pool of 160 runs fixed by rule (the first 40 per suite in sha256 order among eight undefended pipelines under four attacks), runs without errors whose injection appears in a tool result the agent saw: 15 hijacked and 15 not hijacked in sha256 order, at most 7 per pipeline and 8 per suite within a label, minus the runs in AD_SKIP.",
+      "citation": "Debenedetti et al., AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents, NeurIPS 2024 Datasets and Benchmarks.",
+      "bibtex": "@inproceedings{debenedetti2024agentdojo,\n  title     = {{AgentDojo}: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for {LLM} Agents},\n  author    = {Debenedetti, Edoardo and Zhang, Jie and Balunovi{\\'c}, Mislav and Beurer-Kellner, Luca and Fischer, Marc and Tram{\\`e}r, Florian},\n  booktitle = {Advances in Neural Information Processing Systems 37, Datasets and Benchmarks Track},\n  year      = {2024},\n  note      = {arXiv:2406.13352}\n}"
     },
     {
-      "id": "cfpb-complaints",
-      "name": "CFPB Consumer Complaint Database",
+      "id": "tau-bench",
+      "name": "τ-bench historical trajectories",
       "tasks": [
-        "TR-3"
+        "AGT-3"
       ],
-      "homepage": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
-      "license": "CC0-1.0",
-      "license_url": "https://huggingface.co/datasets/BEE-spoke-data/consumer-finance-complaints/blob/088cc7308d4afc2a880f2329d08e2f7a09188ec6/README.md",
-      "content": "Complaint narratives that US consumers wrote to the Consumer Financial Protection Bureau and agreed to have published, with the product they chose when filing; read from a February 2024 Hugging Face mirror (BEE-spoke-data/consumer-finance-complaints) of the CFPB database.",
-      "content_license": "Public domain",
-      "content_terms": "The mirror is marked CC0-1.0. The CFPB says \"Information created by the CFPB is in the public domain\" (https://www.consumerfinance.gov/privacy/website-privacy-policy/); the narratives are written by consumers, published only with their consent and scrubbed of personal information by the CFPB (shown as XXXX). On 14 August 2026 the CFPB stopped publishing narratives and said it \"considers previously published narratives to be in the public domain for Freedom of Information Act (FOIA) purposes\" (https://www.consumerfinance.gov/about-us/newsroom/the-cfpb-to-cease-discretionary-publication-of-complaint-narratives-and-visualizations/). No license or restriction from the consumers themselves is known.",
-      "labelled_by": "the consumer's own product choice when filing",
-      "changes": "None to the narrative (surrounding whitespace stripped); only the date received is kept from the other fields.",
-      "selection": "Narratives of 250–1,800 characters from 16 fixed 100-row pages of the mirror, in sha256 order of the complaint id, 4 per product team, minus the complaints in TR3_SKIP.",
-      "citation": "Consumer Financial Protection Bureau, Consumer Complaint Database; narratives are published with the consumer's consent and scrubbed of personal information by the CFPB (shown as XXXX). Read through the CC0 Hugging Face mirror BEE-spoke-data/consumer-finance-complaints.",
-      "bibtex": "@misc{cfpb_complaints,\n  author       = {{Consumer Financial Protection Bureau}},\n  title        = {Consumer Complaint Database},\n  howpublished = {\\url{https://www.consumerfinance.gov/data-research/consumer-complaints/}},\n  note         = {Narratives read from the Hugging Face mirror BEE-spoke-data/consumer-finance-complaints (February 2024)}\n}"
+      "homepage": "https://github.com/sierra-research/tau-bench",
+      "license": "MIT",
+      "license_url": "https://github.com/sierra-research/tau-bench/blob/59a200c6d575d595120f1cb70fea53cef0632f6b/LICENSE",
+      "content": "One recorded τ-bench conversation between a gpt-4o customer-service agent and a simulated user in the airline or retail domain: the agent's policy (its system prompt), the user's scenario, and the messages, tool calls and tool results, from the repository's historical_trajectories/.",
+      "content_license": "MIT",
+      "content_terms": "Policies, scenarios and the airline and retail databases were written or generated by the τ-bench authors (Sierra); the agent and user turns are model output. Everything in the repository, including historical_trajectories/, is under the MIT licence (LICENSE at the repository root). The customers, orders and reservations are fictional.",
+      "labelled_by": "τ-bench's recorded reward: 1 when the final database state matched the expected actions (and any required answer was given), else 0",
+      "changes": "Turns are numbered; each tool call is shown as name(args) with its result on the next line; user and assistant turns over 1,500 characters and tool results over 1,000 characters are cut with a marker; the user simulator's closing '###STOP###' token is removed. The policy and the scenario are verbatim.",
+      "selection": "gpt-4o runs in both domains, one per task, in sha256 order of (domain, task, trial), for tasks that require no spoken answer: reward-1 runs whose successful database-writing tool calls match the expected actions by name (completed) and reward-0 runs whose successful database-writing calls differ by name from the expected actions (not completed); reward-0 runs that differ only in arguments are dropped as too close to call. 30 rows split evenly across domains and labels, minus the runs in TAU_SKIP.",
+      "citation": "Yao et al., τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains, arXiv:2406.12045, 2024.",
+      "bibtex": "@article{yao2024taubench,\n  title   = {$\\tau$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains},\n  author  = {Yao, Shunyu and Shinn, Noah and Razavi, Pedram and Narasimhan, Karthik},\n  journal = {arXiv preprint arXiv:2406.12045},\n  year    = {2024}\n}"
     },
     {
       "id": "hagrid",
       "name": "HAGRID",
       "tasks": [
-        "EJ-1"
+        "AGT-4"
       ],
       "homepage": "https://github.com/project-miracl/hagrid",
       "license": "Apache-2.0",
@@ -195,33 +142,15 @@
       "content_terms": "The paragraphs are English Wikipedia text (MIRACL's 1 February 2019 dump), licensed by Wikipedia's contributors under CC BY-SA 3.0 and the GFDL (https://en.wikipedia.org/wiki/Wikipedia:Copyrights); each row links the Wikipedia articles its paragraphs come from and carries CC BY-SA 3.0. The questions (MIRACL) and HAGRID's answers and labels are Apache-2.0.",
       "labelled_by": "HAGRID's four trained annotators, who judged whether each answer sentence is fully supported by the passages it cites",
       "changes": "None: the question, every passage and the answer are shown in full, as the model received and wrote them.",
-      "selection": "English dev answers judged for attributability, filtered by the written rules in authoring/bench/eval_judging.py (consistent and informative answers, every sentence cited, no self-contradicting labels, no sensitive topics) and a review that left out answers a reviewer could label either way (listed with reasons), then balanced across labels and answer types in a fixed hash order; one answer per question.",
+      "selection": "English dev answers judged for attributability, filtered by the written rules in authoring/bench/agents.py (consistent and informative answers, every sentence cited, no self-contradicting labels, no sensitive topics) and a review that left out answers a reviewer could label either way (listed with reasons), then 15 per label balanced across answer types in a fixed hash order, shorter states first; one answer per question.",
       "citation": "Kamalloo et al., HAGRID: A Human-LLM Collaborative Dataset for Generative Information-Seeking with Attribution, arXiv:2307.16883, 2023.",
       "bibtex": "@article{kamalloo2023hagrid,\n  title   = {{HAGRID}: A Human-{LLM} Collaborative Dataset for Generative Information-Seeking with Attribution},\n  author  = {Kamalloo, Ehsan and Jafari, Aref and Zhang, Xinyu and Thakur, Nandan and Lin, Jimmy},\n  journal = {arXiv preprint arXiv:2307.16883},\n  year    = {2023}\n}"
-    },
-    {
-      "id": "begin",
-      "name": "BEGIN (Wizard of Wikipedia part)",
-      "tasks": [
-        "EJ-1"
-      ],
-      "homepage": "https://github.com/google/BEGIN-dataset",
-      "license": "CC-BY-4.0",
-      "license_url": "https://github.com/google/BEGIN-dataset/blob/6e65f0d5a1ed1b9574643a7640ff1678d4e979b5/wow/LICENSE",
-      "content": "A crowdworker's chat message and one Wikipedia sentence from the Wizard of Wikipedia dataset, and the reply a fine-tuned dialogue model (T5, GPT-2, DoHA or CTRL-dialog) generated from them.",
-      "content_license": "CC-BY-SA-3.0",
-      "content_terms": "The knowledge sentence is Wikipedia text (CC BY-SA 3.0, https://en.wikipedia.org/wiki/Wikipedia:Copyrights); the chat messages are Wizard of Wikipedia (Facebook, CC BY 4.0, https://github.com/facebookresearch/ParlAI/blob/main/parlai/tasks/wizard_of_wikipedia/LICENSE_DOCUMENTATION); BEGIN's replies and labels are CC BY 4.0 (see begin/NOTICE). Rows carry CC BY-SA 3.0.",
-      "labelled_by": "the majority vote of three trained BEGIN annotators",
-      "changes": "None: the message, knowledge sentence and reply are shown verbatim, including the models' tokenised spacing.",
-      "selection": "Fully and not fully attributable replies of at least eight words whose word overlap with the knowledge is between 40% and 85%, without sensitive topics and without replies a review found mislabelled (listed with reasons), balanced across labels and the four models in a fixed hash order; one reply per knowledge sentence.",
-      "citation": "Dziri et al., Evaluating Attribution in Dialogue Systems: The BEGIN Benchmark, TACL 2022.",
-      "bibtex": "@article{dziri2022begin,\n  title   = {Evaluating Attribution in Dialogue Systems: The {BEGIN} Benchmark},\n  author  = {Dziri, Nouha and Rashkin, Hannah and Linzen, Tal and Reitter, David},\n  journal = {Transactions of the Association for Computational Linguistics},\n  volume  = {10},\n  pages   = {1066--1083},\n  year    = {2022},\n  doi     = {10.1162/tacl_a_00506}\n}"
     },
     {
       "id": "mt-bench-human",
       "name": "MT-Bench human judgments",
       "tasks": [
-        "EJ-2"
+        "AGT-5"
       ],
       "homepage": "https://huggingface.co/datasets/lmsys/mt_bench_human_judgments",
       "license": "CC-BY-4.0",
@@ -231,15 +160,214 @@
       "content_terms": "Questions and responses are part of the CC BY 4.0 dataset; the questions are also released in FastChat under Apache-2.0 (https://github.com/lm-sys/FastChat/blob/587d5cfa1609a43d192cedb8441cac3c17db105d/LICENSE).",
       "labelled_by": "MT-Bench's expert judges (mostly graduate students with expertise in the question's topic), unanimous across at least two judges",
       "changes": "Only the first turn is shown. The two responses are shown in a fixed order that puts the preferred one first on every other row; each row records the order.",
-      "selection": "Turn-1 pairs judged by at least two experts who all preferred the same response (no ties), excluding coding questions, a question asking the model to be a real living person, LLaMA-13B (a base model) and pairs a review found arguable either way (listed with reasons); four pairs from each of seven categories in a fixed hash order.",
+      "selection": "Turn-1 pairs judged by at least 2 experts who all preferred the same response (no ties), both responses 300–3000 characters and neither a refusal, excluding coding questions, a question asking the model to be a real living person, LLaMA-13B (a base model) and pairs a review found arguable either way (listed with reasons); 28 pairs from six categories (3–7 each, as many as the category has) in a fixed hash order.",
       "citation": "Zheng et al., Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena, NeurIPS 2023 Datasets and Benchmarks.",
       "bibtex": "@inproceedings{zheng2023judging,\n  title     = {Judging {LLM}-as-a-Judge with {MT}-Bench and Chatbot Arena},\n  author    = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and Zhuang, Siyuan and Wu, Zhanghao and\n               Zhuang, Yonghao and Lin, Zi and Li, Zhuohan and Li, Dacheng and Xing, Eric P. and Zhang, Hao and\n               Gonzalez, Joseph E. and Stoica, Ion},\n  booktitle = {Advances in Neural Information Processing Systems 36, Datasets and Benchmarks Track},\n  year      = {2023},\n  note      = {arXiv:2306.05685}\n}"
+    },
+    {
+      "id": "deepset-prompt-injections",
+      "name": "deepset/prompt-injections",
+      "tasks": [
+        "SAF-1"
+      ],
+      "homepage": "https://huggingface.co/datasets/deepset/prompt-injections",
+      "license": "Apache-2.0",
+      "license_url": "https://huggingface.co/datasets/deepset/prompt-injections/blob/4f61ecb038e9c3fb77e21034b22511b523772cdd/README.md",
+      "content": "Short chat prompts in English and German, some benign and some trying to override an assistant's instructions, published by deepset; the card does not say who wrote them.",
+      "content_license": "Apache-2.0",
+      "content_terms": "The card's license field is apache-2.0 (a second, misplaced cc-by-4.0 entry inside its dataset_info block is also permissive). No upstream source or other terms are documented for the prompts.",
+      "labelled_by": "the dataset's human annotators (label 0 benign, 1 injection)",
+      "changes": "None to the text: prompts are shown verbatim. Label 1 is mapped to injection only when an override cue is present and no persona cue is; other label-1 rows are skipped.",
+      "selection": "Records are screened by the written rules in this module's docstring (language, length, a broad offensive-vocabulary block list, no e-mail addresses, phone numbers, web addresses or named private individuals), mapped to an answer by keyword rules, then taken in sha256 order of the record id. English only, at least 6 words, no German-politics essays, near-duplicates collapsed. Mix: 10 injection, 6 benign.",
+      "citation": "deepset, prompt-injections (Hugging Face dataset), 2023.",
+      "bibtex": "@misc{deepset2023promptinjections,\n  author       = {{deepset}},\n  title        = {prompt-injections},\n  year         = {2023},\n  howpublished = {\\url{https://huggingface.co/datasets/deepset/prompt-injections}}\n}"
+    },
+    {
+      "id": "in-the-wild-jailbreak-prompts",
+      "name": "In-The-Wild Jailbreak Prompts (JailbreakHub)",
+      "tasks": [
+        "SAF-1"
+      ],
+      "homepage": "https://github.com/verazuo/jailbreak_llms",
+      "license": "MIT",
+      "license_url": "https://github.com/verazuo/jailbreak_llms/blob/main/LICENSE",
+      "content": "Prompts that users posted on Reddit, Discord and prompt-sharing websites (FlowGPT, AIPRM, JailbreakChat) between December 2022 and December 2023, collected by the paper's authors.",
+      "content_license": "MIT",
+      "content_terms": "User-posted text, released by the collectors under MIT (the Hugging Face card and the GitHub LICENSE both say MIT); no stricter upstream terms are known. The card adds a disclaimer that the repository \"is intended for research purposes only. Any misuse is strictly prohibited.\" Each row's original_label names its platform and source.",
+      "labelled_by": "community tagging on the source site (the collectors' jailbreak flag)",
+      "changes": "None to the text: prompts are shown verbatim.",
+      "selection": "Records are screened by the written rules in this module's docstring (language, length, a broad offensive-vocabulary block list, no e-mail addresses, phone numbers, web addresses or named private individuals), mapped to an answer by keyword rules, then taken in sha256 order of the record id. Jailbreak rows need both an unlock cue and a role-play cue; at most 2 DAN prompts; near-duplicates collapse to one. Mix: 10 jailbreak, 4 benign.",
+      "citation": "Shen, Chen, Backes, Shen and Zhang, \"Do Anything Now\": Characterizing and Evaluating In-The-Wild Jailbreak Prompts on Large Language Models, ACM CCS 2024.",
+      "bibtex": "@inproceedings{shen2024donow,\n  author    = {Xinyue Shen and Zeyuan Chen and Michael Backes and Yun Shen and Yang Zhang},\n  title     = {{``Do Anything Now'': Characterizing and Evaluating In-The-Wild Jailbreak Prompts on Large Language Models}},\n  booktitle = {Proceedings of the 2024 ACM SIGSAC Conference on Computer and Communications Security (CCS '24)},\n  publisher = {ACM},\n  year      = {2024},\n  pages     = {1671--1685},\n  doi       = {10.1145/3658644.3670388}\n}"
+    },
+    {
+      "id": "civil-comments",
+      "name": "Civil Comments",
+      "tasks": [
+        "SAF-2"
+      ],
+      "homepage": "https://huggingface.co/datasets/google/civil_comments",
+      "license": "CC0-1.0",
+      "license_url": "https://huggingface.co/datasets/google/civil_comments/blob/main/README.md",
+      "content": "Reader comments posted between 2015 and 2017 on about 50 English-language news sites that used the Civil Comments plugin, released when the platform closed and annotated by Jigsaw.",
+      "content_license": "CC0-1.0",
+      "content_terms": "The dataset card says \"This dataset is released under CC0 1.0\" and that the comments come from \"an archive of the Civil Comments platform\", which \"released the public comments\" when it shut down (the original archive is on Figshare, record 7376747, also CC0). Comments were posted publicly by unnamed readers.",
+      "labelled_by": "crowd raters; the toxicity score is the fraction of raters who marked the comment toxic",
+      "changes": "None to the text: comments are shown verbatim. The continuous crowd score is mapped to two options at 0.8 and 0.1; comments in between are not used.",
+      "selection": "Records are screened by the written rules in this module's docstring (language, length, a broad offensive-vocabulary block list, no e-mail addresses, phone numbers, web addresses or named private individuals), mapped to an answer by keyword rules, then taken in sha256 order of the record id. Toxicity >= 0.8 or <= 0.1, 60-600 characters, identity_attack, threat and sexual_explicit below 0.2, no slurs, no personal names. Mix: 15 toxic, 15 not toxic.",
+      "citation": "Borkan, Dixon, Sorensen, Thain and Vasserman, Nuanced Metrics for Measuring Unintended Bias with Real Data for Text Classification, WWW 2019 Companion.",
+      "bibtex": "@inproceedings{borkan2019nuanced,\n  author    = {Daniel Borkan and Lucas Dixon and Jeffrey Sorensen and Nithum Thain and Lucy Vasserman},\n  title     = {Nuanced Metrics for Measuring Unintended Bias with Real Data for Text Classification},\n  booktitle = {Companion Proceedings of The 2019 World Wide Web Conference (WWW '19)},\n  publisher = {ACM},\n  year      = {2019},\n  pages     = {491--500},\n  doi       = {10.1145/3308560.3317593}\n}"
+    },
+    {
+      "id": "cfpb-complaints",
+      "name": "CFPB Consumer Complaint Database",
+      "tasks": [
+        "SUP-1",
+        "SUP-2"
+      ],
+      "homepage": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
+      "license": "CC0-1.0",
+      "license_url": "https://huggingface.co/datasets/BEE-spoke-data/consumer-finance-complaints/blob/088cc7308d4afc2a880f2329d08e2f7a09188ec6/README.md",
+      "content": "Complaint narratives that US consumers wrote to the Consumer Financial Protection Bureau and agreed to have published, with the product and issue they chose when filing; read from a February 2024 Hugging Face mirror (BEE-spoke-data/consumer-finance-complaints) of the CFPB database.",
+      "content_license": "Public domain",
+      "content_terms": "The mirror is marked CC0-1.0. The CFPB says \"Information created by the CFPB is in the public domain\" (https://www.consumerfinance.gov/privacy/website-privacy-policy/); the narratives are written by consumers, published only with their consent and scrubbed of personal information by the CFPB (shown as XXXX). On 14 August 2026 the CFPB stopped publishing narratives and said it \"considers previously published narratives to be in the public domain for Freedom of Information Act (FOIA) purposes\" (https://www.consumerfinance.gov/about-us/newsroom/the-cfpb-to-cease-discretionary-publication-of-complaint-narratives-and-visualizations/). No license or restriction from the consumers themselves is known.",
+      "labelled_by": "the consumer's own product choice (SUP-1) or issue choice (SUP-2) when filing",
+      "changes": "None to the narrative (surrounding whitespace stripped); only the date received is kept from the other fields. CFPB product and issue names are grouped under short team and issue keys.",
+      "selection": "Narratives of 250–1,800 characters from fixed 100-row pages of the mirror (16 pages for SUP-1, 32 for SUP-2), in sha256 order of the complaint id: 5 per product team and 4 per issue group, minus template letters and the complaints in SUP1_SKIP and SUP2_SKIP; SUP-2 never reuses a SUP-1 narrative.",
+      "citation": "Consumer Financial Protection Bureau, Consumer Complaint Database; narratives are published with the consumer's consent and scrubbed of personal information by the CFPB (shown as XXXX). Read through the CC0 Hugging Face mirror BEE-spoke-data/consumer-finance-complaints.",
+      "bibtex": "@misc{cfpb_complaints,\n  author       = {{Consumer Financial Protection Bureau}},\n  title        = {Consumer Complaint Database},\n  howpublished = {\\url{https://www.consumerfinance.gov/data-research/consumer-complaints/}},\n  note         = {Narratives read from the Hugging Face mirror BEE-spoke-data/consumer-finance-complaints (February 2024)}\n}"
+    },
+    {
+      "id": "amazon-esci",
+      "name": "Amazon Shopping Queries Dataset (ESCI)",
+      "tasks": [
+        "COM-1"
+      ],
+      "homepage": "https://github.com/amazon-science/esci-data",
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/amazon-science/esci-data/blob/main/LICENSE",
+      "content": "A real Amazon.com search query and one product returned for it (title, brand, colour, bullet points, description), with the ESCI relevance judgement; read from the Hugging Face mirror tasksource/esci, which joins the dataset's examples and products files.",
+      "content_license": "Apache-2.0",
+      "content_terms": "Amazon Science released the queries, product texts and labels together under Apache-2.0 (https://github.com/amazon-science/esci-data/blob/main/LICENSE); the mirror carries the same licence (https://huggingface.co/datasets/tasksource/esci). The product texts are Amazon catalogue listings written by sellers and published by Amazon in the dataset.",
+      "labelled_by": "Amazon's trained human annotators: at least three judgements per query-product pair, aggregated by majority vote (paper, section 2)",
+      "changes": "US locale only; HTML tags stripped from descriptions and descriptions cut at 800 characters with a marker; bullet points split into a list; one product per query.",
+      "selection": "27 fixed 100-row pages of the mirror's train split; candidates walked in sha256 order of example_id, one row per query, filled to fixed per-label quotas; pairs a careful reader could label two ways were skipped by hand and are listed in COM1_SKIP.",
+      "citation": "Reddy et al., Shopping Queries Dataset: A Large-Scale ESCI Benchmark for Improving Product Search, arXiv:2206.06588, 2022.",
+      "bibtex": "@article{reddy2022shopping,\n  title={Shopping Queries Dataset: A Large-Scale {ESCI} Benchmark for Improving Product Search},\n  author={Reddy, Chandan K. and M{\\`a}rquez, Llu{\\'i}s and Valero, Fran and Rao, Nikhil and Zaragoza, Hugo and\n          Bandyopadhyay, Sambaran and Biswas, Arnab and Xing, Anlu and Subbian, Karthik},\n  journal={arXiv preprint arXiv:2206.06588},\n  year={2022}\n}"
+    },
+    {
+      "id": "amazon-berkeley-objects",
+      "name": "Amazon Berkeley Objects (ABO)",
+      "tasks": [
+        "COM-2"
+      ],
+      "homepage": "https://amazon-berkeley-objects.s3.amazonaws.com/index.html",
+      "license": "CC-BY-4.0",
+      "license_url": "https://amazon-berkeley-objects.s3.amazonaws.com/LICENSE-CC-BY-4.0.txt",
+      "content": "One Amazon.com product listing's metadata (name, brand, bullet points, description, colour, material, style, dimensions, weight) from the ABO listings shard listings_0.json.gz.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "The ABO site describes itself as \"A CC BY 4.0-licensed dataset of Amazon products with metadata, catalog images, and 3D models\" and ships LICENSE-CC-BY-4.0.txt in the archive; the metadata is Amazon's own catalogue data, released by Amazon under that licence.",
+      "labelled_by": "the seller's own product_type field in the listing",
+      "changes": "product_type and browse-node fields removed (they are the answer); hidden search keywords, image, spin and 3D-model identifiers, marketplace and country fields removed; only en_US values kept; dimensions and weight flattened to text.",
+      "selection": "Listings for the US marketplace with an en_US name and one of eight product types, walked in sha256 order of item_id and filled to per-type quotas; fabric swatches and listings with no bullet point or description excluded by rule; hand-skips listed in COM2_SKIP.",
+      "citation": "Collins et al., ABO: Dataset and Benchmarks for Real-World 3D Object Understanding, CVPR 2022.",
+      "bibtex": "@inproceedings{collins2022abo,\n  title={{ABO}: Dataset and Benchmarks for Real-World {3D} Object Understanding},\n  author={Collins, Jasmine and Goel, Shubham and Deng, Kenan and Luthra, Achleshwar and Xu, Leon and Gundogdu, Erhan\n          and Zhang, Xi and Vicente, Tomas F. Yago and Dideriksen, Thomas and Arora, Himanshu and Guillaumin, Matthieu\n          and Malik, Jitendra},\n  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},\n  pages={21126--21136},\n  year={2022}\n}"
+    },
+    {
+      "id": "edgar-corpus-10k-business",
+      "name": "EDGAR-CORPUS (10-K Item 1) with SEC EDGAR SIC codes",
+      "tasks": [
+        "COM-3"
+      ],
+      "homepage": "https://huggingface.co/datasets/eloukas/edgar-corpus",
+      "license": "Apache-2.0",
+      "license_url": "https://huggingface.co/datasets/c3po-ai/edgar-corpus",
+      "content": "The opening 2,000 characters of Item 1 (Business) of a company's Form 10-K for fiscal 2020, as parsed by EDGAR-CORPUS, with the company's name replaced by \"[the Company]\"; the answer comes from the SIC code in the filer's SEC EDGAR submissions record.",
+      "content_license": "Public domain",
+      "content_terms": "Form 10-K filings are public records filed with the US Securities and Exchange Commission and published on EDGAR; the SEC states that its web content is in the public domain (https://www.sec.gov/privacy#dissemination). EDGAR-CORPUS and its parquet mirror are Apache-2.0 (https://huggingface.co/datasets/eloukas/edgar-corpus). The submissions API is SEC open data (https://www.sec.gov/search-filings/edgar-application-programming-interfaces).",
+      "labelled_by": "the SIC code SEC EDGAR records for the filer, mapped to its SIC division by code range",
+      "changes": "Item 1 cut to its first 2,000 characters with a marker; the filer's current and former names and listed aliases replaced by \"[the Company]\"; whitespace normalised.",
+      "selection": "14 fixed 10-row pages of the year_2020 config; filings with an Item 1 of at least 6,000 characters, walked in sha256 order of filename and filled to per-division quotas; filers outside the seven divisions dropped by rule; at most one blank-check company; hand-skips listed in COM3_SKIP.",
+      "citation": "Loukas et al., EDGAR-CORPUS: Billions of Tokens Make The World Go Round, ECONLP 2021.",
+      "bibtex": "@inproceedings{loukas2021edgar,\n  title={{EDGAR-CORPUS}: Billions of Tokens Make The World Go Round},\n  author={Loukas, Lefteris and Fergadiotis, Manos and Androutsopoulos, Ion and Malakasiotis, Prodromos},\n  booktitle={Proceedings of the Third Workshop on Economics and Natural Language Processing (ECONLP)},\n  pages={13--18},\n  year={2021}\n}"
+    },
+    {
+      "id": "edgar-corpus",
+      "name": "EDGAR-CORPUS",
+      "tasks": [
+        "FIN-1"
+      ],
+      "homepage": "https://huggingface.co/datasets/eloukas/edgar-corpus",
+      "license": "Apache-2.0",
+      "license_url": "https://huggingface.co/datasets/eloukas/edgar-corpus/blob/7e90f0f342569b35213445f809cfaf3b91f9964f/README.md",
+      "content": "A passage of consecutive paragraphs from one section (Item 1, 1A, 3, 7 or 9A) of a US public company's annual report on Form 10-K for fiscal years 2015–2020, as split into sections by EDGAR-CORPUS; read through the Hugging Face rows API from the Parquet duplicate c3po-ai/edgar-corpus (revision 5b6b152, marked “Duplicated from eloukas/edgar-corpus”).",
+      "content_license": "Public domain",
+      "content_terms": "SEC filings are public records. The SEC's website policy (https://www.sec.gov/privacy, “Website Dissemination”) says: “Information presented on sec.gov is considered public information and may be copied or further distributed by users of the web site without the SEC's permission”, asking only for attribution to the SEC and no use of the SEC seal or logos. The corpus card adds “EDGAR data is publicly available.”",
+      "labelled_by": "the filing's own item headings, as located by EDGAR-CORPUS's section splitter",
+      "changes": "The section's heading lines are removed and one run of paragraphs is excerpted (whitespace normalised); the filer name and SIC description come from EDGAR's submissions API, not the corpus.",
+      "selection": "One 10-K per rows-API window (42 windows over the 2015–2020 test splits), one per CIK, in sha256 order of the corpus filename; each filer takes the section with the fewest rows so far among those that yield a 600–2,000 character prose passage; six rows per section.",
+      "citation": "Loukas, Fergadiotis, Androutsopoulos and Malakasiotis, EDGAR-CORPUS: Billions of Tokens Make The World Go Round, ECONLP 2021.",
+      "bibtex": "@inproceedings{loukas-etal-2021-edgar,\n  title     = {{EDGAR}-{CORPUS}: Billions of Tokens Make The World Go Round},\n  author    = {Loukas, Lefteris and Fergadiotis, Manos and Androutsopoulos, Ion and Malakasiotis, Prodromos},\n  booktitle = {Proceedings of the Third Workshop on Economics and Natural Language Processing},\n  year      = {2021},\n  publisher = {Association for Computational Linguistics},\n  url       = {https://aclanthology.org/2021.econlp-1.2}\n}"
+    },
+    {
+      "id": "sec-edgar-8k",
+      "name": "SEC EDGAR 8-K filings",
+      "tasks": [
+        "FIN-2"
+      ],
+      "homepage": "https://www.sec.gov/edgar/search/",
+      "license": "Public domain",
+      "license_url": "https://www.sec.gov/privacy",
+      "content": "The body of a current report on Form 8-K filed with the SEC between 4 and 8 March 2024, the primary document converted from HTML to text.",
+      "content_license": "Public domain",
+      "content_terms": "SEC filings are public records. The SEC's website policy (https://www.sec.gov/privacy, “Website Dissemination”) says: “Information presented on sec.gov is considered public information and may be copied or further distributed by users of the web site without the SEC's permission”, asking only for attribution to the SEC and no use of the SEC seal or logos. SEC EDGAR asks automated clients to send a User-Agent header; scripts/fetch_sources.py does.",
+      "labelled_by": "the item numbers the filer put on the Form 8-K cover, as indexed by EDGAR full-text search",
+      "changes": "HTML converted to text; only the sections of the reported item are kept (the Item 9.01 exhibit list and Item 2.03 cross-references are dropped); the 'Item X.XX' heading line and official title are removed and in-body item numbers redacted to 'Item [number removed]'; bodies over 6,000 characters are truncated with a marker.",
+      "selection": "EDGAR full-text search for one week of 8-K filings, one query per item number; plain 8-Ks whose items other than 9.01 map to exactly one option; one per filer; the first nine per option by sha256 of the accession number were downloaded and the first six not in FIN2_SKIP are rows.",
+      "citation": "U.S. Securities and Exchange Commission, EDGAR full-text search, filings of 4–8 March 2024.",
+      "bibtex": "@misc{sec_edgar_8k,\n  author       = {{U.S. Securities and Exchange Commission}},\n  title        = {{EDGAR} Form 8-K filings, 4--8 March 2024},\n  howpublished = {\\url{https://www.sec.gov/edgar/search/}},\n  year         = {2024}\n}"
+    },
+    {
+      "id": "cord-v2",
+      "name": "CORD-v2 (Consolidated Receipt Dataset)",
+      "tasks": [
+        "FIN-3"
+      ],
+      "homepage": "https://github.com/clovaai/cord",
+      "license": "CC-BY-4.0",
+      "license_url": "https://huggingface.co/datasets/naver-clova-ix/cord-v2/blob/7f0115a4b758a71d6473b8d085751692da2fef98/README.md",
+      "content": "A photograph of a printed receipt from an Indonesian shop or restaurant, with the dataset's word-level OCR annotations and key-value parse (menu lines, subtotal and total).",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "The CORD repository (github.com/clovaai/cord) says “This work is licensed under a Creative Commons Attribution 4.0 International License” and that the dataset “consists of thousands of Indonesian receipts” collected from shops and restaurants; the images and annotations were released together by Clova AI (NAVER) under that licence, and the Hugging Face card carries cc-by-4.0.",
+      "labelled_by": "Clova AI's trained annotators (CORD's key-value labels: total.total_price)",
+      "changes": "The image is resized to a longest side of at most 1,600 px and re-encoded as JPEG under 400 KB; the annotated words are shown as lines in reading order; option figures are as printed.",
+      "selection": "All 100 test-split receipts, in sha256 order of the image id; kept when the photo is at least 800 px on its longest side, a single total_price is annotated, its digits appear only in total-type fields, at least three other distinct figures of 100 or more are printed and 8–120 words are annotated; first 30.",
+      "citation": "Park et al., CORD: A Consolidated Receipt Dataset for Post-OCR Parsing, Document Intelligence Workshop at NeurIPS 2019.",
+      "bibtex": "@inproceedings{park2019cord,\n  title     = {{CORD}: A Consolidated Receipt Dataset for Post-{OCR} Parsing},\n  author    = {Park, Seunghyun and Shin, Seung and Lee, Bado and Lee, Junyeop and Surh, Jaeheung and Seo, Minjoon and Lee, Hwalsuk},\n  booktitle = {Document Intelligence Workshop at Neural Information Processing Systems},\n  year      = {2019}\n}"
+    },
+    {
+      "id": "finer-139",
+      "name": "FiNER-139",
+      "tasks": [
+        "FIN-4"
+      ],
+      "homepage": "https://huggingface.co/datasets/nlpaueb/finer-139",
+      "license": "CC-BY-SA-4.0",
+      "license_url": "https://huggingface.co/datasets/nlpaueb/finer-139/blob/080f677a026e304c38666d759ef625d621dc8cb9/README.md",
+      "content": "One tokenised sentence from a US public company's 10-K or 10-Q filing (2016–2020) with the XBRL element the company attached to one dollar amount in it.",
+      "content_license": "Public domain",
+      "content_terms": "SEC filings are public records. The SEC's website policy (https://www.sec.gov/privacy, “Website Dissemination”) says: “Information presented on sec.gov is considered public information and may be copied or further distributed by users of the web site without the SEC's permission”, asking only for attribution to the SEC and no use of the SEC seal or logos. The dataset's own annotations (token labels) are CC BY-SA 4.0, so these rows carry that licence.",
+      "labelled_by": "the filing company itself: the XBRL element it tagged the amount with in its SEC filing",
+      "changes": "Tokens are joined back into a sentence (spacing around punctuation restored) and the tagged number is wrapped in [[ ]]; eleven of the 139 XBRL elements are mapped to six plain-words groups, and only sentences tagged with one of those elements are used.",
+      "selection": "Test split rows 0–11,999 in sha256 order of the row id; sentences with exactly one tagged token, a dollar sign before it and a tag in one of the six groups, minus the ids in FIN5_SKIP; up to six per group.",
+      "citation": "Loukas et al., FiNER: Financial Numeric Entity Recognition for XBRL Tagging, ACL 2022.",
+      "bibtex": "@inproceedings{loukas-etal-2022-finer,\n  title     = {{FiNER}: Financial Numeric Entity Recognition for {XBRL} Tagging},\n  author    = {Loukas, Lefteris and Fergadiotis, Manos and Chalkidis, Ilias and Spyropoulou, Eirini and Malakasiotis, Prodromos and Androutsopoulos, Ion and Paliouras, George},\n  booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n  year      = {2022},\n  publisher = {Association for Computational Linguistics},\n  url       = {https://aclanthology.org/2022.acl-long.303}\n}"
     },
     {
       "id": "contractnli",
       "name": "ContractNLI",
       "tasks": [
-        "CP-1"
+        "LEG-1"
       ],
       "homepage": "https://stanfordnlp.github.io/contract-nli/",
       "license": "CC-BY-4.0",
@@ -249,9 +377,281 @@
       "content_terms": "The dataset zip holds LICENSE (CC BY 4.0) and TERMS (saved as data/sources/contractnli/LICENSE and LICENSE-TERMS). Hitachi America's TERMS grant use \"in accordance with the terms and conditions of the Creative Commons Attribution 4.0 International Public License\" and give a notice address for anyone who believes the dataset \"incorporates any of your work\". The SEC says \"Information presented on sec.gov is considered public information and may be copied or further distributed by users of the web site without the SEC's permission\" (https://www.sec.gov/privacy). The web templates carry no license of their own; agreements with a copyright notice are not used (COPYRIGHT_NOTICE), and each row links the agreement's original URL (document_url). Some agreements name business contacts in their notice clauses; their phone numbers and e-mail addresses are removed.",
       "labelled_by": "ContractNLI's annotators, who also marked the evidence spans",
       "changes": "The hypothesis and the full agreement text are shown as ContractNLI has them, except that e-mail addresses and phone/fax numbers are replaced with placeholders; the labels are renamed (Entailment -> yes, Contradiction -> says_opposite, NotMentioned -> not_addressed).",
-      "selection": "Test-split agreements of at most 10,000 characters, 10 pairs per label in sha256 order of (document, hypothesis), one row per agreement, at most 2 per hypothesis, minus the pairs excluded by the rules above.",
+      "selection": "Test-split agreements of at most 10,000 characters, 11 pairs per label in sha256 order of (document, hypothesis), one row per agreement, at most 2 per hypothesis, minus the pairs excluded by the rules in authoring/bench/legal.py.",
       "citation": "Koreeda and Manning, ContractNLI: A Dataset for Document-level Natural Language Inference for Contracts, Findings of EMNLP 2021.",
       "bibtex": "@inproceedings{koreeda-manning-2021-contractnli-dataset,\n  title     = {{ContractNLI}: A Dataset for Document-level Natural Language Inference for Contracts},\n  author    = {Koreeda, Yuta and Manning, Christopher},\n  booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2021},\n  year      = {2021},\n  address   = {Punta Cana, Dominican Republic},\n  publisher = {Association for Computational Linguistics},\n  pages     = {1907--1919},\n  doi       = {10.18653/v1/2021.findings-emnlp.164},\n  url       = {https://aclanthology.org/2021.findings-emnlp.164/}\n}"
+    },
+    {
+      "id": "cuad",
+      "name": "CUAD (Contract Understanding Atticus Dataset) v1",
+      "tasks": [
+        "LEG-2",
+        "LEG-4"
+      ],
+      "homepage": "https://www.atticusprojectai.org/cuad",
+      "license": "CC-BY-4.0",
+      "license_url": "https://huggingface.co/datasets/theatticusproject/cuad",
+      "content": "Clauses and continuous excerpts from real commercial contracts (supply, distribution, licence, endorsement, hosting and similar agreements) that public companies filed as exhibits with the US SEC (EDGAR), collected and annotated by The Atticus Project.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "The Atticus Project publishes CUAD under CC BY 4.0: its project page (https://www.atticusprojectai.org/cuad) carries the licence in its header and the Hugging Face dataset card (https://huggingface.co/datasets/theatticusproject/cuad) declares license: cc-by-4.0 (saved as data/sources/cuad/LICENSE-CARD.md and LICENSE-README.txt). The SEC says \"Information presented on sec.gov is considered public information and may be copied or further distributed by users of the web site without the SEC's permission\" (https://www.sec.gov/privacy). Notice clauses in these contracts name business contacts; their phone/fax numbers and e-mail addresses are removed.",
+      "labelled_by": "The Atticus Project's reviewers (law students and lawyers, working under experienced attorneys), who highlighted each clause",
+      "changes": "Clause spans and excerpts are shown as CUAD's text files have them, whitespace collapsed inside a clause, with e-mail addresses and phone/fax numbers replaced by placeholders; excerpts are cut at line or sentence boundaries and marked with an ellipsis and a character range. The clause-type definitions are CUAD's own 'Details' text.",
+      "selection": "Test-split contracts (102). LEG-2: five highlighted spans per clause type, one per contract, excluding spans whose surroundings touch another of the six types. LEG-4: contracts not used by LEG-2; per type, 2–3 excerpts holding a highlighted span and 2–3 from contracts marked as lacking the type whose excerpt passes a written cue screen. All in sha256 order.",
+      "citation": "Hendrycks, Burns, Chen and Ball, CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review, NeurIPS 2021 Datasets and Benchmarks.",
+      "bibtex": "@inproceedings{hendrycks2021cuad,\n  title     = {{CUAD}: An Expert-Annotated {NLP} Dataset for Legal Contract Review},\n  author    = {Hendrycks, Dan and Burns, Collin and Chen, Anya and Ball, Spencer},\n  booktitle = {Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks},\n  year      = {2021},\n  url       = {https://arxiv.org/abs/2103.06268}\n}"
+    },
+    {
+      "id": "lexglue-unfair-tos",
+      "name": "UNFAIR-ToS (LexGLUE)",
+      "tasks": [
+        "LEG-3"
+      ],
+      "homepage": "https://huggingface.co/datasets/coastalcph/lex_glue",
+      "license": "CC-BY-4.0",
+      "license_url": "https://huggingface.co/datasets/coastalcph/lex_glue",
+      "content": "Single sentences (with their neighbours) from the public terms of service of ten online platforms (Academia.edu, Amazon, Netflix, Snap, Twitter, LinkedIn, Duolingo, Uber, Evernote, eBay) as collected in 2017–2018 by the CLAUDETTE project (Lippi et al. 2019) and repackaged in LexGLUE.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "LexGLUE's dataset card declares license: cc-by-4.0 (saved as data/sources/lexglue-unfair-tos/LICENSE-CARD.md); the CLAUDETTE authors published the same sentences with their tags at https://claudette.eui.eu/corpora/ without a separate licence statement. The sentences are short excerpts of terms of service that the platforms posted publicly for all users to read; each row shows at most three consecutive sentences. Contact details, if any, are removed.",
+      "labelled_by": "the CLAUDETTE project's legal annotators (Lippi et al. 2019), who tagged each sentence",
+      "changes": "Sentences are shown as LexGLUE has them (lower-cased) with the corpus tokenisation undone (PTB quotes and spaces before punctuation); labels renamed to snake_case keys and 'not_unfair' for an untagged sentence.",
+      "selection": "Test-split sentences of 60–600 characters with exactly one tag, or with no tag and none of the cue words of the eight types; 9 untagged and 3 per type, at most 5 per document, in sha256 order of the row index; neighbours come from the same document only.",
+      "citation": "Lippi et al., CLAUDETTE: an automated detector of potentially unfair clauses in online terms of service, Artificial Intelligence and Law 2019; packaged in Chalkidis et al., LexGLUE, ACL 2022.",
+      "bibtex": "@article{lippi2019claudette,\n  title     = {{CLAUDETTE}: an automated detector of potentially unfair clauses in online terms of service},\n  author    = {Lippi, Marco and Pa{\\l}ka, Przemys{\\l}aw and Contissa, Giuseppe and Lagioia, Francesca and Micklitz, Hans-Wolfgang and Sartor, Giovanni and Torroni, Paolo},\n  journal   = {Artificial Intelligence and Law},\n  volume    = {27},\n  pages     = {117--139},\n  year      = {2019},\n  doi       = {10.1007/s10506-019-09243-2}\n}\n@inproceedings{chalkidis-etal-2022-lexglue,\n  title     = {{LexGLUE}: A Benchmark Dataset for Legal Language Understanding in {E}nglish},\n  author    = {Chalkidis, Ilias and Jana, Abhik and Hartung, Dirk and Bommarito, Michael and Androutsopoulos, Ion and Katz, Daniel Martin and Aletras, Nikolaos},\n  booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics},\n  year      = {2022},\n  doi       = {10.18653/v1/2022.acl-long.297}\n}"
+    },
+    {
+      "id": "upworthy-archive",
+      "name": "Upworthy Research Archive (exploratory packages)",
+      "tasks": [
+        "PRD-1"
+      ],
+      "homepage": "https://upworthy.natematias.com/",
+      "license": "CC-BY-4.0",
+      "license_url": "https://osf.io/jd64p/",
+      "content": "Headline packages (headline, excerpt, lede) that Upworthy's editors wrote and tested on the upworthy.com home page between 2013 and 2015, with each package's impressions and clicks.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "The OSF project (jd64p) is licensed CC-By Attribution 4.0 International and the archive site says the archive is released under a Creative Commons Attribution 4.0 International License (https://upworthy.natematias.com/). The headlines and ledes were written by Upworthy's own staff and released by Upworthy as part of the archive; there is no separate upstream author.",
+      "labelled_by": "the recorded impressions and clicks of each package (the click-through rates)",
+      "changes": "HTML tags stripped from ledes and ledes over 1,200 characters cut with an explicit marker; otherwise headlines, excerpts and ledes are verbatim. Packages are relabelled A/B.",
+      "selection": "Tests in sha256 order of their id; the highest- and lowest-CTR packages with at least 4,000 impressions each, sharing the same image and lede, with a CTR ratio of at least 1.4 and a two-proportion z-test p < 0.01; a profanity block list; the first 30.",
+      "citation": "Matias, Munger, Le Quere and Ebersole, The Upworthy Research Archive, a time series of 32,487 experiments in U.S. media, Scientific Data 8:195, 2021.",
+      "bibtex": "@article{matias2021upworthy,\n  author  = {Matias, J. Nathan and Munger, Kevin and Le Quere, Marianne Aubin and Ebersole, Charles},\n  title   = {The Upworthy Research Archive, a time series of 32,487 experiments in U.S. media},\n  journal = {Scientific Data},\n  volume  = {8},\n  number  = {195},\n  year    = {2021},\n  doi     = {10.1038/s41597-021-00934-7}\n}"
+    },
+    {
+      "id": "changelogs-mit",
+      "name": "CHANGELOG.md files of MIT-licensed projects (Keep a Changelog)",
+      "tasks": [
+        "PRD-2"
+      ],
+      "homepage": "https://keepachangelog.com/",
+      "license": "MIT",
+      "license_url": "https://github.com/Textualize/rich/blob/9d8f9a372cc5916fd4781fec207ced7ddac2f08f/LICENSE",
+      "content": "Release notes written by the maintainers of open-source projects in their CHANGELOG.md, fetched from GitHub at a pinned commit.",
+      "content_license": "MIT",
+      "content_terms": "Each changelog is a file in its repository and is covered by the repository's MIT LICENSE, read at the pinned commit: Textualize/rich (https://github.com/Textualize/rich/blob/9d8f9a372cc5916fd4781fec207ced7ddac2f08f/LICENSE); Textualize/textual (https://github.com/Textualize/textual/blob/06dbeef4bb70fb718236aa418ed658ef4667a126/LICENSE); python-poetry/poetry (https://github.com/python-poetry/poetry/blob/94b6e35b9091991887aa54feeb3771a86d3bd692/LICENSE); thephpleague/flysystem (https://github.com/thephpleague/flysystem/blob/f7fb152932f30072d573510cbd4dd657d6475b25/LICENSE); guzzle/guzzle (https://github.com/guzzle/guzzle/blob/93939470950a9b11e2e84204166ef5e048c55fe4/LICENSE); ramsey/uuid (https://github.com/ramsey/uuid/blob/dc681915388ca5fd55a7fcb7c85bd9202f20fd4a/LICENSE); olivierlacan/keep-a-changelog (https://github.com/olivierlacan/keep-a-changelog/blob/08d0df5a7e93b71d902def8be0f0d40025b56289/LICENSE).",
+      "labelled_by": "the two consecutive version numbers in the changelog (a written rule maps them to major, minor or patch)",
+      "changes": "Version numbers replaced with x.y.z, dates with [date], GitHub pull/issue links reduced to #number and other links into the repository to [link]; the version heading is removed.",
+      "selection": "Releases in sha256 order of owner/repo@version, both versions at or above 1.0.0, the release a canonical successor of the previous entry, section rules per answer (see the module docstring), at most 4 per repository and 10 per answer.",
+      "citation": "CHANGELOG.md files of Textualize/rich, Textualize/textual, python-poetry/poetry, thephpleague/flysystem, guzzle/guzzle, ramsey/uuid, olivierlacan/keep-a-changelog (GitHub, pinned commits in data/sources/manifest.json).",
+      "bibtex": "@misc{changelogsmit2026,\n  title        = {CHANGELOG.md files of MIT-licensed open-source projects following Keep a Changelog},\n  howpublished = {GitHub; pinned commits listed in data/sources/manifest.json},\n  note         = {Textualize/rich, Textualize/textual, python-poetry/poetry, thephpleague/flysystem, guzzle/guzzle, ramsey/uuid, olivierlacan/keep-a-changelog},\n  year         = {2026}\n}"
+    },
+    {
+      "id": "changelogs-bsd",
+      "name": "CHANGELOG.md files of BSD-3-Clause-licensed projects (Keep a Changelog)",
+      "tasks": [
+        "PRD-2"
+      ],
+      "homepage": "https://keepachangelog.com/",
+      "license": "BSD-3-Clause",
+      "license_url": "https://github.com/httpie/cli/blob/5b604c37c6c67e18e7c3e9aee6c88a8c22b98345/LICENSE",
+      "content": "Release notes written by the maintainers of open-source projects in their CHANGELOG.md, fetched from GitHub at a pinned commit.",
+      "content_license": "BSD-3-Clause",
+      "content_terms": "Each changelog is a file in its repository and is covered by the repository's BSD-3-Clause LICENSE, read at the pinned commit: httpie/cli (https://github.com/httpie/cli/blob/5b604c37c6c67e18e7c3e9aee6c88a8c22b98345/LICENSE); thephpleague/commonmark (https://github.com/thephpleague/commonmark/blob/6efbd9c472b91db0a3350fcd601c8332c2382e1f/LICENSE); sebastianbergmann/diff (https://github.com/sebastianbergmann/diff/blob/3540781ec37cef2da235448e5461e13b7c54206b/LICENSE); sebastianbergmann/comparator (https://github.com/sebastianbergmann/comparator/blob/34dcca995ee957b433ebfb9f1f46777cce2909a2/LICENSE); sebastianbergmann/environment (https://github.com/sebastianbergmann/environment/blob/627b083b89c8ecdb43d2bd3ce8179b81fa4eb766/LICENSE); sebastianbergmann/exporter (https://github.com/sebastianbergmann/exporter/blob/7e269da761c5714d069904597c01023918898a02/LICENSE).",
+      "labelled_by": "the two consecutive version numbers in the changelog (a written rule maps them to major, minor or patch)",
+      "changes": "Version numbers replaced with x.y.z, dates with [date], GitHub pull/issue links reduced to #number and other links into the repository to [link]; the version heading is removed.",
+      "selection": "Releases in sha256 order of owner/repo@version, both versions at or above 1.0.0, the release a canonical successor of the previous entry, section rules per answer (see the module docstring), at most 4 per repository and 10 per answer.",
+      "citation": "CHANGELOG.md files of httpie/cli, thephpleague/commonmark, sebastianbergmann/diff, sebastianbergmann/comparator, sebastianbergmann/environment, sebastianbergmann/exporter (GitHub, pinned commits in data/sources/manifest.json).",
+      "bibtex": "@misc{changelogsbsd2026,\n  title        = {CHANGELOG.md files of BSD-3-Clause-licensed open-source projects following Keep a Changelog},\n  howpublished = {GitHub; pinned commits listed in data/sources/manifest.json},\n  note         = {httpie/cli, thephpleague/commonmark, sebastianbergmann/diff, sebastianbergmann/comparator, sebastianbergmann/environment, sebastianbergmann/exporter},\n  year         = {2026}\n}"
+    },
+    {
+      "id": "spider",
+      "name": "Spider (dev set)",
+      "tasks": [
+        "DAT-1"
+      ],
+      "homepage": "https://yale-lily.github.io/spider",
+      "license": "CC-BY-SA-4.0",
+      "license_url": "https://huggingface.co/datasets/xlangai/spider#licensing-information",
+      "content": "A natural-language question written by Yale students for one of Spider's 20 dev databases, the database schema from tables.json, and four of Spider's gold SQL queries for that database.",
+      "content_license": "CC-BY-SA-4.0",
+      "content_terms": "Questions, gold SQL and schemas were written by the Spider authors and are released with the dataset under CC BY-SA 4.0 (creativecommons.org/licenses/by-sa/4.0/legalcode); the dataset card at huggingface.co/datasets/xlangai/spider states the licence. Rows carry CC BY-SA 4.0.",
+      "labelled_by": "the Spider annotators' gold SQL for each question, verified by the Spider authors",
+      "changes": "The schema is rendered compactly (table(columns), primary keys starred, foreign keys listed) from tables.json; queries are shown verbatim. Distractor queries are other gold queries of the same database, labelled q1–q4 in a fixed hash order.",
+      "selection": "Dev records in sha256 order of their index, databases with 3–8 tables, queries of at most 220 characters, one row per distinct query structure, at most three rows per database; distractors are the first three structurally different gold queries of the database in hash order (see the module docstring).",
+      "citation": "Yu et al., Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task, EMNLP 2018.",
+      "bibtex": "@inproceedings{yu-etal-2018-spider,\n  title     = {Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-{SQL} Task},\n  author    = {Yu, Tao and Zhang, Rui and Yang, Kai and Yasunaga, Michihiro and Wang, Dongxu and Li, Zifan and Ma, James and Li, Irene and Yao, Qingning and Roman, Shanelle and Zhang, Zilin and Radev, Dragomir},\n  booktitle = {Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing},\n  year      = {2018},\n  pages     = {3911--3921},\n  doi       = {10.18653/v1/D18-1425}\n}"
+    },
+    {
+      "id": "wikitablequestions",
+      "name": "WikiTableQuestions (test set)",
+      "tasks": [
+        "DAT-2"
+      ],
+      "homepage": "https://github.com/ppasupat/WikiTableQuestions",
+      "license": "CC-BY-SA-4.0",
+      "license_url": "https://github.com/ppasupat/WikiTableQuestions/blob/7d455a5a707b96341ef72aff9428749d443d8aa9/LICENSE",
+      "content": "A table extracted from a Wikipedia article (csv/ folder of the repository) and a question about it written by an Amazon Mechanical Turk worker, with the worker's answer.",
+      "content_license": "CC-BY-SA-3.0",
+      "content_terms": "The tables are Wikipedia content, licensed by Wikipedia's contributors under CC BY-SA 3.0 (https://en.wikipedia.org/wiki/Wikipedia:Copyrights); the questions and answers are released with the dataset under CC BY-SA 4.0 (the repository's LICENSE file). Rows carry CC BY-SA 3.0.",
+      "labelled_by": "the crowd worker who wrote the question (the dataset's targetValue), checked by the authors' verification pass",
+      "changes": "None to the table cells or question; the table is shown as its header and rows. The three distractor values are other cells of the same column, chosen in a fixed hash order.",
+      "selection": "Test-set (pristine-unseen-tables) examples in sha256 order of their id, single-value non-numeric answers to questions that do not ask for a count or a computation, tables of 5–25 rows and at most 8 columns in which the answer is a cell of exactly one column, one example per table, minus hand drops listed with reasons (see the module docstring).",
+      "citation": "Pasupat and Liang, Compositional Semantic Parsing on Semi-Structured Tables, ACL 2015.",
+      "bibtex": "@inproceedings{pasupat-liang-2015-compositional,\n  title     = {Compositional Semantic Parsing on Semi-Structured Tables},\n  author    = {Pasupat, Panupong and Liang, Percy},\n  booktitle = {Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics and the 7th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)},\n  year      = {2015},\n  pages     = {1470--1480},\n  doi       = {10.3115/v1/P15-1142}\n}"
+    },
+    {
+      "id": "owid-grapher",
+      "name": "Our World in Data grapher charts",
+      "tasks": [
+        "DAT-3"
+      ],
+      "homepage": "https://ourworldindata.org/",
+      "license": "CC-BY-4.0",
+      "license_url": "https://ourworldindata.org/faqs#can-i-reuse-or-republish-your-charts",
+      "content": "A grapher line chart (PNG as served by ourworldindata.org/grapher/<slug>.png for four countries and a year range) and the chart's CSV data, from which a claim is templated.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "Charts with the OWID logo and CC BY stamp may be reproduced and distributed with citation (FAQ: Can I reuse or republish your charts?). The underlying data are third-party; only charts whose every data origin is CC BY 4.0, CC BY 3.0 IGO, CC0 or public domain were used, checked per indicator at api.ourworldindata.org/v1/indicators/<id>.metadata.json on 2026-09-23. The claims are not OWID's: they are templated from the data by this benchmark.",
+      "labelled_by": "a written rule: the claim is compared with the chart's own CSV values (see the module docstring)",
+      "changes": "The PNG is copied unchanged (850×600 px). THE CLAIM IS TEMPLATED BY THIS BENCHMARK from the chart's CSV using two fixed patterns; half the claims state the opposite of the data. The data points used are listed in the state, with the series sampled every ten years, as the text rendering.",
+      "selection": "A hand list of charts with permissive data origins, four countries each; two claims per chart (one comparison, one trend) chosen by sha256 over the qualifying candidates, one true and one false per chart, differences of at least 15% (see the module docstring).",
+      "citation": "Our World in Data, grapher charts (ourworldindata.org/grapher), retrieved 2026-09-23, CC BY 4.0.",
+      "bibtex": "@misc{owid_grapher,\n  title        = {Our World in Data grapher charts},\n  author       = {{Our World in Data}},\n  howpublished = {\\url{https://ourworldindata.org/grapher}},\n  year         = {2026},\n  note         = {Retrieved 2026-09-23. CC BY 4.0; underlying data from the producers named on each chart}\n}"
+    },
+    {
+      "id": "fivethirtyeight",
+      "name": "FiveThirtyEight data repository",
+      "tasks": [
+        "DAT-4"
+      ],
+      "homepage": "https://github.com/fivethirtyeight/data",
+      "license": "CC-BY-4.0",
+      "license_url": "https://github.com/fivethirtyeight/data/blob/4c1ff5e3aef1816ae04af63218015066e186c147/LICENSE",
+      "content": "Fifteen values from one column of a CSV in FiveThirtyEight's data repository (weather, librarians, comic characters, talk-show guests, film budgets, college majors, police, airline safety, drivers), with the file's other headers.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "The repository README states that, unless otherwise noted, the data sets are available under CC BY 4.0 (github.com/fivethirtyeight/data/blob/master/README.md); none of the folders used notes otherwise. The values are factual records compiled by FiveThirtyEight from public sources.",
+      "labelled_by": "a written mapping from the column's real header to one of seven meanings (MAPPING in the module)",
+      "changes": "The header of the shown column is hidden; values are shown verbatim, 15 per row in a fixed hash order.",
+      "selection": "Nine CSVs chosen by hand; per file the unambiguously mapped headers in sha256 order, at most three; values are the first 15 non-empty cells in sha256 order of the row index.",
+      "citation": "FiveThirtyEight. Data and code behind the articles and graphics at FiveThirtyEight. github.com/fivethirtyeight/data, commit 4c1ff5e.",
+      "bibtex": "@misc{fivethirtyeight_data,\n  title        = {Data and code behind the articles and graphics at FiveThirtyEight},\n  author       = {{FiveThirtyEight}},\n  howpublished = {\\url{https://github.com/fivethirtyeight/data}},\n  year         = {2025},\n  note         = {Commit 4c1ff5e3aef1816ae04af63218015066e186c147, CC BY 4.0}\n}"
+    },
+    {
+      "id": "congress-legislators",
+      "name": "congress-legislators (legislators-current.csv)",
+      "tasks": [
+        "DAT-4"
+      ],
+      "homepage": "https://github.com/unitedstates/congress-legislators",
+      "license": "CC0-1.0",
+      "license_url": "https://github.com/unitedstates/congress-legislators/blob/73e2fcd181e1c48d1b0580d417e8d0314b22f7c9/LICENSE",
+      "content": "Fifteen values from one column of legislators-current.csv, the public roster of current members of the United States Congress maintained by the @unitedstates project, with the file's other headers.",
+      "content_license": "CC0-1.0",
+      "content_terms": "The project dedicates the data to the public domain under CC0 1.0 (LICENSE file); the values are public official records (birth dates, parties, states, government identifiers).",
+      "labelled_by": "a written mapping from the column's real header to one of seven meanings (MAPPING in the module)",
+      "changes": "The header of the shown column is hidden; values are shown verbatim, 15 per row in a fixed hash order.",
+      "selection": "Mapped headers in sha256 order, at most three; values are the first 15 non-empty cells in sha256 order of the row index.",
+      "citation": "The @unitedstates project. congress-legislators. github.com/unitedstates/congress-legislators, gh-pages commit 73e2fcd.",
+      "bibtex": "@misc{congress_legislators,\n  title        = {congress-legislators: Members of the United States Congress, 1789-Present},\n  author       = {{The @unitedstates project}},\n  howpublished = {\\url{https://github.com/unitedstates/congress-legislators}},\n  year         = {2026},\n  note         = {Commit 73e2fcd181e1c48d1b0580d417e8d0314b22f7c9, CC0 1.0}\n}"
+    },
+    {
+      "id": "fiscal-data",
+      "name": "U.S. Treasury Fiscal Data",
+      "tasks": [
+        "DAT-4"
+      ],
+      "homepage": "https://fiscaldata.treasury.gov/",
+      "license": "Public domain",
+      "license_url": "https://fiscaldata.treasury.gov/api-documentation/#license-and-authorization",
+      "content": "Fifteen values from one column of a Fiscal Data API CSV (Debt to the Penny, January–March 2024; Treasury Reporting Rates of Exchange, 31 March 2024), with the file's other headers.",
+      "content_license": "Public domain",
+      "content_terms": "Fiscal Data's API documentation, section License and Authorization: the data is offered free, without restriction, and available to copy, adapt, redistribute or otherwise use for non-commercial or commercial purposes. The values are U.S. government works (17 U.S.C. § 105).",
+      "labelled_by": "a written mapping from the column's real header to one of seven meanings (MAPPING in the module)",
+      "changes": "The header of the shown column is hidden; values are shown verbatim, 15 per row in a fixed hash order.",
+      "selection": "Two API extracts with fixed date filters; mapped headers in sha256 order, at most three per file.",
+      "citation": "U.S. Department of the Treasury, Bureau of the Fiscal Service. Fiscal Data: Debt to the Penny; Treasury Reporting Rates of Exchange. fiscaldata.treasury.gov, retrieved 2026-09-23.",
+      "bibtex": "@misc{fiscal_data,\n  title        = {Fiscal Data: Debt to the Penny; Treasury Reporting Rates of Exchange},\n  author       = {{U.S. Department of the Treasury, Bureau of the Fiscal Service}},\n  howpublished = {\\url{https://fiscaldata.treasury.gov/}},\n  year         = {2024},\n  note         = {Retrieved 2026-09-23. Public domain (U.S. government work)}\n}"
+    },
+    {
+      "id": "federal-register",
+      "name": "Federal Register documents API",
+      "tasks": [
+        "DAT-4"
+      ],
+      "homepage": "https://www.federalregister.gov/developers/documentation/api/v1",
+      "license": "Public domain",
+      "license_url": "https://www.govinfo.gov/about/policies#copyright",
+      "content": "Fifteen values from one column of the Federal Register API's CSV listing of the documents published on one day (title, type, abstract, document number), with the file's other headers.",
+      "content_license": "Public domain",
+      "content_terms": "The Federal Register is published by the Office of the Federal Register and the Government Publishing Office; GPO's Public Domain & Copyright Notice cites 17 U.S.C. § 105: copyright protection is not available for any work of the United States Government, so public documents can generally be reprinted without legal restriction.",
+      "labelled_by": "a written mapping from the column's real header to one of seven meanings (MAPPING in the module)",
+      "changes": "The header of the shown column is hidden; values are shown verbatim, 15 per row in a fixed hash order.",
+      "selection": "Two publication days (2024-03-01 and 2024-09-03), first 60 documents each in the API's oldest-first order; mapped headers in sha256 order, at most three per file.",
+      "citation": "Office of the Federal Register. Federal Register API v1, documents.csv. federalregister.gov, retrieved 2026-09-23.",
+      "bibtex": "@misc{federal_register_api,\n  title        = {Federal Register API, version 1},\n  author       = {{Office of the Federal Register, National Archives and Records Administration}},\n  howpublished = {\\url{https://www.federalregister.gov/developers/documentation/api/v1}},\n  year         = {2024},\n  note         = {Retrieved 2026-09-23. Public domain (U.S. government work)}\n}"
+    },
+    {
+      "id": "doclaynet",
+      "name": "DocLayNet v1.2",
+      "tasks": [
+        "DOC-1"
+      ],
+      "homepage": "https://github.com/DS4SD/DocLayNet",
+      "license": "CDLA-Permissive-1.0",
+      "license_url": "https://huggingface.co/datasets/docling-project/DocLayNet-v1.2",
+      "content": "A page image rendered from a public PDF (annual report, SEC filing, arXiv paper, statute, EU tender, IBM manual or patent) with the PDF's own text cells and IBM's human layout annotation.",
+      "content_license": "CDLA-Permissive-1.0",
+      "content_terms": "IBM Research releases the page images, text cells and annotations under CDLA-Permissive-1.0 (LICENSE in the repository and the dataset card). The paper says the documents were chosen under 'open intellectual property constraints' and that 'a large effort went into ensuring that all documents are free to use' (Pfitzmann et al. 2022, section 3).",
+      "labelled_by": "DocLayNet's own doc_category metadata, assigned by the dataset's curators when the documents were collected (human labels)",
+      "changes": "Nothing changed in the image. The text rendering is built from the dataset's pdf_cells grouped by its annotated layout boxes and truncated with a marker when over 5,000 characters. File names and collection names are kept out of the state.",
+      "selection": "Seventeen fixed 15-row windows of the test split; pages ordered by rank(page_hash), kept if their text cells total 400+ characters, at most 3 per source PDF and 5 per category.",
+      "citation": "Pfitzmann, Auer, Dolfi, Nassar and Staar (2022). DocLayNet: A Large Human-Annotated Dataset for Document-Layout Segmentation. KDD 2022.",
+      "bibtex": "@inproceedings{pfitzmann2022doclaynet,\n  title     = {DocLayNet: A Large Human-Annotated Dataset for Document-Layout Segmentation},\n  author    = {Pfitzmann, Birgit and Auer, Christoph and Dolfi, Michele and Nassar, Ahmed S. and Staar, Peter},\n  booktitle = {Proceedings of the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},\n  pages     = {3743--3751},\n  year      = {2022},\n  doi       = {10.1145/3534678.3539043}\n}"
+    },
+    {
+      "id": "ami",
+      "name": "AMI Meeting Corpus (manual annotations 1.6.2)",
+      "tasks": [
+        "DOC-2",
+        "DOC-3"
+      ],
+      "homepage": "https://groups.inf.ed.ac.uk/ami/corpus/",
+      "license": "CC-BY-4.0",
+      "license_url": "https://groups.inf.ed.ac.uk/ami/corpus/license.shtml",
+      "content": "Human transcripts of recorded English meetings (mostly a role-played four-person design team, some real research meetings), with the corpus's dialogue-act segmentation and its annotator-written abstractive summaries (abstract, decisions, actions, problems) linked to the transcript.",
+      "content_license": "CC-BY-4.0",
+      "content_terms": "LICENCE.txt in the annotation release: 'The AMI corpus and its annotations are released under the Creative Commons Attribution 4.0 International Public License'. Participants consented to public release (https://groups.inf.ed.ac.uk/ami/corpus/ethicsandconsent.shtml); speakers appear only as roles or letters.",
+      "labelled_by": "the corpus's trained summary annotators: DOC-2 from which summary section (decisions, actions, abstract) they linked the utterance to; DOC-3 from which meeting a summary belongs to (objective record)",
+      "changes": "Words are joined into utterances with the corpus's punctuation; vocal sounds appear as [laugh] etc. and disfluency markers as '--'. Speakers are shown by role and channel letter. Windows are cut as the module docstring says.",
+      "selection": "Meetings in rank order, one row per meeting (DOC-2) or per series (DOC-3); dialogue acts and distractor summaries in rank order under the written filters in the module docstring.",
+      "citation": "Carletta et al. (2005). The AMI Meeting Corpus: A Pre-announcement. MLMI 2005.",
+      "bibtex": "@inproceedings{carletta2005ami,\n  title     = {The {AMI} Meeting Corpus: A Pre-announcement},\n  author    = {Carletta, Jean and Ashby, Simone and Bourban, Sebastien and Flynn, Mike and Guillemot, Mael and\n               Hain, Thomas and Kadlec, Jaroslav and Karaiskos, Vasilis and Kraaij, Wessel and Kronenthal, Melissa and\n               Lathoud, Guillaume and Lincoln, Mike and Lisowska, Agnes and McCowan, Iain and Post, Wilfried and\n               Reidsma, Dennis and Wellner, Pierre},\n  booktitle = {Machine Learning for Multimodal Interaction (MLMI 2005)},\n  series    = {Lecture Notes in Computer Science},\n  volume    = {3869},\n  pages     = {28--39},\n  year      = {2006},\n  doi       = {10.1007/11677482_3}\n}"
+    },
+    {
+      "id": "material-symbols",
+      "name": "Material Symbols (google/material-design-icons)",
+      "tasks": [
+        "DSN-1"
+      ],
+      "homepage": "https://github.com/google/material-design-icons",
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/google/material-design-icons/blob/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/LICENSE",
+      "content": "One icon of Google's Material Symbols set, the outlined-style 24 px SVG from symbols/web/<name>/ at the pinned commit, rasterised black on white at 256×256 px.",
+      "content_license": "Apache-2.0",
+      "content_terms": "The icons are Google's own designs, released with the repository under the Apache License 2.0 (https://github.com/google/material-design-icons/blob/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/LICENSE); the same set is served by Google Fonts (fonts.google.com/icons) under Apache-2.0. No third-party logos are in the set.",
+      "labelled_by": "the icon's own name and category in the repository: the folder symbols/web/<name>/ and the key '<category>::<name>' in update/current_versions.json",
+      "changes": "The SVG's width and height attributes were set from 24 to 256 (viewBox='0 0 24 24' added where the file had none) and the file rasterised black on white (headless Chrome on the authoring machine; rsvg-convert or Quick Look otherwise). Nothing else was changed; distractor names are other icons of the same category.",
+      "selection": "A hand allowlist of icons whose plain-words name is what a general reader would call the picture (no abstract shapes, jargon names or style variants; no two confusable glyphs in one category), ordered by sha256 of the icon name, at most three per category, first 30. Distractors are the first three same-category pool icons by sha256 of 'answer:candidate' sharing no word with the answer.",
+      "citation": "Google. Material Symbols. github.com/google/material-design-icons, commit 27e9ef1 (2026-09-18).",
+      "bibtex": "@misc{material_symbols,\n  title        = {Material Symbols},\n  author       = {{Google}},\n  howpublished = {\\url{https://github.com/google/material-design-icons}},\n  year         = {2026},\n  note         = {Commit 27e9ef1dbeedc13d682fece4a58e1eda4cb0961a, Apache License 2.0}\n}"
     }
   ]
 }

@@ -271,7 +271,7 @@ function heatTasks(rs,cases){
 }
 
 /* ---------- Page scaffolding ---------- */
-const pageHead=(title,sub,extra='')=>`<header class="page-head"><div><h1>${title}</h1>${sub?`<p class="lede">${sub}</p>`:''}</div>${extra}</header>`;
+const pageHead=(title,sub,extra='',eyebrow='Decision Bench')=>`<header class="page-head"><div>${eyebrow?`<p class="eyebrow">${eyebrow}</p>`:''}<h1>${title}</h1>${sub?`<p class="lede">${sub}</p>`:''}</div>${extra}</header>`;
 const section=(title,sub,body,{id='',aside=''}={})=>`<section class="sec"${id?` id="${id}"`:''}><div class="sec-head"><div><h2>${title}</h2>${sub?`<p>${sub}</p>`:''}</div>${aside?`<div class="aside">${aside}</div>`:''}</div>${body}</section>`;
 const block=(title,sub,body,{aside='',foot=''}={})=>`<div class="block"><div class="block-head"><h3>${title}</h3>${aside?`<div class="aside">${aside}</div>`:''}</div>${sub?`<p class="help">${sub}</p>`:''}${body}${foot?`<p class="foot">${foot}</p>`:''}</div>`;
 const seg=(label,items,attr,current)=>`<div class="seg" role="group" aria-label="${esc(label)}">${items.map(([v,l])=>`<button type="button" data-${attr}="${esc(v)}" aria-pressed="${v===current}">${esc(l)}</button>`).join('')}</div>`;
@@ -285,13 +285,18 @@ function scopeRuns(){const sel=route.q.get('models');if(!sel)return RUNS;const s
 const evaluated=(rs,cases)=>rs.filter(r=>subsetMetrics(r,cases).questions>0);
 
 /* ---------- Banner and filter bar ---------- */
+function pixelStrip(){
+ const cat=route.q.get('category')||'',per=6,gap=2,rowsPer=2,unit=8;
+ return categoryOrder().map(k=>{const n=allCases.filter(c=>catKey(c)===k).length,sq=Math.max(1,Math.round(n/unit)),cols=Math.ceil(sq/rowsPer),w=cols*(per+gap)-gap,h=rowsPer*(per+gap)-gap;
+  const cells=Array.from({length:cols*rowsPer},(_,i)=>{const r=i%rowsPer,c=Math.floor(i/rowsPer);return `<rect class="px${i<sq?'':' dim'}" x="${c*(per+gap)}" y="${r*(per+gap)}" width="${per}" height="${per}"/>`;}).join('');
+  return `<a href="${href('',{category:cat===k?'':k,modality:route.q.get('modality')||''})}" class="${cat===k?'on':''}" title="${esc(catInfo(k).description)}"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${cells}</svg><span>${esc(catInfo(k).name)}<span class="n">${n}</span></span></a>`;}).join('');
+}
 function banner(){
- const rows=allCases.length,tasks=taskOrder().length,cats=categoryOrder().length,models=RUNS.length,imgs=allCases.filter(c=>isImageTask(c.task)).length;
+ const rows=allCases.length,tasks=taskOrder().length,cats=categoryOrder().length,models=RUNS.length,imgs=allCases.filter(c=>isImageTask(c.task)).length,configured=ORDER.filter(k=>MODELS[k].configured).length;
  const kpi=(l,v,s='')=>`<div><dt>${l}</dt><dd>${v}${s?`<small>${s}</small>`:''}</dd></div>`;
- const cat=route.q.get('category')||'';
- return `<div class="banner"><div class="banner-inner"><div><h1>Can a small model make <em>this decision</em> for you?</h1><p class="lede">Decision Bench measures how well language models make the bounded decisions inside software: route a ticket, spot an injection, check a contract, pick a tool, judge an answer. Every row is a real record from an <a href="#/data">open dataset</a>; every answer comes from the dataset's own annotators or an objective record, never from a model.</p></div>
- <dl class="kpis">${kpi('Rows',num(rows),imgs?`${num(imgs)} with images`:'')}${kpi('Tasks',tasks,`${cats} use cases`)}${kpi('Models',models||MODELS&&ORDER.filter(k=>MODELS[k].configured).length,models?'evaluated':'configured')}${kpi('Version',esc(man().version||''),'frozen')}</dl></div>
- <div class="usecases"><a href="${href('',{modality:route.q.get('modality')||''})}" class="${cat?'':'on'}">All use cases</a>${categoryOrder().map(k=>`<a href="${href('',{category:k,modality:route.q.get('modality')||''})}" class="${cat===k?'on':''}">${esc(catInfo(k).name)}<span class="n">${allCases.filter(c=>catKey(c)===k).length}</span></a>`).join('')}</div></div>`;
+ return `<div class="banner"><div class="banner-inner"><div><p class="eyebrow">Decision Bench · ${esc(man().version||'')} · real records, open licences</p><h1>Can a small model make <em>this decision</em> for you?</h1><p class="lede">Bounded decisions from real work: route a ticket, spot an injection, check a contract, pick a tool, judge an answer. Every row is a record from an <a href="#/data">open dataset</a>, and every answer comes from the dataset's own annotators or an objective record, never from a model.</p></div>
+ <dl class="kpis">${kpi('Rows',num(rows),imgs?`${num(imgs)} with images`:'')}${kpi('Tasks',tasks,`${cats} use cases`)}${kpi('Models',models||configured,models?'evaluated':'configured')}${kpi('Datasets',DATASETS.length,'cited')}</dl></div>
+ <div class="usecases">${pixelStrip()}</div></div>`;
 }
 function filterBar(cases){
  const cat=route.q.get('category')||'',mod=route.q.get('modality')||'',rs=RUNS,sel=scopeRuns(),n=sel.length;
@@ -368,15 +373,14 @@ function coverageList(){
 }
 function home(){
  const cases=scopeCases(),rs=evaluated(scopeRuns(),cases),cat=route.q.get('category')||'';
- const catLine=cat?`<p class="lede" style="margin:8px 0 14px">${esc(catInfo(cat).description)} <a href="${href('tasks',{category:cat})}">See the ${taskOrder().filter(t=>taskCat(t)===cat).length} tasks</a>.</p>`:'';
- const body=`<div class="wrap">${cat?`<h2 style="font-size:var(--fs-5);margin-top:24px;font-family:var(--display)">${esc(catInfo(cat).name)}</h2>`:''}${catLine}${filterBar(cases)}`+
+ const catLine=cat?`<p class="lede" style="margin:6px 0 0">${esc(catInfo(cat).description)} <a href="${href('tasks',{category:cat})}">See the tasks</a>.</p>`:'';
+ const body=`<div class="wrap">${cat?`<div class="page-head" style="margin-top:28px;margin-bottom:0"><div><p class="eyebrow">Use case</p><h1 style="font-family:var(--sans);text-transform:none;font-weight:600;font-size:var(--fs-6)">${esc(catInfo(cat).name)}</h1>${catLine}</div></div>`:''}${filterBar(cases)}`+
   (!hasResults()?`${section('Leaderboard','',`<p class="notice">No model has been evaluated on this version yet. ${howToAdd()}</p>`)}${section('What the bench covers',`${plural(allCases.length,'row')} in ${taskOrder().length} tasks. Open a task to read its rows.`,coverageList())}`:
   !rs.length?`<p class="notice">No selected model has results on these rows.</p>`:
-  section('Leaderboard',`${cat?`${esc(catInfo(cat).name)} rows`:'All rows'}${route.q.get('modality')?` · ${route.q.get('modality')} inputs`:''}. Sorted by ${sort.key.replace('col:','')}; click a column to re-sort.`,leaderboard(rs,cases)+(PARTIAL.length?`<p class="foot">Partial runs, not ranked: ${PARTIAL.map(r=>`${esc(ident(r).short)} (${num(r.metrics.cases)} of ${num(allCases.length)} rows)`).join(', ')}.</p>`:'')+(unevaluated().length?`<p class="foot">Configured but not evaluated yet: ${unevaluated().map(k=>esc(M(k).short)).join(', ')}. ${howToAdd()}</p>`:''),{id:'leaderboard'})+
+  section('Leaderboard',`${cat?`${esc(catInfo(cat).name)} rows`:'All rows'}${route.q.get('modality')?` · ${route.q.get('modality')} inputs`:''}. Click a column to re-sort.`,leaderboard(rs,cases)+(PARTIAL.length?`<p class="foot">Partial runs, not ranked: ${PARTIAL.map(r=>`${esc(ident(r).short)} (${num(r.metrics.cases)} of ${num(allCases.length)} rows)`).join(', ')}.</p>`:'')+(unevaluated().length?`<p class="foot">Configured but not evaluated yet: ${unevaluated().map(k=>esc(M(k).short)).join(', ')}. ${howToAdd()}</p>`:''),{id:'leaderboard'})+
   section('Accuracy, speed and cost','',headline(rs,cases))+
-  section(cat?'Accuracy by task':'Accuracy by use case','Only misses are coloured; faded cells are at or above 95%. Click a heading to open it.',(cat?heatTasks(rs,cases):heatCategories(rs,cases))+heatLegend())+
-  (cat?'':section('Accuracy by task','Every task, grouped by use case.',heatTasks(rs,cases)+heatLegend()))+
-  section('Trade-offs','',tradeoffs(rs,cases))+
+  section('Accuracy by task','Only misses are coloured; faded cells are at or above 95%. Click a task to open it.',heatTasks(rs,cases)+heatLegend())+
+  section('Trade-offs','Up and to the left is better. Vertical lines are 95% intervals.',tradeoffs(rs,cases))+
   section('Every row','Each column is one row, in the same position for every model. Hover for the row; click to open it.',record(rs,cases))+
   section('Where models disagree with the answer key','Rows most models get wrong. Either the models are weak here, or the key deserves a second look; each row page links to the source record.',hardestRows(rs,cases)))+
   `</div>`;
@@ -410,7 +414,7 @@ function taskPage(t){
  const shown=list.slice(0,rowsShown);
  const rowsTable=`<div class="table-meta"><span>${plural(rows.length,'row')}</span><span>Sort: ${[['order','corpus order'],['hardest','hardest first'],['title','title']].map(([k,l])=>k===sortKey?`<b>${l}</b>`:`<a href="${withQ({sort:k})}">${l}</a>`).join(' · ')}</span></div><div class="table-wrap"><table class="plain"><thead><tr><th>Row</th><th>Answer key</th><th>Source record</th><th class="r">Models right</th></tr></thead><tbody>${shown.map(c=>`<tr class="link" data-href="${rowHref(c)}"><td><a class="t-link" href="${rowHref(c)}">${esc(caseTitle(c))}</a></td><td>${esc(goldText(c))}</td><td class="muted">${esc(String(c.source?.record_id||''))}</td><td class="r">${correctCell(caseStats(c))}</td></tr>`).join('')}</tbody></table></div>${rows.length>rowsShown?`<div class="pagination"><button type="button" data-morerows>Show all ${rows.length} rows</button></div>`:''}`;
  return crumbs([['Tasks',href('tasks')],[catInfo(cat).name,href('tasks',{category:cat})],[taskName(t),'']])+
-  `<div class="task-head"><div><p class="name">${esc(taskName(t))} · ${esc(t)}</p><h1>${esc(taskAsk(t))}</h1><p class="instr">${esc(q0.instructions)}</p>${optsHtml}</div><div class="card"><h3>About this task</h3><dl>${labels.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl></div></div>`+
+  `<div class="task-head"><div><p class="eyebrow name">${esc(catInfo(cat).name)} · ${esc(t)} · ${esc(taskName(t))}</p><h1>${esc(taskAsk(t))}</h1><p class="instr">${esc(q0.instructions)}</p>${optsHtml}</div><div class="card"><h3>About this task</h3><dl>${labels.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl></div></div>`+
   section('Results on this task',`${plural(rows.length,'row')} each.`,results)+
   section('Rows','Every record in this task, with its answer key. Open a row to read the record as the model saw it.',rowsTable);
 }
@@ -492,7 +496,7 @@ function rowPage(id,review=false){
  const q=c.questions[0],t=c.task,rows=taskRows(t),i=rows.indexOf(c),prev=rows[i-1],next=rows[i+1];
  const nav=`<div class="row-nav"><span>Row ${i+1} of ${rows.length}</span><a href="${prev?rowHref(prev):'#'}"${prev?'':' aria-disabled="true"'} title="Previous row (k)">‹ Previous</a><a href="${next?rowHref(next):'#'}"${next?'':' aria-disabled="true"'} title="Next row (j)">Next ›</a></div>`;
  const head=crumbs([['Tasks',href('tasks')],[catInfo(catKey(c)).name,href('tasks',{category:catKey(c)})],[taskName(t),taskHref(t)],[`Row ${i+1}`,'']])+
-  `<div class="row-head"><div><h1>${esc(taskAsk(t)||firstSentence(q.instructions))}</h1><p class="title">${esc(caseTitle(c))}</p><div class="answer-with"><span>Answer with</span>${optionOrder(q).map(k=>`<span class="tag">${esc(human(k))}</span>`).join('')}${isImageTask(t)?'<span class="tag img">image task</span>':''}</div>${review?'':verdictLine(c)}</div>${nav}</div>`;
+  `<div class="row-head"><div><p class="eyebrow">${esc(taskName(t))} · row ${i+1} of ${rows.length}</p><h1>${esc(taskAsk(t)||firstSentence(q.instructions))}</h1><p class="title">${esc(caseTitle(c))}</p><div class="answer-with"><span>Answer with</span>${optionOrder(q).map(k=>`<span class="tag">${esc(human(k))}</span>`).join('')}${isImageTask(t)?'<span class="tag img">image task</span>':''}</div>${review?'':verdictLine(c)}</div>${nav}</div>`;
  const body=`<section class="record"><h2>The record</h2>${renderRecord(c)}</section><section class="key"><h2>Answer key</h2>${answerKey(c)}</section>`+(review?'':`<section class="answers"><h2>Model answers</h2>${answersTable(c)}</section>`)+
   `<footer class="case-meta"><span><code>${esc(c.id)}</code> · ${esc(taskName(t))} · ${esc(man().version||'')}</span><span><a href="${location.hash.split('?')[0]}">Link to this row</a></span></footer>`;
  return head+body;
@@ -563,47 +567,36 @@ function dataPage(focus){
 function methodology(){
  const rows=allCases.length,tasks=taskOrder().length,cats=categoryOrder().length,ds=DATASETS.length,imgs=allCases.filter(c=>isImageTask(c.task)).length;
  const prompt=data.prompt?.system||'';
- const toc=[['what','What is measured'],['rows','Where the rows come from'],['sees','What the model sees'],['answers','How answers are parsed'],['metrics','Metrics'],['verdict','The fit verdict'],['limits','Limits'],['submit','Submitting results'],['cite','Citing and licences']];
+ const toc=[['what','What is measured'],['rows','Where rows come from'],['sees','What the model sees'],['metrics','Metrics'],['verdict','The fit verdict'],['limits','Limits'],['submit','Results and citing']];
  const step=(n,h,p)=>`<div class="step"><b>${n}</b><h4>${h}</h4><p>${p}</p></div>`;
  const body=`<div class="method">
 <h2 id="m-what">What is measured</h2>
-<p>Decision Bench measures one narrow thing: whether a language model makes the same call a human or an objective record made on a real piece of work. Each row is a real record (a complaint, a contract, a code change, a transcript, a receipt) with one question and a short fixed list of options. The model picks one option and states a probability for each. Nothing is generated, ranked by taste, or graded by another model.</p>
-<p>The bench has <strong>${num(rows)} rows</strong> in <strong>${tasks} tasks</strong> across <strong>${cats} use cases</strong>, from <strong>${ds} public datasets</strong>.${imgs?` ${num(imgs)} rows carry an image as well as a text rendering.`:''} The corpus is frozen: its sha256 is in the manifest, every run records the hash it used, and results from different versions are never mixed.</p>
-<div class="steps">${step('1','A real record','Sampled from an open-licence dataset by a written rule, in a fixed order, never by looking at model output.')}${step('2','One bounded question','Fixed per task, 12 words or fewer, with 2–10 options each described in one line. Abstain options exist where the data supports them.')}${step('3','An answer from the source','The dataset’s own annotators, or an objective record such as a test result or a filing’s item number.')}${step('4','A strict JSON answer','The model returns one option and a probability for every option. Anything else counts as no answer, not as a guess.')}</div>
-<h2 id="m-rows">Where the rows come from</h2>
-<p>Every dataset is listed on the <a href="#/data">Data page</a> with its licence, the terms of the material inside it, who decided the answers and how rows were chosen. A dataset is used only when both its own licence and the terms of the text or images inside it allow anyone to copy, change and redistribute it, including commercially. Datasets built on non-commercial or publisher-copyrighted text are not used, even when the dataset itself is MIT.</p>
-<p>Rows are chosen deterministically: candidates are ordered by the sha256 of their source id and taken in order while they pass the module's written filters. Where a maintainer dropped a specific record by hand, the module lists it with the reason. Every option is the answer at least once and no option is the answer on more than 60% of a task's rows. Titles are neutral and never shown to models.</p>
-<p>Some labels are <em>derived by rule</em> from the record itself, for example a release's version bump from its tags or a claim checked against a chart's own data. Those tasks say so on their task page, and the rule is in the module.</p>
+<p>Whether a model makes the same call a human or an objective record made on a real piece of work. Each row is one record with one question and a short fixed list of options; the model picks one and states a probability for each. Nothing is generated or graded by another model.</p>
+<p><strong>${num(rows)} rows · ${tasks} tasks · ${cats} use cases · ${ds} datasets</strong>${imgs?` · ${num(imgs)} rows carry an image`:''}. The corpus is frozen by sha256 and results from different versions are never mixed.</p>
+<div class="steps">${step('1','A real record','From an open-licence dataset, chosen by a written rule in a fixed order.')}${step('2','One question','12 words or fewer, 2–10 options, each described in one line.')}${step('3','An answer from the source','The dataset’s annotators or an objective record, never a model.')}${step('4','A strict JSON answer','One option plus a probability for each. Anything else is no answer.')}</div>
+<h2 id="m-rows">Where rows come from</h2>
+<ul><li>Every dataset is on the <a href="#/data">Data page</a> with its licence, the terms of the material inside it, who decided the answers, and how rows were chosen.</li><li>Both the dataset and the material inside it must allow copying, changing and redistributing, commercially too. Non-commercial or publisher-copyrighted sources are not used.</li><li>Every option is the answer at least once; no option on more than 60% of a task's rows. Titles are neutral and never sent to models.</li><li>Some labels are derived by rule from the record itself (a version bump from tags, a chart claim checked against the chart's data); those task pages say so.</li></ul>
 <h2 id="m-sees">What the model sees</h2>
-<p>The model input is built by allowlist: the row's record (<code>state</code>), the task instruction, and the options in a fixed per-row shuffled order. The answer, the rationale, the row title, the source and the reader-facing question are never sent. For image rows, vision models receive the image and text-only models receive the text rendering; the two are reported separately.</p>
-<p>Every request carries the same system policy, version <code>${esc(data.prompt?.version||'')}</code>:</p>
-<pre class="code wrap">${esc(prompt)}</pre>
-<p>API models are called through a chat completions endpoint with a JSON schema response format where the provider supports it. CLI models run in an empty temporary directory with tools disabled; a tool call invalidates the answer. The exact request options for each model are on its <a href="#/models">model page</a>.</p>
-<h2 id="m-answers">How answers are parsed</h2>
-<ul><li>The response must be one JSON object with a label from the options and a probability for exactly the listed options, each a finite number in [0, 1], summing to 1 within 0.02. One surrounding Markdown code fence is tolerated; nothing else is repaired.</li><li>The model's own label is scored, even when it disagrees with its highest probability; that disagreement is recorded.</li><li>A response cut off by the token limit, a refusal, a transport error or invalid JSON is <em>no answer</em>. It counts as wrong for accuracy and is reported separately.</li></ul>
+<p>The record, the task instruction and the options in a fixed per-row shuffled order. Never the answer, the rationale, the title or the source. Vision models also receive the row's images; text-only models receive the text rendering instead, and the site marks which was used.</p>
+<details class="adv"><summary>The system prompt sent with every request (${esc(data.prompt?.version||'')})</summary><pre class="code wrap">${esc(prompt)}</pre></details>
+<p>API models use a chat completions endpoint with a JSON schema response format where supported. CLI models run in an empty directory with tools disabled. A response cut off by the token limit, a refusal, a tool call or invalid JSON is <em>no answer</em>: counted as wrong, reported separately.</p>
 <h2 id="m-metrics">Metrics</h2>
-<p>The leaderboard follows the conventions of established evaluation suites: accuracy with an interval, per-slice accuracy, a class-balanced score, calibration, latency and cost, all recomputable from the published predictions.</p>
-<table class="metric-table"><thead><tr><th>Metric</th><th>Definition</th><th>Why it is here</th></tr></thead><tbody>
-<tr><td>Accuracy</td><td>Share of rows whose answer equals the key. No answer counts as wrong.</td><td>The headline number. Rank ties models whose intervals overlap.</td></tr>
-<tr><td>Wilson 95% interval</td><td>Score interval for a binomial proportion; shown as whiskers and beside every accuracy.</td><td>Tasks have 20–40 rows, so differences of a few points are usually within noise.</td></tr>
-<tr><td>Per use case, per task</td><td>Accuracy and its interval recomputed on that subset of rows.</td><td>The answer to "can I use it for my case?" lives here, not in the overall number.</td></tr>
-<tr><td>Macro F1</td><td>F1 per option, averaged within a task, then averaged across tasks.</td><td>Rewards getting the rare options right, not only the common ones.</td></tr>
-<tr><td>Expected calibration error</td><td>Mean gap between stated confidence and observed accuracy over ten confidence bins.</td><td>Says whether the probabilities can be trusted for routing low-confidence rows to a person.</td></tr>
-<tr><td>Brier score</td><td>Mean squared error of the stated probability distribution against the one-hot key.</td><td>A single calibration-and-accuracy number; lower is better.</td></tr>
-<tr><td>Latency</td><td>Wall-clock time per row at the client: median, 95th and 99th percentile.</td><td>API times measure the endpoint; CLI times include process start-up and are marked.</td></tr>
-<tr><td>Cost per 1,000 rows</td><td>Provider-reported cost when the endpoint returns it, otherwise input and output tokens priced at the list prices recorded with the run.</td><td>Comparable across providers; the basis is recorded per row.</td></tr>
-<tr><td>Tokens</td><td>Input and output tokens per row as reported by the provider.</td><td>Shows how much of the cost is the record and how much is the model's answer.</td></tr>
-<tr><td>Paired difference</td><td>Rows where only one of two models is right, with a bootstrap interval over task clusters.</td><td>Two models on the same rows: the difference is real, not two noisy means.</td></tr>
+<table class="metric-table"><thead><tr><th>Metric</th><th>Definition</th></tr></thead><tbody>
+<tr><td>Accuracy</td><td>Share of rows answered as the key does; no answer counts as wrong. Shown with a Wilson 95% interval; models whose intervals overlap share a rank.</td></tr>
+<tr><td>Per use case, per task</td><td>The same, recomputed on that subset of rows.</td></tr>
+<tr><td>Macro F1</td><td>F1 per option averaged within a task, then across tasks. Rewards the rare options.</td></tr>
+<tr><td>ECE and Brier</td><td>Calibration: the gap between stated confidence and observed accuracy, and the squared error of the stated probabilities. Lower is better.</td></tr>
+<tr><td>Latency</td><td>Wall-clock time per row at the client: median and 95th percentile. CLI times include start-up and are marked.</td></tr>
+<tr><td>Cost per 1,000 rows</td><td>Provider-reported cost where the endpoint returns it, else tokens priced at the list prices recorded with the run.</td></tr>
+<tr><td>Tokens</td><td>Input and output tokens per row.</td></tr>
+<tr><td>Paired difference</td><td>Rows where only one of two models is right, with a bootstrap interval over task clusters.</td></tr>
 </tbody></table>
 <h2 id="m-verdict">The fit verdict</h2>
-<p>Each task and use-case page shows a plain verdict per model, computed from accuracy and its interval, never written by hand: <span class="fit ok">Fits</span> accuracy at or above 90% with the whole 95% interval above 85%; <span class="fit risk">Risky</span> accuracy above 80%; <span class="fit no">Not fit</span> below 80%; <span class="fit na">Not run</span> when the model was not sent those rows, for example an image task and a text-only model. The thresholds are a starting point for a decision, not a guarantee: your data will differ from these rows.</p>
+<p><span class="fit ok">Fits</span> accuracy at or above 90% with the whole 95% interval above 85%. <span class="fit risk">Risky</span> above 80%. <span class="fit no">Not fit</span> below 80%. <span class="fit na">Not run</span> when the model was not sent those rows. Computed from the numbers, never written by hand; a starting point, not a guarantee.</p>
 <h2 id="m-limits">Limits</h2>
-<ul><li><strong>Contamination.</strong> These are public datasets and may be in a model's training data. Each task page states a contamination risk; fresh derivations are lower risk than famous benchmarks.</li><li><strong>Label noise.</strong> Real labels carry some error. Rows a careful reader could argue either way are dropped by rule where possible, and every row page links to its source record so a label can be challenged.</li><li><strong>Small tasks.</strong> With 20–40 rows per task, read the interval, not the point.</li><li><strong>One prompt.</strong> Every model gets the same instruction and schema. A prompt tuned for one model would likely lift its score; that is out of scope.</li><li><strong>Not a production sample.</strong> The rows come from research datasets and public records, not from your systems.</li></ul>
-<h2 id="m-submit">Submitting results</h2>
-<p>Results are added by pull request. Run a model on every row with the harness, publish the run into <code>results/&lt;suite&gt;/&lt;model&gt;/</code>, and open a PR with only that folder and the updated leaderboard files. The published folder holds run metadata, one prediction per row and aggregate scores; nothing in it identifies your infrastructure. Maintainers may re-run a submitted model to check it.${REPO&&!REPO.includes('OWNER')?` <a href="${esc(gh('results/README.md'))}" target="_blank" rel="noopener">Full instructions</a>.`:''}</p>
-<h2 id="m-cite">Citing and licences</h2>
-<p>The harness, the viewer and the row selection code are MIT. Each row keeps its dataset's licence, and the <a href="#/data">Data page</a> carries the citation and BibTeX for every dataset; please cite the datasets behind the tasks you use as well as the bench.${REPO&&!REPO.includes('OWNER')?` The repository's <a href="${esc(gh('CITATION.cff'))}" target="_blank" rel="noopener">CITATION.cff</a> has the bench's own entry.`:''}</p>
-<h3>Downloads</h3>
+<ul><li><strong>Contamination.</strong> Public datasets may be in training data; each task states its risk.</li><li><strong>Label noise.</strong> Real labels carry error. Arguable rows are dropped by rule where possible and every row links to its source record.</li><li><strong>Small tasks.</strong> 20–40 rows each: read the interval, not the point.</li><li><strong>One prompt for all.</strong> No per-model tuning.</li><li><strong>Not your data.</strong> Research datasets and public records, not a production sample.</li></ul>
+<h2 id="m-submit">Results and citing</h2>
+<p>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, open a PR with that folder. The harness, viewer and selection code are MIT; each row keeps its dataset's licence. Please cite the datasets behind the tasks you use as well as the bench.${REPO&&!REPO.includes('OWNER')?` <a href="${esc(gh('results/README.md'))}" target="_blank" rel="noopener">How to submit</a> · <a href="${esc(gh('CITATION.cff'))}" target="_blank" rel="noopener">Citation</a>.`:''}</p>
 <div class="downloads"><a href="corpus.json" download><span>All rows with answer keys</span><span class="k">JSON</span></a><a href="data.json" download><span>Everything the site shows</span><span class="k">JSON</span></a><a href="datasets.json" download><span>Dataset records</span><span class="k">JSON</span></a><a href="protocol.txt" download><span>Protocol</span><span class="k">Text</span></a>${hasResults()?RUNS.filter(r=>r.files).map(r=>`<a href="${esc(r.files.predictions)}" download><span>${esc(M(keyOf(r)).name)} predictions</span><span class="k">JSONL</span></a>`).join(''):''}</div>
 </div>`;
  return pageHead('Methodology','How the bench is built, what a model sees, how answers are scored, and where the limits are.')+`<div class="method-grid">${body}<nav class="toc" aria-label="On this page">${toc.map(([id,l])=>`<a href="#/methodology/${id}">${esc(l)}</a>`).join('')}</nav></div>`;

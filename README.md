@@ -1,28 +1,32 @@
 # Decision Bench
 
-An open benchmark for the small, bounded decisions that software asks models to make:
+An open benchmark for the bounded decisions software asks language models to make:
+- Which team owns this complaint?
 - Is this message a prompt injection?
-- Is this a real secret?
-- Which agent broke this run?
-- Which team owns this ticket?
-- Is this answer supported by its sources?
-- Does this contract say this?
+- Does this NDA say this?
+- Which tool should the agent call?
+- Is this commit a fix, a feature or a refactor?
+- Which figure on this receipt is the total?
 
-**359 rows · 14 tasks · 7 categories · 323 real records from 14 public datasets.** Every real row keeps its source licence and names its dataset, record id and original label. Answers come from each dataset's human annotators or from an objective record, never from a model.
+**1,071 rows · 35 tasks · 11 use cases · 36 public datasets.** Every row is a real record; the answer comes from the dataset's own annotators or an objective record such as a test result or a filing's item number, never from a model. 122 rows carry an image as well as a text rendering, so vision and text-only models can both be scored. Every row names its dataset, licence, record id and original label.
 
-Browse every row, the sources and the leaderboard on the site (GitHub Pages; run `python3 -m decision_bench serve` for a local copy).
+Browse every row, every source and the leaderboard on the site (run `python3 -m decision_bench serve` for a local copy).
 
-| Category | Tasks | Rows | From |
+| Use case | Questions | Rows | Sources |
 | --- | --- | --- | --- |
-| Prompt injection | Is this message an attack? · Does this email try to hijack the assistant? | 54 | deepset/prompt-injections, In-The-Wild Jailbreak Prompts, LLMail-Inject |
-| Sensitive data | Is this a real secret committed in code? | 24 | Samsung CredData |
-| Trace classification | What kind of failure is this step? · Which agent caused the failure? · Did the coding agent fix the issue? | 71 | AgentRx, Who&When, SWE-agent trajectories |
-| Trace routing | Which tool should the agent call? · Which bank team handles this? · Which product team owns this complaint? | 88 | BFCL v3 Live, BANKING77, CFPB complaints |
-| Eval judging | Is the answer supported by its sources? · Which response is better? | 56 | HAGRID, BEGIN, MT-Bench human judgments |
-| Contract checks | Does this NDA say this? | 30 | ContractNLI |
-| Skill improvement | Why did the skill fail? · Should this change ship? | 36 | Written examples |
+| Engineering | Which file did the fix for this issue change? · What kind of change does this diff make? · Which weakness class does this CVE describe? · Is this a real secret committed in code? · Which commit message belongs to this diff? | 150 | CommitPackFT, NVD (National Vulnerability Database), SWE-bench Verified, Samsung CredData |
+| AI agents & evals | Which tool should the agent call for this request? · Did the agent carry out the injected instruction? · Did the agent complete what the user's scenario required? · Is this answer supported by its sources? · Which response is better? | 154 | AgentDojo recorded runs, BFCL v3 Live (Berkeley Function-Calling Leaderboard), HAGRID, MT-Bench human judgments, τ-bench historical trajectories |
+| Trust & safety | Is this message an attack? · Is this comment toxic? | 60 | Civil Comments, In-The-Wild Jailbreak Prompts (JailbreakHub), deepset/prompt-injections |
+| Customer support | Which product team owns this complaint? · What is this complaint about? | 67 | CFPB Consumer Complaint Database |
+| Sales & commerce | How relevant is this product to the shopping query? · What type of product is this listing? · Which SIC division is this company in? | 90 | Amazon Berkeley Objects (ABO), Amazon Shopping Queries Dataset (ESCI), EDGAR-CORPUS (10-K Item 1) with SEC EDGAR SIC codes |
+| Finance | Which section of the annual report is this passage from? · What event does this current report disclose? · Which of these figures is the receipt's total? · What does the marked amount in this sentence report? | 121 | CORD-v2 (Consolidated Receipt Dataset), EDGAR-CORPUS, FiNER-139, SEC EDGAR 8-K filings |
+| Legal | Does the agreement say this, the opposite, or neither? · Which of these clause types is this? · Is this term unfair, and how? · Does this excerpt contain that clause type? | 126 | CUAD (Contract Understanding Atticus Dataset) v1, ContractNLI, UNFAIR-ToS (LexGLUE) |
+| Product management | Which package got more clicks per view? · Which part of the version was bumped? | 60 | CHANGELOG.md files of BSD-3-Clause-licensed projects (Keep a Changelog), CHANGELOG.md files of MIT-licensed projects (Keep a Changelog), Upworthy Research Archive (exploratory packages) |
+| Data & analytics | Which query answers the question on this schema? · Which value is the answer to the question? · Do the chart's data support the claim? · What kind of value does the hidden column hold? | 126 | Federal Register documents API, FiveThirtyEight data repository, Our World in Data grapher charts, Spider (dev set), U.S. Treasury Fiscal Data, WikiTableQuestions (test set), congress-legislators (legislators-current.csv) |
+| Documents & meetings | What kind of document is this page from? · Is the highlighted utterance a decision, an action item, or neither? · Which of the four summaries describes this meeting? | 87 | AMI Meeting Corpus (manual annotations 1.6.2), DocLayNet v1.2 |
+| Design | Which of these names is this icon's official name? | 30 | Material Symbols (google/material-design-icons) |
 
-The full task list, with questions, options and how rows were chosen, is in [docs/tasks.md](docs/tasks.md). Sources, licences and citations are in [data/SOURCES.md](data/SOURCES.md).
+The full task list, with options and how rows were chosen, is in [docs/tasks.md](docs/tasks.md). Sources, licences and citations are in [data/SOURCES.md](data/SOURCES.md). The authoring rules are in [docs/authoring-v4.md](docs/authoring-v4.md).
 
 ## Quick start
 
@@ -42,15 +46,16 @@ python3 -m decision_bench models                                   # models in c
 python3 -m decision_bench run --model gemini-3.5-flash --limit 5   # smoke test
 python3 -m decision_bench run --model gemini-3.5-flash             # all rows; re-run the same command to resume
 python3 -m decision_bench publish <run-id>                         # copy the finished run into results/
+python3 scripts/run_all.py                                         # every API model, then publish and rebuild
 ```
 
-There are also adapters for the Claude Code CLI, the Codex CLI and the TypeSafe API. Setup, options, costs and resuming are covered in [docs/running.md](docs/running.md).
+Models flagged `"vision": true` in `config/models.json` receive the row's images; the others receive the text rendering. There are also adapters for the Claude Code CLI, the Codex CLI and the TypeSafe API. Setup, options, costs and resuming are covered in [docs/running.md](docs/running.md).
 
 ## How it works
 
-- **The model sees only the evidence.** Each row's input, the task instruction and the options (in a fixed per-row shuffled order) are sent. The answer, rationale, title, source and notes never are. The system prompt treats the input as untrusted data. CLI adapters run in an empty directory with tools disabled. See [docs/protocol.md](docs/protocol.md).
-- **Answers are strict JSON:** a label from the options plus a probability for each option. Anything else counts as an invalid answer, not a guess.
-- **Scores are accuracy with Wilson 95% intervals,** overall, per category and per task, alongside cost, latency, tokens and calibration.
+- **The model sees only the evidence.** Each row's record, the task instruction and the options (in a fixed per-row shuffled order) are sent. The answer, rationale, title, source and notes never are. The system prompt treats the record as untrusted data. CLI adapters run in an empty directory with tools disabled. See [docs/protocol.md](docs/protocol.md).
+- **Answers are strict JSON:** a label from the options plus a probability for each option. Anything else counts as no answer, not a guess.
+- **Scores are accuracy with Wilson 95% intervals,** overall, per use case and per task, alongside macro F1, calibration, latency, cost and tokens. Each task page also shows a plain fit verdict per model, computed from the numbers.
 - **The corpus is frozen** with a sha256 in its manifest. Every run records the hash it used, and results from different versions are never mixed.
 
 ## Results
@@ -59,10 +64,11 @@ There are also adapters for the Claude Code CLI, the Codex CLI and the TypeSafe 
 
 ## Data and licences
 
-The code and the written examples are MIT. Each real row keeps its dataset's licence (MIT, Apache-2.0, CC BY 4.0, CC BY-SA or CC0). A dataset is used only if both its own licence and the terms of the text inside it allow anyone to copy, modify and redistribute it, commercially too. The build enforces this. Datasets built on non-commercial or publisher-copyrighted text were removed before release, even when the dataset itself was MIT (see [docs/tasks.md](docs/tasks.md#removed-before-release)).
+The code is MIT. Each row keeps its dataset's licence. A dataset is used only if both its own licence and the terms of the text or images inside it allow anyone to copy, modify and redistribute it, commercially too; the build enforces this. Datasets that failed that test were not used, even when the dataset itself was MIT (the reasons are recorded in each module's docstring under `authoring/bench/`).
 
-- Real secrets in the code rows are replaced with fake values of the same shape.
+- Real secrets in code rows are replaced with fake values of the same shape.
 - Contact details in contracts are replaced with placeholders.
+- Row images are resized copies of the source images, under 400 KB each.
 - Rows can be traced to their upstream record, but not to a live secret.
 
 `scripts/fetch_sources.py` re-downloads every upstream file and checks it against the pinned sha256 in `data/sources/manifest.json`. `scripts/build_bench.py --dry-run` then rebuilds the rows.
@@ -71,9 +77,9 @@ If you hold rights in a row or are named in one, open a **Data removal request**
 
 ## Limits
 
-- Public datasets may be in model training data, so scores may be inflated.
-- Tasks have 15–30 rows each, so per-task differences of a few points are usually within noise. Compare the intervals, not the point estimates.
-- Skill-improvement rows are written examples, not real data. They are badged everywhere and can be filtered out.
+- Public datasets may be in model training data, so scores may be inflated. Each task states a contamination risk.
+- Tasks have 27–36 rows each, so per-task differences of a few points are usually within noise. Compare the intervals, not the point estimates.
+- Some labels are derived by a written rule from the record itself (a version bump, a templated chart claim); those task pages say so.
 
 ## Contributing and citing
 
