@@ -69,6 +69,8 @@ def cmd_serve(args):
     from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
     from .corpus import ROOT
     handler = functools.partial(SimpleHTTPRequestHandler, directory=str(ROOT / "site"))
+    if not (ROOT / "site" / "index.html").exists():
+        print("The viewer is not built yet: run `npm ci --prefix web && npm run build --prefix web`.", flush=True)
     print(f"Decision Bench: http://127.0.0.1:{args.port} (serving site/ only)", flush=True)
     ThreadingHTTPServer(("127.0.0.1", args.port), handler).serve_forever()
 

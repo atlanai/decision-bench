@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from decision_bench import config, corpus  # noqa: E402
 
-API = {"openai-compatible", "typesafe", "laya"}
+API = {"openai-compatible", "typesafe", "djev", "laya"}
 BLUE = (32, 38, 210)      # Atlan Blue 500
 CYAN = (98, 225, 252)     # Atlan Cyan 500
 PINK = (243, 77, 119)     # Atlan Pink 500

@@ -30,9 +30,12 @@ jobs:
           python3 -m unittest discover -s tests -q
           python3 -m decision_bench validate
           python3 scripts/check_secrets.py
-          node --test tests/test_site.cjs
       - name: Build site data from results/
         run: python3 -m decision_bench report
+      - name: Analytics consent and event tests
+        run: node --test web/tests/analytics.test.mjs
+      - name: Build the viewer into site/
+        run: npm ci --prefix web && npm run build --prefix web
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:

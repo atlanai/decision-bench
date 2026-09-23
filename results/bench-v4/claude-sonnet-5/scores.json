@@ -5,15 +5,15 @@
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
   "overall": {
     "rows": 1071,
-    "correct": 724,
-    "accuracy": 0.6760037348272643,
+    "correct": 992,
+    "accuracy": 0.9262371615312792,
     "wilson95": [
-      0.6473888525589192,
-      0.7033605043695809
+      0.9090130881693816,
+      0.940414399564625
     ],
-    "errors": 272,
-    "macro_category_accuracy": 0.654989498293582,
-    "macro_task_f1": 0.7168601312962518
+    "errors": 1,
+    "macro_category_accuracy": 0.9261408193451595,
+    "macro_task_f1": 0.9223066659519233
   },
   "by_category": [
     {
@@ -31,44 +31,44 @@
       "id": "commerce",
       "name": "Sales & commerce",
       "rows": 90,
-      "correct": 57,
-      "accuracy": 0.6333333333333333,
+      "correct": 82,
+      "accuracy": 0.9111111111111111,
       "wilson95": [
-        0.530221128924694,
-        0.7255289861628577
+        0.8342928001780631,
+        0.9542700546752215
       ]
     },
     {
       "id": "data",
       "name": "Data & analytics",
       "rows": 126,
-      "correct": 86,
-      "accuracy": 0.6825396825396826,
+      "correct": 126,
+      "accuracy": 1.0,
       "wilson95": [
-        0.596889187315963,
-        0.7573886404372379
+        0.9704131803674632,
+        1
       ]
     },
     {
       "id": "design",
       "name": "Design",
       "rows": 30,
-      "correct": 7,
-      "accuracy": 0.23333333333333334,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.11792239210501232,
-        0.40928672330324267
+        0.8864829086095221,
+        1
       ]
     },
     {
       "id": "documents",
       "name": "Documents & meetings",
       "rows": 87,
-      "correct": 33,
-      "accuracy": 0.3793103448275862,
+      "correct": 79,
+      "accuracy": 0.9080459770114943,
       "wilson95": [
-        0.28450264391892643,
-        0.48432573426904035
+        0.8289125711515433,
+        0.952667674022474
       ]
     },
     {
@@ -86,22 +86,22 @@
       "id": "finance",
       "name": "Finance",
       "rows": 121,
-      "correct": 32,
-      "accuracy": 0.2644628099173554,
+      "correct": 119,
+      "accuracy": 0.9834710743801653,
       "wilson95": [
-        0.1940040187978015,
-        0.3494174048302199
+        0.9417321024498186,
+        0.9954555016821374
       ]
     },
     {
       "id": "legal",
       "name": "Legal",
       "rows": 126,
-      "correct": 73,
-      "accuracy": 0.5793650793650794,
+      "correct": 120,
+      "accuracy": 0.9523809523809523,
       "wilson95": [
-        0.49207071941351854,
-        0.6619631187400472
+        0.8999970658645753,
+        0.9779958116107486
       ]
     },
     {
@@ -216,11 +216,11 @@
       "name": "What type of product is this?",
       "category": "commerce",
       "rows": 30,
-      "correct": 25,
-      "accuracy": 0.8333333333333334,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.6643529481431982,
-        0.9266356575964831
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -228,11 +228,11 @@
       "name": "Which industry is this company in?",
       "category": "commerce",
       "rows": 30,
-      "correct": 10,
-      "accuracy": 0.3333333333333333,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.19230295526846194,
-        0.5122027418616973
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -240,11 +240,11 @@
       "name": "Which SQL answers the question?",
       "category": "data",
       "rows": 30,
-      "correct": 25,
-      "accuracy": 0.8333333333333334,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.6643529481431982,
-        0.9266356575964831
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -252,11 +252,11 @@
       "name": "Which cell answers the question?",
       "category": "data",
       "rows": 30,
-      "correct": 15,
-      "accuracy": 0.5,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.33153851227173764,
-        0.6684614877282624
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -264,11 +264,11 @@
       "name": "Does the chart support the claim?",
       "category": "data",
       "rows": 32,
-      "correct": 29,
-      "accuracy": 0.90625,
+      "correct": 32,
+      "accuracy": 1.0,
       "wilson95": [
-        0.7578150066422116,
-        0.9675990373736805
+        0.8928172849426366,
+        1
       ]
     },
     {
@@ -276,11 +276,11 @@
       "name": "What does this column hold?",
       "category": "data",
       "rows": 34,
-      "correct": 17,
-      "accuracy": 0.5,
+      "correct": 34,
+      "accuracy": 1.0,
       "wilson95": [
-        0.34069062628048985,
-        0.6593093737195102
+        0.8984820937803899,
+        1
       ]
     },
     {
@@ -288,11 +288,11 @@
       "name": "Where is this page from?",
       "category": "documents",
       "rows": 30,
-      "correct": 11,
-      "accuracy": 0.36666666666666664,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.21873702204017678,
-        0.5448675356639506
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -300,11 +300,11 @@
       "name": "Decision, action item, or neither?",
       "category": "documents",
       "rows": 30,
-      "correct": 11,
-      "accuracy": 0.36666666666666664,
+      "correct": 24,
+      "accuracy": 0.8,
       "wilson95": [
-        0.21873702204017678,
-        0.5448675356639506
+        0.6269395261897256,
+        0.9049502189759876
       ]
     },
     {
@@ -312,11 +312,11 @@
       "name": "Which summary is this meeting's?",
       "category": "documents",
       "rows": 27,
-      "correct": 11,
-      "accuracy": 0.4074074074074074,
+      "correct": 25,
+      "accuracy": 0.9259259259259259,
       "wilson95": [
-        0.24514513372857344,
-        0.5927361694463591
+        0.7663002270926937,
+        0.9794457783026165
       ]
     },
     {
@@ -324,11 +324,11 @@
       "name": "What does this icon mean?",
       "category": "design",
       "rows": 30,
-      "correct": 7,
-      "accuracy": 0.23333333333333334,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.11792239210501232,
-        0.40928672330324267
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -396,11 +396,11 @@
       "name": "Which part of the 10-K?",
       "category": "finance",
       "rows": 30,
-      "correct": 7,
-      "accuracy": 0.23333333333333334,
+      "correct": 28,
+      "accuracy": 0.9333333333333333,
       "wilson95": [
-        0.11792239210501232,
-        0.40928672330324267
+        0.7867618227892791,
+        0.9815233646723066
       ]
     },
     {
@@ -408,11 +408,11 @@
       "name": "What does this 8-K report?",
       "category": "finance",
       "rows": 30,
-      "correct": 8,
-      "accuracy": 0.26666666666666666,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.14182495553910618,
-        0.4444830204431169
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -420,11 +420,11 @@
       "name": "Which figure is the total?",
       "category": "finance",
       "rows": 30,
-      "correct": 9,
-      "accuracy": 0.3,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.16664562643958933,
-        0.4787612101166018
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -432,11 +432,11 @@
       "name": "What does this number report?",
       "category": "finance",
       "rows": 31,
-      "correct": 8,
-      "accuracy": 0.25806451612903225,
+      "correct": 31,
+      "accuracy": 1.0,
       "wilson95": [
-        0.1370154373686976,
-        0.432464724277151
+        0.889740999265246,
+        0.9999999999999999
       ]
     },
     {
@@ -444,11 +444,11 @@
       "name": "Does the NDA say this?",
       "category": "legal",
       "rows": 33,
-      "correct": 26,
-      "accuracy": 0.7878787878787878,
+      "correct": 30,
+      "accuracy": 0.9090909090909091,
       "wilson95": [
-        0.6224802241287064,
-        0.8932411343356381
+        0.7642705646564897,
+        0.968596628950737
       ]
     },
     {
@@ -456,11 +456,11 @@
       "name": "What kind of clause is this?",
       "category": "legal",
       "rows": 30,
-      "correct": 11,
-      "accuracy": 0.36666666666666664,
+      "correct": 30,
+      "accuracy": 1.0,
       "wilson95": [
-        0.21873702204017678,
-        0.5448675356639506
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -468,11 +468,11 @@
       "name": "Is this term unfair, and how?",
       "category": "legal",
       "rows": 33,
-      "correct": 10,
-      "accuracy": 0.30303030303030304,
+      "correct": 31,
+      "accuracy": 0.9393939393939394,
       "wilson95": [
-        0.17375347814547223,
-        0.4733845397473445
+        0.8039341828220181,
+        0.9832194695709291
       ]
     },
     {
@@ -480,11 +480,11 @@
       "name": "Does the contract cover this?",
       "category": "legal",
       "rows": 30,
-      "correct": 26,
-      "accuracy": 0.8666666666666667,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.7031831605558306,
-        0.9469043057578189
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -565,46 +565,46 @@
       "id": "real",
       "name": "real",
       "rows": 1071,
-      "correct": 724,
-      "accuracy": 0.6760037348272643,
+      "correct": 992,
+      "accuracy": 0.9262371615312792,
       "wilson95": [
-        0.6473888525589192,
-        0.7033605043695809
+        0.9090130881693816,
+        0.940414399564625
       ]
     }
   ],
   "calibration": {
-    "brier": 0.14495918397997498,
-    "log_loss": 0.3035893167832834,
-    "ece": 0.025657071339174057,
+    "brier": 0.11610406060873056,
+    "log_loss": 0.2522091781417293,
+    "ece": 0.030785613140753346,
     "high_confidence_errors": 18
   },
   "cost": {
-    "usd": 3.919546,
-    "coverage": 0.5498967653131452,
+    "usd": 5.37457,
+    "coverage": 0.6205098493626883,
     "basis": [
       "provider_reported",
       "unavailable"
     ],
-    "per_1000_rows_usd": 3.659706816059757
+    "per_1000_rows_usd": 5.01827264239029
   },
   "latency_ms": {
-    "p50": 2908.9079159894027,
-    "p95": 5929.050291480962,
-    "p99": 7059.611832996597,
-    "mean": 3250.13069857158
+    "p50": 3588.1204580073245,
+    "p95": 5991.962542000692,
+    "p99": 7330.018879292761,
+    "mean": 3676.6187188080876
   },
   "tokens": {
-    "input": 1659463,
-    "output": 60062,
+    "input": 2273255,
+    "output": 82806,
     "cached_input": 0,
-    "reasoning_output": 1666,
-    "coverage": 0.5498967653131452
+    "reasoning_output": 1773,
+    "coverage": 0.6205098493626883
   },
   "attempts": {
-    "attempts": 1453,
-    "retries": 382,
-    "attempt_errors": 654,
+    "attempts": 1726,
+    "retries": 655,
+    "attempt_errors": 656,
     "incomplete_attempts": 0
   }
 }

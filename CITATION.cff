@@ -4,7 +4,7 @@ title: "Decision Bench: bounded decisions on real public data"
 type: software
 authors:
   - name: "Decision Bench contributors"
-version: "4.0.0"
+version: "1.0"
 license: MIT
 repository-code: "https://github.com/atlanai/decision-bench"
 url: "https://github.com/atlanai/decision-bench"

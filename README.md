@@ -203,6 +203,7 @@ From the repository root, validate the committed corpus and build the local expl
 ```sh
 python3 -m decision_bench validate
 python3 -m decision_bench report
+npm ci --prefix web && npm run build --prefix web   # the viewer (Node 20+), once
 python3 -m decision_bench serve
 ```
 
@@ -273,7 +274,7 @@ Copyable citation for the version recorded in `CITATION.cff`:
 @software{decision_bench_v4,
   author  = {{Decision Bench contributors}},
   title   = {Decision Bench: bounded decisions on real public data},
-  version = {4.0.0}
+  version = {1.0}
 }
 ```
 

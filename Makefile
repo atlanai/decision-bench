@@ -1,7 +1,7 @@
 # Plain commands; see docs/running.md. Nothing here is required.
 PY ?= python3
 
-.PHONY: test validate secrets report serve check
+.PHONY: test validate secrets report site serve check
 
 test:
 	$(PY) -m unittest discover -s tests -v
@@ -15,9 +15,10 @@ secrets:
 report:
 	$(PY) -m decision_bench report
 
-serve: report
+site:
+	npm ci --prefix web && npm run build --prefix web
+
+serve: report site
 	$(PY) -m decision_bench serve
 
-check: test validate secrets
-	node --check site/app.js
-	node --test tests/test_site.cjs
+check: test validate secrets site

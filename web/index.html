@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Decision Bench</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Added to a home screen it opens full screen, like an app. theme-color follows the site's theme (see below). -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Decision Bench">
+<link rel="canonical" href="https://decisionbench.ai/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Decision Bench">
+<meta property="og:description" content="Can a small model make this decision for you? An open benchmark built from real records and open datasets.">
+<meta property="og:url" content="https://decisionbench.ai/">
+<meta property="og:image" content="https://decisionbench.ai/social-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Decision Bench: Can a small model make this decision for you?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Decision Bench">
+<meta name="twitter:description" content="Can a small model make this decision for you? An open benchmark built from real records and open datasets.">
+<meta name="twitter:image" content="https://decisionbench.ai/social-preview.png">
+<meta name="description" content="An open benchmark of the bounded decisions software asks language models to make, built from real records in open-licence datasets: engineering, agents, safety, support, commerce, finance, legal, product, data, documents and design.">
+<!-- The one place the repository URL is set. Every GitHub link on the site is derived from it. -->
+<meta name="repo" content="https://github.com/atlanai/decision-bench">
+<meta name="ga-measurement-id" content="G-Y0L8VH8M13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
+<script>try{const q=new URLSearchParams(location.search).get('theme'),s=q==='light'||q==='dark'?q:localStorage.getItem('db-theme'),d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);document.querySelector('meta[name=theme-color]').content=d?'#19191b':'#ffffff';}catch(e){}</script>
+<style>html{background:#fff;color:#0a0a0a;font-family:Geist,system-ui,sans-serif}html.dark{background:#19191b;color:#f1f1f3;color-scheme:dark}</style>
+<!-- Loading screen. Plain CSS, because the Tailwind runtime below only styles the page after React mounts;
+     app.jsx keeps this up until that stylesheet and the fonts have settled, so no half-styled frame shows.
+     Only transform and opacity animate, so it keeps moving while the main thread builds the page. -->
+<style>
+#boot{--ink:#0a0a0a;position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#fff;transition:opacity .4s ease .22s,visibility 0s linear .65s}
+html.dark #boot{--ink:#f1f1f3;background:#19191b}
+#boot[data-done]{opacity:0;visibility:hidden}
+#boot .in{display:flex;flex-direction:column;align-items:center;gap:22px;transition:transform .6s cubic-bezier(.5,0,.2,1)}
+#boot[data-done] .in{transform:scale(1.18)}
+#boot .mark{display:grid;grid-template-columns:repeat(11,10px);gap:3px}
+#boot .mark i,#boot .bar i{display:block;width:10px;height:10px;border-radius:1px;background:var(--ink);opacity:.08}
+#boot .mark i.on{opacity:1;animation:boot-in .55s cubic-bezier(.34,1.56,.64,1) var(--d) both,boot-wave 1.8s ease-in-out calc(var(--d) + .9s) infinite}
+#boot .mark i:not(.on){animation:boot-twinkle 2.6s steps(1) var(--r) infinite}
+#boot .word{font:500 13px/1 "Geist Pixel","Geist Mono",ui-monospace,monospace;letter-spacing:.2em;color:var(--ink)}
+#boot .tag{margin-top:-12px;font:400 13px/1.4 Geist,system-ui,sans-serif;color:var(--ink);opacity:.55;animation:boot-fade .6s ease .5s both}
+#boot .bar{display:flex;gap:2px}
+#boot .bar i{width:8px;height:8px;transition:opacity .2s ease}
+#boot .bar i.on{opacity:1}
+#boot .bar i.next{animation:boot-blink .7s steps(1) infinite}
+#boot .msg{min-height:14px;font:500 11px/14px "Geist Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.5}
+/* On the way out the lit pixels burst outward from the mark while the screen zooms through and fades. */
+#boot[data-done] .mark i.on{animation:boot-out .6s cubic-bezier(.5,0,.75,0) var(--o) forwards}
+#boot[data-done] .mark i:not(.on),#boot[data-done] .word,#boot[data-done] .tag,#boot[data-done] .bar,#boot[data-done] .msg{animation:none;opacity:0;transition:opacity .2s ease}
+@keyframes boot-in{0%{opacity:0;transform:translateY(-14px) scale(.4)}100%{opacity:1;transform:none}}
+@keyframes boot-out{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.4)}}
+@keyframes boot-fade{from{opacity:0;transform:translateY(4px)}}
+@keyframes boot-wave{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes boot-twinkle{0%,88%{opacity:.08}89%,100%{opacity:.3}}
+@keyframes boot-blink{0%{opacity:.55}50%{opacity:.08}}
+@media (prefers-reduced-motion:reduce){#boot *{animation:none!important}#boot[data-done] .in{transform:none}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
+<style type="text/tailwindcss">
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-pixel: "Geist Pixel", "Geist Mono", ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-pink: var(--pink);
+  --color-pink-soft: var(--pink-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --animate-accordion-down: accordion-down .2s ease-out;
+  --animate-accordion-up: accordion-up .2s ease-out;
+  --animate-fade-in: fade-in .15s ease-out;
+  --animate-pop-in: pop-in .15s ease-out;
+  --animate-dialog-in: dialog-in .18s ease-out;
+  --animate-sheet-in: sheet-in .22s cubic-bezier(.32,.72,0,1);
+  --animate-sheet-up: sheet-up .45s cubic-bezier(.32,.72,0,1);
+  --animate-sheet-down: sheet-down .26s cubic-bezier(.4,0,1,1) forwards;
+  --animate-fade-out: fade-out .22s ease-in forwards;
+  --animate-toast-in: toast-in .4s cubic-bezier(.3,1.35,.5,1);
+  --animate-deck-rise: deck-rise .42s cubic-bezier(.2,.8,.2,1);
+  --animate-deck-return: deck-return .46s cubic-bezier(.2,.9,.25,1);
+  --animate-wiggle: wiggle .45s ease-out;
+  --animate-tab-pop: tab-pop .5s cubic-bezier(.3,1.5,.5,1);
+  --animate-tabbar-in: tabbar-in .6s cubic-bezier(.2,.9,.25,1) .15s both;
+  --animate-hint-hand: hint-hand 1.6s ease-in-out infinite;
+}
+
+:root {
+  --radius: .625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(.145 0 0);
+  --primary: oklch(.205 0 0);
+  --primary-foreground: oklch(.985 0 0);
+  --secondary: oklch(.97 0 0);
+  --secondary-foreground: oklch(.205 0 0);
+  --muted: oklch(.97 0 0);
+  --muted-foreground: oklch(.556 0 0);
+  --accent: oklch(.97 0 0);
+  --accent-foreground: oklch(.205 0 0);
+  --destructive: oklch(.577 .245 27.325);
+  --border: oklch(.922 0 0);
+  --input: oklch(.922 0 0);
+  --ring: oklch(.708 0 0);
+  --brand: #2026d2;
+  --brand-soft: #eef0fd;
+  --pink: #F34D77;
+  --pink-soft: #FDE6EC;
+  --good: #15803d;
+  --good-soft: #ecfdf3;
+  --warn: #b45309;
+  --warn-soft: #fef6e7;
+  --bad: #dc2626;
+  --bad-soft: #fef2f2;
+  --grid-ok: oklch(.9 0 0);
+}
+/* Dark: a soft charcoal with a faint cool cast (Linear, Raycast), not near-black. Cards sit one step lighter than
+   the page so they read as raised; tints are mixed from the page colour so they never glow. */
+.dark {
+  --background: oklch(.215 .004 286);
+  --foreground: oklch(.96 .002 286);
+  --card: oklch(.24 .005 286);
+  --card-foreground: oklch(.96 .002 286);
+  --popover: oklch(.265 .005 286);
+  --popover-foreground: oklch(.96 .002 286);
+  --primary: oklch(.93 .003 286);
+  --primary-foreground: oklch(.24 .005 286);
+  --secondary: oklch(.3 .006 286);
+  --secondary-foreground: oklch(.96 .002 286);
+  --muted: oklch(.3 .006 286);
+  --muted-foreground: oklch(.73 .008 286);
+  --accent: oklch(.31 .006 286);
+  --accent-foreground: oklch(.96 .002 286);
+  --destructive: oklch(.704 .191 22.216);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(.6 .01 286);
+  --brand: #a4a9ff;
+  --brand-soft: color-mix(in oklab, var(--brand) 15%, var(--background));
+  --pink: #F34D77;
+  --pink-soft: color-mix(in oklab, var(--pink) 15%, var(--background));
+  --good: #4ade80;
+  --good-soft: color-mix(in oklab, var(--good) 12%, var(--background));
+  --warn: #fbbf24;
+  --warn-soft: color-mix(in oklab, var(--warn) 12%, var(--background));
+  --bad: #f87171;
+  --bad-soft: color-mix(in oklab, var(--bad) 13%, var(--background));
+  --grid-ok: oklch(.39 .006 286);
+}
+
+@keyframes accordion-down { from { height: 0 } to { height: var(--radix-accordion-content-height) } }
+@keyframes accordion-up { from { height: var(--radix-accordion-content-height) } to { height: 0 } }
+@keyframes fade-in { from { opacity: 0 } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px) scale(.98) } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(6px) scale(.98) } }
+@keyframes sheet-in { from { transform: translateX(100%) } }
+@keyframes db-roll { 0% { transform: rotate(-200deg) scale(.7) } 70% { transform: rotate(12deg) scale(1.08) } 100% { transform: none } }
+/* App shell on phones and tablets: sheets rise from the bottom, cards leave like a swiped deck, the tab bar pops. */
+@keyframes sheet-up { from { transform: translateY(100%) } }
+@keyframes sheet-down { to { transform: translateY(100%) } }
+@keyframes fade-out { to { opacity: 0 } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(14px) scale(.94) } }
+@keyframes deck-rise { from { opacity: .35; transform: translateY(16px) scale(.94) } }
+@keyframes deck-return { from { transform: translateX(-112%) rotate(-9deg) } }
+@keyframes wiggle { 0%, 100% { transform: none } 20% { transform: translateX(-9px) rotate(-1.2deg) } 45% { transform: translateX(7px) rotate(.9deg) } 70% { transform: translateX(-3px) } }
+@keyframes tab-pop { 0% { transform: scale(.88) } 60% { transform: translateY(-1px) scale(1.06) } 100% { transform: none } }
+@keyframes tabbar-in { from { transform: translateY(150%) } }
+@keyframes hint-hand { 0%, 100% { transform: translateX(12px) rotate(10deg) } 50% { transform: translateX(-14px) rotate(-8deg) } }
+
+/* Page transitions (route.js sets data-nav on <html> and starts a view transition, compact screens only).
+   push/pop: iOS-style slide with the page underneath parallaxing; tab: a short fade-up; next/prev: a card deck.
+   The top bar and the tab bar are captured on their own, so they stay put while the page moves. */
+@media (max-width: 1023px) {
+  .vt-topbar { view-transition-name: topbar; }
+  .vt-tabbar { view-transition-name: tabbar; }
+}
+::view-transition-group(*) { animation-duration: .42s; animation-timing-function: cubic-bezier(.32,.72,0,1); }
+::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; animation-duration: .42s; animation-timing-function: cubic-bezier(.32,.72,0,1); }
+html[data-nav=push]::view-transition-old(root) { animation-name: vt-behind-left; }
+html[data-nav=push]::view-transition-new(root) { animation-name: vt-from-right; }
+html[data-nav=pop]::view-transition-old(root) { animation-name: vt-to-right; z-index: 2; }
+html[data-nav=pop]::view-transition-new(root) { animation-name: vt-from-behind-left; }
+html[data-nav=tab]::view-transition-old(root) { animation: vt-fade .16s ease-out both; }
+html[data-nav=tab]::view-transition-new(root) { animation: vt-rise .34s cubic-bezier(.2,.8,.2,1) .04s both; }
+html[data-nav=next]::view-transition-old(root) { animation: vt-fling .36s cubic-bezier(.4,0,1,1) both; z-index: 2; }
+html[data-nav=next]::view-transition-new(root) { animation: deck-rise .42s cubic-bezier(.2,.8,.2,1) .06s both; }
+html[data-nav=prev]::view-transition-old(root) { animation: vt-sink .42s ease both; }
+html[data-nav=prev]::view-transition-new(root) { animation: deck-return .44s cubic-bezier(.2,.9,.25,1) both; z-index: 2; }
+@keyframes vt-from-right { from { transform: translateX(100%) } }
+@keyframes vt-behind-left { to { transform: translateX(-28%); opacity: .55 } }
+@keyframes vt-to-right { to { transform: translateX(100%) } }
+@keyframes vt-from-behind-left { from { transform: translateX(-28%); opacity: .55 } }
+@keyframes vt-fade { to { opacity: 0 } }
+@keyframes vt-rise { from { opacity: 0; transform: translateY(12px) } }
+@keyframes vt-fling { to { transform: translateX(-112%) rotate(-9deg) } }
+@keyframes vt-sink { to { transform: scale(.94); opacity: .4 } }
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-background text-foreground font-sans antialiased; font-feature-settings: "ss01"; }
+  a { text-underline-offset: 3px; }
+  code { @apply font-mono text-[0.85em]; }
+  ::selection { background: color-mix(in oklab, var(--brand) 22%, transparent); }
+  @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+}
+
+@layer components {
+  /* Prose inside records, methodology and dataset notes. */
+  .prose-db { @apply text-sm leading-relaxed text-foreground/85; }
+  .prose-db p + p { @apply mt-3; }
+  .prose-db ul { @apply mt-2 list-disc space-y-1.5 pl-5 marker:text-muted-foreground/60; }
+  .prose-db a, a.link { @apply text-brand underline-offset-4 hover:underline; }
+  /* Use cases on the leaderboard banner: one square per eight rows. Hover (or focus) runs a staggered pop
+     along the bar and turns it brand blue; the other use cases step back. */
+  .px { transform-box: fill-box; transform-origin: center; transition: fill .35s ease var(--d); }
+  .px-on { fill: color-mix(in oklab, var(--foreground) 70%, transparent); }
+  .px-chip { color: color-mix(in oklab, var(--foreground) 75%, transparent); transition: color .2s ease, opacity .3s ease, filter .3s ease, background-color .2s ease; }
+  .px-n { color: var(--muted-foreground); transition: color .2s ease; }
+  .px-chip[data-on] { color: var(--brand); }
+  .px-chip[data-on] .px-on { fill: var(--brand); }
+  .px-chip:is(:hover, :focus-visible) { color: var(--foreground); }
+  .px-chip:is(:hover, :focus-visible) .px-n { color: var(--foreground); }
+  .px-chip:is(:hover, :focus-visible) .px-on { fill: var(--pink); animation: px-pop .7s cubic-bezier(.34, 1.56, .64, 1) var(--d) both; }
+  .px-strip:has(.px-chip:hover) .px-chip:not(:hover):not([data-on]) { opacity: .4; }
+  @keyframes px-pop { 0% { transform: none } 25% { transform: translateY(-5px) scale(1.45) rotate(8deg) } 55% { transform: translateY(1px) scale(.9) rotate(-3deg) } 80% { transform: translateY(-1px) scale(1.06) } 100% { transform: none } }
+  /* Analytics consent, rendered by analytics.js. */
+  .analytics-choice { @apply fixed right-4 bottom-4 z-[100] max-w-sm rounded-lg border bg-popover p-4 text-sm text-popover-foreground shadow-lg max-lg:inset-x-3 max-lg:bottom-[calc(env(safe-area-inset-bottom)+84px)] max-lg:mx-auto max-lg:max-w-md max-lg:rounded-2xl; }
+  .analytics-choice p { @apply mb-3 leading-relaxed; }
+  .analytics-choice a { @apply underline underline-offset-4; }
+  .analytics-choice div { @apply flex justify-end gap-2; }
+  .analytics-choice button { @apply inline-flex h-8 cursor-pointer items-center rounded-md border bg-background px-3 text-sm font-medium shadow-xs hover:bg-accent; }
+  .analytics-choice button:last-child { @apply border-primary bg-primary text-primary-foreground hover:bg-primary/90; }
+}
+</style>
+</head>
+<body>
+<div id="boot" role="status" aria-live="polite"><div class="in"><div class="mark" aria-hidden="true"></div><div class="word">DECISION BENCH</div><div class="tag">Real records, answered by their source.</div><div class="bar" aria-hidden="true"></div><div class="msg">Waking up</div></div></div>
+<script>
+/* "DB" in a 5×7 pixel face. Lit pixels drop in column by column, then a wave runs across them; the rest twinkle.
+   Each lit pixel also gets a direction away from the centre, which it flies along when the screen lifts. */
+(function(){
+  var g=['11110011110','10001010001','10001010001','10001011110','10001010001','10001010001','11110011110'],b=document.getElementById('boot'),m=b.querySelector('.mark'),bar=b.querySelector('.bar'),h='',n=20;
+  function burst(x,y){var dx=x-5,dy=y-3,a=Math.atan2(dy,dx)+(Math.random()-.5)*.6,r=90+Math.random()*160+Math.hypot(dx,dy)*14;return '--dx:'+(Math.cos(a)*r).toFixed(0)+'px;--dy:'+(Math.sin(a)*r).toFixed(0)+'px;--rot:'+((Math.random()-.5)*160).toFixed(0)+'deg;--o:'+(Math.random()*90).toFixed(0)+'ms';}
+  g.forEach(function(row,y){for(var x=0;x<row.length;x++)h+=row[x]==='1'?'<i class="on" style="--d:'+(x*45+y*18)+'ms;'+burst(x,y)+'"></i>':'<i style="--r:'+(-Math.random()*2.6).toFixed(2)+'s"></i>';});
+  m.innerHTML=h;for(var i=0,s='';i<n;i++)s+='<i></i>';bar.innerHTML=s;
+  /* app.jsx reports progress through this: a message and how far along, 0 to 1. */
+  window.dbBoot=function(msg,f){var k=Math.round(Math.max(0,Math.min(1,f))*n);if(msg)b.querySelector('.msg').textContent=msg;[].forEach.call(bar.children,function(e,j){e.className=j<k?'on':j===k?'next':'';});};
+  window.dbBoot('',.1);
+})();
+</script>
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
+<script src="analytics.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Authoring reports for Decision Bench 4.0.0
+# Authoring reports for Decision Bench 1.0
 
 One report per category module, written when the module was built. Each lists the tasks built, the licence
 evidence that was read, every dataset or task that was dropped and why, and the judgement calls a maintainer should

@@ -121,6 +121,8 @@ def preflight(model):
         openai_compat.api_key(openai_compat.base_url())
     elif provider == "typesafe" and not config.env_value("TYPESAFE_API_KEY"):
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
+    elif provider == "djev" and not config.env_value("DJEV_API_KEY"):
+        raise CallError("DJEV_API_KEY is not set; see .env.example", status="auth_missing")
     elif provider == "laya":
         adapters.laya_key(adapters.laya_endpoint())
     elif provider in ("claude-cli", "codex-cli"):

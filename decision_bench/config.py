@@ -8,12 +8,13 @@ import re
 
 from . import corpus
 
-PROVIDERS = {"openai-compatible", "typesafe", "laya", "claude-cli", "codex-cli"}
+PROVIDERS = {"openai-compatible", "typesafe", "djev", "laya", "claude-cli", "codex-cli"}
 MODEL_ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
 REQUEST_KEYS = {
     "openai-compatible": {"response_format", "token_limit_field", "max_output_tokens", "reasoning_effort",
                           "temperature", "json_wrapper_policy"},
     "typesafe": set(),
+    "djev": set(),
     "laya": set(),
     "claude-cli": {"reasoning_effort"},
     "codex-cli": {"reasoning_effort"},

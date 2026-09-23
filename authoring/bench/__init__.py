@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 SOURCES = ROOT / "data/sources"
 ASSETS = ROOT / "data/assets"
 SUITE = "bench-v4"
-VERSION = "4.0.0"
+VERSION = "1.0"
 
 # Order here is display order on the site.
 CATEGORIES = {

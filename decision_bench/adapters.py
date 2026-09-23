@@ -18,8 +18,9 @@ from .corpus import JUDGMENT_POLICY, SYSTEM, prompt, public_input, response_sche
 from .errors import CallError
 
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
+DJEV_URL = "https://api.djev.dev/v1/request"
 # Credentials the harness itself uses are never passed to a CLI child process.
-HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "TYPESAFE_API_KEY",
+HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "TYPESAFE_API_KEY", "DJEV_API_KEY",
                    "LAYA_API_KEY", "LAYA_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
@@ -32,6 +33,8 @@ def call(model, case, timeout, api_model=None):
         return openai_compat.completion(model, case, timeout, api_model)
     if provider == "typesafe":
         return typesafe(model, case, timeout, api_model)
+    if provider == "djev":
+        return djev(model, case, timeout, api_model)
     if provider == "laya":
         return laya(model, case, timeout, api_model)
     if provider in ("claude-cli", "codex-cli"):
@@ -65,6 +68,13 @@ def typesafe(model, case, timeout, api_model=None):
     if not key:
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
     return systemone(model, case, timeout, api_model, TYPESAFE_URL, key, "TypeSafe")
+
+
+def djev(model, case, timeout, api_model=None):
+    key = env_value("DJEV_API_KEY")
+    if not key:
+        raise CallError("DJEV_API_KEY is not set; see .env.example", status="auth_missing")
+    return systemone(model, case, timeout, api_model, DJEV_URL, key, "Djev")
 
 
 def laya(model, case, timeout, api_model=None):

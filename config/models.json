@@ -239,6 +239,23 @@
       "vision": false
     },
     {
+      "id": "djev",
+      "label": "DiffusionGemma-Jev (djev)",
+      "short_label": "djev",
+      "vendor": "Maisa",
+      "provider": "djev",
+      "model": "djev",
+      "color": "#b45309",
+      "pricing": {
+        "input_per_mtok": 0.035,
+        "output_per_mtok": 0,
+        "source_url": "https://djev.dev/llms.txt",
+        "as_of": "2026-09",
+        "note": "Announced preview rate; billing may not yet be enabled. Used only as an estimate."
+      },
+      "vision": false
+    },
+    {
       "id": "jev-1.13",
       "label": "Jev 1.13",
       "short_label": "Jev 1.13",
