@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "qwen3-32b",
+    "label": "Qwen3-32B",
+    "short_label": "Qwen 32B",
+    "vendor": "Qwen",
+    "provider": "openai-compatible",
+    "color": "#64748b",
+    "vision": false,
+    "api_model": "Qwen3-32B",
+    "resolved_models": [
+      "Qwen3-32B"
+    ]
+  },
+  "request": {
+    "response_format": "json_object",
+    "token_limit_field": "max_tokens",
+    "max_output_tokens": 8192,
+    "reasoning_effort": "low",
+    "temperature": null,
+    "json_wrapper_policy": "allow_single_code_fence"
+  },
+  "pricing": {
+    "input_per_mtok": 0.15,
+    "output_per_mtok": 0.6,
+    "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+    "as_of": "2026-09",
+    "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "4.0.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "4b919ae6f2c97e69dfe05f378c495e8604df994e",
+    "git_dirty": false,
+    "git_commits": [
+      "4b919ae6f2c97e69dfe05f378c495e8604df994e"
+    ]
+  },
+  "run": {
+    "run_id": "qwen3-32b-bench-v4-7fc8c751",
+    "status": "completed_with_errors",
+    "created_at": "2026-09-23T13:42:35.111717+00:00",
+    "completed_at": "2026-09-23T13:44:19.072473+00:00",
+    "published_at": "2026-09-23T13:59:58.657446+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-2a0f85ecc26e",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1014,
+    "rows_error": 57,
+    "full": true
+  },
+  "totals": {
+    "correct": 853,
+    "accuracy": 0.7964519140989729,
+    "wilson95": [
+      0.7712978887569022,
+      0.8194868371040991
+    ],
+    "errors": 57,
+    "cost_usd": 0.21681195,
+    "cost_coverage": 1.0,
+    "input_tokens": 1100769,
+    "output_tokens": 86161,
+    "latency_p50_ms": 373.2386250048876
+  }
+}

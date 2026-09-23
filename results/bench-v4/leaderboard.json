@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "corpus_version": "4.0.0",
+  "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+  "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
+  "models": [
+    {
+      "model_id": "gemini-3.5-flash",
+      "label": "Gemini 3.5 Flash",
+      "vendor": "Google",
+      "provider": "openai-compatible",
+      "api_model": "gemini-3.5-flash",
+      "accuracy": 0.942110177404295,
+      "wilson95": [
+        0.9264792738277718,
+        0.9545807819050915
+      ],
+      "correct": 1009,
+      "rows": 1071,
+      "errors": 1,
+      "cost_usd": 3.5517975,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 3.316337535014006,
+      "latency_p50_ms": 3589.5842079771683,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:36:13.556133+00:00"
+    },
+    {
+      "model_id": "gemini-flash-lite-latest",
+      "label": "Gemini Flash Lite",
+      "vendor": "Google",
+      "provider": "openai-compatible",
+      "api_model": "gemini-flash-lite-latest",
+      "accuracy": 0.9411764705882353,
+      "wilson95": [
+        0.925444771056673,
+        0.95375454538214
+      ],
+      "correct": 1008,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.9884501,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.9229225957049486,
+      "latency_p50_ms": 3370.2833330025896,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:33:55.245634+00:00"
+    },
+    {
+      "model_id": "deepseek-v4.1-flash",
+      "label": "DeepSeek V4.1 Flash",
+      "vendor": "DeepSeek",
+      "provider": "openai-compatible",
+      "api_model": "deepseek/deepseek-v4.1-flash",
+      "accuracy": 0.927170868347339,
+      "wilson95": [
+        0.9100340910468661,
+        0.941254135981191
+      ],
+      "correct": 993,
+      "rows": 1071,
+      "errors": 6,
+      "cost_usd": 0.73073896,
+      "cost_coverage": 0.9990671641791045,
+      "cost_per_1000_rows_usd": 0.6822959477124184,
+      "latency_p50_ms": 1408.9679169701412,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:58:50.363352+00:00"
+    },
+    {
+      "model_id": "gpt-5.6-luna",
+      "label": "GPT-5.6 Luna",
+      "vendor": "OpenAI",
+      "provider": "openai-compatible",
+      "api_model": "gpt-5.6-luna",
+      "accuracy": 0.9262371615312792,
+      "wilson95": [
+        0.9090130881693816,
+        0.940414399564625
+      ],
+      "correct": 992,
+      "rows": 1071,
+      "errors": 5,
+      "cost_usd": 0.43365739999999997,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.4049088702147525,
+      "latency_p50_ms": 1805.3157500107773,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:29:11.085606+00:00"
+    },
+    {
+      "model_id": "jev-1.13",
+      "label": "Jev 1.13",
+      "vendor": "TypeSafe",
+      "provider": "typesafe",
+      "api_model": "jev-1.13.0",
+      "accuracy": 0.9243697478991597,
+      "wilson95": [
+        0.9069732206842946,
+        0.9387327884616112
+      ],
+      "correct": 990,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.046292988,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.04322407843137255,
+      "latency_p50_ms": 438.5520829819143,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:50:29.093424+00:00"
+    },
+    {
+      "model_id": "glm-5.3-flash",
+      "label": "GLM 5.3 Flash",
+      "vendor": "Z.AI",
+      "provider": "openai-compatible",
+      "api_model": "z-ai/glm-5.3-flash",
+      "accuracy": 0.9225023342670402,
+      "wilson95": [
+        0.9049361248659793,
+        0.9370484056918258
+      ],
+      "correct": 988,
+      "rows": 1071,
+      "errors": 7,
+      "cost_usd": 1.09885639,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 1.0260097012138187,
+      "latency_p50_ms": 2358.7047909968533,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:59:55.821544+00:00"
+    },
+    {
+      "model_id": "claude-haiku-4.5",
+      "label": "Claude Haiku 4.5",
+      "vendor": "Anthropic",
+      "provider": "openai-compatible",
+      "api_model": "claude-haiku-4-5-20251001",
+      "accuracy": 0.9056956115779645,
+      "wilson95": [
+        0.8867136153353633,
+        0.9217776079295347
+      ],
+      "correct": 970,
+      "rows": 1071,
+      "errors": 8,
+      "cost_usd": 2.078327,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 1.940548085901027,
+      "latency_p50_ms": 2127.8327500331216,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:39:00.056705+00:00"
+    },
+    {
+      "model_id": "qwen3-32b",
+      "label": "Qwen3-32B",
+      "vendor": "Qwen",
+      "provider": "openai-compatible",
+      "api_model": "Qwen3-32B",
+      "accuracy": 0.7964519140989729,
+      "wilson95": [
+        0.7712978887569022,
+        0.8194868371040991
+      ],
+      "correct": 853,
+      "rows": 1071,
+      "errors": 57,
+      "cost_usd": 0.21681195,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.2024387955182073,
+      "latency_p50_ms": 373.2386250048876,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:44:19.072473+00:00"
+    },
+    {
+      "model_id": "claude-sonnet-5",
+      "label": "Claude Sonnet 5",
+      "vendor": "Anthropic",
+      "provider": "openai-compatible",
+      "api_model": "claude-sonnet-5",
+      "accuracy": 0.6760037348272643,
+      "wilson95": [
+        0.6473888525589192,
+        0.7033605043695809
+      ],
+      "correct": 724,
+      "rows": 1071,
+      "errors": 272,
+      "cost_usd": 3.919546,
+      "cost_coverage": 0.5498967653131452,
+      "cost_per_1000_rows_usd": 3.659706816059757,
+      "latency_p50_ms": 2908.9079159894027,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:48:27.092776+00:00"
+    },
+    {
+      "model_id": "nova-micro-v1",
+      "label": "Amazon Nova Micro",
+      "vendor": "Amazon",
+      "provider": "openai-compatible",
+      "api_model": "Amazon Nova Micro v1",
+      "accuracy": 0.6638655462184874,
+      "wilson95": [
+        0.6350327781778906,
+        0.6915269679279541
+      ],
+      "correct": 711,
+      "rows": 1071,
+      "errors": 107,
+      "cost_usd": 0.076742033,
+      "cost_coverage": 0.9990662931839402,
+      "cost_per_1000_rows_usd": 0.07165455929038282,
+      "latency_p50_ms": 735.2302920189686,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:42:34.950666+00:00"
+    }
+  ]
+}

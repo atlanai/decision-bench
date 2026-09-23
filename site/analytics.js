@@ -1,6 +1,6 @@
 (() => {
   const id = document.querySelector('meta[name="ga-measurement-id"]')?.content.trim();
-  if (!/^G-[A-Z0-9]+$/.test(id || '')) return;
+  if (!/^G-[A-Z0-9]+$/.test(id || '') || !['decisionbench.ai', 'www.decisionbench.ai'].includes(location.hostname)) return;
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = function () { window.dataLayer.push(arguments); };
