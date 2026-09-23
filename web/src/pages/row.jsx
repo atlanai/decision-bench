@@ -7,7 +7,8 @@ import {pct, pct0, ms, money, compact, human, hostOf, plural} from '@/lib/format
 import {href, rowHref, taskHref, dataHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
 import {Crumbs, Section, Notice, ModelName, EmptyPage, Ext} from '@/components/common';
-import {Record, Code, CopyButton, exactInput} from '@/components/record';
+import {Code, CopyButton, exactInput} from '@/components/record';
+import {RecordView} from '@/components/records/views';
 import {TableCard} from '@/pages/task';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
@@ -47,7 +48,7 @@ function QuestionCard({c, review}) {
         {opts.map(k => { const gold = k === q.gold, who = votes[k] || [];
           return <li key={k} className={cn('relative grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 rounded-lg px-3 py-2.5', gold && 'bg-good-soft')}>
             <div className="min-w-0">
-              <span className={cn('block text-sm font-medium [overflow-wrap:anywhere]', gold && 'text-good')}>{human(k)}</span>
+              <span className={cn('block text-sm font-medium [overflow-wrap:anywhere]', gold && 'text-good')}>{B.optLabel(t, k)}</span>
               {gold && <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-good"><CheckIcon className="size-3.5" />Answer key</span>}
               {describes(k, q.options[k]) && <p className={cn('mt-0.5 text-[13px] leading-relaxed text-muted-foreground', long && 'line-clamp-3')}>{q.options[k]}</p>}
             </div>
@@ -110,7 +111,7 @@ function Answers({c}) {
               <td className="max-w-[280px] px-3 py-2.5">
                 <span className={cn('inline-flex max-w-full items-center gap-1.5', ok ? 'text-foreground' : 'text-bad')}>
                   <span className={cn('grid size-4 shrink-0 place-items-center rounded-full text-[10px] font-bold', ok ? 'bg-good-soft text-good' : 'bg-bad-soft text-bad')}>{ok ? '✓' : '✗'}</span>
-                  <span className="truncate font-medium">{s?.label != null ? human(s.label) : v.status === 'ok' ? 'no answer' : human(v.status)}</span>
+                  <span className="truncate font-medium">{s?.label != null ? B.optLabel(c.task, s.label) : v.status === 'ok' ? 'no answer' : human(v.status)}</span>
                 </span>
               </td>
               <td className="px-3 py-2.5 text-right tabular-nums">{pct0(s?.confidence)}</td>
@@ -124,7 +125,7 @@ function Answers({c}) {
                 <div>
                   <h4 className="mb-2 text-xs font-medium text-muted-foreground">Probabilities the model gave</h4>
                   {probs.length ? <div className="space-y-1.5">{probs.map(([l, p]) => <div key={l} className="grid grid-cols-[minmax(0,1fr)_96px_48px] items-center gap-3 text-[13px]">
-                    <span className="truncate">{human(l)}{l === s.gold && <CheckIcon className="ml-1 inline size-3.5 text-good" />}</span>
+                    <span className="truncate">{B.optLabel(c.task, l)}{l === s.gold && <CheckIcon className="ml-1 inline size-3.5 text-good" />}</span>
                     <span className="h-1.5 overflow-hidden rounded-full bg-foreground/10"><i className="block h-full rounded-full" style={{width: `${p * 100}%`, background: l === s.gold ? 'var(--good)' : l === s.label ? 'var(--bad)' : 'var(--muted-foreground)'}} /></span>
                     <span className="text-right text-xs text-muted-foreground tabular-nums">{pct(p)}</span></div>)}</div> : <p className="text-[13px] text-muted-foreground">No probabilities returned.</p>}
                   {v.error && <p className="mt-3 text-[13px] text-bad">{v.error}</p>}
@@ -163,7 +164,7 @@ export function RowView({c, review = false, nav}) {
             <h2 className="text-sm font-semibold">The record</h2>
             {B.isImageTask(t) && <Badge variant="brand">Image task</Badge>}
           </div>
-          <Record c={c} />
+          <RecordView c={c} />
           <div className="border-t px-5 py-3">
             <div className="flex items-center justify-between gap-3">
               <button type="button" onClick={() => setRaw(v => !v)} className="inline-flex cursor-pointer items-center gap-1 text-[13px] text-muted-foreground hover:text-foreground">

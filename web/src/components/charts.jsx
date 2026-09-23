@@ -1,5 +1,5 @@
 /* SVG charts drawn at the container's measured width. Hover and focus details come from data-tip (see tip.jsx). */
-import {useLayoutEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {M, result, okOf, answered, caseTitle, taskName, goldText, ident, runName, runColor, keyOf, subsetMetrics, catKey, catInfo, answerOf} from '@/lib/bench';
 import {pct, pct0, clip} from '@/lib/format';
 import {rowHref} from '@/lib/route';
@@ -113,9 +113,41 @@ export function Risk({runs, cases, focus, label}) {
   }}</Chart>;
 }
 
+/* Dock-style magnifier for the row grid: columns near the cursor widen with a fisheye falloff (only inside the
+   lens, so the rest of the grid never moves) and a band marks the column under the cursor. Rects carry data-col;
+   updates go straight to the DOM for the ~80 columns inside the lens, so it stays smooth over 12k cells. */
+const LENS_R = 76, LENS_D = 4.5;
+function useDockLens(root, geom, deps) {
+  useEffect(() => {
+    const el = root.current; if (!el) return;
+    const g = geom.current, cols = new Map();
+    el.querySelectorAll('rect[data-col]').forEach(r => { const i = +r.dataset.col; if (!cols.has(i)) cols.set(i, []); cols.get(i).push({r, x: +r.getAttribute('x'), w: +r.getAttribute('width')}); });
+    const base = el.querySelector('svg[data-lens-base]'), band = el.querySelector('[data-lens-band]'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let x0 = 0, amp = 0, target = 0, raf = 0, touched = new Set();
+    const F = x => { const t = (x - x0) / LENS_R, a = Math.abs(t); if (a >= 1) return x; const f = Math.sign(t) * (LENS_D + 1) * a / (LENS_D * a + 1); return Math.max(0, Math.min(g.W, x0 + LENS_R * (t + (f - t) * amp))); };
+    const put = (i, on) => { for (const c of cols.get(i) || []) { if (on) { const a = F(c.x), b = F(c.x + c.w); c.r.setAttribute('x', a); c.r.setAttribute('width', Math.max(.4, b - a)); } else { c.r.setAttribute('x', c.x); c.r.setAttribute('width', c.w); } } };
+    const frame = () => {
+      raf = 0; amp = reduce ? target : amp + (target - amp) * .22; if (Math.abs(target - amp) < .01) amp = target;
+      const next = new Set();
+      if (amp > 0) g.xs.forEach((x, i) => { if (x > x0 - LENS_R - g.pitch && x < x0 + LENS_R) next.add(i); });
+      for (const i of touched) if (!next.has(i)) put(i, false);
+      let hot = -1;
+      for (const i of next) { put(i, true); if (hot < 0 && F(g.xs[i]) <= x0 && x0 < F(g.xs[i] + g.pitch)) hot = i; }
+      touched = next;
+      if (band) { if (hot >= 0 && amp > .05) { const a = F(g.xs[hot]), b = F(g.xs[hot] + g.cell); band.style.transform = `translateX(${g.LW + a - 2}px)`; band.style.width = `${b - a + 4}px`; band.style.opacity = String(amp); } else band.style.opacity = '0'; }
+      if (amp !== target) raf = requestAnimationFrame(frame);
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const move = e => { if (!base) return; const b = base.getBoundingClientRect(); x0 = e.clientX - b.left; target = x0 >= -4 && x0 <= g.W + 4 ? 1 : 0; kick(); };
+    const leave = () => { target = 0; kick(); };
+    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); cancelAnimationFrame(raf); for (const i of touched) put(i, false); };
+  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
 /* Every row as one cell. Column i is the same row for every model. */
 export function RecordGrid({runs, cases}) {
-  const [ref, w] = useWidth();
+  const [ref, w] = useWidth(), lens = useRef(null), geom = useRef({xs: [], pitch: 1, cell: 1, W: 0, LW: 0});
   let body = null;
   if (w > 0) {
     const LW = w < 640 ? 132 : 228, groups = [];
@@ -123,23 +155,26 @@ export function RecordGrid({runs, cases}) {
     const avail = w - LW - 4, gaps = Math.max(1, groups.length - 1), pitch = Math.max(3, Math.min(12, Math.floor((avail - 7 * gaps) / cases.length))), GAP = groups.length > 1 ? Math.max(7, Math.min(22, Math.floor((avail - pitch * cases.length) / gaps))) : 0, cell = Math.max(2, pitch - 1), RH = 13;
     const xs = []; let x = 0; for (const g of groups) { g.x = x; for (const _ of g.cases) { xs.push(x); x += pitch; } g.w = x - g.x - 1; x += GAP; }
     const W = x - GAP, res = runs.map(r => cases.map(c => result(r.id, c.id)));
+    geom.current = {xs, pitch, cell, W, LW};
     const wrong = cases.map((c, i) => { let k = 0, m = 0; res.forEach(row => { const v = row[i]; if (!v) return; m++; if (!okOf(v)) k++; }); return [k, m]; });
-    const SH = 20, label = 'sticky left-0 z-[1] flex shrink-0 items-center justify-between gap-2 overflow-hidden bg-card pr-3 text-[13px]';
-    body = <div className="flex w-max min-w-full flex-col gap-0.5">
+    const SH = 20, label = 'sticky left-0 z-[2] flex shrink-0 items-center justify-between gap-2 overflow-hidden bg-card pr-3 text-[13px]';
+    body = <div ref={lens} className="relative flex w-max min-w-full flex-col gap-0.5">
+      <div data-lens-band aria-hidden="true" className="pointer-events-none absolute top-[20px] bottom-0 left-0 z-[1] rounded-[3px] bg-foreground/[.07] opacity-0 ring-1 ring-foreground/10" style={{width: 0}} />
       <div className="flex items-center"><div className={label} style={{width: LW}} />
         <svg width={W} height={18} aria-hidden="true" className={SVG_CLS}>{groups.map(g => { const fit = Math.floor(g.w / 6.3), short = g.name.split(/\s+/)[0], t = g.name.length <= fit ? g.name : short.length <= fit ? short : fit >= 4 ? clip(short, fit) : ''; return <g key={g.name} data-tip={tip(g.name, [['Rows', g.cases.length]])}><rect className="hit" x={g.x} y="0" width={g.w + 1} height="18" />{t && <text className="t-ink" x={g.x} y="10">{t}</text>}<line className="axis" x1={g.x} x2={g.x + g.w} y1="16.5" y2="16.5" /></g>; })}</svg>
       </div>
       <div className="mb-1 flex items-center"><div className={cn(label, 'text-xs text-muted-foreground')} style={{width: LW}}>Models wrong</div>
-        <svg width={W} height={SH} aria-hidden="true" className={SVG_CLS}>{cases.map((c, i) => { const [k, m] = wrong[i], hh = m ? Math.round((SH - 3) * k / m) : 0; return <a key={c.id} href={rowHref(c)} tabIndex={-1} data-tip={tip(caseTitle(c), [['Models wrong', `${k} of ${m}`], ['Answer key', goldText(c)]])}><rect className="hit" x={xs[i]} y="0" width={pitch} height={SH} /><rect x={xs[i]} y={SH - 1} width={cell} height="1" fill="var(--border)" />{hh > 0 && <rect x={xs[i]} y={SH - 1 - hh} width={cell} height={hh} fill="var(--bad)" />}</a>; })}</svg>
+        <svg data-lens-base width={W} height={SH} aria-hidden="true" className={SVG_CLS}>{cases.map((c, i) => { const [k, m] = wrong[i], hh = m ? Math.round((SH - 3) * k / m) : 0; return <a key={c.id} href={rowHref(c)} tabIndex={-1} data-tip={tip(caseTitle(c), [['Models wrong', `${k} of ${m}`], ['Answer key', goldText(c)]])}><rect data-col={i} className="hit" x={xs[i]} y="0" width={pitch} height={SH} /><rect data-col={i} x={xs[i]} y={SH - 1} width={cell} height="1" fill="var(--border)" />{hh > 0 && <rect data-col={i} x={xs[i]} y={SH - 1 - hh} width={cell} height={hh} fill="var(--bad)" />}</a>; })}</svg>
       </div>
       {runs.map((r, ri) => { let n = 0; const cells = cases.map((c, i) => { const v = res[ri][i], ok = okOf(v), err = v && !answered(v); if (v && !ok) n++; const inset = !v || err ? .5 : 0;
-          return <a key={c.id} href={rowHref(c)} tabIndex={-1} data-tip={tip(caseTitle(c), [['Task', taskName(c.task)], ['Answer key', goldText(c)], [ident(r).name, answerOf(v)]])}><rect x={xs[i] + inset} y={inset} width={cell - 2 * inset} height={RH - 2 * inset} fill={!v ? 'none' : err ? 'url(#hatch)' : ok ? 'var(--grid-ok)' : 'var(--bad)'} stroke={!v ? 'var(--border)' : err ? 'var(--bad)' : undefined} className="hover:stroke-foreground" /></a>; });
+          return <a key={c.id} href={rowHref(c)} tabIndex={-1} data-tip={tip(caseTitle(c), [['Task', taskName(c.task)], ['Answer key', goldText(c)], [ident(r).name, answerOf(v)]])}><rect data-col={i} x={xs[i] + inset} y={inset} width={cell - 2 * inset} height={RH - 2 * inset} rx=".75" fill={!v ? 'none' : err ? 'url(#hatch)' : ok ? 'var(--grid-ok)' : 'var(--bad)'} stroke={!v ? 'var(--border)' : err ? 'var(--bad)' : undefined} /></a>; });
         return <div key={r.id} className="flex items-center"><div className={label} style={{width: LW}} title={runName(r)}>
           <span className="inline-flex min-w-0 items-center gap-2"><i className="size-2 shrink-0 rounded-full" style={{background: ident(r).color}} /><span className="truncate font-medium">{w < 640 ? ident(r).short : ident(r).name}</span></span>
           <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground tabular-nums">{n} wrong</span></div>
-          <svg width={W} height={RH} aria-hidden="true" className={SVG_CLS}><Hatch />{cells}</svg></div>; })}
+          <svg width={W} height={RH} aria-hidden="true" className={cn(SVG_CLS, 'relative z-[1]')}><Hatch />{cells}</svg></div>; })}
     </div>;
   }
+  useDockLens(lens, geom, [w, runs, cases]);
   return <div ref={ref} role="img" aria-label="Result of every model on every row" className="w-full min-w-0 overflow-x-auto pb-1">{body}</div>;
 }
 

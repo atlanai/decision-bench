@@ -64,6 +64,8 @@ export const taskCat = t => taskInfo(t).category || taskRows(t)[0]?.category;
 export const isImageTask = t => (taskInfo(t).modality || (taskRows(t).some(c => c.assets?.length) ? 'image' : 'text')) !== 'text';
 export const caseTitle = c => c.title || c.id;
 export const optionOrder = q => q.option_order?.length ? q.option_order : Object.keys(q.options);
+/* Option keys that come from the record (tool names, file paths, hashes) are shown verbatim; fixed labels are humanised. */
+export const optLabel = (t, k) => k == null ? 'no answer' : taskInfo(t).per_row_options ? String(k) : human(k);
 export const taskOptions = t => { const q = taskRows(t)[0]?.questions[0]; return q ? optionOrder(q) : []; };
 export const origLabel = v => v == null ? 'none' : Array.isArray(v) ? (v.length ? v.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(', ') : 'none') : typeof v === 'object' ? JSON.stringify(v) : String(v);
 export const categoryOrder = () => CAT_ORDER;
