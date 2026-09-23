@@ -47,15 +47,15 @@ export function Methodology({id}) {
   const steps = [['A real record', 'From an open-licence dataset, chosen by a written rule in a fixed order.'], ['One question', '12 words or fewer, 2–10 options, each described in one line.'], ['An answer from the source', 'The dataset’s annotators or an objective record, never a model.'], ['A strict JSON answer', 'One option plus a probability for each. Anything else is no answer.']];
   return <div className="max-w-4xl">
     <PageHeader title="Methodology" description="How the bench is built, what a model sees, how answers are scored, and where the limits are." />
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 max-sm:[&>:last-child:nth-child(odd)]:col-span-2">
       <Stat label="Rows" value={num(rows)} /><Stat label="Tasks" value={B.taskOrder().length} /><Stat label="Use cases" value={B.categoryOrder().length} /><Stat label="Datasets" value={B.DATASETS.length} />{imgs > 0 && <Stat label="With an image" value={num(imgs)} />}
     </div>
-    <h2 className="mt-12 mb-4 text-lg font-semibold tracking-tight">How a row is built</h2>
-    <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([h, p], i) => <li key={h} className="rounded-xl border bg-card p-4 shadow-xs">
+    <h2 className="mt-10 mb-4 text-lg font-semibold tracking-tight md:mt-12">How a row is built</h2>
+    <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">{steps.map(([h, p], i) => <li key={h} className="rounded-xl border bg-card p-3.5 shadow-xs md:p-4">
       <span className="grid size-6 place-items-center rounded-full bg-muted font-mono text-xs font-medium">{i + 1}</span>
       <h3 className="mt-3 text-sm font-semibold">{h}</h3><p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{p}</p></li>)}</ol>
     <h2 className="mt-12 mb-4 text-lg font-semibold tracking-tight">The details</h2>
-    <Accordion type="multiple" defaultValue={[id || 'what']} className="rounded-xl border bg-card px-5 shadow-xs">
+    <Accordion type="multiple" defaultValue={[id || 'what']} className="rounded-xl border bg-card px-4 shadow-xs md:px-5">
       {parts.map(([k, t, sub, body]) => <AccordionItem key={k} value={k} id={`m-${k}`} className="scroll-mt-20">
         <AccordionTrigger data-track={`methodology_${k}`} className="py-4 hover:no-underline [&[data-state=open]_.sub]:text-foreground/60"><span><span className="block text-[15px] font-semibold">{t}</span><span className="sub mt-0.5 block text-[13px] font-normal text-muted-foreground">{sub}</span></span></AccordionTrigger>
         <AccordionContent className="prose-db max-w-3xl pb-6">{body}</AccordionContent>

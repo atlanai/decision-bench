@@ -1,8 +1,9 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {init, caseMap, caseTitle, taskName, M} from '@/lib/bench';
 import {pageView, installClicks} from '@/lib/analytics';
 import {useRoute} from '@/lib/route';
-import {Header, Footer} from '@/components/layout';
+import {Header, Footer, TabBar} from '@/components/layout';
+import {Toaster} from '@/components/toast';
 import {ChartTip} from '@/components/tip';
 import {TooltipProvider} from '@/components/ui/tooltip';
 import {EmptyPage} from '@/components/common';
@@ -18,9 +19,16 @@ import {Review} from '@/pages/review';
 
 const TITLES = {home: 'Leaderboard', tasks: 'Tasks', models: 'Models', compare: 'Compare', data: 'Data', methodology: 'Methodology', review: 'Review'};
 
-/* The loading screen lives in index.html, outside React. */
+/* The loading screen lives in index.html, outside React. It is also the splash screen: on the first load of a
+   visit it stays long enough for the mark to finish assembling, then bursts apart as the app zooms in behind it. */
 const boot = (msg, f) => window.dbBoot?.(msg, f);
-function hideBoot() { const el = document.getElementById('boot'); if (!el || el.dataset.done != null) return; boot('Ready', 1); el.dataset.done = ''; setTimeout(() => el.remove(), 400); }
+const SPLASH_MS = 1150;
+function splashLeft() { let seen = false; try { seen = sessionStorage.getItem('db-splash') === '1'; sessionStorage.setItem('db-splash', '1'); } catch {} return seen ? 0 : Math.max(0, SPLASH_MS - performance.now()); }
+function hideBoot() {
+  const el = document.getElementById('boot'); if (!el || el.dataset.leaving) return;
+  el.dataset.leaving = '1'; boot('Ready', 1);
+  setTimeout(() => { el.dataset.done = ''; setTimeout(() => el.remove(), 900); }, splashLeft());
+}
 /* The Tailwind runtime writes the stylesheet after the page mounts, so the first layout is unstyled and charts
    measure the wrong width until their ResizeObserver catches up. Lift the loading screen once the stylesheet has
    been quiet for a moment, the fonts are in and two frames have let the charts re-measure. */
@@ -40,12 +48,12 @@ function useBench() {
   useEffect(() => {
     (async () => {
       try {
-        boot('Fetching results', .25);
+        boot('Fetching the results', .25);
         const res = await fetch('data.json', {cache: 'no-store'}); if (!res.ok) throw Error(`HTTP ${res.status}`);
         const json = await res.json();
-        boot('Fetching datasets', .45);
+        boot('Checking the licences', .45);
         let ds = null; try { const d = await fetch('datasets.json', {cache: 'no-store'}); ds = d.ok ? await d.json() : null; } catch {}
-        boot('Scoring the models', .6);
+        boot('Scoring every model', .6);
         await new Promise(r => setTimeout(r));
         init(json, ds); setState({ready: true, error: null});
       } catch (e) { console.error(e); setState({ready: false, error: e.message}); }
@@ -72,8 +80,9 @@ function Page({route}) {
 
 export function App() {
   const {ready, error} = useBench(), route = useRoute(), last = useRef('');
-  /* A new page starts at the top; a filter change on the same page keeps the scroll position. */
-  useEffect(() => {
+  /* A new page starts at the top; a filter change on the same page keeps the scroll position. A layout effect, so
+     a page transition (see route.js) captures the new page already scrolled to the top. */
+  useLayoutEffect(() => {
     if (!ready) return;
     const key = `${route.page}/${route.id}`;
     if (key !== last.current && !(route.page === 'methodology' && route.id) && !(route.page === 'data' && last.current.startsWith('data/'))) scrollTo({top: 0, behavior: 'instant'});
@@ -87,17 +96,19 @@ export function App() {
 
   useEffect(() => { if (ready) hideBootWhenSettled(); else if (error) hideBoot(); }, [ready, error]);
 
-  if (error) return <EmptyPage title="Results are not built yet">Run <code>python3 -m decision_bench report</code>, then refresh.<div className="mt-2 opacity-70">{error}</div></EmptyPage>;
+  if (error) return <EmptyPage title="Nothing to show yet">Run <code>python3 -m decision_bench report</code>, then refresh.<div className="mt-2 opacity-70">{error}</div></EmptyPage>;
   if (!ready) return null;
   const wide = route.page === 'home';
   return (
     <TooltipProvider>
       <a href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }} className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:shadow">Skip to content</a>
       <Header page={route.page} id={route.id} />
-      <main id="main" tabIndex={-1} className={wide ? 'outline-none' : 'mx-auto max-w-[1240px] px-4 pt-8 pb-20 outline-none md:px-8 md:pt-10'}>
+      <main id="main" tabIndex={-1} className={wide ? 'outline-none' : 'mx-auto max-w-[1240px] px-4 pt-5 pb-16 outline-none md:px-8 md:pt-8 lg:pt-10 lg:pb-20'}>
         <Page route={route} />
       </main>
       <Footer />
+      <TabBar page={route.page} />
+      <Toaster />
       <ChartTip />
     </TooltipProvider>
   );
