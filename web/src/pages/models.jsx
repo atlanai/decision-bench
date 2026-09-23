@@ -54,7 +54,7 @@ export function ModelPage({id: k}) {
         <p className="mt-1 text-sm text-muted-foreground">{[m.vendor, m.iface, m.vision ? 'text and images' : 'text only'].filter(Boolean).join(' · ')}{m.api_model && <> · sent as <code>{m.api_model}</code></>}</p></div>
     </div>
   </>;
-  const details = json => <div className="mt-10"><Button variant="ghost" size="sm" className="-ml-2 text-muted-foreground" onClick={() => setAdv(v => !v)}><ChevronRightIcon className={cn('transition-transform', adv && 'rotate-90')} />Request options, prices and run record</Button>{adv && <Code className="mt-2">{JSON.stringify(json, null, 2)}</Code>}</div>;
+  const details = json => <div className="mt-10"><Button variant="ghost" size="sm" className="-ml-2 text-muted-foreground" aria-expanded={adv} data-track="model_run_details" onClick={() => setAdv(v => !v)}><ChevronRightIcon className={cn('transition-transform', adv && 'rotate-90')} />Request options, prices and run record</Button>{adv && <Code className="mt-2">{JSON.stringify(json, null, 2)}</Code>}</div>;
   if (!run) return <>{head}<Notice className="mt-8">This model is configured but has not been evaluated on this version. <HowToAdd /></Notice>{m.request && details({request: m.request, pricing: m.pricing})}</>;
   const all = B.subsetMetrics(run, B.allCases), textCases = B.allCases.filter(c => !B.isImageTask(c.task));
   const fits = B.taskOrder().map(t => [t, B.verdict(B.subsetMetrics(run, B.taskRows(t)))]), count = x => fits.filter(([, v]) => v.k === x).length;

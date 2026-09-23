@@ -82,7 +82,7 @@ export function Tasks({route}) {
             <tbody key={k}>
               <tr className="border-b bg-muted/50">
                 <td colSpan={7} className="p-0">
-                  <button type="button" onClick={() => toggle(k)} aria-expanded={open} className="flex h-10 w-full cursor-pointer items-center gap-2 px-5 text-left text-sm outline-none focus-visible:bg-muted">
+                  <button type="button" data-track={`category_expand_${k}`} onClick={() => toggle(k)} aria-expanded={open} className="flex h-10 w-full cursor-pointer items-center gap-2 px-5 text-left text-sm outline-none focus-visible:bg-muted">
                     <ChevronRightIcon className={cn('size-4 text-muted-foreground transition-transform', open && 'rotate-90')} />
                     <span className="font-semibold whitespace-nowrap">{B.catInfo(k).name}</span>
                     <Badge variant="secondary" className="bg-background tabular-nums">{ts.length}</Badge>
@@ -102,7 +102,7 @@ export function Tasks({route}) {
                   <td className="px-3 py-2.5 text-right tabular-nums">{B.taskRows(t).length}</td>
                   <td className="px-3 py-2.5 max-md:hidden">{b ? <span className="inline-flex items-center gap-2" title={B.runName(b[0])}><Logo k={B.keyOf(b[0])} /><span className="tabular-nums">{pct0(b[1].accuracy)}</span></span> : <Dash />}</td>
                   <td className="px-3 py-2.5">{b ? <Fit v={B.verdict(b[1])} /> : <Dash />}</td>
-                  <td className="py-2.5 pr-3 text-right"><Button variant="ghost" size="icon-sm" className="text-muted-foreground" onClick={() => setInfo(t)} aria-label={`Details and source for ${B.taskName(t)}`}><InfoIcon /></Button></td>
+                  <td className="py-2.5 pr-3 text-right"><Button variant="ghost" size="icon-sm" className="text-muted-foreground" data-track="task_details" onClick={() => setInfo(t)} aria-label={`Details and source for ${B.taskName(t)}`}><InfoIcon /></Button></td>
                 </tr>; })}
             </tbody>); })}
           {!groups.length && <tbody><tr><td colSpan={7} className="px-5 py-12 text-center text-sm text-muted-foreground">No task matches these filters.</td></tr></tbody>}

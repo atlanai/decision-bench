@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 /* Review mode (maintainers): step through rows, mark each, keep a note, export. Stored in this browser only. */
 import {useEffect, useRef, useState} from 'react';
 import {ArrowLeftIcon, ArrowRightIcon, CheckIcon, DownloadIcon, FlagIcon, UploadIcon} from 'lucide-react';
@@ -41,7 +42,7 @@ export function Review({id}) {
   const [note, setNote] = useState(c ? reviewOf(c)?.note || '' : '');
   useEffect(() => { setNote(c ? reviewOf(c)?.note || '' : ''); }, [c?.id]);
   const step = dir => { if (!c) return false; let i = list.indexOf(c), n; if (i < 0) { const j = all.indexOf(c); n = dir > 0 ? all.slice(j + 1).find(x => list.includes(x)) : all.slice(0, j).reverse().find(x => list.includes(x)); } else n = list[i + dir]; if (n) location.hash = href(`review/${encodeURIComponent(n.id)}`); return !!n; };
-  const act = a => { if (!c) return; setReview(c, {note}); if (a === 'prev') step(-1); else if (a === 'next') step(1); else if (a === 'ok') { setReview(c, {status: 'ok'}); setMsg(''); if (!step(1)) bump(x => x + 1); } else if (a === 'flag') { setReview(c, {status: 'flag'}); bump(x => x + 1); setTimeout(() => noteRef.current?.focus(), 0); } };
+  const act = a => { if (!c) return; track('review_action', {action: a}); setReview(c, {note}); if (a === 'prev') step(-1); else if (a === 'next') step(1); else if (a === 'ok') { setReview(c, {status: 'ok'}); setMsg(''); if (!step(1)) bump(x => x + 1); } else if (a === 'flag') { setReview(c, {status: 'flag'}); bump(x => x + 1); setTimeout(() => noteRef.current?.focus(), 0); } };
   const actRef = useRef(act); actRef.current = act;
   useEffect(() => {
     const on = e => { if (e.metaKey || e.ctrlKey || e.altKey) return; if (['TEXTAREA', 'INPUT', 'SELECT'].includes(e.target.tagName)) { if (e.key === 'Escape') e.target.blur(); return; } const a = {j: 'next', k: 'prev', y: 'ok', f: 'flag'}[e.key.toLowerCase()]; if (a) { e.preventDefault(); actRef.current(a); } };
@@ -59,10 +60,10 @@ export function Review({id}) {
           </div>
           <span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums">{num(done)} / {num(all.length)} reviewed · {num(flagged)} flagged</span>
         </div>
-        <Tabs value={filter} onValueChange={v => { setFilter(v); setMsg(''); }}><TabsList><TabsTrigger value="all">All rows</TabsTrigger><TabsTrigger value="todo">Not reviewed</TabsTrigger><TabsTrigger value="flagged">Flagged</TabsTrigger></TabsList></Tabs>
+        <Tabs value={filter} onValueChange={v => { track('review_filter', {filter: v}); setFilter(v); setMsg(''); }}><TabsList><TabsTrigger value="all">All rows</TabsTrigger><TabsTrigger value="todo">Not reviewed</TabsTrigger><TabsTrigger value="flagged">Flagged</TabsTrigger></TabsList></Tabs>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={exportReviews}><DownloadIcon />Export</Button>
-          <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()}><UploadIcon />Import</Button>
+          <Button variant="outline" size="sm" data-track="review_export" onClick={exportReviews}><DownloadIcon />Export</Button>
+          <Button variant="outline" size="sm" data-track="review_import" onClick={() => fileRef.current?.click()}><UploadIcon />Import</Button>
           <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={e => { const f = e.target.files?.[0]; if (f) f.text().then(x => { setMsg(importReviews(x)); bump(n => n + 1); }); e.target.value = ''; }} />
         </div>
       </div>

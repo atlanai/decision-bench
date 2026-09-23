@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 /* SVG charts drawn at the container's measured width. Hover and focus details come from data-tip (see tip.jsx). */
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {M, result, okOf, answered, caseTitle, taskName, goldText, ident, runName, runColor, keyOf, subsetMetrics, catKey, catInfo, answerOf} from '@/lib/bench';
@@ -189,7 +190,7 @@ export function RecordGrid({runs, cases}) {
       showTip({t: caseTitle(cs), r: h.ri < 0 ? [['Models wrong', `${nk} of ${nm}`], ['Answer key', goldText(cs)]] : [['Task', taskName(cs.task)], ['Answer key', goldText(cs)], [ident(g.runs[h.ri]).name, answerOf(g.res[h.ri][h.i])]]}, e.clientX, e.clientY);
     };
     const leave = () => { key = ''; hideTip(); mark(-1); };
-    const click = e => { const h = at(e); if (h) location.hash = rowHref(g.cases[h.i]); };
+    const click = e => { const h = at(e); if (h) { track('chart_click', {chart: 'every_row', row_id: g.cases[h.i].id, task_id: g.cases[h.i].task}); location.hash = rowHref(g.cases[h.i]); } };
     draw();
     const mo = new MutationObserver(draw); mo.observe(document.documentElement, {attributes: true, attributeFilter: ['class']});
     c.addEventListener('pointermove', move); c.addEventListener('pointerleave', leave); c.addEventListener('click', click);

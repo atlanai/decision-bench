@@ -5,11 +5,17 @@
   const consentKey = 'decision-bench-analytics-consent';
   let started = false;
   let banner;
-  const pageView = () => localStorage.getItem(consentKey) === 'yes' && window.gtag('event', 'page_view', {
-    page_location: location.origin + location.pathname + location.hash.split('?')[0],
-    page_path: location.pathname + location.hash.split('?')[0],
-    page_title: document.title,
-  });
+  let page, lastPath;
+  const consent = () => { try { return localStorage.getItem(consentKey); } catch { return 'no'; } };
+  const send = (name, params) => {
+    if (!started || consent() !== 'yes' || !page) return;
+    window.gtag('event', name, {...page, ...params, page_referrer: ''});
+  };
+  const pageView = () => { if (!page || consent() !== 'yes' || lastPath === page.page_path) return; send('page_view', {}); lastPath = page.page_path; };
+  window.dbAnalytics = {
+    page(value) { page = value; if (started && consent() === 'yes') { window.gtag('set', {page_location: page.page_location, page_title: page.page_title, page_referrer: ''}); pageView(); } },
+    event: send,
+  };
   function start() {
     if (started) return;
     started = true;
@@ -17,9 +23,8 @@
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
     // Hash routes are the site's pages. Suppress automatic views to avoid duplicates.
-    window.gtag('config', id, { send_page_view: false });
+    window.gtag('config', id, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, page_location: location.origin + '/', page_referrer: '', page_title: 'Decision Bench', ...(page || {}) });
     pageView();
-    window.addEventListener('hashchange', () => queueMicrotask(pageView));
     const script = document.createElement('script');
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
@@ -38,11 +43,14 @@
     if (preference) { event.preventDefault(); showChoice(); return; }
     const choice = event.target.closest('[data-analytics-choice]')?.dataset.analyticsChoice;
     if (!choice) return;
-    localStorage.setItem(consentKey, choice);
+    try { localStorage.setItem(consentKey, choice); } catch { return; }
+    window[`ga-disable-${id}`] = choice !== 'yes';
+    if (choice !== 'yes') lastPath = undefined;
     banner?.remove();
     banner = null;
     if (choice === 'yes') { if (started) pageView(); else start(); }
   });
-  if (localStorage.getItem(consentKey) === 'yes') start();
-  else if (!localStorage.getItem(consentKey)) showChoice();
+  if (location.pathname.endsWith('/privacy.html')) window.dbAnalytics.page({page_type: 'privacy', page_path: '/privacy.html', page_location: location.origin + '/privacy.html', page_title: 'Privacy · Decision Bench'});
+  if (consent() === 'yes') start();
+  else if (!consent()) showChoice();
 })();

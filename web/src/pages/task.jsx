@@ -125,7 +125,7 @@ export function TaskPage({id: t}) {
           </tr>)}</tbody>
         </table>
       </TableCard>
-      {rows.length > shown.length && <div className="mt-4 flex justify-center"><Button variant="outline" onClick={() => setAll(true)}>Show all {rows.length} rows</Button></div>}
+      {rows.length > shown.length && <div className="mt-4 flex justify-center"><Button variant="outline" data-track="show_all_rows" onClick={() => setAll(true)}>Show all {rows.length} rows</Button></div>}
     </Section>
   </>;
 }

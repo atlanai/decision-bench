@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import {init, caseMap, caseTitle, taskName, M} from '@/lib/bench';
+import {pageView, installClicks} from '@/lib/analytics';
 import {useRoute} from '@/lib/route';
 import {Header, Footer} from '@/components/layout';
 import {ChartTip} from '@/components/tip';
@@ -80,6 +81,9 @@ export function App() {
     const t = route.page === 'row' ? caseTitle(caseMap.get(route.id) || {id: route.id}) : route.page === 'task' ? taskName(route.id) : route.page === 'model' ? M(route.id).name : TITLES[route.page];
     document.title = `${t} · Decision Bench`;
   }, [ready, route]);
+
+  useEffect(() => { if (ready) pageView(route); }, [ready, route]);
+  useEffect(() => installClicks(), []);
 
   useEffect(() => { if (ready) hideBootWhenSettled(); else if (error) hideBoot(); }, [ready, error]);
 

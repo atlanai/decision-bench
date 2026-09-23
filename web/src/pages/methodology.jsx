@@ -57,7 +57,7 @@ export function Methodology({id}) {
     <h2 className="mt-12 mb-4 text-lg font-semibold tracking-tight">The details</h2>
     <Accordion type="multiple" defaultValue={[id || 'what']} className="rounded-xl border bg-card px-5 shadow-xs">
       {parts.map(([k, t, sub, body]) => <AccordionItem key={k} value={k} id={`m-${k}`} className="scroll-mt-20">
-        <AccordionTrigger className="py-4 hover:no-underline [&[data-state=open]_.sub]:text-foreground/60"><span><span className="block text-[15px] font-semibold">{t}</span><span className="sub mt-0.5 block text-[13px] font-normal text-muted-foreground">{sub}</span></span></AccordionTrigger>
+        <AccordionTrigger data-track={`methodology_${k}`} className="py-4 hover:no-underline [&[data-state=open]_.sub]:text-foreground/60"><span><span className="block text-[15px] font-semibold">{t}</span><span className="sub mt-0.5 block text-[13px] font-normal text-muted-foreground">{sub}</span></span></AccordionTrigger>
         <AccordionContent className="prose-db max-w-3xl pb-6">{body}</AccordionContent>
       </AccordionItem>)}
     </Accordion>

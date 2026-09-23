@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 /* Filter controls bound to the URL: use case, input modality, which models are shown, search. */
 import {startTransition, useEffect, useRef, useState} from 'react';
 import {ChevronDownIcon, SearchIcon} from 'lucide-react';
@@ -15,7 +16,7 @@ export function UseCaseSelect({route, className}) {
   const cur = route.q.get('category') || '';
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild><Button variant="outline" className={cn('justify-between font-normal', className)} aria-label="Use case">{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild><Button variant="outline" className={cn('justify-between font-normal', className)} data-track="use_case_menu" aria-label="Use case">{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-(--radix-dropdown-menu-trigger-width)">
         <DropdownMenuRadioGroup value={cur || 'all'} onValueChange={v => go(withQ(route, {category: v === 'all' ? '' : v}))}>
           <DropdownMenuRadioItem value="all">All use cases</DropdownMenuRadioItem>
@@ -43,12 +44,12 @@ export function ModelPicker({route}) {
   const fromUrl = selectedRuns(route).map(keyOf), [keys, setKeys] = useState(fromUrl), all = RUNS.map(keyOf);
   const url = route.q.get('models') || '';
   useEffect(() => { setKeys(selectedRuns(route).map(keyOf)); }, [url]); // eslint-disable-line react-hooks/exhaustive-deps
-  const set = next => { setKeys(next); startTransition(() => go(withQ(route, {models: next.length === all.length ? '' : next.length ? next.join(',') : 'none'}))); };
+  const set = next => { track('model_selection', {selected_model_count: next.length}); setKeys(next); startTransition(() => go(withQ(route, {models: next.length === all.length ? '' : next.length ? next.join(',') : 'none'}))); };
   const n = keys.length, allOn = n === all.length ? true : n ? 'indeterminate' : false;
   const keep = e => e.preventDefault();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild><Button variant="outline" className="font-normal">Models <span className="text-muted-foreground tabular-nums">{n === all.length ? 'All' : `${n} of ${all.length}`}</span><ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild><Button variant="outline" data-track="model_picker" className="font-normal">Models <span className="text-muted-foreground tabular-nums">{n === all.length ? 'All' : `${n} of ${all.length}`}</span><ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
       <DropdownMenuContent className="w-72">
         <DropdownMenuCheckboxItem checked={allOn} onSelect={keep} onCheckedChange={() => set(allOn === true ? [] : all)} className="font-medium">All models<span className="ml-auto text-xs font-normal text-muted-foreground tabular-nums">{n}/{all.length}</span></DropdownMenuCheckboxItem>
         <DropdownMenuSeparator />

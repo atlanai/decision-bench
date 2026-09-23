@@ -143,7 +143,7 @@ const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
 function LeaderboardSection({route, runs, cases}) {
   const [more, setMore] = useState(false), cat = route.q.get('category') || '';
-  const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground" title="Tokens, macro F1, calibration and errors" aria-expanded={more} onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
+  const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground" title="Tokens, macro F1, calibration and errors" aria-expanded={more} data-track="leaderboard_columns" onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
   return <Section id="leaderboard" title="Leaderboard" actions={toggle} description={`${cat ? `${B.catInfo(cat).name} rows` : 'All rows'}${route.q.get('modality') ? ` · ${route.q.get('modality')} inputs` : ''}. Click a column to re-sort.`} className="mt-8">
     <Leaderboard route={route} runs={runs} cases={cases} more={more} />
   </Section>;
@@ -159,7 +159,7 @@ function Leaderboard({route, runs, cases, more}) {
   const sorted = metrics.slice().sort(([ra, a], [rb, b]) => { const va = value(a, sort.key, ra), vb = value(b, sort.key, rb); if (va == null) return 1; if (vb == null) return -1; return sort.dir === 'asc' ? va - vb : vb - va; });
   const Th = ({k, children, className, title}) => (
     <th title={title} className={cn('h-10 px-3 text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5', className)}>
-      {k ? <button type="button" onClick={() => setSort(s => s.key === k ? {key: k, dir: s.dir === 'desc' ? 'asc' : 'desc'} : {key: k, dir: ASC.includes(k) ? 'asc' : 'desc'})} className={cn('inline-flex cursor-pointer items-center gap-1 hover:text-foreground', sort.key === k && 'text-foreground')}>
+      {k ? <button type="button" data-track={`sort_${k}`} onClick={() => setSort(s => s.key === k ? {key: k, dir: s.dir === 'desc' ? 'asc' : 'desc'} : {key: k, dir: ASC.includes(k) ? 'asc' : 'desc'})} className={cn('inline-flex cursor-pointer items-center gap-1 hover:text-foreground', sort.key === k && 'text-foreground')}>
         {children}{sort.key === k && (sort.dir === 'desc' ? <ArrowDownIcon className="size-3.5" /> : <ArrowUpIcon className="size-3.5" />)}</button> : children}
     </th>
   );

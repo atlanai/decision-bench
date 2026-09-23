@@ -70,7 +70,7 @@ export function Expandable({children, lines = 6, label = 'Show all', className, 
       {children}
       {!open && !always && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-card to-transparent" />}
     </div>
-    {!always && <button type="button" onClick={() => setOpen(v => !v)} className="mt-1.5 inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
+    {!always && <button type="button" data-track="record_expand" onClick={() => setOpen(v => !v)} className="mt-1.5 inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
       {open ? 'Show less' : label}<ChevronDownIcon className={cn('size-3.5 transition-transform', open && 'rotate-180')} />
     </button>}
   </div>;
@@ -79,7 +79,7 @@ export function Expandable({children, lines = 6, label = 'Show all', className, 
 export function Fold({label, preview, children, defaultOpen = false}) {
   const [open, setOpen] = useState(defaultOpen);
   return <section className="px-5 py-3.5">
-    <button type="button" onClick={() => setOpen(v => !v)} aria-expanded={open} className="flex w-full cursor-pointer items-center gap-3 text-left">
+    <button type="button" data-track="record_expand" onClick={() => setOpen(v => !v)} aria-expanded={open} className="flex w-full cursor-pointer items-center gap-3 text-left">
       <ChevronDownIcon className={cn('size-4 shrink-0 text-muted-foreground transition-transform', !open && '-rotate-90')} />
       <span className="shrink-0 text-xs font-medium text-muted-foreground">{label}</span>
       {!open && preview && <span className="min-w-0 truncate text-[13px] text-muted-foreground/80">{preview}</span>}

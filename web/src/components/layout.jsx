@@ -30,7 +30,7 @@ function ThemeToggle() {
     mq.addEventListener('change', on); return () => mq.removeEventListener('change', on);
   }, []);
   const flip = () => { const next = !dark; setTheme(next); setDark(next); try { localStorage.setItem('db-theme', next ? 'dark' : 'light'); } catch {} };
-  return <Tip content={dark ? 'Light mode' : 'Dark mode'}><Button variant="ghost" size="icon-sm" onClick={flip} aria-label="Toggle dark mode">{dark ? <SunIcon /> : <MoonIcon />}</Button></Tip>;
+  return <Tip content={dark ? 'Light mode' : 'Dark mode'}><Button variant="ghost" size="icon-sm" data-track="theme_toggle" onClick={flip} aria-label="Toggle dark mode">{dark ? <SunIcon /> : <MoonIcon />}</Button></Tip>;
 }
 
 /* Random task, just for fun. A shuffled bag, so repeated rolls visit every task before any comes round again. */
@@ -52,7 +52,7 @@ function RandomTask({current}) {
     go(taskHref(t));
   };
   const Die = DICE[face];
-  return <Tip content="Random task"><Button variant="ghost" size="icon-sm" onClick={roll} aria-label="Open a random task">
+  return <Tip content="Random task"><Button variant="ghost" size="icon-sm" data-track="random_task" onClick={roll} aria-label="Open a random task">
     <Die key={spin} className={cn(spin && 'motion-safe:animate-[db-roll_.35s_ease-out]')} />
   </Button></Tip>;
 }

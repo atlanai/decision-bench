@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 /* One row: the record as the model saw it, and beside it one card that answers "what was asked, what is right,
    and what did the models say" — the options with the answer key marked and each model's pick counted. */
 import {Fragment, useEffect, useState} from 'react';
@@ -35,7 +36,7 @@ function QuestionCard({c, review}) {
       <div className="px-5 pt-5">
         <div className="text-xs font-medium text-muted-foreground">Question</div>
         <p className="mt-1.5 text-[15px] leading-snug font-semibold text-balance">{B.taskAsk(t) || q.instructions}</p>
-        <button type="button" onClick={() => setInstr(v => !v)} className="mt-2 inline-flex cursor-pointer items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+        <button type="button" aria-expanded={instr} data-track="task_instructions" onClick={() => setInstr(v => !v)} className="mt-2 inline-flex cursor-pointer items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
           Instructions the model received<ChevronDownIcon className={cn('size-3.5 transition-transform', instr && 'rotate-180')} />
         </button>
         {instr && <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{q.instructions}</p>}
@@ -96,7 +97,7 @@ function Answers({c}) {
   if (!rs.length) return <Notice>{B.hasResults() ? 'No model has a result on this row.' : 'No model has been evaluated on this version yet.'}</Notice>;
   const rows = rs.map(r => { const v = B.result(r.id, c.id); return {r, v, ok: B.okOf(v)}; }).sort((a, b) => (a.ok - b.ok) || B.byOrder(a.r, b.r));
   const img = B.isImageTask(c.task), cols = img ? 7 : 6;
-  const toggle = id => setOpen(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const toggle = id => { track('result_toggle', {expanded: !open.has(id)}); setOpen(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; }); };
   const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
   return <>
     <TableCard>
@@ -167,7 +168,7 @@ export function RowView({c, review = false, nav}) {
           <RecordView c={c} />
           <div className="border-t px-5 py-3">
             <div className="flex items-center justify-between gap-3">
-              <button type="button" onClick={() => setRaw(v => !v)} className="inline-flex cursor-pointer items-center gap-1 text-[13px] text-muted-foreground hover:text-foreground">
+              <button type="button" aria-expanded={raw} data-track="raw_record" onClick={() => setRaw(v => !v)} className="inline-flex cursor-pointer items-center gap-1 text-[13px] text-muted-foreground hover:text-foreground">
                 <ChevronRightIcon className={cn('size-4 transition-transform', raw && 'rotate-90')} />Exact input sent to the model (JSON)
               </button>
               {raw && <CopyButton text={exactInput(c)} />}

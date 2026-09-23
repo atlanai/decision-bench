@@ -121,6 +121,6 @@ export function Record({c}) {
 
 export function CopyButton({text, label = 'Copy'}) {
   const [done, setDone] = useState(false);
-  return <Button variant="ghost" size="xs" onClick={() => navigator.clipboard?.writeText(text).then(() => { setDone(true); setTimeout(() => setDone(false), 1500); })}>{done ? <CheckIcon /> : <CopyIcon />}{done ? 'Copied' : label}</Button>;
+  return <Button variant="ghost" size="xs" data-track="copy_record" onClick={() => navigator.clipboard?.writeText(text).then(() => { setDone(true); setTimeout(() => setDone(false), 1500); })}>{done ? <CheckIcon /> : <CopyIcon />}{done ? 'Copied' : label}</Button>;
 }
 export const exactInput = c => JSON.stringify({state: c.state, question: {instructions: c.questions[0].instructions, options: Object.fromEntries(optionOrder(c.questions[0]).map(k => [k, c.questions[0].options[k]]))}}, null, 2);

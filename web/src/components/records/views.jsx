@@ -112,7 +112,7 @@ const AGT2 = ({s}) => { const steps = parseTrace(s.transcript), where = steps.fi
     {first?.text?.trim() !== String(s.user_task || '').trim() && <Block label="User task"><Bubble side="user">{s.user_task}</Bubble></Block>}
     <Block><Callout tone="warn" icon={TriangleAlertIcon} title="Injected instruction, planted in a tool result">
       <div className="max-h-48 overflow-auto font-mono text-xs leading-relaxed whitespace-pre-wrap">{s.injected_text}</div>
-      {where.length > 0 && <div className="mt-2 text-xs text-muted-foreground">The agent receives it at {where.map((n, i) => <Fragment key={n}>{i > 0 && ', '}<a href={`#step-${n}`} onClick={e => { e.preventDefault(); document.getElementById(`step-${n}`)?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="font-medium text-warn underline-offset-2 hover:underline">step {n}</a></Fragment>)}.</div>}
+      {where.length > 0 && <div className="mt-2 text-xs text-muted-foreground">The agent receives it at {where.map((n, i) => <Fragment key={n}>{i > 0 && ', '}<a href={`#step-${n}`} data-track="record_jump" onClick={e => { e.preventDefault(); document.getElementById(`step-${n}`)?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="font-medium text-warn underline-offset-2 hover:underline">step {n}</a></Fragment>)}.</div>}
     </Callout></Block>
     <Fold label="System prompt" preview={String(s.system_prompt || '').split('\n')[0]}><div className="font-mono text-xs leading-relaxed whitespace-pre-wrap text-foreground/85">{s.system_prompt}</div></Fold>
     <Block label="Trace"><Trace lines={s.transcript} injected={s.injected_text} /></Block>
@@ -126,7 +126,7 @@ const AGT3 = ({s}) => <Stack>
 AGT3.uses = ['policy', 'transcript', 'user_scenario'];
 function AGT4({s}) {
   const [hot, setHot] = useState(null), srcs = (s.sources || []).map(x => { const m = String(x).match(/^\s*\[(\d+)\]\s*([\s\S]*)$/); return m ? {n: m[1], text: m[2]} : {n: '', text: String(x)}; });
-  const cite = (n, i) => <button key={i} type="button" onMouseEnter={() => setHot(n)} onMouseLeave={() => setHot(null)} onClick={() => document.getElementById(`src-${n}`)?.scrollIntoView({behavior: 'smooth', block: 'nearest'})} className="mx-0.5 inline-grid h-4 min-w-4 cursor-pointer place-items-center rounded bg-brand-soft px-1 align-[1px] text-[10px] font-semibold text-brand hover:bg-brand hover:text-background">{n}</button>;
+  const cite = (n, i) => <button key={i} type="button" onMouseEnter={() => setHot(n)} onMouseLeave={() => setHot(null)} data-track="citation_jump" onClick={() => document.getElementById(`src-${n}`)?.scrollIntoView({behavior: 'smooth', block: 'nearest'})} className="mx-0.5 inline-grid h-4 min-w-4 cursor-pointer place-items-center rounded bg-brand-soft px-1 align-[1px] text-[10px] font-semibold text-brand hover:bg-brand hover:text-background">{n}</button>;
   return <Stack>
     <Block label="Setting"><p className="text-sm text-muted-foreground">{s.setting}</p></Block>
     <Block label="Conversation"><div className="space-y-3">
@@ -309,7 +309,7 @@ function DOC2({s}) {
   const u = String(s.highlighted_utterance || ''), cut = u.indexOf(':');
   return <Stack>
     <Block label="Meeting"><p className="text-sm text-muted-foreground">{s.meeting}</p></Block>
-    <Block label="Utterance to classify" aside={hot >= 0 && <a href="#hot-turn" onClick={e => { e.preventDefault(); document.getElementById('hot-turn')?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="hover:text-foreground hover:underline">Turn {hot + 1} of {turns.length}</a>}>
+    <Block label="Utterance to classify" aside={hot >= 0 && <a href="#hot-turn" data-track="record_jump" onClick={e => { e.preventDefault(); document.getElementById('hot-turn')?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="hover:text-foreground hover:underline">Turn {hot + 1} of {turns.length}</a>}>
       <div className="flex items-start gap-3 rounded-lg border bg-muted/40 px-4 py-3"><Avatar who={cut > 0 ? u.slice(0, cut) : ''} /><div className="min-w-0"><div className="text-xs text-muted-foreground">{cut > 0 ? u.slice(0, cut) : 'Utterance'}</div><div className="mt-0.5 text-sm leading-relaxed font-medium">{cut > 0 ? u.slice(cut + 1).trim() : u}</div></div></div>
     </Block>
     <Block label="Transcript around it"><Turns turns={turns} hot={hot} /></Block>

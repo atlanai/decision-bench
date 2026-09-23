@@ -30,5 +30,7 @@ jobs:
         run: python3 scripts/check_secrets.py
       - name: Build the site data
         run: python3 -m decision_bench report
+      - name: Analytics consent and event tests
+        run: node --test web/tests/analytics.test.mjs
       - name: Build the viewer
         run: npm ci --prefix web && npm run build --prefix web
