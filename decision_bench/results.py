@@ -10,6 +10,7 @@ See docs/results-format.md for the full schema."""
 from __future__ import annotations
 
 import json
+import math
 import re
 import shutil
 from datetime import datetime, timezone
@@ -320,6 +321,21 @@ def write_leaderboard(suite):
     return board
 
 
+def _same_scores(expected, actual):
+    """Ignore floating-point rounding across Python versions, not changed counts or structure."""
+    if isinstance(expected, float):
+        return (isinstance(actual, (int, float)) and not isinstance(actual, bool)
+                and math.isfinite(expected) and math.isfinite(actual)
+                and math.isclose(expected, actual, rel_tol=1e-12, abs_tol=1e-12))
+    if isinstance(expected, dict):
+        return (isinstance(actual, dict) and expected.keys() == actual.keys()
+                and all(_same_scores(value, actual[key]) for key, value in expected.items()))
+    if isinstance(expected, list):
+        return (isinstance(actual, list) and len(expected) == len(actual)
+                and all(_same_scores(a, b) for a, b in zip(expected, actual)))
+    return type(expected) is type(actual) and expected == actual
+
+
 def check_published(cases, manifest):
     """Consistency checks for committed results (run by `validate` and CI). Returns a list of problems."""
     problems = []
@@ -352,6 +368,7 @@ def check_published(cases, manifest):
             continue
         records, events = records_from_predictions(predictions, metadata["run"]["run_id"])
         expected = scores_summary(summarize(records, case_map, events), manifest)
-        if expected["overall"] != scores.get("overall") or expected["by_task"] != scores.get("by_task"):
+        if (not _same_scores(expected["overall"], scores.get("overall"))
+                or not _same_scores(expected["by_task"], scores.get("by_task"))):
             problems.append(f"{where}: scores.json does not match predictions.jsonl")
     return problems
