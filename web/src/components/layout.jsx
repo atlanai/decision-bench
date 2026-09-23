@@ -20,16 +20,17 @@ function ThemeToggle() {
   return <Tip content={dark ? 'Light mode' : 'Dark mode'}><Button variant="ghost" size="icon-sm" onClick={flip} aria-label="Toggle dark mode">{dark ? <SunIcon /> : <MoonIcon />}</Button></Tip>;
 }
 
-function NavLinks({page, className}) {
+/* Selected page: full-strength text and a straight 2px bar resting on the header's bottom border. No box. */
+function NavLinks({page, className, bar = 'after:-bottom-[12px]'}) {
   const cur = SECTION[page] || page;
   return (
     <nav aria-label="Main navigation" className={cn('flex items-center gap-1', className)}>
-      {NAV.map(([k, h, t]) => (
-        <a key={k} href={h} aria-current={cur === k ? 'page' : undefined}
-          className={cn('inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground', cur === k && 'bg-accent text-foreground')}>
-          {t}{k === 'tasks' && <span className={cn('rounded-full bg-muted px-1.5 text-[11px] leading-[18px] tabular-nums text-muted-foreground', cur === k && 'bg-background text-foreground')}>{taskOrder().length}</span>}
-        </a>
-      ))}
+      {NAV.map(([k, h, t]) => { const on = cur === k;
+        return <a key={k} href={h} aria-current={on ? 'page' : undefined}
+          className={cn('relative inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none',
+            "after:absolute after:inset-x-3 after:h-[2px] after:origin-center after:scale-x-0 after:bg-foreground after:transition-transform after:duration-200 after:content-['']", bar, on && 'text-foreground after:scale-x-100')}>
+          {t}{k === 'tasks' && <span className={cn('rounded-full bg-muted px-1.5 text-[11px] leading-[18px] tabular-nums text-muted-foreground', on && 'text-foreground')}>{taskOrder().length}</span>}
+        </a>; })}
     </nav>
   );
 }
@@ -47,7 +48,7 @@ export function Header({page}) {
           <ThemeToggle />
         </div>
       </div>
-      <NavLinks page={page} className="mx-auto max-w-[1240px] overflow-x-auto px-3 pb-2 [scrollbar-width:none] md:hidden" />
+      <NavLinks page={page} bar="after:-bottom-[8px]" className="mx-auto max-w-[1240px] overflow-x-auto px-3 pb-2 [scrollbar-width:none] md:hidden" />
     </header>
   );
 }

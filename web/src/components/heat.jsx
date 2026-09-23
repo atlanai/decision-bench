@@ -27,9 +27,9 @@ export function HeatTasks({runs, cases}) {
         <table className="w-full min-w-max border-collapse text-[13px]">
           <thead>
             <tr className="border-b">
-              <th className="sticky left-0 z-[1] bg-card py-2 pr-4 pl-5 text-left align-bottom text-[13px] font-medium text-muted-foreground">Task</th>
-              {runs.map(r => <th key={r.id} title={runName(r)} className="w-[72px] min-w-[64px] px-1.5 py-2 text-center align-bottom text-xs font-medium text-muted-foreground">
-                <Logo k={keyOf(r)} className="mx-auto mb-1 block" /><span className="block leading-tight">{ident(r).short}</span></th>)}
+              <th className="sticky left-0 z-[1] bg-card pt-3 pr-4 pb-2 pl-5 text-left align-bottom text-[13px] font-medium text-muted-foreground"><span className="block h-8 leading-4">Task</span></th>
+              {runs.map(r => <th key={r.id} title={runName(r)} className="w-[72px] min-w-[64px] px-1.5 pt-3 pb-2 text-center align-top text-xs font-medium text-muted-foreground">
+                <Logo k={keyOf(r)} className="mx-auto mb-1.5 block" /><span className="line-clamp-2 block h-8 leading-4">{ident(r).short}</span></th>)}
             </tr>
           </thead>
           <tbody>

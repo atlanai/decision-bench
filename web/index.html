@@ -56,6 +56,8 @@
   --color-ring: var(--ring);
   --color-brand: var(--brand);
   --color-brand-soft: var(--brand-soft);
+  --color-pink: var(--pink);
+  --color-pink-soft: var(--pink-soft);
   --color-good: var(--good);
   --color-good-soft: var(--good-soft);
   --color-warn: var(--warn);
@@ -96,6 +98,8 @@
   --ring: oklch(.708 0 0);
   --brand: #2026d2;
   --brand-soft: #eef0fd;
+  --pink: #F34D77;
+  --pink-soft: #FDE6EC;
   --good: #15803d;
   --good-soft: #ecfdf3;
   --warn: #b45309;
@@ -125,6 +129,8 @@
   --ring: oklch(.556 0 0);
   --brand: #a4a9ff;
   --brand-soft: #1c1e3a;
+  --pink: #F34D77;
+  --pink-soft: #3a1621;
   --good: #4ade80;
   --good-soft: #0f2417;
   --warn: #fbbf24;
@@ -159,17 +165,17 @@
   .prose-db a, a.link { @apply text-brand underline-offset-4 hover:underline; }
   /* Use cases on the leaderboard banner: one square per eight rows. Hover (or focus) runs a staggered pop
      along the bar and turns it brand blue; the other use cases step back. */
-  .px { transform-box: fill-box; transform-origin: center; transition: fill .3s ease var(--d); }
+  .px { transform-box: fill-box; transform-origin: center; transition: fill .35s ease var(--d); }
   .px-on { fill: color-mix(in oklab, var(--foreground) 70%, transparent); }
   .px-chip { color: color-mix(in oklab, var(--foreground) 75%, transparent); transition: color .2s ease, opacity .3s ease, filter .3s ease, background-color .2s ease; }
   .px-n { color: var(--muted-foreground); transition: color .2s ease; }
   .px-chip[data-on] { color: var(--brand); }
   .px-chip[data-on] .px-on { fill: var(--brand); }
-  .px-chip:is(:hover, :focus-visible) { color: var(--brand); }
-  .px-chip:is(:hover, :focus-visible) .px-n { color: color-mix(in oklab, var(--brand) 70%, transparent); }
-  .px-chip:is(:hover, :focus-visible) .px-on { fill: var(--brand); animation: px-pop .55s cubic-bezier(.3, .7, .4, 1) var(--d) both; }
+  .px-chip:is(:hover, :focus-visible) { color: var(--pink); }
+  .px-chip:is(:hover, :focus-visible) .px-n { color: color-mix(in oklab, var(--pink) 70%, transparent); }
+  .px-chip:is(:hover, :focus-visible) .px-on { fill: var(--pink); animation: px-pop .7s cubic-bezier(.34, 1.56, .64, 1) var(--d) both; }
   .px-strip:has(.px-chip:hover) .px-chip:not(:hover):not([data-on]) { opacity: .45; filter: saturate(0); }
-  @keyframes px-pop { 0% { transform: none } 30% { transform: translateY(-3px) scale(1.35) } 60% { transform: translateY(.5px) scale(.94) } 100% { transform: none } }
+  @keyframes px-pop { 0% { transform: none } 25% { transform: translateY(-5px) scale(1.45) rotate(8deg) } 55% { transform: translateY(1px) scale(.9) rotate(-3deg) } 80% { transform: translateY(-1px) scale(1.06) } 100% { transform: none } }
   /* Analytics consent, rendered by analytics.js. */
   .analytics-choice { @apply fixed right-4 bottom-4 z-[100] max-w-sm rounded-lg border bg-popover p-4 text-sm text-popover-foreground shadow-lg; }
   .analytics-choice p { @apply mb-3 leading-relaxed; }

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {ArrowDownIcon, ArrowUpIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, compact, num, metric, plural, secs, ciText} from '@/lib/format';
@@ -31,7 +31,7 @@ const PER = 8;
 function UseCases({route}) {
   const cur = route.q.get('category') || '', counts = B.categoryOrder().map(k => [k, B.allCases.filter(c => B.catKey(c) === k).length]);
   return (
-    <div className="w-full lg:max-w-[400px] lg:justify-self-end">
+    <div data-no-trail className="w-full lg:max-w-[400px] lg:justify-self-end">
       <div className="mb-3 flex items-baseline justify-between gap-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">
         <span>Browse by use case</span>
         <span className="inline-flex items-center gap-1.5"><i className="inline-block size-[6px] bg-foreground/70" />= {PER} rows</span>
@@ -50,17 +50,65 @@ function UseCases({route}) {
     </div>
   );
 }
-/* The grid lights up in the brand colour under the cursor. Pointer position goes straight to CSS variables. */
-const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-top';
+/* The banner under the cursor: a pink glow glides after the pointer (eased, so it trails a little), the grid lines
+   around it turn pink, and the cells the pointer crosses light up as pixels that fade out, with a few sparks
+   beside them. Drawn on one canvas; positions go to CSS variables, never through React state. */
+const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-[position:0_0]';
+const CELL = 24;
+function usePixelTrail(ref, canvasRef) {
+  useEffect(() => {
+    const el = ref.current, cv = canvasRef.current; if (!el || !cv) return;
+    const ctx = cv.getContext('2d'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, cells = new Map();
+    let tx = 0, ty = 0, sx = 0, sy = 0, inside = false, raf = 0, last = null, pink = '#F34D77', dpr = 1;
+    const size = () => { dpr = Math.min(2, devicePixelRatio || 1); cv.width = el.clientWidth * dpr; cv.height = el.clientHeight * dpr; cv.style.width = `${el.clientWidth}px`; cv.style.height = `${el.clientHeight}px`; pink = getComputedStyle(el).getPropertyValue('--pink').trim() || pink; };
+    const ro = new ResizeObserver(size); ro.observe(el); size();
+    const light = (c, r, v) => { const k = `${c},${r}`; cells.set(k, Math.max(cells.get(k) || 0, v)); };
+    const frame = () => {
+      raf = 0;
+      sx += (tx - sx) * (reduce ? 1 : .16); sy += (ty - sy) * (reduce ? 1 : .16);
+      el.style.setProperty('--mx', `${sx}px`); el.style.setProperty('--my', `${sy}px`);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.fillStyle = pink;
+      for (const [k, v] of cells) {
+        const [c, r] = k.split(',').map(Number), inset = 3 + (1 - v) * 5;
+        ctx.globalAlpha = v * .5; ctx.fillRect(c * CELL + inset, r * CELL + inset, CELL - 2 * inset + 1, CELL - 2 * inset + 1);
+        const nv = v * (reduce ? 0 : .94); if (nv < .03) cells.delete(k); else cells.set(k, nv);
+      }
+      ctx.globalAlpha = 1;
+      if (inside || cells.size || Math.abs(tx - sx) + Math.abs(ty - sy) > .5) raf = requestAnimationFrame(frame);
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const move = e => {
+      if (e.pointerType !== 'mouse') return;
+      const b = el.getBoundingClientRect(); tx = e.clientX - b.left; ty = e.clientY - b.top;
+      if (!inside) { sx = tx; sy = ty; } inside = true;
+      const c = Math.floor(tx / CELL), r = Math.floor(ty / CELL);
+      /* No pixels behind the use-case list: its own hover wave is the effect there, and the labels stay legible. */
+      if (e.target.closest?.('[data-no-trail]')) { last = null; kick(); return; }
+      if (!reduce && (!last || last[0] !== c || last[1] !== r)) {
+        /* Fill the cells between the last one and this one, so a fast swipe leaves an unbroken trail. */
+        const [c0, r0] = last || [c, r], steps = Math.max(Math.abs(c - c0), Math.abs(r - r0), 1);
+        for (let i = 1; i <= steps; i++) light(Math.round(c0 + (c - c0) * i / steps), Math.round(r0 + (r - r0) * i / steps), 1);
+        for (let i = 0; i < 2; i++) if (Math.random() < .55) light(c + Math.round(Math.random() * 4 - 2), r + Math.round(Math.random() * 2 - 1), .35 + Math.random() * .35);
+        last = [c, r];
+      }
+      kick();
+    };
+    const leave = () => { inside = false; last = null; kick(); };
+    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); ro.disconnect(); cancelAnimationFrame(raf); };
+  }, [ref, canvasRef]);
+}
 function Banner({route}) {
   const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
   const stat = (l, v, t) => <div title={t || undefined} className="flex flex-col-reverse px-6 first:pl-0 last:pr-0"><dt className="mt-1 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">{l}</dt><dd className="font-mono text-2xl font-medium tabular-nums">{v}</dd></div>;
-  const move = e => { const el = e.currentTarget, b = el.getBoundingClientRect(); el.style.setProperty('--mx', `${e.clientX - b.left}px`); el.style.setProperty('--my', `${e.clientY - b.top}px`); };
+  const box = useRef(null), canvas = useRef(null);
+  usePixelTrail(box, canvas);
   return (
-    <div onPointerMove={e => e.pointerType === 'mouse' && move(e)} className={cn('group/banner relative border-b [--grid-line:var(--border)]', GRID)}>
+    <div ref={box} className={cn('group/banner relative overflow-hidden border-b [--grid-line:var(--border)]', GRID)}>
       <div className="relative bg-gradient-to-b from-background/40 via-background/70 to-background">
-        <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/banner:opacity-100 [--grid-line:color-mix(in_oklab,var(--brand)_45%,transparent)] [mask-image:radial-gradient(220px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_70%)]', GRID)} />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/banner:opacity-100 [background:radial-gradient(320px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--brand)_7%,transparent),transparent_70%)]" />
+        <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute top-0 left-0" />
+        <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
         <div className="relative mx-auto grid max-w-[1240px] items-center gap-x-16 gap-y-12 px-4 pt-14 pb-12 md:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
             <p className="mb-5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">Decision Bench · {B.man().version} · real records, open licences</p>

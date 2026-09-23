@@ -21,11 +21,11 @@ const Figure = ({c, className}) => (c.assets || []).filter(a => String(a.mime_ty
 const SPEAKER = ['text-brand', 'text-emerald-600 dark:text-emerald-400', 'text-amber-600 dark:text-amber-400', 'text-pink-600 dark:text-pink-400', 'text-sky-600 dark:text-sky-400'];
 const speakerTone = who => { const m = String(who).match(/\(([A-Z])\)/); return SPEAKER[m ? (m[1].charCodeAt(0) - 65) % SPEAKER.length : 0]; };
 function Turns({turns, hot}) {
-  return <ol className="divide-y rounded-lg border">{turns.map((t, i) => (
-    <li key={i} className={cn('grid gap-x-4 gap-y-0.5 px-3.5 py-2 text-sm sm:grid-cols-[180px_minmax(0,1fr)]', i === hot && 'bg-warn-soft ring-1 ring-warn/40 ring-inset')}>
+  return <ol className="overflow-hidden rounded-lg border">{turns.map((t, i) => { const on = i === hot;
+    return <li key={i} id={on ? 'hot-turn' : undefined} className={cn('grid scroll-mt-28 gap-x-4 gap-y-0.5 border-b px-3.5 py-2 text-sm last:border-0 sm:grid-cols-[180px_minmax(0,1fr)]', on ? 'relative z-[1] bg-pink-soft py-3 ring-2 ring-pink ring-inset' : hot >= 0 && 'text-foreground/70')}>
       <span className={cn('truncate text-[13px] font-medium', speakerTone(t.speaker))} title={t.speaker}>{t.speaker}</span>
-      <span className="leading-relaxed break-words">{t.text}{i === hot && <Badge variant="warn" className="ml-2 align-middle">This utterance</Badge>}</span>
-    </li>))}</ol>;
+      <span className={cn('leading-relaxed break-words', on && 'font-medium text-foreground')}>{t.text}{on && <Badge className="ml-2 border-transparent bg-pink align-middle text-white">Highlighted</Badge>}</span>
+    </li>; })}</ol>;
 }
 const Chips = ({items, mono}) => <div className="flex flex-wrap gap-1.5">{items.map(x => <Badge key={x} variant="outline" className={cn('font-normal', mono && 'font-mono')}>{x}</Badge>)}</div>;
 
@@ -301,11 +301,14 @@ function DOC1({s, c}) {
 }
 DOC1.uses = ['layout_blocks', 'page', 'text_rendering'];
 function DOC2({s}) {
-  const turns = (s.transcript || []).map(t => typeof t === 'string' ? {speaker: t.split(':')[0], text: t.slice(t.indexOf(':') + 1).trim()} : {speaker: t.speaker, text: t.text});
-  const hot = turns.findIndex(t => `${t.speaker}: ${t.text}` === s.highlighted_utterance);
+  const turns = (s.transcript || []).map(t => typeof t === 'string' ? {speaker: t.split(':')[0], text: t.slice(t.indexOf(':') + 1).trim()} : {speaker: t.speaker, text: t.text, highlighted: !!t.highlighted});
+  let hot = turns.findIndex(t => t.highlighted); if (hot < 0) hot = turns.findIndex(t => `${t.speaker}: ${t.text}` === s.highlighted_utterance);
+  const u = String(s.highlighted_utterance || ''), cut = u.indexOf(':');
   return <Stack>
     <Block label="Meeting"><p className="text-sm text-muted-foreground">{s.meeting}</p></Block>
-    <Block label="Utterance to classify"><Callout icon={MessageSquareIcon} title={String(s.highlighted_utterance).split(':')[0]}>{String(s.highlighted_utterance).slice(String(s.highlighted_utterance).indexOf(':') + 1).trim()}</Callout></Block>
+    <Block label="Utterance to classify" aside={hot >= 0 && <a href="#hot-turn" onClick={e => { e.preventDefault(); document.getElementById('hot-turn')?.scrollIntoView({behavior: 'smooth', block: 'center'}); }} className="font-medium text-pink hover:underline">Turn {hot + 1} of {turns.length}</a>}>
+      <div className="rounded-lg border border-pink/30 bg-pink-soft px-4 py-3"><div className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-pink"><MessageSquareIcon className="size-3.5" />{cut > 0 ? u.slice(0, cut) : 'Utterance'}</div><div className="text-sm leading-relaxed font-medium">{cut > 0 ? u.slice(cut + 1).trim() : u}</div></div>
+    </Block>
     <Block label="Transcript around it"><Turns turns={turns} hot={hot} /></Block>
   </Stack>;
 }
