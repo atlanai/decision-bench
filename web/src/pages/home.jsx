@@ -25,28 +25,37 @@ const Link = ({href, children}) => <a href={href} className="text-brand underlin
 const HowToAdd = () => <>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, and open a PR. {B.repoOk() && <Link href={B.gh('results/README.md')}>How to submit results</Link>}</>;
 
 /* ---------- Banner ---------- */
+/* One pixel per eight rows. On hover a wave runs across the pixels column by column (see .px-* in index.html). */
 function PixelStrip({route}) {
   const cur = route.q.get('category') || '';
   return (
-    <div className="flex flex-wrap items-end gap-x-6 gap-y-4">
+    <div className="px-strip flex flex-wrap items-end gap-x-6 gap-y-4">
       {B.categoryOrder().map(k => {
         const n = B.allCases.filter(c => B.catKey(c) === k).length, sq = Math.max(1, Math.round(n / 8)), cols = Math.ceil(sq / 2), per = 6, gap = 2, w = cols * (per + gap) - gap, h = 2 * (per + gap) - gap, on = cur === k;
-        return <a key={k} href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} title={B.catInfo(k).description}
-          className={cn('group flex flex-col gap-1.5 font-mono text-[11px] tracking-[.06em] whitespace-nowrap uppercase transition-colors', on ? 'text-brand' : 'text-foreground/70 hover:text-foreground')}>
-          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">{Array.from({length: cols * 2}, (_, i) => <rect key={i} x={Math.floor(i / 2) * (per + gap)} y={(i % 2) * (per + gap)} width={per} height={per} className={i < sq ? (on ? 'fill-brand' : 'fill-foreground/70 group-hover:fill-foreground') : 'fill-border'} />)}</svg>
-          <span>{B.catInfo(k).name}<span className="ml-1.5 text-muted-foreground">{n}</span></span>
+        return <a key={k} href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} title={B.catInfo(k).description} data-on={on || undefined}
+          className="px-chip flex flex-col gap-1.5 rounded-sm font-mono text-[11px] tracking-[.06em] whitespace-nowrap uppercase outline-offset-4">
+          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true" className="overflow-visible">
+            {Array.from({length: cols * 2}, (_, i) => { const col = Math.floor(i / 2), row = i % 2;
+              return <rect key={i} x={col * (per + gap)} y={row * (per + gap)} width={per} height={per} className={cn('px', i < sq ? 'px-on' : 'px-off')} style={{'--d': `${col * 28 + row * 42}ms`}} />; })}
+          </svg>
+          <span className="px-label">{B.catInfo(k).name}<span className="px-n ml-1.5">{n}</span></span>
         </a>;
       })}
     </div>
   );
 }
+/* The grid lights up in the brand colour under the cursor. Pointer position goes straight to CSS variables. */
+const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-top';
 function Banner({route}) {
   const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
   const kpi = (l, v, s) => <div className="bg-card px-4 py-3"><dt className="font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">{l}</dt><dd className="mt-1 font-mono text-xl font-medium tabular-nums">{v}</dd>{s && <dd className="mt-0.5 font-mono text-[11px] text-muted-foreground">{s}</dd>}</div>;
+  const move = e => { const el = e.currentTarget, b = el.getBoundingClientRect(); el.style.setProperty('--mx', `${e.clientX - b.left}px`); el.style.setProperty('--my', `${e.clientY - b.top}px`); };
   return (
-    <div className="border-b bg-[linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] bg-top [--tw-bg-opacity:.5]">
-      <div className="bg-gradient-to-b from-background/40 via-background/70 to-background">
-        <div className="mx-auto grid max-w-[1240px] items-end gap-10 px-4 pt-12 pb-8 md:px-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,1fr)]">
+    <div onPointerMove={e => e.pointerType === 'mouse' && move(e)} className={cn('group/banner relative border-b [--grid-line:var(--border)]', GRID)}>
+      <div className="relative bg-gradient-to-b from-background/40 via-background/70 to-background">
+        <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/banner:opacity-100 [--grid-line:color-mix(in_oklab,var(--brand)_45%,transparent)] [mask-image:radial-gradient(220px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_70%)]', GRID)} />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/banner:opacity-100 [background:radial-gradient(320px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--brand)_7%,transparent),transparent_70%)]" />
+        <div className="relative mx-auto grid max-w-[1240px] items-end gap-10 px-4 pt-12 pb-8 md:px-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,1fr)]">
           <div>
             <p className="mb-5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">Decision Bench · {B.man().version} · real records, open licences</p>
             <h1 className="max-w-[16ch] font-pixel text-4xl leading-[1.02] uppercase sm:text-5xl lg:text-[52px]">Can a small model make <em className="text-brand not-italic">this decision</em> for you?</h1>
@@ -57,7 +66,7 @@ function Banner({route}) {
             {kpi('Models', models || configured, models ? 'evaluated' : 'configured')}{kpi('Datasets', B.DATASETS.length, 'cited')}
           </dl>
         </div>
-        <div className="mx-auto max-w-[1240px] px-4 pb-8 md:px-8"><PixelStrip route={route} /></div>
+        <div className="relative mx-auto max-w-[1240px] px-4 pb-8 md:px-8"><PixelStrip route={route} /></div>
       </div>
     </div>
   );

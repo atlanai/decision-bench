@@ -145,6 +145,22 @@
   .prose-db p + p { @apply mt-3; }
   .prose-db ul { @apply mt-2 list-disc space-y-1.5 pl-5 marker:text-muted-foreground/60; }
   .prose-db a, a.link { @apply text-brand underline-offset-4 hover:underline; }
+  /* Use-case pixels on the leaderboard banner: hover (or focus) runs a staggered pop across the pixels,
+     turns them brand blue and fills the empty ones; the other use cases step back. */
+  .px { transform-box: fill-box; transform-origin: center; transition: fill .3s ease var(--d), opacity .3s ease var(--d); }
+  .px-on { fill: color-mix(in oklab, var(--foreground) 72%, transparent); }
+  .px-off { fill: var(--border); }
+  .px-chip { color: color-mix(in oklab, var(--foreground) 70%, transparent); transition: color .2s ease, opacity .3s ease, filter .3s ease; }
+  .px-n { color: var(--muted-foreground); transition: color .2s ease; }
+  .px-chip[data-on] { color: var(--brand); }
+  .px-chip[data-on] .px-on { fill: var(--brand); }
+  .px-chip:is(:hover, :focus-visible) { color: var(--brand); }
+  .px-chip:is(:hover, :focus-visible) .px-n { color: color-mix(in oklab, var(--brand) 60%, transparent); }
+  .px-chip:is(:hover, :focus-visible) .px-on { fill: var(--brand); animation: px-pop .6s cubic-bezier(.3, .7, .4, 1) var(--d) both; }
+  .px-chip:is(:hover, :focus-visible) .px-off { fill: color-mix(in oklab, var(--brand) 22%, transparent); animation: px-pop-soft .6s ease var(--d) both; }
+  .px-strip:has(.px-chip:hover) .px-chip:not(:hover):not([data-on]) { opacity: .4; filter: saturate(0); }
+  @keyframes px-pop { 0% { transform: none } 30% { transform: translateY(-3px) scale(1.3) } 60% { transform: translateY(.5px) scale(.94) } 100% { transform: none } }
+  @keyframes px-pop-soft { 0% { transform: none } 40% { transform: translateY(-1.5px) scale(1.12) } 100% { transform: none } }
   /* Analytics consent, rendered by analytics.js. */
   .analytics-choice { @apply fixed right-4 bottom-4 z-[100] max-w-sm rounded-lg border bg-popover p-4 text-sm text-popover-foreground shadow-lg; }
   .analytics-choice p { @apply mb-3 leading-relaxed; }
