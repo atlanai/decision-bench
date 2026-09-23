@@ -39,10 +39,10 @@ export const Ext = ({href, children, className, icon = false}) => isHttp(href)
 
 export function PageHeader({title, description, eyebrow, actions, className}) {
   return (
-    <header className={cn('mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4', className)}>
+    <header className={cn('mb-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 md:mb-8', className)}>
       <div className="min-w-0 max-w-3xl">
         {eyebrow && <div className="mb-2 text-sm font-medium text-muted-foreground">{eyebrow}</div>}
-        <h1 className="text-3xl font-semibold tracking-tight text-balance">{title}</h1>
+        <h1 className="text-[28px] leading-tight font-semibold tracking-tight text-balance md:text-3xl">{title}</h1>
         {description && <p className="mt-2 text-[15px] leading-relaxed text-pretty text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
@@ -57,7 +57,7 @@ export function Notes({items, className}) {
 }
 export function Section({title, description, actions, children, id, className}) {
   return (
-    <section id={id} className={cn('mt-14 scroll-mt-20', className)}>
+    <section id={id} className={cn('mt-10 scroll-mt-28 md:mt-14 lg:scroll-mt-20', className)}>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
@@ -70,9 +70,10 @@ export function Section({title, description, actions, children, id, className}) 
   );
 }
 
+/* Desktop only: on phones and tablets the top bar's Back button and title do this job. */
 export function Crumbs({items}) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+    <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground max-lg:hidden">
       {items.map(([t, h], i) => <Fragment key={i}>
         {i > 0 && <ChevronRightIcon className="size-3.5 opacity-60" />}
         {h ? <a href={h} className="transition-colors hover:text-foreground">{t}</a> : <span className="truncate text-foreground">{t}</span>}
@@ -87,9 +88,9 @@ export const Dash = () => <span className="text-muted-foreground/50">—</span>;
 
 /* Stat tile: label over a large tabular value. */
 export const Stat = ({label, value, sub, className}) => (
-  <div className={cn('rounded-xl border bg-card px-4 py-3.5 shadow-xs', className)}>
-    <div className="text-[13px] text-muted-foreground">{label}</div>
-    <div className="mt-1 flex items-baseline gap-2"><span className="text-2xl font-semibold tracking-tight tabular-nums">{value}</span>{sub && <span className="text-xs text-muted-foreground">{sub}</span>}</div>
+  <div className={cn('min-w-0 rounded-xl border bg-card px-4 py-3.5 shadow-xs', className)}>
+    <div className="truncate text-[13px] text-muted-foreground">{label}</div>
+    <div className="mt-1 flex items-baseline gap-2"><span className="text-xl font-semibold tracking-tight tabular-nums md:text-2xl">{value}</span>{sub && <span className="text-xs text-muted-foreground">{sub}</span>}</div>
   </div>
 );
 

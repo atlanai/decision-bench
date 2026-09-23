@@ -4,9 +4,13 @@ import {Fragment, useEffect, useState} from 'react';
 import {CheckIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon, ExternalLinkIcon, FlagIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, compact, human, hostOf, plural} from '@/lib/format';
-import {href, rowHref, taskHref, dataHref} from '@/lib/route';
+import {href, rowHref, taskHref, dataHref, go, replace} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {Crumbs, Section, Notice, ModelName, EmptyPage, Ext, Notes} from '@/components/common';
+import {Crumbs, Section, Notice, ModelName, Logo, EmptyPage, Ext, Notes} from '@/components/common';
+import {List, Item} from '@/components/list';
+import {Swipe} from '@/components/swipe';
+import {toast} from '@/components/toast';
+import {nextTask} from '@/lib/dice';
 import {Code, CopyButton, exactInput} from '@/components/record';
 import {RecordView} from '@/components/records/views';
 import {TableCard} from '@/pages/task';
@@ -90,6 +94,27 @@ function SourceCard({c}) {
   );
 }
 
+/* What one model said on this row: its probabilities and the raw response. */
+function AnswerDetail({c, r, v}) {
+  const s = v.scores[0], probs = Object.entries(s?.probabilities || {}).sort((a, b) => b[1] - a[1]);
+  return <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+    <div>
+      <h4 className="mb-2 text-xs font-medium text-muted-foreground">Probabilities the model gave</h4>
+      {probs.length ? <div className="space-y-1.5">{probs.map(([l, p]) => <div key={l} className="grid grid-cols-[minmax(0,1fr)_96px_48px] items-center gap-3 text-[13px] max-sm:grid-cols-[minmax(0,1fr)_64px_44px]">
+        <span className="truncate">{B.optLabel(c.task, l)}{l === s.gold && <CheckIcon className="ml-1 inline size-3.5 text-good" />}</span>
+        <span className="h-1.5 overflow-hidden rounded-full bg-foreground/10"><i className="block h-full rounded-full" style={{width: `${p * 100}%`, background: l === s.gold ? 'var(--good)' : l === s.label ? 'var(--bad)' : 'var(--muted-foreground)'}} /></span>
+        <span className="text-right text-xs text-muted-foreground tabular-nums">{pct(p)}</span></div>)}</div> : <p className="text-[13px] text-muted-foreground">No probabilities returned.</p>}
+      {v.error && <p className="mt-3 text-[13px] text-bad">{v.error}</p>}
+    </div>
+    <div>
+      <h4 className="mb-2 text-xs font-medium text-muted-foreground">Raw response</h4>
+      <Code wrap className="max-h-64 bg-background">{v.output_text || v.raw_response || '(not published)'}</Code>
+      <p className="mt-2 text-xs text-muted-foreground">{[B.ident(r).iface, v.status && `status ${v.status}`, v.attempt_count && plural(v.attempt_count, 'attempt'), v.tokens?.input != null && `${compact(v.tokens.input)} in / ${compact(v.tokens.output)} out`, v.cost_usd != null && money(v.cost_usd)].filter(Boolean).join(' · ')}</p>
+    </div>
+  </div>;
+}
+const said = (c, v) => { const s = v.scores[0]; return s?.label != null ? B.optLabel(c.task, s.label) : v.status === 'ok' ? 'no answer' : human(v.status); };
+
 function Answers({c}) {
   const [open, setOpen] = useState(() => new Set());
   const rs = B.RUNS.filter(r => B.result(r.id, c.id));
@@ -99,11 +124,17 @@ function Answers({c}) {
   const toggle = id => setOpen(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
   const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
   return <>
-    <TableCard>
+    {/* Phones: one line per model, tap for the probabilities and the raw response. */}
+    <List className="md:hidden">{rows.map(({r, v, ok}) => { const on = open.has(r.id), k = B.keyOf(r);
+      return <Item key={r.id} onClick={() => toggle(r.id)} aria-expanded={on} chevron={false} lead={<Logo k={k} size={26} className="rounded-lg" />} title={B.ident(r).name}
+        sub={<span className={cn('inline-flex max-w-full items-center gap-1.5', ok ? 'text-foreground/80' : 'text-bad')}><span className={cn('grid size-4 shrink-0 place-items-center rounded-full text-[10px] font-bold', ok ? 'bg-good-soft text-good' : 'bg-bad-soft text-bad')}>{ok ? '✓' : '✗'}</span><span className="truncate">{said(c, v)}</span></span>}
+        trail={<><span className="text-[13px] text-muted-foreground tabular-nums">{pct0(v.scores[0]?.confidence)}</span><ChevronDownIcon className={cn('size-4 text-muted-foreground/60 transition-transform duration-200', on && 'rotate-180')} /></>}>
+        {on && <div className="border-t bg-muted/30 px-4 py-4 motion-safe:animate-fade-in"><AnswerDetail c={c} r={r} v={v} /></div>}
+      </Item>; })}</List>
+    <TableCard className="max-md:hidden">
       <table className="w-full text-sm">
         <thead><tr className="border-b"><th className={TH}>Model</th><th className={TH}>Answer</th><th className={cn(TH, 'text-right')}>Confidence</th><th className={cn(TH, 'text-right')}>Latency</th><th className={cn(TH, 'text-right')}>Cost</th><th className={cn(TH, 'text-right')}>Tokens in / out</th>{img && <th className={TH}>Saw</th>}</tr></thead>
         <tbody>{rows.map(({r, v, ok}) => { const s = v.scores[0], on = open.has(r.id);
-          const probs = Object.entries(s?.probabilities || {}).sort((a, b) => b[1] - a[1]);
           return <Fragment key={r.id}>
             <tr onClick={() => toggle(r.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(r.id); } }} tabIndex={0} aria-expanded={on}
               className={cn('cursor-pointer border-b transition-colors outline-none hover:bg-muted/40 focus-visible:bg-muted/50', on && 'bg-muted/40')}>
@@ -111,7 +142,7 @@ function Answers({c}) {
               <td className="max-w-[280px] px-3 py-2.5">
                 <span className={cn('inline-flex max-w-full items-center gap-1.5', ok ? 'text-foreground' : 'text-bad')}>
                   <span className={cn('grid size-4 shrink-0 place-items-center rounded-full text-[10px] font-bold', ok ? 'bg-good-soft text-good' : 'bg-bad-soft text-bad')}>{ok ? '✓' : '✗'}</span>
-                  <span className="truncate font-medium">{s?.label != null ? B.optLabel(c.task, s.label) : v.status === 'ok' ? 'no answer' : human(v.status)}</span>
+                  <span className="truncate font-medium">{said(c, v)}</span>
                 </span>
               </td>
               <td className="px-3 py-2.5 text-right tabular-nums">{pct0(s?.confidence)}</td>
@@ -120,27 +151,11 @@ function Answers({c}) {
               <td className={cn('px-3 py-2.5 text-right whitespace-nowrap text-muted-foreground tabular-nums', !img && 'pr-5')}>{v.tokens?.input != null ? `${compact(v.tokens.input)} / ${compact(v.tokens.output)}` : '—'}</td>
               {img && <td className="py-2.5 pr-5 pl-3">{v.images_sent ? <Badge variant="brand">image</Badge> : <Badge variant="secondary">text rendering</Badge>}</td>}
             </tr>
-            {on && <tr className="border-b bg-muted/30"><td colSpan={cols} className="px-5 py-4">
-              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-                <div>
-                  <h4 className="mb-2 text-xs font-medium text-muted-foreground">Probabilities the model gave</h4>
-                  {probs.length ? <div className="space-y-1.5">{probs.map(([l, p]) => <div key={l} className="grid grid-cols-[minmax(0,1fr)_96px_48px] items-center gap-3 text-[13px]">
-                    <span className="truncate">{B.optLabel(c.task, l)}{l === s.gold && <CheckIcon className="ml-1 inline size-3.5 text-good" />}</span>
-                    <span className="h-1.5 overflow-hidden rounded-full bg-foreground/10"><i className="block h-full rounded-full" style={{width: `${p * 100}%`, background: l === s.gold ? 'var(--good)' : l === s.label ? 'var(--bad)' : 'var(--muted-foreground)'}} /></span>
-                    <span className="text-right text-xs text-muted-foreground tabular-nums">{pct(p)}</span></div>)}</div> : <p className="text-[13px] text-muted-foreground">No probabilities returned.</p>}
-                  {v.error && <p className="mt-3 text-[13px] text-bad">{v.error}</p>}
-                </div>
-                <div>
-                  <h4 className="mb-2 text-xs font-medium text-muted-foreground">Raw response</h4>
-                  <Code wrap className="max-h-64 bg-background">{v.output_text || v.raw_response || '(not published)'}</Code>
-                  <p className="mt-2 text-xs text-muted-foreground">{[B.ident(r).iface, v.status && `status ${v.status}`, v.attempt_count && plural(v.attempt_count, 'attempt')].filter(Boolean).join(' · ')}</p>
-                </div>
-              </div>
-            </td></tr>}
+            {on && <tr className="border-b bg-muted/30"><td colSpan={cols} className="px-5 py-4"><AnswerDetail c={c} r={r} v={v} /></td></tr>}
           </Fragment>; })}</tbody>
       </table>
     </TableCard>
-    <Notes items={['Wrong answers first; select a model for its probabilities and raw response.', 'Confidence is the probability the model gave its own answer.']} />
+    <Notes items={[<><span className="md:hidden">Wrong answers first; tap a model for its probabilities and raw response.</span><span className="max-md:hidden">Wrong answers first; select a model for its probabilities and raw response.</span></>, 'Confidence is the probability the model gave its own answer.']} />
   </>;
 }
 
@@ -148,11 +163,12 @@ export function RowView({c, review = false, nav}) {
   const t = c.task, rows = B.taskRows(t), i = rows.indexOf(c), d = B.dsOf(c);
   const [raw, setRaw] = useState(false);
   return <>
-    <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
+    <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2 max-lg:hidden">
       <Crumbs items={[['Tasks', href('tasks')], [B.catInfo(B.catKey(c)).name, href('tasks', {category: B.catKey(c)})], [B.taskName(t), taskHref(t)], [`Row ${i + 1}`, '']]} />
       {nav}
     </div>
-    <h1 className="text-2xl font-semibold tracking-tight text-balance break-words">{B.caseTitle(c)}</h1>
+    <a href={href('tasks', {category: B.catKey(c)})} className="mb-1.5 inline-block text-[13px] font-medium text-muted-foreground lg:hidden">{B.catInfo(B.catKey(c)).name}</a>
+    <h1 className="text-[22px] leading-snug font-semibold tracking-tight text-balance break-words md:text-2xl">{B.caseTitle(c)}</h1>
     <p className="mt-1.5 text-sm text-muted-foreground">
       <a href={taskHref(t)} className="font-mono text-xs hover:text-foreground">{t}</a><span className="mx-2 opacity-50">·</span>Row {i + 1} of {rows.length}
       {d && <><span className="mx-2 opacity-50">·</span>from <a href={dataHref(d.id)} className="hover:text-foreground hover:underline">{d.name}</a></>}
@@ -196,11 +212,20 @@ export function RowPage({id}) {
     const on = e => { if (e.metaKey || e.ctrlKey || e.altKey || ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return; if (e.key === 'j' && next) location.hash = rowHref(next); if (e.key === 'k' && prev) location.hash = rowHref(prev); };
     addEventListener('keydown', on); return () => removeEventListener('keydown', on);
   }, [prev, next]);
-  if (!c) return <EmptyPage title="Unknown row"><a href="#/tasks" className="text-brand hover:underline">All tasks</a></EmptyPage>;
+  if (!c) return <EmptyPage title="No such row">It may have left the corpus in this version. <a href="#/tasks" className="text-brand hover:underline">Browse every task</a></EmptyPage>;
   const nav = <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
     <span className="tabular-nums">{i + 1} / {rows.length}</span>
     <Tip content="Previous row (k)"><Button variant="outline" size="icon-sm" asChild aria-disabled={!prev}><a href={prev ? rowHref(prev) : undefined} aria-label="Previous row"><ChevronLeftIcon /></a></Button></Tip>
     <Tip content="Next row (j)"><Button variant="outline" size="icon-sm" asChild aria-disabled={!next}><a href={next ? rowHref(next) : undefined} aria-label="Next row"><ChevronRightIcon /></a></Button></Tip>
   </div>;
-  return <RowView c={c} nav={nav} />;
+  /* Touch screens: swipe the row away for the next one, pull it right for the one before. */
+  const t = c.task, peek = (x, label) => <div className="rounded-2xl border bg-card p-5 shadow-lg">
+    <div className="text-xs font-medium text-muted-foreground">{label} · row {rows.indexOf(x) + 1} of {rows.length}</div>
+    <p className="mt-1.5 line-clamp-3 text-[17px] leading-snug font-semibold">{B.caseTitle(x)}</p>
+  </div>;
+  const left = next ? {label: 'Next', peek: peek(next, 'Up next'), run: () => replace(rowHref(next))}
+    : {off: true, onOff: () => toast(`That's every row in ${B.taskName(t)}.`, {action: ['Roll the dice', () => go(taskHref(nextTask(t)))]})};
+  const right = prev ? {label: 'Previous', peek: peek(prev, 'Before this'), run: () => replace(rowHref(prev))}
+    : {off: true, onOff: () => toast('This is the first row. Swipe left to keep going.')};
+  return <Swipe left={left} right={right} hint="Swipe the card for the next row" hintKey="row-swipe"><RowView c={c} nav={nav} /></Swipe>;
 }

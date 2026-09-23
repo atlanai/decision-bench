@@ -2,9 +2,10 @@ import {useState} from 'react';
 import {BadgeCheckIcon, FileTextIcon, ImageIcon, InfoIcon, ListChecksIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
 import {pct, ms, money, plural, human, cap, ciText, hostOf} from '@/lib/format';
-import {href, rowHref, dataHref} from '@/lib/route';
+import {href, rowHref, dataHref, modelHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {Crumbs, Section, Notice, ModelName, Fit, Meter, EmptyPage, Ext, Notes} from '@/components/common';
+import {Crumbs, Section, Notice, ModelName, Logo, Fit, Meter, EmptyPage, Ext, Notes} from '@/components/common';
+import {List, Item} from '@/components/list';
 import {Expandable} from '@/components/records/kit';
 import {Tip} from '@/components/ui/tooltip';
 import {Strip, HowToAdd} from '@/pages/home';
@@ -32,7 +33,7 @@ const Prop = ({label, hint, children}) => (
 export function TaskPage({id: t}) {
   const [sort, setSort] = useState('order'), [all, setAll] = useState(false);
   const rows = B.taskRows(t);
-  if (!rows.length) return <EmptyPage title="Unknown task"><a href="#/tasks" className="text-brand hover:underline">All tasks</a></EmptyPage>;
+  if (!rows.length) return <EmptyPage title="No such task">It may have been renamed in this version. <a href="#/tasks" className="text-brand hover:underline">Browse every task</a></EmptyPage>;
   const i = B.taskInfo(t), q0 = rows[0].questions[0], cat = B.taskCat(t), ds = B.datasetsOfTask(t), man = B.man(), img = B.isImageTask(t);
   const nOpts = Object.keys(q0.options).length, by = rows[0].source?.labelled_by || '';
   /* How the task works, in three steps: what the model reads, what it chooses between, what the answer is checked against. */
@@ -52,7 +53,7 @@ export function TaskPage({id: t}) {
           <span className="font-mono text-xs">{t}</span><span aria-hidden="true">·</span><a href={href('tasks', {category: cat})} className="hover:text-foreground">{B.catInfo(cat).name}</a>
           {img && <Badge variant="outline" className="ml-1 font-normal text-muted-foreground"><ImageIcon />Image input</Badge>}
         </div>
-        <h1 className="text-3xl font-semibold tracking-tight text-balance">{B.taskName(t)}</h1>
+        <h1 className="text-[28px] leading-tight font-semibold tracking-tight text-balance md:text-3xl">{B.taskName(t)}</h1>
         <p className="mt-2 max-w-[62ch] text-[15px] leading-relaxed text-muted-foreground">{B.taskBlurb(t)}</p>
 
         <ol className="mt-6 grid overflow-hidden rounded-xl border bg-card shadow-xs max-sm:divide-y sm:grid-cols-3 sm:divide-x">
@@ -95,7 +96,12 @@ export function TaskPage({id: t}) {
     </div>
 
     <Section title="Results on this task" description={`${plural(rows.length, 'row')} each. Fits: accuracy at or above 90% with the whole 95% interval above 85%. Risky: above 80%. Not fit: below 80%.`}>
-      {metrics.length ? <TableCard>
+      {metrics.length ? <>
+      <List className="md:hidden">{metrics.map(([r, m]) => { const k = B.keyOf(r);
+        return <Item key={r.id} href={modelHref(k)} chevron={false} lead={<Logo k={k} size={28} className="rounded-lg" />} title={B.runName(r)}
+          sub={`95% CI ${ciText(m.wilson)} · ${ms(m.latency.p50)} · ${money(m.costPer1k)}/1k${m.errors ? ` · ${m.errors} unanswered` : ''}`}
+          trail={<span className="flex flex-col items-end gap-1"><span className="text-[15px] font-semibold tabular-nums">{pct(m.accuracy)}</span><Fit v={B.verdict(m)} /></span>} />; })}</List>
+      <TableCard className="max-md:hidden">
         <table className="w-full text-sm">
           <thead><tr className="border-b"><th className={TH}>Model</th><th className={TH}>Accuracy</th><th className={cn(TH, 'text-right')}>95% interval</th><th className={cn(TH, 'text-right')}>Latency</th><th className={cn(TH, 'text-right')}>$ / 1k rows</th><th className={cn(TH, 'text-right')}>No answer</th><th className={TH}>Verdict</th></tr></thead>
           <tbody>{metrics.map(([r, m]) => <tr key={r.id} className="border-b last:border-0 hover:bg-muted/40">
@@ -108,13 +114,16 @@ export function TaskPage({id: t}) {
             <td className={TD}><Fit v={B.verdict(m)} /></td>
           </tr>)}</tbody>
         </table>
-      </TableCard> : <Notice>{B.hasResults() ? 'No model has results on this task yet.' : <>No model has been evaluated on this version yet. <HowToAdd /></>}</Notice>}
+      </TableCard></> : <Notice>{B.hasResults() ? 'No model has results on this task yet.' : <>No model has been evaluated on this version yet. <HowToAdd /></>}</Notice>}
       {B.isImageTask(t) && metrics.length > 0 && <Notes items={['Text-only models saw a text rendering, not the image.', 'Models never sent this task are not listed.']} />}
     </Section>
 
     <Section title="Rows" description="Every record in this task with its answer key. Open a row to read the record as the model saw it."
-      actions={<Tabs value={sort} onValueChange={setSort}><TabsList aria-label="Sort rows"><TabsTrigger value="order">Corpus order</TabsTrigger><TabsTrigger value="hardest">Hardest first</TabsTrigger><TabsTrigger value="title">Title</TabsTrigger></TabsList></Tabs>}>
-      <TableCard>
+      actions={<Tabs value={sort} onValueChange={setSort} className="max-md:w-full"><TabsList aria-label="Sort rows" className="max-md:w-full"><TabsTrigger value="order">Corpus order</TabsTrigger><TabsTrigger value="hardest">Hardest first</TabsTrigger><TabsTrigger value="title">Title</TabsTrigger></TabsList></Tabs>}>
+      <List className="md:hidden">{shown.map(c => { const st = B.caseStats(c);
+        return <Item key={c.id} href={rowHref(c)} wrap lead={<span className="w-6 text-[13px] text-muted-foreground tabular-nums">{rows.indexOf(c) + 1}</span>} title={B.caseTitle(c)} sub={`Key: ${B.goldText(c)}`}
+          trail={st.n ? <span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums"><span className={cn('font-medium', st.ok < st.n ? 'text-foreground' : 'text-muted-foreground')}>{st.ok}</span>/{st.n}</span> : null} />; })}</List>
+      <TableCard className="max-md:hidden">
         <table className="w-full text-sm">
           <thead><tr className="border-b"><th className={cn(TH, 'w-12')}>#</th><th className={TH}>Row</th><th className={TH}>Answer key</th><th className={cn(TH, 'text-right')}>Models right</th></tr></thead>
           <tbody>{shown.map(c => <tr key={c.id} onClick={e => { if (!e.target.closest('a')) location.hash = rowHref(c); }} className="cursor-pointer border-b last:border-0 hover:bg-muted/40">
@@ -125,7 +134,7 @@ export function TaskPage({id: t}) {
           </tr>)}</tbody>
         </table>
       </TableCard>
-      {rows.length > shown.length && <div className="mt-4 flex justify-center"><Button variant="outline" onClick={() => setAll(true)}>Show all {rows.length} rows</Button></div>}
+      {rows.length > shown.length && <div className="mt-4 flex justify-center"><Button variant="outline" className="max-md:h-11 max-md:w-full max-md:rounded-xl" onClick={() => setAll(true)}>Show all {rows.length} rows</Button></div>}
     </Section>
   </>;
 }

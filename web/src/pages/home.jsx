@@ -1,20 +1,23 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ArrowDownIcon, ArrowUpIcon, ChevronDownIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, compact, num, metric, plural, secs, ciText} from '@/lib/format';
-import {href, withQ, rowHref, taskHref, catHref} from '@/lib/route';
+import {href, withQ, rowHref, taskHref, catHref, modelHref} from '@/lib/route';
+import {haptic, reducedMotion, usePhone} from '@/lib/device';
 import {tip} from '@/components/tip';
 import {cn} from '@/lib/utils';
-import {ModelName, Section, Notice, Dash, Notes} from '@/components/common';
+import {ModelName, Logo, Section, Notice, Dash, Notes} from '@/components/common';
+import {List, Item} from '@/components/list';
 import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns} from '@/components/filters';
 import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
+import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
 
 const scopeCases = route => { const cat = route.q.get('category') || '', mod = route.q.get('modality') || ''; return B.rowsInOrder().filter(c => (!cat || B.catKey(c) === cat) && (!mod || (mod === 'image') === B.isImageTask(c.task))); };
 export const ChartCard = ({title, description, foot, children, className}) => (
-  <div className={cn('min-w-0 rounded-xl border bg-card p-5 shadow-xs', className)}>
+  <div className={cn('min-w-0 rounded-xl border bg-card p-4 shadow-xs md:p-5', className)}>
     <h3 className="text-sm font-semibold">{title}</h3>
     {description && <p className="mt-0.5 mb-4 text-xs text-muted-foreground">{description}</p>}
     {children}
@@ -26,25 +29,26 @@ const HowToAdd = () => <>Results are added by pull request: run a model on every
 const SubmitLink = () => B.repoOk() ? <Link href={B.gh('results/README.md')}>How to submit results</Link> : null;
 
 /* ---------- Banner ---------- */
-/* Rows by use case as a small pixel bar chart, one square per eight rows. Each line filters the leaderboard.
+/* Rows by use case as a small pixel bar chart, one square per eight rows (ten on phones). Each line filters the leaderboard.
    On hover a wave runs across the squares (see .px-* in index.html) and the caption under the list says what the
    use case covers, in place, so nothing floats over the chart. The caption keeps a fixed two-line height: the block
    is centred in the banner, so a caption that grew or shrank would shift the whole list. */
 const PER = 8;
 function UseCases({route}) {
   const cur = route.q.get('category') || '', counts = B.categoryOrder().map(k => [k, B.allCases.filter(c => B.catKey(c) === k).length]);
-  const [hot, setHot] = useState(''), shown = hot || cur;
+  /* Phones: a square per ten rows, so the longest bar still clears its count. */
+  const [hot, setHot] = useState(''), shown = hot || cur, per = usePhone() ? 10 : PER;
   return (
-    <div data-no-trail className="w-full rounded-xl border bg-background/90 p-4 shadow-xs backdrop-blur-sm lg:max-w-[420px] lg:justify-self-end">
-      <div className="mb-3 flex items-baseline justify-between gap-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">
+    <div data-no-trail className="w-full rounded-xl border bg-background/90 p-3 shadow-xs backdrop-blur-sm sm:p-4 lg:max-w-[420px] lg:justify-self-end">
+      <div className="mb-3 flex items-baseline justify-between gap-4 px-0.5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase sm:px-0">
         <span>Browse by use case</span>
-        <span className="inline-flex items-center gap-1.5"><i className="inline-block size-[6px] bg-foreground/70" />= {PER} rows</span>
+        <span className="inline-flex items-center gap-1.5"><i className="inline-block size-[6px] bg-foreground/70" />= {per} rows</span>
       </div>
       <ul className="px-strip -mx-2" onPointerLeave={() => setHot('')}>
-        {counts.map(([k, n]) => { const on = cur === k, sq = Math.max(1, Math.round(n / PER)), w = sq * 8 - 2;
+        {counts.map(([k, n]) => { const on = cur === k, sq = Math.max(1, Math.round(n / per)), w = sq * 8 - 2;
           return <li key={k}><a href={href('', {category: on ? '' : k, modality: route.q.get('modality') || ''})} aria-describedby="use-case-note" data-on={on || undefined} aria-current={on || undefined}
             onPointerEnter={() => setHot(k)} onFocus={() => setHot(k)} onBlur={() => setHot('')}
-            className="px-chip grid grid-cols-[10rem_minmax(0,1fr)_2.25rem] items-center gap-3 rounded-md px-2 py-[5px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-muted focus-visible:bg-muted">
+            className="px-chip grid grid-cols-[7.75rem_minmax(0,1fr)_1.75rem] items-center gap-2 rounded-md px-1.5 py-[7px] font-mono text-[11px] tracking-[.06em] uppercase outline-offset-0 hover:bg-muted focus-visible:bg-muted active:bg-muted sm:grid-cols-[10rem_minmax(0,1fr)_2.25rem] sm:gap-3 sm:px-2 sm:py-[5px]">
             <span className="px-label truncate">{B.catInfo(k).name}</span>
             <svg width={w} height="6" viewBox={`0 0 ${w} 6`} aria-hidden="true" className="overflow-visible">
               {Array.from({length: sq}, (_, i) => <rect key={i} x={i * 8} y="0" width="6" height="6" className="px px-on" style={{'--d': `${i * 22}ms`}} />)}
@@ -104,13 +108,20 @@ function usePixelTrail(ref, canvasRef) {
       kick();
     };
     const leave = () => { inside = false; last = null; delete el.dataset.calm; kick(); };
-    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
-    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); ro.disconnect(); cancelAnimationFrame(raf); };
+    /* No hover on a touch screen: a tap sets off a small burst of pixels where the finger lands instead. */
+    const tap = e => {
+      if (e.pointerType === 'mouse' || reduce || e.target.closest?.('[data-no-trail],a,button')) return;
+      const b = el.getBoundingClientRect(), c = Math.floor((e.clientX - b.left) / CELL), r = Math.floor((e.clientY - b.top) / CELL);
+      light(c, r, 1); for (let i = 0; i < 9; i++) light(c + Math.round(Math.random() * 4 - 2), r + Math.round(Math.random() * 4 - 2), .35 + Math.random() * .6);
+      haptic(6); kick();
+    };
+    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave); el.addEventListener('pointerdown', tap);
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('pointerdown', tap); ro.disconnect(); cancelAnimationFrame(raf); };
   }, [ref, canvasRef]);
 }
 function Banner({route}) {
   const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
-  const stat = (l, v, t) => <div title={t || undefined} className="flex flex-col-reverse px-6 first:pl-0 last:pr-0"><dt className="mt-1 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">{l}</dt><dd className="font-mono text-2xl font-medium tabular-nums">{v}</dd></div>;
+  const stat = (l, v, t) => <div title={t || undefined} className="flex min-w-0 flex-col-reverse px-3 first:pl-0 last:pr-0 sm:px-6"><dt className="mt-1 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase sm:text-[11px]">{l}</dt><dd className="font-mono text-xl font-medium tabular-nums sm:text-2xl">{v}</dd></div>;
   const box = useRef(null), canvas = useRef(null);
   usePixelTrail(box, canvas);
   return (
@@ -119,12 +130,12 @@ function Banner({route}) {
         <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute top-0 left-0" />
         <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
-        <div className="relative mx-auto grid max-w-[1240px] items-center gap-x-16 gap-y-12 px-4 pt-14 pb-12 md:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
+        <div className="relative mx-auto grid max-w-[1240px] items-center gap-x-16 gap-y-10 px-4 pt-8 pb-10 md:px-8 md:pt-14 md:gap-y-12 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
-            <p className="mb-5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase">Decision Bench · {B.man().version} · real records, open licences</p>
+            <p className="mb-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase md:mb-5"><span className="max-md:hidden">Decision Bench · </span>{B.man().version} · real records, open licences</p>
             <h1 className="max-w-[16ch] font-pixel text-4xl leading-[1.02] uppercase sm:text-5xl lg:text-[52px]">Can a small model make <em className="text-brand not-italic">this decision</em> for you?</h1>
             <p className="mt-5 max-w-[48ch] text-base leading-relaxed text-foreground/75">Route a ticket, spot an injection, check a contract: real records from <Link href="#/data">open datasets</Link>, each answered by its source, never by a model.</p>
-            <dl className="mt-8 flex flex-wrap gap-y-4 divide-x">
+            <dl className="mt-7 flex gap-y-4 divide-x sm:mt-8 sm:flex-wrap">
               {stat('rows', num(rows), imgs ? `${num(imgs)} with images` : '')}{stat('tasks', B.taskOrder().length)}{stat(models ? 'models' : 'configured', models || configured)}{stat('datasets', B.DATASETS.length)}
             </dl>
           </div>
@@ -143,9 +154,11 @@ const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
 function LeaderboardSection({route, runs, cases}) {
   const [more, setMore] = useState(false), cat = route.q.get('category') || '';
-  const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground" title="Tokens, macro F1, calibration and errors" aria-expanded={more} onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
-  return <Section id="leaderboard" title="Leaderboard" actions={toggle} description={`${cat ? `${B.catInfo(cat).name} rows` : 'All rows'}${route.q.get('modality') ? ` · ${route.q.get('modality')} inputs` : ''}. Click a column to re-sort.`} className="mt-8">
-    <Leaderboard route={route} runs={runs} cases={cases} more={more} />
+  const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground max-md:hidden" title="Tokens, macro F1, calibration and errors" aria-expanded={more} onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
+  const scope = `${cat ? `${B.catInfo(cat).name} rows` : 'All rows'}${route.q.get('modality') ? ` · ${route.q.get('modality')} inputs` : ''}`;
+  return <Section id="leaderboard" title="Leaderboard" actions={toggle} description={<><span className="max-md:hidden">{scope}. Click a column to re-sort.</span><span className="md:hidden">{scope} · {plural(cases.length, 'row')} in {new Set(cases.map(c => c.task)).size} tasks.</span></>} className="mt-6 md:mt-8">
+    <div className="md:hidden"><LeaderList runs={runs} cases={cases} /></div>
+    <div className="max-md:hidden"><Leaderboard route={route} runs={runs} cases={cases} more={more} /></div>
   </Section>;
 }
 function Leaderboard({route, runs, cases, more}) {
@@ -169,7 +182,7 @@ function Leaderboard({route, runs, cases, more}) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead><tr className="border-b text-left align-bottom [&>th]:py-2">
-            <Th title="1 + the number of models whose 95% interval lies entirely above this one" className="w-10">#</Th><Th>Model</Th>
+            <Th title="1 + the number of models whose 95% interval lies entirely above this one" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
@@ -180,7 +193,8 @@ function Leaderboard({route, runs, cases, more}) {
             {sorted.map(([r, m]) => { const ci = m.wilson, tp = m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0);
               return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40">
                 <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{m.questions ? B.rankOf(m, all) : '—'}</td>
-                <td className="px-3 py-2.5"><ModelName k={B.keyOf(r)} /></td>
+                {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
+                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><ModelName k={B.keyOf(r)} /></td>
                 <td className="px-3 py-2.5" data-tip={tip(B.runName(r), [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(ci)], ['Correct', `${m.correct}/${m.questions}`]])}>
                   <span className="flex items-center gap-3 whitespace-nowrap">
                     <span className="w-12 font-semibold tabular-nums">{pct(m.accuracy)}</span>
@@ -203,6 +217,42 @@ function Leaderboard({route, runs, cases, more}) {
       B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
       B.unevaluated().length > 0 && <>Not yet evaluated: {B.unevaluated().map(k => B.M(k).short).join(', ')}. <SubmitLink /></>,
     ]} />
+  </>;
+}
+
+/* Phones: the leaderboard as a list, re-sorted by a segmented control. A row that moved settles in with a short
+   nudge from the side it came from and a quick fade; no travel across the list. */
+function useSettle(ref, key) {
+  const at = useRef(new Map());
+  useLayoutEffect(() => {
+    const items = [...(ref.current?.querySelectorAll('[data-flip]') || [])], next = new Map(items.map(n => [n.dataset.flip, n.offsetTop]));
+    if (at.current.size && !reducedMotion()) for (const n of items) { const d = (at.current.get(n.dataset.flip) ?? next.get(n.dataset.flip)) - next.get(n.dataset.flip); if (Math.abs(d) > 1) n.animate([{opacity: .45, transform: `translateY(${Math.sign(d) * Math.min(16, Math.abs(d))}px)`}, {opacity: 1, transform: 'none'}], {duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)'}); }
+    at.current = next;
+  }, [ref, key]);
+}
+const BY = {accuracy: ['Most accurate', m => m.accuracy, -1, m => pct(m.accuracy)], latency: ['Fastest', m => m.latency.p50, 1, m => ms(m.latency.p50)], cost: ['Cheapest', m => m.costPer1k, 1, m => money(m.costPer1k)]};
+function LeaderList({runs, cases}) {
+  const [key, setKey] = useState('accuracy'), box = useRef(null), [, val, dir, show] = BY[key];
+  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), all = metrics.map(([, m]) => m);
+  const sorted = metrics.slice().sort(([, a], [, b]) => { const va = val(a), vb = val(b); if (va == null) return 1; if (vb == null) return -1; return dir * (va - vb) || b.accuracy - a.accuracy; });
+  const los = metrics.flatMap(([, m]) => m.wilson || []), [d0] = los.length ? zoomDomain(los, .1) : [0], cx = v => `${(v - d0) / (1 - d0 || 1) * 100}%`;
+  useSettle(box, key);
+  const others = m => Object.entries(BY).filter(([k]) => k !== key).map(([k, [, , , f]]) => `${f(m)}${k === 'cost' ? ' / 1k' : ''}`).join(' · ');
+  return <>
+    <Tabs value={key} onValueChange={v => { haptic(); setKey(v); }} className="mb-3">
+      <TabsList aria-label="Sort the leaderboard" className="h-10 w-full rounded-xl">{Object.entries(BY).map(([k, [t]]) => <TabsTrigger key={k} value={k} className="rounded-[9px]">{t}</TabsTrigger>)}</TabsList>
+    </Tabs>
+    <div ref={box}><List>
+      {sorted.map(([r, m], i) => { const k = B.keyOf(r), id = B.ident(r), ci = m.wilson;
+        return <Item key={r.id} data-flip={r.id} href={modelHref(k)} chevron={false}
+          lead={<><span className="w-5 text-center text-[13px] text-muted-foreground tabular-nums">{key === 'accuracy' ? B.rankOf(m, all) : i + 1}</span><Logo k={k} size={30} className="ml-2 rounded-lg" /></>}
+          title={id.name} sub={<>{id.iface && id.iface !== 'API' && <>{id.iface} · </>}{others(m)}</>}
+          trail={<span className="flex flex-col items-end gap-1.5">
+            <span className="text-[15px] font-semibold tabular-nums">{show(m)}</span>
+            {key === 'accuracy' && ci && <span className="relative block h-1.5 w-14" aria-hidden="true"><i className="absolute inset-x-0 top-[2.5px] h-px bg-border" /><i className="absolute top-0.5 h-0.5 rounded-full bg-foreground/25" style={{left: cx(ci[0]), width: `calc(${cx(ci[1])} - ${cx(ci[0])})`}} /><b className="absolute top-0 h-1.5 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}
+          </span>} />; })}
+    </List></div>
+    <Notes items={[key === 'accuracy' && 'Overlapping 95% intervals share a rank.', B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => B.ident(r).short).join(', ')}.`, 'Tap a model for its fit by use case.']} />
   </>;
 }
 
@@ -238,8 +288,10 @@ function Tradeoffs({runs, cases}) {
 function HardestRows({cases}) {
   const items = cases.map(c => ({c, st: B.caseStats(c)})).filter(x => x.st.n >= 2 && x.st.ok < x.st.n).sort((a, b) => (b.st.n - b.st.ok) / b.st.n - (a.st.n - a.st.ok) / a.st.n || b.st.n - a.st.n).slice(0, 12);
   if (!items.length) return <p className="text-sm text-muted-foreground">Every evaluated model agrees with every answer key in this selection.</p>;
-  return (
-    <div className="overflow-hidden rounded-xl border bg-card shadow-xs"><div className="overflow-x-auto">
+  return <>
+    <List className="md:hidden">{items.map(({c, st}) => <Item key={c.id} href={rowHref(c)} wrap title={B.caseTitle(c)} sub={`${B.taskName(c.task)} · key: ${B.goldText(c)}`}
+      trail={<span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums"><span className="font-medium text-foreground">{st.ok}</span>/{st.n}</span>} />)}</List>
+    <div className="overflow-hidden rounded-xl border bg-card shadow-xs max-md:hidden"><div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead><tr className="border-b text-left text-[13px] text-muted-foreground"><th className="h-10 pl-5 font-medium">Row</th><th className="px-3 font-medium">Task</th><th className="px-3 font-medium">Answer key</th><th className="px-3 font-medium">Models answered</th><th className="pr-5 text-right font-medium">Models right</th></tr></thead>
         <tbody>{items.map(({c, st}) => (
@@ -252,7 +304,7 @@ function HardestRows({cases}) {
           </tr>))}</tbody>
       </table>
     </div></div>
-  );
+  </>;
 }
 export const Strip = ({st}) => st.n ? <span className="inline-flex items-center gap-2 whitespace-nowrap"><span className="tabular-nums">{st.ok}/{st.n}</span><span className="inline-flex gap-0.5" aria-hidden="true">{st.dots.map(d => <i key={d.k} title={`${B.fullName(d.k)}: ${d.ok ? 'correct' : 'wrong'}`} className={cn('h-2.5 w-[5px] rounded-[1px]', d.ok ? 'bg-good/40' : 'bg-bad')} />)}</span></span> : <Dash />;
 
@@ -269,12 +321,13 @@ export function Home({route}) {
   return <>
     <Banner route={route} />
     <div className="mx-auto max-w-[1240px] px-4 pb-20 md:px-8">
-      {cat && <div className="pt-10"><div className="text-sm font-medium text-muted-foreground">Use case</div><h2 className="mt-1 text-3xl font-semibold tracking-tight">{B.catInfo(cat).name}</h2><p className="mt-2 text-[15px] text-muted-foreground">{B.catInfo(cat).description} <Link href={href('tasks', {category: cat})}>See the tasks</Link></p></div>}
-      <div className="z-30 -mx-4 mt-6 flex md:sticky md:top-14 flex-wrap items-center gap-2 bg-background/85 px-4 py-3 backdrop-blur-md md:-mx-8 md:px-8">
-        <UseCaseSelect route={route} className="min-w-44" />
-        {B.allCases.some(c => B.isImageTask(c.task)) && <ModalityTabs route={route} />}
+      {cat && <div className="pt-8 md:pt-10"><div className="text-sm font-medium text-muted-foreground">Use case</div><h2 className="mt-1 text-2xl font-semibold tracking-tight md:text-3xl">{B.catInfo(cat).name}</h2><p className="mt-2 text-[15px] text-muted-foreground">{B.catInfo(cat).description} <Link href={href('tasks', {category: cat})}>See the tasks</Link></p></div>}
+      {/* Sticky under the top bar; on phones one line of chips that scrolls sideways. */}
+      <div className="sticky top-[calc(env(safe-area-inset-top)+48px)] z-30 -mx-4 flex items-center gap-2 overflow-x-auto bg-background/85 px-4 py-2.5 backdrop-blur-md [scrollbar-width:none] md:-mx-8 md:mt-6 md:flex-wrap md:overflow-visible md:px-8 md:py-3 lg:top-14">
+        <UseCaseSelect route={route} className="shrink-0 md:min-w-44" />
+        {B.allCases.some(c => B.isImageTask(c.task)) && <div className="shrink-0 max-md:order-last"><ModalityTabs route={route} /></div>}
         {B.RUNS.length > 0 && <ModelPicker route={route} />}
-        <span className="ml-auto text-[13px] text-muted-foreground tabular-nums">{plural(cases.length, 'row')} · {new Set(cases.map(c => c.task)).size} tasks</span>
+        <span className="ml-auto text-[13px] text-muted-foreground tabular-nums max-md:hidden">{plural(cases.length, 'row')} · {new Set(cases.map(c => c.task)).size} tasks</span>
       </div>
       {!B.hasResults() ? <>
         <Section title="Leaderboard"><Notice>No model has been evaluated on this version yet. <HowToAdd /></Notice></Section>
@@ -282,9 +335,10 @@ export function Home({route}) {
       </> : !runs.length ? <Section title="Leaderboard"><Notice>No selected model has results on these rows.</Notice></Section> : <>
         <LeaderboardSection route={route} runs={runs} cases={cases} />
         <Section title="Accuracy, speed and cost"><Headline runs={runs} cases={cases} /></Section>
-        <Section title="Accuracy by task" description="Only misses are coloured; faded cells are at or above 95%. Click a task to open it."><HeatTasks runs={runs} cases={cases} /></Section>
+        <Section title="Accuracy by task" description={<>Only misses are coloured; faded cells are at or above 95%. Open a task for its rows.<span className="md:hidden"> Scroll sideways for every model.</span></>}><HeatTasks runs={runs} cases={cases} /></Section>
         <Section title="Trade-offs"><Tradeoffs runs={runs} cases={cases} /></Section>
-        <Section title="Every row" description="Each column is one row, in the same position for every model. Hover for the row; click to open it.">
+        {/* Hover-driven and 1,000 columns wide: desktop and tablet only. */}
+        <Section title="Every row" className="max-md:hidden" description="Each column is one row, in the same position for every model. Hover for the row; click to open it.">
           <div className="rounded-xl border bg-card p-5 shadow-xs">
             <Legend items={[['cell', 'var(--grid-ok)', 'Correct'], ['cell', 'var(--bad)', 'Wrong'], ['hatch', '', 'No valid answer'], ['box', 'var(--border)', 'Not run'], ['bar', 'var(--bad)', 'Bar: how many models got the row wrong']]} />
             <RecordGrid runs={runs.slice().sort((a, b) => B.subsetMetrics(b, cases).accuracy - B.subsetMetrics(a, cases).accuracy)} cases={cases} />

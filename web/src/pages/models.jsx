@@ -4,7 +4,8 @@ import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, metric, plural, ciText} from '@/lib/format';
 import {href, modelHref, catHref, taskHref, rowHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {PageHeader, Crumbs, Section, Notice, ModelName, Fit, Meter, Stat, EmptyPage, Dash, Notes} from '@/components/common';
+import {PageHeader, Crumbs, Section, Notice, ModelName, Logo, Fit, Meter, Stat, EmptyPage, Dash, Notes} from '@/components/common';
+import {List, Item} from '@/components/list';
 import {Reliability, Risk} from '@/components/charts';
 import {Code} from '@/components/record';
 import {ChartCard, HowToAdd} from '@/pages/home';
@@ -20,8 +21,12 @@ export function Models() {
   const keys = B.ORDER.filter(k => B.MODELS[k].configured);
   return <>
     <PageHeader title="Models" description={<>Every model the harness can run, with the request options and prices used. {B.hasResults() ? 'Open a model for its fit by use case, its failures and its calibration.' : <HowToAdd />}</>}
-      actions={B.RUNS.length > 1 && <Button variant="outline" asChild><a href={href('compare')}>Compare two models</a></Button>} />
-    <TableCard>
+      actions={B.RUNS.length > 1 && <Button variant="outline" asChild className="max-md:h-11 max-md:w-full max-md:rounded-xl"><a href={href('compare')}>Compare two models</a></Button>} />
+    <List className="md:hidden">{keys.map(k => { const m = B.M(k), run = B.RUNS.find(r => B.keyOf(r) === k), mm = run ? B.subsetMetrics(run, B.allCases) : null;
+      return <Item key={k} href={modelHref(k)} lead={<Logo k={k} size={30} className="rounded-lg" />} title={B.fullName(k)}
+        sub={[m.vendor, m.vision ? 'Text and images' : 'Text only', mm && ms(mm.latency.p50)].filter(Boolean).join(' · ')}
+        trail={mm ? <span className="text-[15px] font-semibold tabular-nums">{pct(mm.accuracy)}</span> : <span className="text-xs text-muted-foreground">Not run yet</span>} />; })}</List>
+    <TableCard className="max-md:hidden">
       <table className="w-full text-sm">
         <thead><tr className="border-b"><th className={TH}>Model</th><th className={TH}>Vendor</th><th className={TH}>Interface</th><th className={TH}>Model name sent</th><th className={TH}>Input</th><th className={cn(TH, 'text-right')}>Accuracy</th><th className={cn(TH, 'text-right')}>Latency</th><th className={cn(TH, 'text-right')}>$ / 1k rows</th></tr></thead>
         <tbody>{keys.map(k => { const m = B.M(k), run = B.RUNS.find(r => B.keyOf(r) === k), mm = run ? B.subsetMetrics(run, B.allCases) : null;
@@ -44,17 +49,17 @@ export function Models() {
 export function ModelPage({id: k}) {
   const [adv, setAdv] = useState(false);
   const m = B.MODELS[k];
-  if (!m) return <EmptyPage title="Unknown model"><a href="#/models" className="text-brand hover:underline">All models</a></EmptyPage>;
+  if (!m) return <EmptyPage title="No such model">It isn't in this version of the bench. <a href="#/models" className="text-brand hover:underline">See every model</a></EmptyPage>;
   const run = B.RUNS.find(r => B.keyOf(r) === k) || B.PARTIAL.find(r => B.keyOf(r) === k);
   const head = <>
     <Crumbs items={[['Models', href('models')], [m.name, '']]} />
     <div className="flex items-center gap-4">
-      {m.logo && <img src={m.logo} alt="" width="48" height="48" className="size-12 rounded-xl border bg-white object-contain p-1" />}
-      <div className="min-w-0"><h1 className="text-3xl font-semibold tracking-tight">{m.name}</h1>
+      {m.logo && <img src={m.logo} alt="" width="48" height="48" className="size-12 shrink-0 rounded-xl border bg-white object-contain p-1" />}
+      <div className="min-w-0"><h1 className="text-[26px] leading-tight font-semibold tracking-tight md:text-3xl">{m.name}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{[m.vendor, m.iface, m.vision ? 'text and images' : 'text only'].filter(Boolean).join(' · ')}{m.api_model && <> · sent as <code>{m.api_model}</code></>}</p></div>
     </div>
   </>;
-  const details = json => <div className="mt-10"><Button variant="ghost" size="sm" className="-ml-2 text-muted-foreground" onClick={() => setAdv(v => !v)}><ChevronRightIcon className={cn('transition-transform', adv && 'rotate-90')} />Request options, prices and run record</Button>{adv && <Code className="mt-2">{JSON.stringify(json, null, 2)}</Code>}</div>;
+  const details = json => <div className="mt-10"><Button variant="ghost" size="sm" className="-ml-2 whitespace-normal text-left text-muted-foreground max-md:h-auto max-md:py-2" onClick={() => setAdv(v => !v)}><ChevronRightIcon className={cn('transition-transform', adv && 'rotate-90')} />Request options, prices and run record</Button>{adv && <Code className="mt-2">{JSON.stringify(json, null, 2)}</Code>}</div>;
   if (!run) return <>{head}<Notice className="mt-8">This model is configured but has not been evaluated on this version. <HowToAdd /></Notice>{m.request && details({request: m.request, pricing: m.pricing})}</>;
   const all = B.subsetMetrics(run, B.allCases), textCases = B.allCases.filter(c => !B.isImageTask(c.task));
   const fits = B.taskOrder().map(t => [t, B.verdict(B.subsetMetrics(run, B.taskRows(t)))]), count = x => fits.filter(([, v]) => v.k === x).length;
@@ -62,12 +67,15 @@ export function ModelPage({id: k}) {
   const others = B.RUNS.filter(r => r !== run);
   return <>
     {head}
-    <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-5">
+    <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:grid-cols-5 [&>:last-child:nth-child(odd)]:max-md:col-span-2">
       <Stat label="Accuracy" value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
       <Stat label="$ / 1k rows" value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
     <Section title="Fit by use case" description="Fits: accuracy at or above 90% with the whole 95% interval above 85%. Risky: above 80%. Not fit: below 80%.">
-      <TableCard><table className="w-full text-sm">
+      <List className="md:hidden">{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
+        return <Item key={c} href={catHref(c)} chevron={false} title={B.catInfo(c).name} sub={best ? `Best: ${B.ident(best[0]).short}, ${pct0(best[1].accuracy)}` : ''}
+          trail={<span className="flex flex-col items-end gap-1"><span className="text-[15px] font-semibold tabular-nums">{mm.questions ? pct(mm.accuracy) : '—'}</span><Fit v={B.verdict(mm)} /></span>} />; })}</List>
+      <TableCard className="max-md:hidden"><table className="w-full text-sm">
         <thead><tr className="border-b"><th className={TH}>Use case</th><th className={TH}>This model</th><th className={cn(TH, 'text-right')}>Best model</th><th className={TH}>Verdict</th></tr></thead>
         <tbody>{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
           return <tr key={c} onClick={go(catHref(c))} className="cursor-pointer border-b last:border-0 hover:bg-muted/40">
@@ -88,7 +96,11 @@ export function ModelPage({id: k}) {
       </div>
     </Section>
     <Section title="Where it fails while most models succeed" description="The likeliest places to look before using this model. Each opens the row.">
-      {fails.length ? <TableCard><table className="w-full text-sm">
+      {fails.length ? <>
+      <List className="md:hidden">{fails.map(({c, st, v}) => <Item key={c.id} href={rowHref(c)} wrap title={B.caseTitle(c)}
+        sub={<>{B.taskName(c.task)} · key {B.goldText(c)} · <span className="text-bad">said {B.answerOf(v)}</span></>}
+        trail={<span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums">{st.ok}/{st.n} right</span>} />)}</List>
+      <TableCard className="max-md:hidden"><table className="w-full text-sm">
         <thead><tr className="border-b"><th className={TH}>Row</th><th className={TH}>Task</th><th className={TH}>Answer key</th><th className={TH}>This model said</th><th className={cn(TH, 'text-right')}>Others right</th></tr></thead>
         <tbody>{fails.map(({c, st, v}) => <tr key={c.id} onClick={go(rowHref(c))} className="cursor-pointer border-b last:border-0 hover:bg-muted/40">
           <td className={cn(TD, 'max-w-[340px]')}><a href={rowHref(c)} className="line-clamp-2 font-medium hover:underline">{B.caseTitle(c)}</a></td>
@@ -97,7 +109,7 @@ export function ModelPage({id: k}) {
           <td className={cn(TD, 'max-w-[220px] text-bad')}><span className="line-clamp-1">{B.answerOf(v)}</span></td>
           <td className={cn(TD, 'text-right tabular-nums')}>{st.ok}/{st.n}</td>
         </tr>)}</tbody>
-      </table></TableCard> : <p className="text-sm text-muted-foreground">No row where this model is wrong while most others are right.</p>}
+      </table></TableCard></> : <p className="text-sm text-muted-foreground">No row where this model is wrong while most others are right.</p>}
     </Section>
     <Section title="Confidence" description={`Expected calibration error ${metric(all.ece)} · Brier ${metric(all.brier)} · ${plural(all.highConfErrors, 'wrong answer')} given with 90% confidence or more.`}>
       <div className="grid gap-4 lg:grid-cols-2">
