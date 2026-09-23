@@ -71,7 +71,10 @@ DATASETS = {}
 # those rows carry the same licence.
 PERMISSIVE = {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "CC0-1.0", "Public domain",
               "CC-BY-3.0", "CC-BY-4.0", "CC-BY-SA-3.0", "CC-BY-SA-4.0", "ODC-BY-1.0", "CDLA-Permissive-1.0",
-              "CDLA-Permissive-2.0"}
+              "CDLA-Permissive-2.0",
+              # The CVE Program's Terms of Use (SPDX cve-tou): a perpetual, royalty-free licence to reproduce and
+              # distribute CVE records, provided MITRE's copyright notice is kept.
+              "cve-tou"}
 DATASET_FIELDS = ("id", "name", "tasks", "homepage", "license", "license_url", "content", "content_license",
                   "content_terms", "labelled_by", "changes", "selection", "citation", "bibtex")
 
