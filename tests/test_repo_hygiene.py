@@ -15,11 +15,18 @@ spec.loader.exec_module(check_secrets)
 
 # Assembled at runtime so this file does not contain the strings it looks for.
 INTERNAL_HOST = "llm" + "proxy." + "at" + "lan" + ".dev"
-COMPANY_URL = re.compile(r"(?i)[a-z][a-z0-9+.-]*://[^\s\"'<>)]*" + "at" + "lan")
+COMPANY_URL = dict(check_secrets.PROJECT_RE)["company URL"]
 HOME = re.compile(r"/" + r"Users/[A-Za-z]")
 
 
 class RepoHygiene(unittest.TestCase):
+    def test_only_this_public_repository_is_exempt_from_company_url_rule(self):
+        base = "https://github.com/at" + "lanai/decision-bench"
+        self.assertEqual(check_secrets.scan_text("README.md", base + "/issues"), [])
+        for url in (base + "-private", base + "/../private", base.replace("github.com", "github.com.evil.test"),
+                    base.replace("decision-bench", "private-repo")):
+            self.assertTrue(check_secrets.scan_text("README.md", url), url)
+
     def test_scanner_finds_nothing_in_the_repository(self):
         findings = check_secrets.scan(ROOT)
         self.assertEqual(findings, [], "\n".join(f"{f[0]}:{f[1]} {f[2]}" for f in findings))
@@ -33,7 +40,8 @@ class RepoHygiene(unittest.TestCase):
                 continue
             text = data.decode("utf-8", errors="replace")
             self.assertNotIn(INTERNAL_HOST, text, rel)
-            self.assertIsNone(COMPANY_URL.search(text), rel)
+            self.assertTrue(all(check_secrets.public_repository_url(m.group(0))
+                                for m in COMPANY_URL.finditer(text)), rel)
             self.assertIsNone(HOME.search(text), rel)
 
     def test_scanner_catches_planted_problems(self):

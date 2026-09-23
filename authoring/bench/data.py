@@ -362,7 +362,7 @@ def _datasets():
     dataset(
         id="congress-legislators", name="congress-legislators (legislators-current.csv)", tasks=["DAT-4"],
         homepage="https://github.com/unitedstates/congress-legislators", license="CC0-1.0",
-        license_url=f"https://github.com/unitedstates/congress-legislators/blob/{LEG_COMMIT}/LICENSE",
+        license_url="https://github.com/unitedstates/congress-legislators/blob/8a3c7e6987f890b32e56058f7ddbdf380860b4a3/LICENSE",
         content=("Fifteen values from one column of legislators-current.csv, the public roster of current members of "
                  "the United States Congress maintained by the @unitedstates project, with the file's other headers."),
         content_license="CC0-1.0",

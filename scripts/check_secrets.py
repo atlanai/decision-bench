@@ -14,6 +14,7 @@ import math
 import re
 import subprocess
 import sys
+from urllib.parse import urlsplit
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,7 +38,7 @@ CREDENTIALS = [
 # Checked in code, config and docs. Strings are split so this file does not match itself.
 PROJECT = [
     ("internal proxy host", "llm" + "proxy"),
-    ("company URL", r"(?i)[a-z][a-z0-9+.-]*://[^\s\"'<>)]*" + "at" + "lan"),
+    ("company URL", r"(?i)[a-z][a-z0-9+.-]*://[^\s\"'<>)]*" + "at" + "lan" + r"[^\s\"'<>)]*"),
     ("private hostname", r"(?i)\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:internal|corp|intranet|lan)\b(?![\w-])"),
     ("private IP address", r"\b(?:10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})\b"),
     ("home directory", r"(?<![\w.])/" + r"Users/[A-Za-z0-9._-]+|(?<![\w.])/" + r"home/[a-z][a-z0-9_-]*/|[A-Z]:\\" + r"Users\\"),
@@ -48,6 +49,18 @@ PLACEHOLDER = re.compile(r"EXAMPLE|X{8,}|0{16,}")
 ASSIGNMENT = re.compile(r"(?i)(?:api[_-]?key|secret|token|password|passwd)[\"']?\s*[:=]\s*[\"']([A-Za-z0-9/+_.=-]{20,})[\"']")
 CREDENTIAL_RE = [(name, re.compile(p)) for name, p in CREDENTIALS]
 PROJECT_RE = [(name, re.compile(p)) for name, p in PROJECT]
+
+
+def public_repository_url(value):
+    """The public project destination is allowed; other company URLs remain findings."""
+    try:
+        parsed = urlsplit(value)
+    except ValueError:
+        return False
+    repository = "/at" + "lanai/decision-bench"
+    return (parsed.scheme == "https" and parsed.netloc == "github.com"
+            and ".." not in parsed.path.split("/")
+            and (parsed.path == repository or parsed.path.startswith(repository + "/")))
 
 
 def entropy(s):
@@ -73,6 +86,8 @@ def scan_text(rel, text):
     for lineno, line in enumerate(text.splitlines(), 1):
         for name, rx in rules:
             for m in rx.finditer(line):
+                if name == "company URL" and public_repository_url(m.group(0)):
+                    continue
                 if not PLACEHOLDER.search(m.group(0)):
                     findings.append((rel, lineno, name, "[REDACTED]"))
                     break

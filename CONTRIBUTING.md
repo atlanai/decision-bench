@@ -14,7 +14,7 @@ Rights holders and people named in a row can ask for it to be removed with the *
 ## Set up
 
 ```sh
-git clone https://github.com/OWNER/decision-bench && cd decision-bench
+git clone https://github.com/atlanai/decision-bench && cd decision-bench
 python3 -m decision_bench validate
 make check        # tests, validate, secret scan, JS syntax
 ```

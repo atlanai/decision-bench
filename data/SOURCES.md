@@ -42,7 +42,7 @@ If you are a rights holder and want a row removed, open an issue using the *Data
 | [WikiTableQuestions (test set)](#wikitablequestions) | DAT-2 (30) | 30 | [CC-BY-SA-4.0](https://github.com/ppasupat/WikiTableQuestions/blob/7d455a5a707b96341ef72aff9428749d443d8aa9/LICENSE) | CC-BY-SA-3.0 | the crowd worker who wrote the question (the dataset's targetValue), checked by the authors' verification pass |
 | [Our World in Data grapher charts](#owid-grapher) | DAT-3 (32) | 32 | [CC-BY-4.0](https://ourworldindata.org/faqs#can-i-reuse-or-republish-your-charts) | same | a written rule: the claim is compared with the chart's own CSV values (see the module docstring) |
 | [FiveThirtyEight data repository](#fivethirtyeight) | DAT-4 (20) | 20 | [CC-BY-4.0](https://github.com/fivethirtyeight/data/blob/4c1ff5e3aef1816ae04af63218015066e186c147/LICENSE) | same | a written mapping from the column's real header to one of seven meanings (MAPPING in the module) |
-| [congress-legislators (legislators-current.csv)](#congress-legislators) | DAT-4 (3) | 3 | [CC0-1.0](https://github.com/unitedstates/congress-legislators/blob/73e2fcd181e1c48d1b0580d417e8d0314b22f7c9/LICENSE) | same | a written mapping from the column's real header to one of seven meanings (MAPPING in the module) |
+| [congress-legislators (legislators-current.csv)](#congress-legislators) | DAT-4 (3) | 3 | [CC0-1.0](https://github.com/unitedstates/congress-legislators/blob/8a3c7e6987f890b32e56058f7ddbdf380860b4a3/LICENSE) | same | a written mapping from the column's real header to one of seven meanings (MAPPING in the module) |
 | [U.S. Treasury Fiscal Data](#fiscal-data) | DAT-4 (5) | 5 | [Public domain](https://fiscaldata.treasury.gov/api-documentation/#license-and-authorization) | same | a written mapping from the column's real header to one of seven meanings (MAPPING in the module) |
 | [Federal Register documents API](#federal-register) | DAT-4 (6) | 6 | [Public domain](https://www.govinfo.gov/about/policies#copyright) | same | a written mapping from the column's real header to one of seven meanings (MAPPING in the module) |
 | [DocLayNet v1.2](#doclaynet) | DOC-1 (30) | 30 | [CDLA-Permissive-1.0](https://huggingface.co/datasets/docling-project/DocLayNet-v1.2) | same | DocLayNet's own doc_category metadata, assigned by the dataset's curators when the documents were collected (human labels) |
@@ -255,7 +255,7 @@ If you are a rights holder and want a row removed, open an issue using the *Data
 - **Homepage:** https://huggingface.co/datasets/deepset/prompt-injections
 - **License:** [Apache-2.0](https://huggingface.co/datasets/deepset/prompt-injections/blob/4f61ecb038e9c3fb77e21034b22511b523772cdd/README.md)
 - **What a row contains:** Short chat prompts in English and German, some benign and some trying to override an assistant's instructions, published by deepset; the card does not say who wrote them.
-- **Terms of that text:** Apache-2.0. The card's license field is apache-2.0 (a second, misplaced cc-by-4.0 entry inside its dataset_info block is also permissive). No upstream source or other terms are documented for the prompts.
+- **Terms of that text:** Apache-2.0. The pinned card declares Apache-2.0 at the top level and CC-BY-4.0 inside dataset_info. Both are permissive, but the differing declarations are preserved as a release-review question rather than assuming one is a mistake. No upstream source or other terms are documented for the prompts. See docs/data-release-review.md.
 - **Answers from:** the dataset's human annotators (label 0 benign, 1 injection)
 - **How rows were chosen:** Records are screened by the written rules in this module's docstring (language, length, a broad offensive-vocabulary block list, no e-mail addresses, phone numbers, web addresses or named private individuals), mapped to an answer by keyword rules, then taken in sha256 order of the record id. English only, at least 6 words, no German-politics essays, near-duplicates collapsed. Mix: 10 injection, 6 benign.
 - **What we changed:** None to the text: prompts are shown verbatim. Label 1 is mapped to injection only when an override cue is present and no persona cue is; other label-1 rows are skipped.
@@ -734,7 +734,7 @@ If you are a rights holder and want a row removed, open an issue using the *Data
 ## congress-legislators (legislators-current.csv)
 
 - **Homepage:** https://github.com/unitedstates/congress-legislators
-- **License:** [CC0-1.0](https://github.com/unitedstates/congress-legislators/blob/73e2fcd181e1c48d1b0580d417e8d0314b22f7c9/LICENSE)
+- **License:** [CC0-1.0](https://github.com/unitedstates/congress-legislators/blob/8a3c7e6987f890b32e56058f7ddbdf380860b4a3/LICENSE)
 - **What a row contains:** Fifteen values from one column of legislators-current.csv, the public roster of current members of the United States Congress maintained by the @unitedstates project, with the file's other headers.
 - **Terms of that text:** CC0-1.0. The project dedicates the data to the public domain under CC0 1.0 (LICENSE file); the values are public official records (birth dates, parties, states, government identifiers).
 - **Answers from:** a written mapping from the column's real header to one of seven meanings (MAPPING in the module)

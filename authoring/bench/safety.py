@@ -107,9 +107,10 @@ def _datasets():
             content="Short chat prompts in English and German, some benign and some trying to override an "
                     "assistant's instructions, published by deepset; the card does not say who wrote them.",
             content_license="Apache-2.0",
-            content_terms="The card's license field is apache-2.0 (a second, misplaced cc-by-4.0 entry inside its "
-                          "dataset_info block is also permissive). No upstream source or other terms are "
-                          "documented for the prompts.",
+            content_terms="The pinned card declares Apache-2.0 at the top level and CC-BY-4.0 inside dataset_info. "
+                          "Both are permissive, but the differing declarations are preserved as a release-review "
+                          "question rather than assuming one is a mistake. No upstream source or other terms "
+                          "are documented for the prompts. See docs/data-release-review.md.",
             labelled_by="the dataset's human annotators (label 0 benign, 1 injection)",
             changes="None to the text: prompts are shown verbatim. Label 1 is mapped to injection only when an "
                     "override cue is present and no persona cue is; other label-1 rows are skipped.",

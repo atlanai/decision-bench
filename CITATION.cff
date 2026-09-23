@@ -6,3 +6,5 @@ authors:
   - name: "Decision Bench contributors"
 version: "4.0.0"
 license: MIT
+repository-code: "https://github.com/atlanai/decision-bench"
+url: "https://github.com/atlanai/decision-bench"

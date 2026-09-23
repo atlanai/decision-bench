@@ -1,0 +1,1131 @@
+{
+  "reviewed_at": "2026-09-23",
+  "status": "publication_decisions_required",
+  "method": "All committed corpus state fields scanned for common email, SSN and telephone patterns; candidate contexts reviewed. Active image contact sheets visually inspected. License labels and source policy evidence reviewed; not a legal clearance.",
+  "corpora": [
+    {
+      "path": "data/corpus/bench-v3/cases.jsonl",
+      "file_sha256": "0d3a205999dd2f9f37f40ca55a2d6e55e8f3fc16633da64405cc6f6d89913ff3",
+      "rows": 359,
+      "dataset_counts": {
+        "deepset-prompt-injections": 16,
+        "in-the-wild-jailbreak-prompts": 14,
+        "llmail-inject-challenge": 24,
+        "creddata": 24,
+        "agentrx": 25,
+        "whoandwhen": 22,
+        "swe-agent-trajectories": 24,
+        "bfcl-v3-live": 30,
+        "banking77": 30,
+        "cfpb-complaints": 28,
+        "begin": 14,
+        "hagrid": 14,
+        "mt-bench-human": 28,
+        "contractnli": 30,
+        "written": 36
+      },
+      "identifier_candidates": {
+        "email": [
+          {
+            "row_id": "pi-2-llmail-9549e6e9",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-e27722d2",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-dddf2f43",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 2
+          },
+          {
+            "row_id": "pi-2-llmail-1d48808d",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-03f18c6e",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-2b07b2f4",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-449262cd",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 2
+          },
+          {
+            "row_id": "pi-2-llmail-2196d49b",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 3
+          },
+          {
+            "row_id": "pi-2-llmail-f244bb5b",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-c6eea5b8",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-f5df0899",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 1
+          },
+          {
+            "row_id": "pi-2-llmail-71f6a453",
+            "dataset_id": "llmail-inject-challenge",
+            "count": 3
+          },
+          {
+            "row_id": "pii-2-creddata-31185",
+            "dataset_id": "creddata",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-72-s21",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-82-s20",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-34-s21",
+            "dataset_id": "agentrx",
+            "count": 3
+          },
+          {
+            "row_id": "tc-1-tau-79-s20",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-21-s28",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-98-s21",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-12-s19",
+            "dataset_id": "agentrx",
+            "count": 4
+          },
+          {
+            "row_id": "tc-1-tau-34-s17",
+            "dataset_id": "agentrx",
+            "count": 3
+          },
+          {
+            "row_id": "tc-1-tau-32-s11",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-tau-74-s24",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "sk-1-base-05",
+            "dataset_id": "written",
+            "count": 2
+          },
+          {
+            "row_id": "sk-2-stress-01a",
+            "dataset_id": "written",
+            "count": 5
+          },
+          {
+            "row_id": "sk-2-stress-01b",
+            "dataset_id": "written",
+            "count": 5
+          },
+          {
+            "row_id": "sk-2-stress-02a",
+            "dataset_id": "written",
+            "count": 1
+          },
+          {
+            "row_id": "sk-2-stress-02b",
+            "dataset_id": "written",
+            "count": 1
+          }
+        ],
+        "ssn": [],
+        "phone": [
+          {
+            "row_id": "tc-1-m1-797f7a5b65ca-s51",
+            "dataset_id": "agentrx",
+            "count": 2
+          },
+          {
+            "row_id": "tc-1-m1-8ad84bd6fe38-s18",
+            "dataset_id": "agentrx",
+            "count": 3
+          },
+          {
+            "row_id": "tc-1-m1-a9074997e698-s52",
+            "dataset_id": "agentrx",
+            "count": 1
+          },
+          {
+            "row_id": "tc-1-m1-b36ef2d8f264-s21",
+            "dataset_id": "agentrx",
+            "count": 11
+          },
+          {
+            "row_id": "tc-2-ag-105",
+            "dataset_id": "whoandwhen",
+            "count": 1
+          },
+          {
+            "row_id": "tc-2-hc-6",
+            "dataset_id": "whoandwhen",
+            "count": 1
+          },
+          {
+            "row_id": "tc-2-ag-103",
+            "dataset_id": "whoandwhen",
+            "count": 3
+          }
+        ]
+      },
+      "unique_assets": 0
+    },
+    {
+      "path": "data/corpus/bench-v4/cases.jsonl",
+      "file_sha256": "cef3a413bd27063c9023d4779e2fe12ef4a10979be4765b3d27ec2e43f3aecf4",
+      "rows": 1071,
+      "dataset_counts": {
+        "swe-bench-verified": 30,
+        "commitpackft": 60,
+        "nvd": 30,
+        "creddata": 30,
+        "bfcl-v3-live": 36,
+        "agentdojo": 30,
+        "tau-bench": 30,
+        "hagrid": 30,
+        "mt-bench-human": 28,
+        "deepset-prompt-injections": 16,
+        "in-the-wild-jailbreak-prompts": 14,
+        "civil-comments": 30,
+        "cfpb-complaints": 67,
+        "amazon-esci": 30,
+        "amazon-berkeley-objects": 30,
+        "edgar-corpus-10k-business": 30,
+        "edgar-corpus": 30,
+        "sec-edgar-8k": 30,
+        "cord-v2": 30,
+        "finer-139": 31,
+        "contractnli": 33,
+        "cuad": 60,
+        "lexglue-unfair-tos": 33,
+        "upworthy-archive": 30,
+        "changelogs-bsd": 6,
+        "changelogs-mit": 24,
+        "spider": 30,
+        "wikitablequestions": 30,
+        "owid-grapher": 32,
+        "fivethirtyeight": 20,
+        "congress-legislators": 3,
+        "fiscal-data": 5,
+        "federal-register": 6,
+        "doclaynet": 30,
+        "ami": 57,
+        "material-symbols": 30
+      },
+      "identifier_candidates": {
+        "email": [
+          {
+            "row_id": "eng-4-creddata-31185",
+            "dataset_id": "creddata",
+            "count": 1
+          },
+          {
+            "row_id": "eng-5-2a014c0b2955",
+            "dataset_id": "commitpackft",
+            "count": 3
+          },
+          {
+            "row_id": "agt-2-meta-llama-llama-3.3-70b-instruct-slack-u20-direct-i3",
+            "dataset_id": "agentdojo",
+            "count": 4
+          },
+          {
+            "row_id": "agt-2-meta-llama-llama-3.3-70b-instruct-travel-u13-ignore-previous-i2",
+            "dataset_id": "agentdojo",
+            "count": 1
+          },
+          {
+            "row_id": "agt-2-gpt-4o-2024-05-13-workspace-u1-ignore-previous-i0",
+            "dataset_id": "agentdojo",
+            "count": 11
+          },
+          {
+            "row_id": "agt-2-gpt-4o-2024-05-13-travel-u7-direct-i2",
+            "dataset_id": "agentdojo",
+            "count": 1
+          },
+          {
+            "row_id": "agt-2-gpt-4o-2024-05-13-workspace-u16-ignore-previous-i5",
+            "dataset_id": "agentdojo",
+            "count": 15
+          },
+          {
+            "row_id": "agt-2-meta-llama-llama-3.3-70b-instruct-workspace-u29-direct-i9",
+            "dataset_id": "agentdojo",
+            "count": 3
+          },
+          {
+            "row_id": "agt-2-meta-llama-llama-3.3-70b-instruct-travel-u7-direct-i2",
+            "dataset_id": "agentdojo",
+            "count": 1
+          },
+          {
+            "row_id": "agt-2-meta-llama-llama-3.3-70b-instruct-workspace-u3-ignore-previous-i11",
+            "dataset_id": "agentdojo",
+            "count": 6
+          },
+          {
+            "row_id": "agt-2-command-r-plus-slack-u10-important-instructions-i5",
+            "dataset_id": "agentdojo",
+            "count": 2
+          },
+          {
+            "row_id": "agt-2-gpt-4o-2024-05-13-slack-u3-tool-knowledge-i5",
+            "dataset_id": "agentdojo",
+            "count": 5
+          },
+          {
+            "row_id": "agt-2-claude-3-5-sonnet-20241022-slack-u17-important-instructions-i3",
+            "dataset_id": "agentdojo",
+            "count": 4
+          },
+          {
+            "row_id": "agt-2-gpt-4o-mini-2024-07-18-slack-u0-important-instructions-i5",
+            "dataset_id": "agentdojo",
+            "count": 3
+          },
+          {
+            "row_id": "agt-3-retail-8-3",
+            "dataset_id": "tau-bench",
+            "count": 2
+          },
+          {
+            "row_id": "agt-3-retail-10-3",
+            "dataset_id": "tau-bench",
+            "count": 4
+          },
+          {
+            "row_id": "agt-3-retail-84-0",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-retail-88-3",
+            "dataset_id": "tau-bench",
+            "count": 4
+          },
+          {
+            "row_id": "agt-3-retail-61-0",
+            "dataset_id": "tau-bench",
+            "count": 3
+          },
+          {
+            "row_id": "agt-3-retail-18-1",
+            "dataset_id": "tau-bench",
+            "count": 3
+          },
+          {
+            "row_id": "agt-3-airline-4-0",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-retail-111-3",
+            "dataset_id": "tau-bench",
+            "count": 4
+          },
+          {
+            "row_id": "agt-3-retail-11-2",
+            "dataset_id": "tau-bench",
+            "count": 4
+          },
+          {
+            "row_id": "agt-3-airline-6-0",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-retail-48-0",
+            "dataset_id": "tau-bench",
+            "count": 2
+          },
+          {
+            "row_id": "agt-3-retail-57-2",
+            "dataset_id": "tau-bench",
+            "count": 2
+          },
+          {
+            "row_id": "agt-3-retail-55-0",
+            "dataset_id": "tau-bench",
+            "count": 11
+          },
+          {
+            "row_id": "agt-3-airline-1-1",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-retail-69-1",
+            "dataset_id": "tau-bench",
+            "count": 3
+          },
+          {
+            "row_id": "agt-3-retail-20-1",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-airline-45-3",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-airline-15-1",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-airline-37-0",
+            "dataset_id": "tau-bench",
+            "count": 1
+          },
+          {
+            "row_id": "agt-3-airline-7-2",
+            "dataset_id": "tau-bench",
+            "count": 1
+          }
+        ],
+        "ssn": [],
+        "phone": [
+          {
+            "row_id": "com-2-abo-b07nhs2zjb",
+            "dataset_id": "amazon-berkeley-objects",
+            "count": 1
+          },
+          {
+            "row_id": "com-3-edgar-887919-2020",
+            "dataset_id": "edgar-corpus-10k-business",
+            "count": 1
+          }
+        ]
+      },
+      "unique_assets": 106
+    }
+  ],
+  "active_license_evidence": [
+    {
+      "dataset_id": "swe-bench-verified",
+      "declared_license": "MIT",
+      "evidence_url": "https://raw.githubusercontent.com/SWE-bench/SWE-bench/main/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/SWE-bench/SWE-bench/main/LICENSE",
+      "status": "retrieved",
+      "sha256": "2bd2e08df7147f67a69b42c10efae09bd4bf119df397371036187d5dd1b02f57",
+      "bytes": 1159,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "commitpackft",
+      "declared_license": "MIT",
+      "evidence_url": "https://huggingface.co/datasets/bigcode/commitpackft/raw/fc56fe33c030c6daa414c2b112c932b8eed085e6/README.md",
+      "final_url": "https://huggingface.co/datasets/bigcode/commitpackft/raw/fc56fe33c030c6daa414c2b112c932b8eed085e6/README.md",
+      "status": "retrieved",
+      "sha256": "69799047051e9d487d20e8930d73de1b3023ee1c75cf36dc3d2dfca2643f0bb0",
+      "bytes": 17288,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "nvd",
+      "declared_license": "Public domain",
+      "evidence_url": "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications",
+      "final_url": "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications",
+      "status": "retrieved",
+      "sha256": "52981b8e9880cb6e0e0366cbffebf09659a20bdfc57e9ce42e462ceba6e5c6fa",
+      "bytes": 93926,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "creddata",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/Samsung/CredData/c09c0c52fc6dae4ae5438ae69ba486f9f8059f0d/LICENSE",
+      "status": "retrieved",
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5",
+      "bytes": 11560,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "bfcl-v3-live",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard/raw/61fc0608cfd831fcfbbaa676ebdfef0ed963eeda/README.md",
+      "final_url": "https://huggingface.co/datasets/gorilla-llm/Berkeley-Function-Calling-Leaderboard/raw/61fc0608cfd831fcfbbaa676ebdfef0ed963eeda/README.md",
+      "status": "retrieved",
+      "sha256": "22234ad32a0bb921809278d01ed65e932b4e611690dfa17d1e0eb6ba74ab4e27",
+      "bytes": 15282,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "agentdojo",
+      "declared_license": "MIT",
+      "evidence_url": "https://raw.githubusercontent.com/ethz-spylab/agentdojo/089ed468cf3ed0322acc66b0211f26d9d90dbf60/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/ethz-spylab/agentdojo/089ed468cf3ed0322acc66b0211f26d9d90dbf60/LICENSE",
+      "status": "retrieved",
+      "sha256": "4285a071f2d382338e52b4fb0a186d952984a34d43a33d8872e1a1d8cb43401e",
+      "bytes": 1161,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "tau-bench",
+      "declared_license": "MIT",
+      "evidence_url": "https://raw.githubusercontent.com/sierra-research/tau-bench/59a200c6d575d595120f1cb70fea53cef0632f6b/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/sierra-research/tau-bench/59a200c6d575d595120f1cb70fea53cef0632f6b/LICENSE",
+      "status": "retrieved",
+      "sha256": "243d23d45b80122b5ac575586ccef352fdc9c45e6d7d2605449aca8a17478b42",
+      "bytes": 1063,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "hagrid",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://raw.githubusercontent.com/project-miracl/hagrid/7ffab03942e93d3138b0dbd14ad0a844f8a075d5/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/project-miracl/hagrid/7ffab03942e93d3138b0dbd14ad0a844f8a075d5/LICENSE",
+      "status": "retrieved",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "mt-bench-human",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://huggingface.co/datasets/lmsys/mt_bench_human_judgments/raw/f7d2896d2cc5d80f8b55c2bbc722613555233c25/README.md",
+      "final_url": "https://huggingface.co/datasets/lmsys/mt_bench_human_judgments/raw/f7d2896d2cc5d80f8b55c2bbc722613555233c25/README.md",
+      "status": "retrieved",
+      "sha256": "4ef7507ea4d9b7b9e85db9c31742e5295c2f6d1b8c712d392705fd641c348fc4",
+      "bytes": 2000,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "deepset-prompt-injections",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://huggingface.co/datasets/deepset/prompt-injections/raw/4f61ecb038e9c3fb77e21034b22511b523772cdd/README.md",
+      "final_url": "https://huggingface.co/datasets/deepset/prompt-injections/raw/4f61ecb038e9c3fb77e21034b22511b523772cdd/README.md",
+      "status": "retrieved",
+      "sha256": "d90b4518dfe06154deeec938243d1ec9119bdfbfd2105aee9cf1567999764b94",
+      "bytes": 500,
+      "review": "unresolved: nested metadata says CC-BY-4.0 while top-level metadata says Apache-2.0"
+    },
+    {
+      "dataset_id": "in-the-wild-jailbreak-prompts",
+      "declared_license": "MIT",
+      "evidence_url": "https://raw.githubusercontent.com/verazuo/jailbreak_llms/main/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/verazuo/jailbreak_llms/main/LICENSE",
+      "status": "retrieved",
+      "sha256": "ad77ffb660cded66e9dcca34e882103c9b636413cd36a3524bf297b0d3fc6e3f",
+      "bytes": 1061,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "civil-comments",
+      "declared_license": "CC0-1.0",
+      "evidence_url": "https://huggingface.co/datasets/google/civil_comments/raw/main/README.md",
+      "final_url": "https://huggingface.co/datasets/google/civil_comments/raw/main/README.md",
+      "status": "retrieved",
+      "sha256": "8ce0fee0cce0d54ddd5daaad7ba7cd5ed31d78b8e8f2d5cd2345b0dd015932c6",
+      "bytes": 7734,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "cfpb-complaints",
+      "declared_license": "CC0-1.0",
+      "evidence_url": "https://huggingface.co/datasets/BEE-spoke-data/consumer-finance-complaints/raw/088cc7308d4afc2a880f2329d08e2f7a09188ec6/README.md",
+      "final_url": "https://huggingface.co/datasets/BEE-spoke-data/consumer-finance-complaints/raw/088cc7308d4afc2a880f2329d08e2f7a09188ec6/README.md",
+      "status": "retrieved",
+      "sha256": "0bdd43302540a7d452ea5dc42fd5db4b6948a4fde766d94399fbe47df99abe40",
+      "bytes": 2432,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "amazon-esci",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://raw.githubusercontent.com/amazon-science/esci-data/main/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/amazon-science/esci-data/main/LICENSE",
+      "status": "retrieved",
+      "sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "bytes": 10142,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "amazon-berkeley-objects",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://amazon-berkeley-objects.s3.amazonaws.com/LICENSE-CC-BY-4.0.txt",
+      "final_url": "https://amazon-berkeley-objects.s3.amazonaws.com/LICENSE-CC-BY-4.0.txt",
+      "status": "retrieved",
+      "sha256": "419896aea50c15d6e40c5b4baf4bd346f78223b9a354c7357ad00262afdc08ec",
+      "bytes": 14527,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "edgar-corpus-10k-business",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://huggingface.co/datasets/c3po-ai/edgar-corpus/raw/main/README.md",
+      "final_url": "https://huggingface.co/datasets/c3po-ai/edgar-corpus/raw/main/README.md",
+      "status": "retrieved",
+      "sha256": "9f81713f7ee6cea5042fa1bd203010c8f37a5aa6c7f43b70999ce0880023f46e",
+      "bytes": 43742,
+      "review": "dataset license confirmed; use SEC reuse policy as evidence, not an inference that private-authored filings are government works"
+    },
+    {
+      "dataset_id": "edgar-corpus",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://huggingface.co/datasets/eloukas/edgar-corpus/raw/7e90f0f342569b35213445f809cfaf3b91f9964f/README.md",
+      "final_url": "https://huggingface.co/datasets/eloukas/edgar-corpus/raw/7e90f0f342569b35213445f809cfaf3b91f9964f/README.md",
+      "status": "retrieved",
+      "sha256": "4dc21b2e24b80b31254d7266b17c79c0516e40260d5cb311bde5baf49d7612b1",
+      "bytes": 43705,
+      "review": "dataset license confirmed; use SEC reuse policy as evidence, not an inference that private-authored filings are government works"
+    },
+    {
+      "dataset_id": "sec-edgar-8k",
+      "declared_license": "Public domain",
+      "evidence_url": "https://www.sec.gov/privacy",
+      "status": "unavailable",
+      "error": "HTTPError: HTTP Error 403: Forbidden",
+      "review": "SEC official FAQ and dissemination policy inspected through web tool; reuse permission does not establish universal public-domain status",
+      "supplemental_evidence": "https://www.sec.gov/about/webmaster-frequently-asked-questions"
+    },
+    {
+      "dataset_id": "cord-v2",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://huggingface.co/datasets/naver-clova-ix/cord-v2/raw/7f0115a4b758a71d6473b8d085751692da2fef98/README.md",
+      "final_url": "https://huggingface.co/datasets/naver-clova-ix/cord-v2/raw/7f0115a4b758a71d6473b8d085751692da2fef98/README.md",
+      "status": "retrieved",
+      "sha256": "835f3f7d88a86e05a882c6a6b6333da6ab874776385f85473798769d767c2fca",
+      "bytes": 27,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "finer-139",
+      "declared_license": "CC-BY-SA-4.0",
+      "evidence_url": "https://huggingface.co/datasets/nlpaueb/finer-139/raw/080f677a026e304c38666d759ef625d621dc8cb9/README.md",
+      "final_url": "https://huggingface.co/datasets/nlpaueb/finer-139/raw/080f677a026e304c38666d759ef625d621dc8cb9/README.md",
+      "status": "retrieved",
+      "sha256": "d5f83b07d6e598ebd2e5355436c37b802170c38a845c8e181dfa232e9ce805de",
+      "bytes": 9553,
+      "review": "dataset license confirmed; use SEC reuse policy as evidence, not an inference that private-authored filings are government works"
+    },
+    {
+      "dataset_id": "contractnli",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://stanfordnlp.github.io/contract-nli/",
+      "final_url": "https://stanfordnlp.github.io/contract-nli/",
+      "status": "retrieved",
+      "sha256": "c4ce154ae48ddb800cc32070d2019a2ad0dd05d115e81200b74536b84f3c80be",
+      "bytes": 21751,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "cuad",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://huggingface.co/datasets/theatticusproject/cuad/raw/main/README.md",
+      "final_url": "https://huggingface.co/datasets/theatticusproject/cuad/raw/main/README.md",
+      "status": "retrieved",
+      "sha256": "835f3f7d88a86e05a882c6a6b6333da6ab874776385f85473798769d767c2fca",
+      "bytes": 27,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "lexglue-unfair-tos",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://huggingface.co/datasets/coastalcph/lex_glue/raw/main/README.md",
+      "final_url": "https://huggingface.co/datasets/coastalcph/lex_glue/raw/main/README.md",
+      "status": "retrieved",
+      "sha256": "132da3adf6de8e30e4f3d6f4f305e7ae37c11060bcaa1462fe2c589aa910d1fa",
+      "bytes": 34120,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "upworthy-archive",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://upworthy.natematias.com/",
+      "final_url": "https://upworthy.natematias.com/",
+      "status": "retrieved",
+      "sha256": "737defac01122f42778f53b8e03cd87db64e8c30562cd2bc5a4bab7ab2675c97",
+      "bytes": 17174,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "changelogs-mit",
+      "declared_license": "MIT",
+      "evidence_url": "https://raw.githubusercontent.com/Textualize/rich/9d8f9a372cc5916fd4781fec207ced7ddac2f08f/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/Textualize/rich/9d8f9a372cc5916fd4781fec207ced7ddac2f08f/LICENSE",
+      "status": "retrieved",
+      "sha256": "deed7c17a4318158190a3ea239cc879a5a50271cebb98ae7025f48fbe58dca15",
+      "bytes": 1056,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "changelogs-bsd",
+      "declared_license": "BSD-3-Clause",
+      "evidence_url": "https://raw.githubusercontent.com/httpie/cli/5b604c37c6c67e18e7c3e9aee6c88a8c22b98345/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/httpie/cli/5b604c37c6c67e18e7c3e9aee6c88a8c22b98345/LICENSE",
+      "status": "retrieved",
+      "sha256": "89a72f18e678d9db71553f9a30bc0c436c71a61496849af9cd477871b70c31ef",
+      "bytes": 1534,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "spider",
+      "declared_license": "CC-BY-SA-4.0",
+      "evidence_url": "https://huggingface.co/datasets/xlangai/spider/raw/main/README.md",
+      "final_url": "https://huggingface.co/datasets/xlangai/spider/raw/main/README.md",
+      "status": "retrieved",
+      "sha256": "e932ef2c29ee5eb626694f59a7c910f7cdbe85cdb5abd226e759610cf3622103",
+      "bytes": 5510,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "wikitablequestions",
+      "declared_license": "CC-BY-SA-4.0",
+      "evidence_url": "https://raw.githubusercontent.com/ppasupat/WikiTableQuestions/7d455a5a707b96341ef72aff9428749d443d8aa9/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/ppasupat/WikiTableQuestions/7d455a5a707b96341ef72aff9428749d443d8aa9/LICENSE",
+      "status": "retrieved",
+      "sha256": "7abe19ec9bb73b36141b999b861d24ad855e808bafe0f81e84cce28556f6c297",
+      "bytes": 20131,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "owid-grapher",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://ourworldindata.org/faqs#can-i-reuse-or-republish-your-charts",
+      "final_url": "https://ourworldindata.org/faqs#can-i-reuse-or-republish-your-charts",
+      "status": "retrieved",
+      "sha256": "924a9f7b4e807de51ce2fc3fdd2644c0d39e12a1a1c538ec439b2f85aa95d661",
+      "bytes": 187579,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "fivethirtyeight",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://raw.githubusercontent.com/fivethirtyeight/data/4c1ff5e3aef1816ae04af63218015066e186c147/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/fivethirtyeight/data/4c1ff5e3aef1816ae04af63218015066e186c147/LICENSE",
+      "status": "retrieved",
+      "sha256": "7e7170e3cebf88a9f60c7b8421418323c09304da1af4d5e90f4da1dc1c8a2661",
+      "bytes": 18650,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "congress-legislators",
+      "declared_license": "CC0-1.0",
+      "evidence_url": "https://raw.githubusercontent.com/unitedstates/congress-legislators/8a3c7e6987f890b32e56058f7ddbdf380860b4a3/LICENSE",
+      "status": "retrieved",
+      "final_url": "https://raw.githubusercontent.com/unitedstates/congress-legislators/8a3c7e6987f890b32e56058f7ddbdf380860b4a3/LICENSE",
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "bytes": 7048,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "fiscal-data",
+      "declared_license": "Public domain",
+      "evidence_url": "https://fiscaldata.treasury.gov/api-documentation/#license-and-authorization",
+      "final_url": "https://fiscaldata.treasury.gov/api-documentation/#license-and-authorization",
+      "status": "retrieved",
+      "sha256": "e324aef55541b8ca4c7119d59fa7d09be75bd16017f335ae5279534b81083efb",
+      "bytes": 553587,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "federal-register",
+      "declared_license": "Public domain",
+      "evidence_url": "https://www.govinfo.gov/about/policies#copyright",
+      "final_url": "https://www.govinfo.gov/about/policies#copyright",
+      "status": "retrieved",
+      "sha256": "d9e3a2f1cb4486ab4ecc4eff640f94f9a9bb8655ca71ff00694b236e7011ad1c",
+      "bytes": 64169,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "doclaynet",
+      "declared_license": "CDLA-Permissive-1.0",
+      "evidence_url": "https://raw.githubusercontent.com/DS4SD/DocLayNet/main/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/DS4SD/DocLayNet/main/LICENSE",
+      "status": "retrieved",
+      "sha256": "2d6f51b40d9b47e2b01e1503e8e16230b5745bc927ae9024f734e36fcee8e7f5",
+      "bytes": 10461,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "ami",
+      "declared_license": "CC-BY-4.0",
+      "evidence_url": "https://groups.inf.ed.ac.uk/ami/corpus/license.shtml",
+      "final_url": "https://groups.inf.ed.ac.uk/ami/corpus/license.shtml",
+      "status": "retrieved",
+      "sha256": "2b5328846c1db44dad89e473ae74a7497ff2a637efaceb83a2d45148eb5db5a6",
+      "bytes": 30267,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    },
+    {
+      "dataset_id": "material-symbols",
+      "declared_license": "Apache-2.0",
+      "evidence_url": "https://raw.githubusercontent.com/google/material-design-icons/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/LICENSE",
+      "final_url": "https://raw.githubusercontent.com/google/material-design-icons/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/LICENSE",
+      "status": "retrieved",
+      "sha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+      "bytes": 11357,
+      "review": "publisher license evidence inspected; retain row attribution and underlying-content terms"
+    }
+  ],
+  "owid_indicator_evidence": [
+    {
+      "chart": "annual-co2-emissions-per-country",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1119906.metadata.json",
+          "licenses": [
+            {
+              "url": "https://doi.org/10.5281/zenodo.5569234",
+              "name": "CC BY 4.0"
+            },
+            {
+              "url": "https://www.icos-cp.eu/data-services/about-data-portal/data-license",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "0710c53e273ff6da3686fb2b46cbe3cd596af6e670c284a3cd1106933ab09fab"
+        }
+      ]
+    },
+    {
+      "chart": "carbon-intensity-electricity",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1295504.metadata.json",
+          "licenses": [
+            {
+              "url": "https://ember-energy.org/creative-commons/",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "65b3e36565805f825794a5bf703b5368b82e84e0883c9f4aebb00a6c48ab92e3"
+        }
+      ]
+    },
+    {
+      "chart": "children-per-woman-un",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/950920.metadata.json",
+          "licenses": [
+            {
+              "url": "https://population.un.org/wpp/downloads/",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "adb64728867368a0f85eff6ed9b19adf1628c5819c32e0cc3c3d2eef76ce8d93"
+        }
+      ]
+    },
+    {
+      "chart": "co2-emissions-per-capita",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1119914.metadata.json",
+          "licenses": [
+            {
+              "url": "https://doi.org/10.5281/zenodo.5569234",
+              "name": "CC BY 4.0"
+            },
+            {
+              "url": "https://www.icos-cp.eu/data-services/about-data-portal/data-license",
+              "name": "CC BY 4.0"
+            },
+            {
+              "url": "https://creativecommons.org/licenses/by/4.0/",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "6324f0c1fc5e24ba0e9e652322dfc4627599120309e8a51fa04b5b9f0bbede09"
+        }
+      ]
+    },
+    {
+      "chart": "co2-emissions-transport",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1146634.metadata.json",
+          "licenses": [
+            {
+              "url": "https://www.climatewatchdata.org/about/permissions",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "3859b28f24751d6cc44295d61e7da846ca65d7a3c5967620f93eb37876dffcaa"
+        }
+      ]
+    },
+    {
+      "chart": "crude-birth-rate",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/950617.metadata.json",
+          "licenses": [
+            {
+              "url": "https://population.un.org/wpp/downloads/",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "5e0054b8b870390d98bc73b28be9ce87b246fcb7ea4508bb19dde3dff4343887"
+        }
+      ]
+    },
+    {
+      "chart": "gdp-per-capita-maddison-project-database",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/900793.metadata.json",
+          "licenses": [
+            {
+              "url": "https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "8ddd8663675ea16e758aa4a7e83eb15450758fc3525bfb5bc95eb6509242f497"
+        }
+      ]
+    },
+    {
+      "chart": "gdp-per-capita-penn-world-table",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1108541.metadata.json",
+          "licenses": [
+            {
+              "url": "https://www.rug.nl/ggdc/productivity/pwt/",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "61904c1300a9bd6c70bff37309d3b3458202979906de2d579a0a95e2d873ba40"
+        }
+      ]
+    },
+    {
+      "chart": "gdp-per-capita-worldbank",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1294305.metadata.json",
+          "licenses": [
+            {
+              "url": "https://datacatalog.worldbank.org/search/dataset/0037712/World-Development-Indicators",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "044e52d787dfd2821e54d7d43209b17392365d09b8a5c502b6bf739e5fd9e805"
+        },
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/900801.metadata.json",
+          "licenses": [],
+          "metadata_sha256": "f579ee8492f4db06a7ca1cb2f2038d6b03abd626649549d5aa2713b1aaa9440e"
+        }
+      ]
+    },
+    {
+      "chart": "human-development-index",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1032439.metadata.json",
+          "licenses": [
+            {
+              "url": "https://hdr.undp.org/copyright-and-terms-use",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "feab5befd9ccbc0f093b42649dd987882a2d048f3d291f55cd7a1cd7e3ee300d"
+        },
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/900801.metadata.json",
+          "licenses": [],
+          "metadata_sha256": "f579ee8492f4db06a7ca1cb2f2038d6b03abd626649549d5aa2713b1aaa9440e"
+        }
+      ]
+    },
+    {
+      "chart": "life-expectancy-unwpp",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/950927.metadata.json",
+          "licenses": [
+            {
+              "url": "https://population.un.org/wpp/downloads/",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "7df0c24bfc350861850b944980bc70a54d21a15eeb7ffaa99a4b04cbfc79ff99"
+        }
+      ]
+    },
+    {
+      "chart": "median-age",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/950958.metadata.json",
+          "licenses": [
+            {
+              "url": "https://population.un.org/wpp/downloads/",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "833c8a08f745932790dcd5d092ab79bf79cd804692d5813e43b407f5740c14a7"
+        },
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/950961.metadata.json",
+          "licenses": [
+            {
+              "url": "https://population.un.org/wpp/downloads/",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "d7d00cf88b0b08b0d5cb48d2dc110d1877766528dee9a2b6a7256d7a9d3e2456"
+        }
+      ]
+    },
+    {
+      "chart": "mobile-cellular-subscriptions-per-100-people",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1294121.metadata.json",
+          "licenses": [
+            {
+              "url": "https://datacatalog.worldbank.org/search/dataset/0037712/World-Development-Indicators",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "1e6a725dcebfe8f55e2cb4d3ec1c05bbb22315c7e3e02fadd1ecfc2eb1a894c1"
+        }
+      ]
+    },
+    {
+      "chart": "population",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/953903.metadata.json",
+          "licenses": [
+            {
+              "url": "https://doi.org/10.24416/UU01-AEZZIT",
+              "name": "CC BY 4.0"
+            },
+            {
+              "url": "https://docs.google.com/document/d/1-RmthhS2EPMK_HIpnPctcXpB0n7ADSWnXa5Hb3PxNq4/edit?usp=sharing",
+              "name": "CC BY 4.0"
+            },
+            {
+              "url": "https://population.un.org/wpp/downloads/",
+              "name": "CC BY 3.0 IGO"
+            },
+            {
+              "url": "https://github.com/open-numbers/ddf--gapminder--systema_globalis",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "0984ae11cad94fea24ad5e018cc3710900e4b2aa1fc8af629a01be4f17c0fd99"
+        }
+      ]
+    },
+    {
+      "chart": "share-of-population-urban",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1195724.metadata.json",
+          "licenses": [
+            {
+              "url": "http://creativecommons.org/licenses/by/3.0/igo/",
+              "name": "CC BY 3.0 IGO"
+            }
+          ],
+          "metadata_sha256": "cce4aea3d276ac500e27e0719bfab6b12d8d6ded702a1429295d0ed7a3374867"
+        }
+      ]
+    },
+    {
+      "chart": "total-ghg-emissions",
+      "status": "retrieved",
+      "indicators": [
+        {
+          "url": "https://api.ourworldindata.org/v1/indicators/1129036.metadata.json",
+          "licenses": [
+            {
+              "url": "https://zenodo.org/records/7636699/latest",
+              "name": "CC BY 4.0"
+            }
+          ],
+          "metadata_sha256": "3cdcabdc1c4af9dc70dd8b258caeb105f6116801d4cbe547a98db185edca913a"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "deepset-conflicting-license",
+      "active_rows": 16,
+      "legacy_rows": 16,
+      "resolution": "Obtain authoritative license clarification, or exclude these rows in a new corpus version."
+    },
+    {
+      "id": "legacy-model-output-terms",
+      "legacy_rows": 24,
+      "resolution": "Exclude legacy v3 from the public distribution/history or document and satisfy the additional source model license requirements.",
+      "evidence": "https://huggingface.co/datasets/nebius/SWE-agent-trajectories"
+    },
+    {
+      "id": "history-release-boundary",
+      "resolution": "Do not publish the old local Git history until the existing author metadata/path exposure and archived data have been explicitly accepted or removed in a separate public snapshot."
+    }
+  ],
+  "limitations": [
+    "Regex screening does not prove absence of names, addresses, account identifiers or encoded secrets.",
+    "Images reviewed as contact sheets, not forensic OCR or hidden-pixel analysis.",
+    "Code excerpts retain repository-license references; full per-repository notice packaging needs checking at distribution time.",
+    "Archived agent web observations may have third-party text beyond their dataset license; the recommended public distribution excludes archived v3."
+  ],
+  "image_metadata_review": "The 30 CORD JPEGs have EXIF containing color space and image dimensions; no GPS/camera/author EXIF fields observed. Other tracked images expose ordinary format metadata; no forensic hidden-data analysis performed."
+}

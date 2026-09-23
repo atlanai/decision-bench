@@ -1,5 +1,7 @@
 # Public release review — 2026-09-23
 
+**Follow-up:** Repository links are now set and live GitHub controls were verified. See [repository setup](github-release-setup.md) and the completed [data/privacy review](data-release-review.md). Some publication decisions remain open; the original observations below are the first-review snapshot.
+
 The working tree was reviewed before its public-release preparation commit. No confirmed live credential was found. This is a bounded code and disclosure review, not an exhaustive audit or a guarantee that every upstream record is safe to redistribute.
 
 ## Changes made

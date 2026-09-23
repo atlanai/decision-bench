@@ -9,10 +9,8 @@
   An open benchmark for how accurately, quickly, and cheaply language models make bounded decisions.
 </p>
 
-<!-- Badge snapshot: 2026-09-23. Refresh date, corpus counts, and results status
-when updating the benchmark. No GitHub remote is configured yet. Once published,
-replace the static updated badge with Shields /github/last-commit/OWNER/REPO
-and add /github/actions/workflow/status/OWNER/REPO/ci.yml; do not invent CI status. -->
+<!-- Badge snapshot: 2026-09-23. Refresh corpus counts and results status when updating the benchmark.
+GitHub destination: <https://github.com/atlanai/decision-bench>. CI badges can be added after the first public run. -->
 <p align="center">
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/updated-2026--09--23-3028C8?style=flat-square&amp;labelColor=161616" alt="README and benchmark snapshot updated September 23, 2026"></a>
   <a href="data/corpus/bench-v4/manifest.json"><img src="https://img.shields.io/badge/rows-1%2C071-3028C8?style=flat-square&amp;labelColor=161616" alt="1,071 benchmark rows"></a>
@@ -248,7 +246,7 @@ Publishing writes the latest run for a model to `results/<suite>/<model-id>/` an
 
 ## Data and licences
 
-The code is MIT. Each row keeps its dataset's licence. A dataset is used only if both its own licence and the terms of the text or images inside it allow anyone to copy, modify and redistribute it, commercially too; the build enforces this. Datasets that failed that test were not used, even when the dataset itself was MIT (the reasons are recorded in each module's docstring under `authoring/bench/`).
+The code is MIT. Each row keeps its source terms. The selection policy requires redistribution rights for both the dataset and the material inside it; the build checks declared license labels, not legal rights. The [release data review](docs/data-release-review.md) records the source evidence and unresolved publication decisions. Datasets that failed that test were not used, even when the dataset itself was MIT (the reasons are recorded in each module's docstring under `authoring/bench/`).
 
 - Real secrets in code rows are replaced with fake values of the same shape.
 - Contact details in contracts are replaced with placeholders.
