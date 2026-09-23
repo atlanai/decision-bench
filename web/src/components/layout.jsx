@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
-import {MoonIcon, SunIcon} from 'lucide-react';
+import {Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, MoonIcon, SunIcon} from 'lucide-react';
 import {man, data, taskOrder, REPO, repoOk} from '@/lib/bench';
+import {go, taskHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
 import {BrandMark, GitHubIcon} from '@/components/icons';
 import {Button} from '@/components/ui/button';
@@ -20,6 +21,30 @@ function ThemeToggle() {
   return <Tip content={dark ? 'Light mode' : 'Dark mode'}><Button variant="ghost" size="icon-sm" onClick={flip} aria-label="Toggle dark mode">{dark ? <SunIcon /> : <MoonIcon />}</Button></Tip>;
 }
 
+/* Random task, just for fun. A shuffled bag, so repeated rolls visit every task before any comes round again. */
+const DICE = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6];
+let bag = [];
+function nextTask(current) {
+  const all = taskOrder();
+  if (all.length < 2) return all[0];
+  if (!bag.length) { bag = [...all]; for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; } }
+  if (bag[bag.length - 1] === current) bag.unshift(bag.pop());
+  return bag.pop();
+}
+
+function RandomTask({current}) {
+  const [face, setFace] = useState(4), [spin, setSpin] = useState(0);
+  const roll = () => {
+    const t = nextTask(current); if (!t) return;
+    setFace(f => (f + 1 + Math.floor(Math.random() * 5)) % 6); setSpin(n => n + 1);
+    go(taskHref(t));
+  };
+  const Die = DICE[face];
+  return <Tip content="Random task"><Button variant="ghost" size="icon-sm" onClick={roll} aria-label="Open a random task">
+    <Die key={spin} className={cn(spin && 'motion-safe:animate-[db-roll_.35s_ease-out]')} />
+  </Button></Tip>;
+}
+
 /* Selected page: full-strength text and a straight 2px bar resting on the header's bottom border. No box. */
 function NavLinks({page, className, bar = 'after:-bottom-[12px]'}) {
   const cur = SECTION[page] || page;
@@ -35,7 +60,7 @@ function NavLinks({page, className, bar = 'after:-bottom-[12px]'}) {
   );
 }
 
-export function Header({page}) {
+export function Header({page, id}) {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
       <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-6 px-4 md:px-8">
@@ -44,6 +69,7 @@ export function Header({page}) {
         </a>
         <NavLinks page={page} className="hidden md:flex" />
         <div className="ml-auto flex items-center gap-1">
+          <RandomTask current={page === 'task' ? id : ''} />
           {repoOk() && <Tip content="Source on GitHub"><Button variant="ghost" size="icon-sm" asChild><a href={REPO} target="_blank" rel="noopener" aria-label="GitHub"><GitHubIcon className="size-4" /></a></Button></Tip>}
           <ThemeToggle />
         </div>
