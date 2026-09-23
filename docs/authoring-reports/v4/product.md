@@ -1,6 +1,6 @@
 # Product category (authoring/bench/product.py) — authoring report
 
-Module: /Users/rohan/GitHub/decision-bench/authoring/bench/product.py
+Module: authoring/bench/product.py
 Checks: `python3 scripts/fetch_sources.py --only product` (exit 0, 14 files, no hash mismatches — nothing is pinned yet)
         `python3 scripts/build_bench.py --dry-run --only product` -> 60 rows, "problems": []
 New source folders: data/sources/upworthy/ (one 14.3 MB CSV), data/sources/changelogs/ (13 files, 3–211 KB).

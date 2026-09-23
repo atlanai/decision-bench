@@ -1,7 +1,7 @@
 # Design category (authoring/bench/design.py) — report
 
-Module: /Users/rohan/GitHub/decision-bench/authoring/bench/design.py
-Assets: /Users/rohan/GitHub/decision-bench/data/assets/design/dsn-1-<name>.png (30 files, 256×256, 0.9–9 KB each, 180 KB total)
+Module: authoring/bench/design.py
+Assets: data/assets/design/dsn-1-<name>.png (30 files, 256×256, 0.9–9 KB each, 180 KB total)
 Sources: data/sources/material-symbols/ (LICENSE, current_versions.json, svg/<name>.svg for the 30 chosen icons, render/ scratch copies)
 
 `python3 scripts/fetch_sources.py --only design` and `python3 scripts/build_bench.py --dry-run --only design` both pass, "problems": [].
