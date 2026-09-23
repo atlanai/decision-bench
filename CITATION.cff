@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use Decision Bench, please cite it as below, and cite the source datasets of the tasks you use (see data/SOURCES.md)."
+title: "Decision Bench: bounded decisions on real public data"
+type: software
+authors:
+  - name: "Decision Bench contributors"
+version: "4.0.0"
+license: MIT
+repository-code: "https://github.com/atlanai/decision-bench"
+url: "https://github.com/atlanai/decision-bench"

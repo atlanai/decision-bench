@@ -1,8 +1,8 @@
 # AGENTS.md — Atlan AI Agent Guidelines
 
-> **Version:** 6.1 | **Updated:** 2026-03-26  
-> **Applies To:** All AI agents (Claude, GPT, Copilot, Cursor, Cline, etc.)  
-> **Companion:** See `CLAUDE.md` for a lean quick-reference optimized for Claude Code.  
+> **Version:** 6.1 | **Updated:** 2026-03-26
+> **Applies To:** All AI agents (Claude, GPT, Copilot, Cursor, Cline, etc.)
+> **Companion:** See `CLAUDE.md` for a lean quick-reference optimized for Claude Code.
 > **Security Contact:** Slack `#bu-security-and-it`
 
 ---

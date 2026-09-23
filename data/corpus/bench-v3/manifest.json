@@ -1,0 +1,203 @@
+{
+  "version": "3.0.0",
+  "suite": "bench-v3",
+  "label": "Decision Bench",
+  "sha256": "9a0eff83eeca2406510e32e7228ae095cdc0dc0d526975ed235d71765ac96ac4",
+  "license": "Code and written examples: MIT. Real rows keep their source license (see each row and data/SOURCES.md).",
+  "categories": {
+    "prompt-injection": {
+      "name": "Prompt injection",
+      "description": "Spot inputs that try to take over an assistant."
+    },
+    "pii": {
+      "name": "Sensitive data",
+      "description": "Find personal data and secrets that must be masked or removed."
+    },
+    "trace-classification": {
+      "name": "Trace classification",
+      "description": "Say what went wrong in an agent run, and where."
+    },
+    "trace-routing": {
+      "name": "Trace routing",
+      "description": "Send a request to the right tool or team."
+    },
+    "eval-judging": {
+      "name": "Eval judging",
+      "description": "Judge a model's answer against its sources or an alternative."
+    },
+    "contract-policy": {
+      "name": "Contract and policy checks",
+      "description": "Check what a legal document actually says."
+    },
+    "skill-improvement": {
+      "name": "Skill improvement",
+      "description": "Diagnose a failing agent skill and decide on a fix."
+    }
+  },
+  "tasks": {
+    "PI-1": {
+      "category": "prompt-injection",
+      "name": "Attack on the assistant",
+      "ask": "Is this message an attack on the assistant?"
+    },
+    "PI-2": {
+      "category": "prompt-injection",
+      "name": "Email that hijacks the assistant",
+      "ask": "Does this email try to make the assistant do something unrequested?"
+    },
+    "PII-2": {
+      "category": "pii",
+      "name": "Triage a secret-scanner hit",
+      "ask": "Is this a real secret committed in code?"
+    },
+    "TC-1": {
+      "category": "trace-classification",
+      "name": "Agent failure type at a step",
+      "ask": "What kind of failure happens at this step?"
+    },
+    "TC-2": {
+      "category": "trace-classification",
+      "name": "Failure attribution in a multi-agent run",
+      "ask": "Which agent caused the failure?"
+    },
+    "TC-3": {
+      "category": "trace-classification",
+      "name": "Coding-agent outcome",
+      "ask": "Did this coding-agent run fix the issue?"
+    },
+    "TR-1": {
+      "category": "trace-routing",
+      "name": "Tool selection",
+      "ask": "Which tool should the agent call for this request?"
+    },
+    "TR-2": {
+      "category": "trace-routing",
+      "name": "Support queue routing",
+      "ask": "Which team should handle this customer message?"
+    },
+    "TR-3": {
+      "category": "trace-routing",
+      "name": "Complaint routing",
+      "ask": "Which product team owns this complaint?"
+    },
+    "EJ-1": {
+      "category": "eval-judging",
+      "name": "Answer grounding",
+      "ask": "Is this answer supported by its sources?"
+    },
+    "EJ-2": {
+      "category": "eval-judging",
+      "name": "Response quality (pairwise)",
+      "ask": "Which response is better?"
+    },
+    "CP-1": {
+      "category": "contract-policy",
+      "name": "NDA clause check",
+      "ask": "Does this NDA say this?"
+    },
+    "SK-1": {
+      "category": "skill-improvement",
+      "name": "Skill failure diagnosis",
+      "ask": "Why did the skill fail on this run?"
+    },
+    "SK-2": {
+      "category": "skill-improvement",
+      "name": "Skill change review",
+      "ask": "Should this skill change ship?"
+    }
+  },
+  "counts": {
+    "cases": 359,
+    "questions": 359
+  },
+  "real_rows": 323,
+  "frozen_before_inference": true,
+  "sampling": "Deterministic: records ordered by sha256 of their source id and filtered by written rules; no model output used.",
+  "contamination": "Public datasets may appear in model training data; scores may be inflated.",
+  "datasets": {
+    "deepset-prompt-injections": {
+      "name": "deepset/prompt-injections",
+      "license": "Apache-2.0",
+      "content_license": "Apache-2.0",
+      "homepage": "https://huggingface.co/datasets/deepset/prompt-injections"
+    },
+    "in-the-wild-jailbreak-prompts": {
+      "name": "In-The-Wild Jailbreak Prompts (JailbreakHub)",
+      "license": "MIT",
+      "content_license": "MIT",
+      "homepage": "https://github.com/verazuo/jailbreak_llms"
+    },
+    "llmail-inject-challenge": {
+      "name": "LLMail-Inject",
+      "license": "MIT",
+      "content_license": "MIT",
+      "homepage": "https://huggingface.co/datasets/microsoft/llmail-inject-challenge"
+    },
+    "creddata": {
+      "name": "Samsung CredData",
+      "license": "Apache-2.0",
+      "content_license": "Apache-2.0",
+      "homepage": "https://github.com/Samsung/CredData"
+    },
+    "agentrx": {
+      "name": "AgentRx benchmark",
+      "license": "MIT",
+      "content_license": "MIT",
+      "homepage": "https://github.com/microsoft/AgentRx"
+    },
+    "whoandwhen": {
+      "name": "Who&When",
+      "license": "MIT",
+      "content_license": "MIT",
+      "homepage": "https://github.com/mingyin1/Agents_Failure_Attribution"
+    },
+    "swe-agent-trajectories": {
+      "name": "nebius/SWE-agent-trajectories",
+      "license": "CC-BY-4.0",
+      "content_license": "CC-BY-4.0",
+      "homepage": "https://huggingface.co/datasets/nebius/SWE-agent-trajectories"
+    },
+    "bfcl-v3-live": {
+      "name": "BFCL v3 Live (Berkeley Function-Calling Leaderboard)",
+      "license": "Apache-2.0",
+      "content_license": "Apache-2.0",
+      "homepage": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard"
+    },
+    "banking77": {
+      "name": "BANKING77",
+      "license": "CC-BY-4.0",
+      "content_license": "CC-BY-4.0",
+      "homepage": "https://github.com/PolyAI-LDN/task-specific-datasets"
+    },
+    "cfpb-complaints": {
+      "name": "CFPB Consumer Complaint Database",
+      "license": "CC0-1.0",
+      "content_license": "Public domain",
+      "homepage": "https://www.consumerfinance.gov/data-research/consumer-complaints/"
+    },
+    "hagrid": {
+      "name": "HAGRID",
+      "license": "Apache-2.0",
+      "content_license": "CC-BY-SA-3.0",
+      "homepage": "https://github.com/project-miracl/hagrid"
+    },
+    "begin": {
+      "name": "BEGIN (Wizard of Wikipedia part)",
+      "license": "CC-BY-4.0",
+      "content_license": "CC-BY-SA-3.0",
+      "homepage": "https://github.com/google/BEGIN-dataset"
+    },
+    "mt-bench-human": {
+      "name": "MT-Bench human judgments",
+      "license": "CC-BY-4.0",
+      "content_license": "CC-BY-4.0",
+      "homepage": "https://huggingface.co/datasets/lmsys/mt_bench_human_judgments"
+    },
+    "contractnli": {
+      "name": "ContractNLI",
+      "license": "CC-BY-4.0",
+      "content_license": "CC-BY-4.0",
+      "homepage": "https://stanfordnlp.github.io/contract-nli/"
+    }
+  }
+}
