@@ -27,7 +27,7 @@ The working tree was reviewed before its public-release preparation commit. No c
 ## Before changing visibility
 
 - **Decide what history to publish.** Existing commits retain the author's personal email and old local home paths. A new cleanup commit does not erase those. If these should stay private, prepare a separately approved history rewrite or a fresh public history before pushing. Do not assume deleting a current file removes it from Git.
-- **Set the final repository URL.** Replace `OWNER` in `CONTRIBUTING.md` and the `repo` meta tag in `site/index.html`; update citation/release links and badges when a destination exists.
+- **Set the final repository URL.** Replace `OWNER` in `CONTRIBUTING.md` and the `repo` meta tag in `web/index.html`; update citation/release links and badges when a destination exists.
 - **Configure repository controls.** Enable private vulnerability reporting as promised by `SECURITY.md`; select required checks and review rules; configure the Pages environment and intended audience. Consider pinning third-party Actions to reviewed immutable commits.
 - **Review redistribution and privacy.** Keep dataset-specific attribution and licenses with rows; the code's MIT license does not replace them. Confirm upstream/embedded-content rights and inspect personal-data-bearing records, historical datasets, binary assets and vendor marks before release. The source catalog is evidence to review, not independent legal clearance.
 - **Inspect every export.** Keep `.env`, `runs/`, downloaded source data and local caches ignored. Review `results/` and the exact Pages artifact, particularly when exporting older runs whose keys are no longer configured. Avoid publishing a local preview generated with `--include-runs` unintentionally.

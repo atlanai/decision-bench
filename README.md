@@ -203,6 +203,7 @@ From the repository root, validate the committed corpus and build the local expl
 ```sh
 python3 -m decision_bench validate
 python3 -m decision_bench report
+npm ci --prefix web && npm run build --prefix web   # the viewer (Node 20+), once
 python3 -m decision_bench serve
 ```
 

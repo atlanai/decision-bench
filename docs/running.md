@@ -138,7 +138,10 @@ python3 -m decision_bench report --include-runs   # also local runs/, e.g. one s
 python3 -m decision_bench serve                   # http://127.0.0.1:8765
 ```
 
-`serve` exposes only `site/`, not the repository or `.env`. After `report`, `site/` is a complete static site.
+`serve` exposes only `site/`, not the repository or `.env`. The viewer is a React app in `web/`; build it into
+`site/` once with `make site` (`npm ci --prefix web && npm run build --prefix web`), and after `report` `site/` is a
+complete static site. For live editing, `npm run dev --prefix web` serves the viewer with hot reload at
+http://localhost:5173, reading the data in `site/`.
 
 ## Tests and checks
 
@@ -146,7 +149,7 @@ python3 -m decision_bench serve                   # http://127.0.0.1:8765
 python3 -m unittest discover -s tests -v
 python3 -m decision_bench validate
 python3 scripts/check_secrets.py
-node --check site/app.js
+npm run build --prefix web
 ```
 
 or `make check`. Tests use a local fake endpoint and never call a model.

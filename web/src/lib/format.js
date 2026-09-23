@@ -1,0 +1,20 @@
+/* Number and text formatting shared by every page. */
+export const pct = v => v == null ? '—' : `${(v * 100).toFixed(1)}%`;
+export const pct0 = v => v == null ? '—' : `${Math.round(v * 100)}%`;
+export const pp = v => `${v >= 0 ? '+' : '−'}${Math.abs(v * 100).toFixed(1)}`;
+export const num = v => v == null ? '—' : Number(v).toLocaleString('en-US', {maximumFractionDigits: 2});
+export const metric = v => v == null ? '—' : Number(v).toFixed(3);
+export const ms = v => v == null ? '—' : v >= 1000 ? `${(v / 1000).toFixed(v >= 10000 ? 1 : 2)} s` : `${v.toFixed(0)} ms`;
+export const secs = v => v >= 10 ? `${v.toFixed(0)}s` : v >= 1 ? `${v.toFixed(1)}s` : v >= .01 ? `${v.toFixed(2)}s` : `${(v * 1000).toFixed(0)}ms`;
+export const money = v => v == null ? '—' : `$${v < .01 ? v.toFixed(5) : v < 1 ? v.toFixed(3) : v.toFixed(2)}`;
+export const compact = v => v == null || !isFinite(v) ? '—' : v >= 1e6 ? `${(v / 1e6).toFixed(2)}M` : v >= 1e4 ? `${(v / 1e3).toFixed(1)}K` : Math.round(v).toLocaleString('en-US');
+export const human = l => l == null ? 'no answer' : String(l).replaceAll('_', ' ');
+export const plural = (n, w, p = w + 's') => `${num(n)} ${n === 1 ? w : p}`;
+export const clip = (t, n) => t.length > n ? t.slice(0, Math.max(1, n - 1)) + '…' : t;
+export const slug = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+export const firstSentence = t => { const s = String(t || '').trim(), m = s.match(/^.*?[.?!](\s|$)/); return (m ? m[0] : s).trim(); };
+export const ciText = ci => ci ? `${(ci[0] * 100).toFixed(0)}–${(ci[1] * 100).toFixed(0)}%` : '';
+export const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+export const labelOf = k => { const s = String(k).replace(/_/g, ' '); return s[0].toUpperCase() + s.slice(1); };
+export const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+export const isHttp = u => /^https?:\/\//i.test(String(u || ''));

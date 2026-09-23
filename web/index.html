@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Decision Bench</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://decisionbench.ai/">
+<meta property="og:url" content="https://decisionbench.ai/">
+<meta name="description" content="An open benchmark of the bounded decisions software asks language models to make, built from real records in open-licence datasets: engineering, agents, safety, support, commerce, finance, legal, product, data, documents and design.">
+<!-- The one place the repository URL is set. Every GitHub link on the site is derived from it. -->
+<meta name="repo" content="https://github.com/atlanai/decision-bench">
+<meta name="ga-measurement-id" content="G-Y0L8VH8M13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
+<script>try{const q=new URLSearchParams(location.search).get('theme'),s=q==='light'||q==='dark'?q:localStorage.getItem('db-theme');document.documentElement.classList.toggle('dark',s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches);}catch(e){}</script>
+<style>html{background:#fff;color:#0a0a0a;font-family:Geist,system-ui,sans-serif}html.dark{background:#0a0a0a;color:#fafafa;color-scheme:dark}.boot{display:grid;place-items:center;min-height:80vh;font-size:14px;opacity:.6}</style>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
+<style type="text/tailwindcss">
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-pixel: "Geist Pixel", "Geist Mono", ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --animate-accordion-down: accordion-down .2s ease-out;
+  --animate-accordion-up: accordion-up .2s ease-out;
+  --animate-fade-in: fade-in .15s ease-out;
+  --animate-pop-in: pop-in .15s ease-out;
+  --animate-dialog-in: dialog-in .18s ease-out;
+  --animate-sheet-in: sheet-in .22s cubic-bezier(.32,.72,0,1);
+}
+
+:root {
+  --radius: .625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(.145 0 0);
+  --primary: oklch(.205 0 0);
+  --primary-foreground: oklch(.985 0 0);
+  --secondary: oklch(.97 0 0);
+  --secondary-foreground: oklch(.205 0 0);
+  --muted: oklch(.97 0 0);
+  --muted-foreground: oklch(.556 0 0);
+  --accent: oklch(.97 0 0);
+  --accent-foreground: oklch(.205 0 0);
+  --destructive: oklch(.577 .245 27.325);
+  --border: oklch(.922 0 0);
+  --input: oklch(.922 0 0);
+  --ring: oklch(.708 0 0);
+  --brand: #2026d2;
+  --brand-soft: #eef0fd;
+  --good: #15803d;
+  --good-soft: #ecfdf3;
+  --warn: #b45309;
+  --warn-soft: #fef6e7;
+  --bad: #dc2626;
+  --bad-soft: #fef2f2;
+  --grid-ok: oklch(.9 0 0);
+}
+.dark {
+  --background: oklch(.145 0 0);
+  --foreground: oklch(.985 0 0);
+  --card: oklch(.178 0 0);
+  --card-foreground: oklch(.985 0 0);
+  --popover: oklch(.205 0 0);
+  --popover-foreground: oklch(.985 0 0);
+  --primary: oklch(.922 0 0);
+  --primary-foreground: oklch(.205 0 0);
+  --secondary: oklch(.269 0 0);
+  --secondary-foreground: oklch(.985 0 0);
+  --muted: oklch(.269 0 0);
+  --muted-foreground: oklch(.708 0 0);
+  --accent: oklch(.269 0 0);
+  --accent-foreground: oklch(.985 0 0);
+  --destructive: oklch(.704 .191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(.556 0 0);
+  --brand: #a4a9ff;
+  --brand-soft: #1c1e3a;
+  --good: #4ade80;
+  --good-soft: #0f2417;
+  --warn: #fbbf24;
+  --warn-soft: #271f0c;
+  --bad: #f87171;
+  --bad-soft: #2a1414;
+  --grid-ok: oklch(.32 0 0);
+}
+
+@keyframes accordion-down { from { height: 0 } to { height: var(--radix-accordion-content-height) } }
+@keyframes accordion-up { from { height: var(--radix-accordion-content-height) } to { height: 0 } }
+@keyframes fade-in { from { opacity: 0 } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px) scale(.98) } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(6px) scale(.98) } }
+@keyframes sheet-in { from { transform: translateX(100%) } }
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-background text-foreground font-sans antialiased; font-feature-settings: "ss01"; }
+  a { text-underline-offset: 3px; }
+  code { @apply font-mono text-[0.85em]; }
+  ::selection { background: color-mix(in oklab, var(--brand) 22%, transparent); }
+  @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+}
+
+@layer components {
+  /* Prose inside records, methodology and dataset notes. */
+  .prose-db { @apply text-sm leading-relaxed text-foreground/85; }
+  .prose-db p + p { @apply mt-3; }
+  .prose-db ul { @apply mt-2 list-disc space-y-1.5 pl-5 marker:text-muted-foreground/60; }
+  .prose-db a, a.link { @apply text-brand underline-offset-4 hover:underline; }
+  /* Analytics consent, rendered by analytics.js. */
+  .analytics-choice { @apply fixed right-4 bottom-4 z-[100] max-w-sm rounded-lg border bg-popover p-4 text-sm text-popover-foreground shadow-lg; }
+  .analytics-choice p { @apply mb-3 leading-relaxed; }
+  .analytics-choice a { @apply underline underline-offset-4; }
+  .analytics-choice div { @apply flex justify-end gap-2; }
+  .analytics-choice button { @apply inline-flex h-8 cursor-pointer items-center rounded-md border bg-background px-3 text-sm font-medium shadow-xs hover:bg-accent; }
+  .analytics-choice button:last-child { @apply border-primary bg-primary text-primary-foreground hover:bg-primary/90; }
+}
+</style>
+</head>
+<body>
+<div id="root"><div class="boot">Loading Decision Bench…</div></div>
+<script type="module" src="/src/main.jsx"></script>
+<script src="analytics.js"></script>
+</body>
+</html>

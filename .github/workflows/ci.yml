@@ -30,7 +30,5 @@ jobs:
         run: python3 scripts/check_secrets.py
       - name: Build the site data
         run: python3 -m decision_bench report
-      - name: Check site JavaScript
-        run: for f in site/*.js; do node --check "$f"; done
-      - name: Test populated viewer and hostile URL filters
-        run: node --test tests/test_site.cjs
+      - name: Build the viewer
+        run: npm ci --prefix web && npm run build --prefix web
