@@ -69,8 +69,15 @@ def consolidate_attempts(events):
     return list(latest.values())
 
 
+def billable(attempts):
+    """Attempts that may have been charged. A rate-limited request (HTTP 429) never reached the model, so it has no
+    cost to know and does not lower cost coverage."""
+    return [a for a in attempts if a.get("cost_usd") is not None or a.get("status") != "429"]
+
+
 def attempt_totals(attempts):
     known_cost = [a["cost_usd"] for a in attempts if a.get("cost_usd") is not None]
+    charged = billable(attempts)
     tokens = {}
     for key in TOKEN_KEYS:
         values = [(a.get("usage") or {}).get(key) for a in attempts if (a.get("usage") or {}).get(key) is not None]
@@ -82,9 +89,9 @@ def attempt_totals(attempts):
     return {"attempts": len(attempts), "retries": sum(max(n - 1, 0) for n in by_case.values()),
             "incomplete_attempts": sum(a.get("event") == "started" for a in attempts),
             "attempt_errors": sum(a.get("event") == "finished" and a.get("status") != "ok" for a in attempts),
-            "cost_usd": sum(known_cost) if known_cost else None,
-            "cost_coverage": len(known_cost) / len(attempts) if attempts else 0,
-            "cost_bases": sorted({a.get("cost_basis") or "unavailable" for a in attempts}),
+            "cost_usd": sum(known_cost) if known_cost else (0.0 if attempts and not charged else None),
+            "cost_coverage": len(known_cost) / len(charged) if charged else (1 if attempts else 0),
+            "cost_bases": sorted({a.get("cost_basis") or "unavailable" for a in charged}),
             "tokens": tokens}
 
 

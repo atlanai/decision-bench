@@ -35,7 +35,7 @@
     banner = document.createElement('aside');
     banner.className = 'analytics-choice';
     banner.setAttribute('aria-label', 'Analytics choice');
-    banner.innerHTML = '<p>May we use Google Analytics to understand visits to Decision Bench? <a href="privacy.html">Privacy details</a></p><div><button type="button" data-analytics-choice="no">No thanks</button><button type="button" data-analytics-choice="yes">Allow analytics</button></div>';
+    banner.innerHTML = '<p>May we use Google Analytics, which may set cookies, to count visits and clicks on Decision Bench? We never send search terms, record text or URL query strings. You can change this later under Analytics preferences in the footer. <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses this data</a></p><div><button type="button" data-analytics-choice="no">No thanks</button><button type="button" data-analytics-choice="yes">Allow analytics</button></div>';
     document.body.appendChild(banner);
   }
   document.addEventListener('click', event => {
@@ -50,7 +50,6 @@
     banner = null;
     if (choice === 'yes') { if (started) pageView(); else start(); }
   });
-  if (location.pathname.endsWith('/privacy.html')) window.dbAnalytics.page({page_type: 'privacy', page_path: '/privacy.html', page_location: location.origin + '/privacy.html', page_title: 'Privacy · Decision Bench'});
   if (consent() === 'yes') start();
   else if (!consent()) showChoice();
 })();

@@ -18,7 +18,7 @@ from urllib.parse import urlsplit
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-THIRD_PARTY = ("data/corpus/", "data/sources/", "data/assets/", "authoring/bench/v3/", "authoring/bench/engineering_creddata.json")
+THIRD_PARTY = ("data/corpus/", "data/sources/", "data/assets/", "authoring/bench/engineering_creddata.json")
 SKIP_DIRS = {".git", "runs", "__pycache__", ".venv", "node_modules"}
 MAX_BYTES = 20_000_000
 

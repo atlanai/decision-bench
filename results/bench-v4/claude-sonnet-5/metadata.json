@@ -78,7 +78,7 @@
     ],
     "errors": 1,
     "cost_usd": 5.37457,
-    "cost_coverage": 0.6205098493626883,
+    "cost_coverage": 0.9990671641791045,
     "input_tokens": 2273255,
     "output_tokens": 82806,
     "latency_p50_ms": 3588.1204580073245

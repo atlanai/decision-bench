@@ -48,7 +48,6 @@ for (const [path, title] of routes) {
 writeFileSync(join(site, '404.html'), root);
 const sitemap = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   '  <url><loc>https://decisionbench.ai/</loc></url>',
-  '  <url><loc>https://decisionbench.ai/privacy.html</loc></url>',
   ...[...routes.keys()].filter(path => path !== 'review' && !path.startsWith('review/')).map(path => `  <url><loc>https://decisionbench.ai/${path}/</loc></url>`),
   '</urlset>', ''].join('\n');
 writeFileSync(join(site, 'sitemap.xml'), sitemap);
