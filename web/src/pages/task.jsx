@@ -44,6 +44,7 @@ export function TaskPage({id: t}) {
     [BadgeCheckIcon, 'Checked against', cap(i.label_origin || 'the source'), cap(by)],
   ];
   const metrics = B.evaluated(B.RUNS, rows).map(r => [r, B.subsetMetrics(r, rows)]).sort(([, a], [, b]) => b.accuracy - a.accuracy);
+  const excluded = B.RUNS.filter(r => rows.some(c => B.exclusionReason(r.id, c.id)));
   const list = rows.slice().sort((a, b) => { if (sort === 'hardest') { const sa = B.caseStats(a), sb = B.caseStats(b); return (sa.n ? sa.ok / sa.n : 1) - (sb.n ? sb.ok / sb.n : 1); } if (sort === 'title') return B.caseTitle(a).localeCompare(B.caseTitle(b)); return 0; });
   const shown = all ? list : list.slice(0, 40);
   return <>
@@ -116,7 +117,8 @@ export function TaskPage({id: t}) {
           </tr>)}</tbody>
         </table>
       </TableCard></> : <Notice>{B.hasResults() ? 'No model has results on this task yet.' : <>No model has been evaluated on this version yet. <HowToAdd /></>}</Notice>}
-      {B.isImageTask(t) && metrics.length > 0 && <Notes items={['Text-only models saw a text rendering, not the image.', 'Models never sent this task are not listed.']} />}
+      {excluded.length > 0 && <Notice><strong>Not evaluated: image required.</strong> {excluded.map(B.runName).join(', ')} were not sent the images needed for this task. Their answers are excluded from scores and comparisons.</Notice>}
+      {B.isImageTask(t) && metrics.length > 0 && <Notes items={[excluded.length ? 'Only models sent the required image are scored on this task.' : 'Text-only models saw a text rendering, not the image.', 'Models never sent this task are not listed.']} />}
     </Section>
 
     <Section title="Rows" description="Every record in this task with its answer key. Open a row to read the record as the model saw it."

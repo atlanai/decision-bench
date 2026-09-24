@@ -12,7 +12,7 @@ const shade = a => SHADES.find(([t]) => a >= t)[1];
 const bg = s => s ? `color-mix(in oklab, var(--bad) ${s}%, transparent)` : undefined;
 
 function Cell({r, m, label}) {
-  if (!m?.questions) return <td className="px-1.5 py-1 text-center text-muted-foreground">—</td>;
+  if (!m?.questions) return <td className="px-1.5 py-1 text-center text-muted-foreground" title={m?.excluded ? "Not evaluated: image required, but no image was sent." : "Not run"}>{m?.excluded ? "N/E" : "—"}</td>;
   const s = shade(m.accuracy), v = m.accuracy >= .995 ? '100' : m.accuracy === 0 ? '0' : (m.accuracy * 100).toFixed(m.accuracy >= .1 ? 0 : 1);
   return <td className={cn('px-1 py-1 text-center tabular-nums md:px-1.5', s ? 'text-foreground' : 'text-muted-foreground')} style={{background: bg(s)}}
     data-tip={tip(`${runName(r)} · ${label}`, [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(m.wilson)], ['Correct', `${m.correct}/${m.questions}`]])}>{v}</td>;

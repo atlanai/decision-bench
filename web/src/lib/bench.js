@@ -2,6 +2,7 @@
    indexed once at load. Everything here is read-only after init(), so pages call these helpers directly. */
 import {slug, human, clip} from './format.js';
 import {TASK_COPY} from './names.js';
+import {imageInputExclusion} from './eligibility.js';
 
 export let data = null;
 export let allCases = [];
@@ -50,7 +51,9 @@ function collectRuns() {
   PARTIAL = all.filter(r => r.coverage?.full === false);
 }
 export const hasResults = () => RUNS.length > 0;
-export const result = (runId, caseId) => recordMap.get(`${runId}:${caseId}`);
+export const rawResult = (runId, caseId) => recordMap.get(`${runId}:${caseId}`);
+export const exclusionReason = (runId, caseId) => imageInputExclusion(caseMap.get(caseId), rawResult(runId, caseId));
+export const result = (runId, caseId) => exclusionReason(runId, caseId) ? undefined : rawResult(runId, caseId);
 export const okOf = v => !!v && v.scores.length > 0 && v.scores.every(s => s.correct);
 export const answered = v => !!v && v.scores.some(s => s.label != null);
 export const answerOf = v => !v ? 'Not run' : !answered(v) ? 'No valid answer' : v.scores.map(s => human(s.label)).join(', ');
@@ -113,7 +116,7 @@ export function subsetMetrics(run, cases) {
   for (const s of scores) { if (s.confidence == null) continue; const b = bins[Math.min(9, Math.floor(s.confidence * 10))]; b.count++; b.conf += s.confidence; b.acc += s.correct ? 1 : 0; }
   const withConf = scores.filter(s => s.confidence != null).length;
   const ece = withConf ? bins.reduce((e, b) => b.count ? e + b.count / withConf * Math.abs(b.acc / b.count - b.conf / b.count) : e, 0) : null;
-  const m = {cases: recs.length, questions: n, correct, accuracy: n ? correct / n : null, wilson: wilson(correct, n),
+  const m = {excluded: cases.filter(c => exclusionReason(run.id, c.id)).length, cases: recs.length, questions: n, correct, accuracy: n ? correct / n : null, wilson: wilson(correct, n),
     errors: recs.filter(r => r.status !== 'ok').length, highConfErrors: scores.filter(s => !s.correct && (s.confidence || 0) >= .9).length,
     latency: {p50: quantile(recs.map(r => r.duration_ms), .5), p95: quantile(recs.map(r => r.duration_ms), .95)},
     costPer1k: known.length ? known.reduce((x, y) => x + y, 0) / known.length * 1000 : null, costCoverage: recs.length ? known.length / recs.length : null,
@@ -128,7 +131,7 @@ export const macroF1 = (run, tasks) => meanOf(tasks.map(t => {
   return meanOf([...labels].map(l => { const tp = rows.filter(s => s.gold === l && s.label === l).length, fp = rows.filter(s => s.gold !== l && s.label === l).length, fn = rows.filter(s => s.gold === l && s.label !== l).length; return 2 * tp + fp + fn ? 2 * tp / (2 * tp + fp + fn) : 0; }));
 }));
 /* Fit verdict: the plain answer to "can I use this model for this task?" */
-export function verdict(m) { if (!m || m.accuracy == null || !m.questions) return {k: 'na', t: 'Not run'}; const [lo] = m.wilson; if (m.accuracy >= .9 && lo >= .85) return {k: 'ok', t: 'Fits'}; if (m.accuracy >= .8) return {k: 'risk', t: 'Risky'}; return {k: 'no', t: 'Not fit'}; }
+export function verdict(m) { if (!m || m.accuracy == null || !m.questions) return {k: 'na', t: m?.excluded ? 'Not evaluated' : 'Not run'}; const [lo] = m.wilson; if (m.accuracy >= .9 && lo >= .85) return {k: 'ok', t: 'Fits'}; if (m.accuracy >= .8) return {k: 'risk', t: 'Risky'}; return {k: 'no', t: 'Not fit'}; }
 export const rankOf = (m, ms) => { const hi = m.wilson?.[1] ?? m.accuracy; return 1 + ms.filter(o => o !== m && (o.wilson?.[0] ?? o.accuracy) > hi).length; };
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
 export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);
@@ -182,8 +185,8 @@ export function loadCaseDetail(c) {
     if (!res.ok) throw Error('Row unavailable');
     const detail = await res.json();
     if (detail.corpus_sha256 !== data.corpus_sha256 || detail.case?.id !== c.id || !Array.isArray(detail.results)) throw Error('Row version mismatch');
-    if (detail.results.some(r => r.case_id !== c.id || !result(r.run_id, c.id))) throw Error('Row results mismatch');
-    for (const r of detail.results) Object.assign(result(r.run_id, c.id), r);
+    if (detail.results.some(r => r.case_id !== c.id || !rawResult(r.run_id, c.id))) throw Error('Row results mismatch');
+    for (const r of detail.results) Object.assign(rawResult(r.run_id, c.id), r);
     Object.assign(c, detail.case);
   })().finally(() => detailRequests.delete(c.id));
   detailRequests.set(c.id, request);
