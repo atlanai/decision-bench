@@ -67,6 +67,6 @@ def completion(model, case, timeout, api_model=None):
             "output_text": json.dumps(raw, ensure_ascii=False), "resolved_model": meta.get("model"),
             "http_status": status, "provider_duration_ms": meta.get("latency_ms"),
             "adapter_duration_ms": (time.perf_counter() - started) * 1000,
-            "usage": {"input_tokens": None, "output_tokens": None, "cached_input_tokens": None,
+            "usage": {"input_tokens": (meta.get("usage") or {}).get("billed_input_tokens"), "output_tokens": None, "cached_input_tokens": None,
                       "reasoning_output_tokens": (meta.get("reasoning") or {}).get("tokens")},
             "cost_usd": None, "cost_basis": "unavailable", "payload": payload}

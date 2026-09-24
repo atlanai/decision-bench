@@ -87,7 +87,7 @@ def predictions_from_run(records, ledger, case_map):
         row = {"row_id": r["case_id"], "task": case["task"], "category": case["category"], "status": r["status"],
                "answer": answer["label"] if answer else None, "gold": q["gold"],
                "correct": bool(answer and answer["label"] == q["gold"]),
-               "confidence": answer["probabilities"][answer["label"]] if answer and answer.get("probabilities") else None,
+               "confidence": answer["probabilities"][answer["label"]] if answer and answer.get("probabilities") and answer.get("label") is not None else None,
                "probabilities": answer["probabilities"] if answer else None,
                "output_text": text[:MAX_OUTPUT_CHARS] if isinstance(text, str) else None,
                "error": public_error(r.get("error"), r["status"]) if r["status"] != "ok" else None,

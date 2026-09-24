@@ -73,6 +73,7 @@ export function ModelPage({id: k}) {
       <Stat label="$ / 1k rows" value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
     {run.coverage?.full === false && <Notice>This is a partial evaluation: {run.coverage.rows_completed} of {run.coverage.rows_in_corpus} corpus rows were run. Unrun rows are not scored, and this run is not ranked on the full leaderboard. {m.provider === 'tev1' && 'Tev1 was evaluated on 949 text-only cases; all 122 image-containing cases were excluded. Calibration metrics are unavailable for this label-only evaluation.'}</Notice>}
+    {m.provider === 'sage' && <Notice>Sage abstained on {B.allCases.filter(c => { const r = B.rawResult(run.id, c.id); return r?.status === 'ok' && r.scores.some(s => s.label == null); }).length} rows. These count as incorrect in accuracy, not as API failures. Probability metrics use renormalized independent option probabilities and do not measure Sage’s original calibrated confidence. Dollar cost is unavailable for this subscription-funded run.</Notice>}
     {all.excluded > 0 && <Notice>{all.excluded} image-only rows excluded: the required image was not sent. Overall metrics use {all.questions} eligible rows. Downloaded run files retain the original, unadjusted results for audit.</Notice>}
     <Section title="Fit by use case" description="Fits: accuracy at or above 90% with the whole 95% interval above 85%. Risky: above 80%. Not fit: below 80%.">
       <List className="md:hidden">{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c && (run.coverage?.full !== false || B.rawResult(run.id, x.id))), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
@@ -114,7 +115,7 @@ export function ModelPage({id: k}) {
         </tr>)}</tbody>
       </table></TableCard></> : <p className="text-sm text-muted-foreground">No row where this model is wrong while most others are right.</p>}
     </Section>
-    <Section title="Confidence" description={`Expected calibration error ${metric(all.ece)} · Brier ${metric(all.brier)} · ${plural(all.highConfErrors, 'wrong answer')} given with 90% confidence or more.`}>
+    <Section title={m.provider === 'sage' ? 'Renormalized probability diagnostics' : 'Confidence'} description={`Expected calibration error ${metric(all.ece)} · Brier ${metric(all.brier)} · ${plural(all.highConfErrors, 'wrong answer')} given with 90% confidence or more.`}>
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="Reliability" description="On the diagonal, stated confidence matches observed accuracy. Dot size is the number of decisions in the bin."><Reliability runs={[run, ...others]} cases={textCases} focus={[k]} label="Reliability diagram" /></ChartCard>
         <ChartCard title="Risk and coverage" description="Error rate if answers below a confidence threshold are handed to a person. Other models in grey."><Risk runs={[run, ...others]} cases={textCases} focus={[k]} label="Risk against coverage" /></ChartCard>

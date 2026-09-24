@@ -330,7 +330,7 @@
       "model": "levanto-sage-v1.1",
       "color": "#1438d4",
       "vision": false,
-      "notes": "Hosted default model; version recorded from API response, not pinned. Reasoning auto; no grounding. Independent option probabilities are renormalized for benchmark calibration (native-renormalized); raw probabilities retained. Null choices remain invalid answers under the existing forced-choice contract. Subscription decision-unit pricing is not estimated as token pricing."
+      "notes": "Hosted default model; version recorded from API response, not pinned. Reasoning auto; no grounding. Independent option probabilities are renormalized for benchmark calibration (native-renormalized); raw probabilities retained. Null choices count as unanswered and incorrect, not transport errors; no argmax is substituted. Subscription decision-unit pricing is not estimated as token pricing."
     },
     {
       "id": "tev1-4b-experimental",
