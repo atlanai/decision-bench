@@ -68,9 +68,10 @@ export function ModelPage({id: k}) {
   return <>
     {head}
     <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:grid-cols-5 [&>:last-child:nth-child(odd)]:max-md:col-span-2">
-      <Stat label="Accuracy" value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
+      <Stat label={`Accuracy · ${all.questions} scored rows`} value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
       <Stat label="$ / 1k rows" value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
+    {all.excluded > 0 && <Notice>{all.excluded} image-only rows excluded: the required image was not sent. Overall metrics use {all.questions} eligible rows. Downloaded run files retain the original, unadjusted results for audit.</Notice>}
     <Section title="Fit by use case" description="Fits: accuracy at or above 90% with the whole 95% interval above 85%. Risky: above 80%. Not fit: below 80%.">
       <List className="md:hidden">{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
         return <Item key={c} href={catHref(c)} chevron={false} title={B.catInfo(c).name} sub={best ? `Best: ${B.ident(best[0]).short}, ${pct0(best[1].accuracy)}` : ''}
@@ -80,7 +81,7 @@ export function ModelPage({id: k}) {
         <tbody>{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
           return <tr key={c} onClick={go(catHref(c))} className="cursor-pointer border-b last:border-0 hover:bg-muted/40">
             <td className={TD}><a href={catHref(c)} className="font-medium hover:underline">{B.catInfo(c).name}</a></td>
-            <td className={TD}>{mm.questions ? <span className="flex items-center gap-3"><span className="w-12 font-semibold tabular-nums">{pct(mm.accuracy)}</span><Meter value={mm.accuracy} color={m.color} /></span> : <span className="text-muted-foreground">not run</span>}</td>
+            <td className={TD}>{mm.questions ? <span className="flex items-center gap-3"><span className="w-12 font-semibold tabular-nums">{pct(mm.accuracy)}</span><Meter value={mm.accuracy} color={m.color} /></span> : <span className="text-muted-foreground">{mm.excluded ? 'Not evaluated: image required' : 'not run'}</span>}</td>
             <td className={cn(TD, 'text-right text-muted-foreground tabular-nums')}>{best ? `${pct0(best[1].accuracy)} · ${B.ident(best[0]).short}` : '—'}</td>
             <td className={TD}><Fit v={B.verdict(mm)} /></td>
           </tr>; })}</tbody>
@@ -90,7 +91,7 @@ export function ModelPage({id: k}) {
       <div className="grid gap-x-8 rounded-xl border bg-card px-5 py-2 shadow-xs sm:grid-cols-2 lg:grid-cols-3">
         {fits.map(([t, v]) => { const mm = B.subsetMetrics(run, B.taskRows(t));
           return <a key={t} href={taskHref(t)} className="group flex items-center justify-between gap-3 border-b py-2.5 last:border-0 sm:[&:nth-last-child(-n+2)]:border-0 lg:[&:nth-last-child(-n+3)]:border-0">
-            <span className="min-w-0"><span className="block truncate text-sm font-medium group-hover:underline">{B.taskName(t)}</span><span className="block truncate text-xs text-muted-foreground">{B.catInfo(B.taskCat(t)).name} · {mm.questions ? `${pct0(mm.accuracy)} on ${mm.questions} rows` : B.isImageTask(t) ? 'image task, not run' : 'not run'}</span></span>
+            <span className="min-w-0"><span className="block truncate text-sm font-medium group-hover:underline">{B.taskName(t)}</span><span className="block truncate text-xs text-muted-foreground">{B.catInfo(B.taskCat(t)).name} · {mm.questions ? `${pct0(mm.accuracy)} on ${mm.questions} rows` : mm.excluded ? 'Not evaluated: image required' : B.isImageTask(t) ? 'image task, not run' : 'not run'}</span></span>
             <Fit v={v} />
           </a>; })}
       </div>

@@ -77,6 +77,15 @@ class Metrics(unittest.TestCase):
         total = attempt_totals(consolidate_attempts(events))
         self.assertEqual((total["attempts"], total["cost_coverage"], total["cost_usd"]), (1, 1, 0))
 
+    def test_rate_limited_attempt_does_not_lower_cost_coverage(self):
+        attempts = [{"attempt_id": "a", "case_id": "c", "event": "finished", "status": "429"},
+                    {"attempt_id": "b", "case_id": "c", "event": "finished", "status": "ok", "cost_usd": .01,
+                     "cost_basis": "provider_reported"}]
+        total = attempt_totals(attempts)
+        self.assertEqual((total["cost_coverage"], total["cost_usd"], total["cost_bases"]),
+                         (1, .01, ["provider_reported"]))
+        self.assertEqual(attempt_totals(attempts[:1])["cost_usd"], 0)
+
     def test_only_orphan_attempt_cost_is_unknown(self):
         total = attempt_totals([{"attempt_id": "a", "case_id": "c", "event": "started"}])
         self.assertIsNone(total["cost_usd"])

@@ -164,3 +164,11 @@ data/sources/**
 site/viewer.json
 site/viewer.json.tmp
 site/details/
+
+# Internal launch drafts and editorial notes (kept locally, never published)
+docs/editorial-skills/
+docs/frontier/
+docs/social/posts.md
+docs/social/x-*.md
+docs/social/x-thread.json
+docs/social/*.prompt.md

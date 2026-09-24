@@ -118,13 +118,15 @@ const said = (c, v) => { const s = v.scores[0]; return s?.label != null ? B.optL
 
 function Answers({c}) {
   const [open, setOpen] = useState(() => new Set());
+  const excluded = B.RUNS.filter(r => B.exclusionReason(r.id, c.id));
   const rs = B.RUNS.filter(r => B.result(r.id, c.id));
-  if (!rs.length) return <Notice>{B.hasResults() ? 'No model has a result on this row.' : 'No model has been evaluated on this version yet.'}</Notice>;
+  if (!rs.length) return <Notice>{excluded.length ? `Not evaluated: image required. ${excluded.map(B.runName).join(', ')} were not sent this image.` : B.hasResults() ? 'No model has a result on this row.' : 'No model has been evaluated on this version yet.'}</Notice>;
   const rows = rs.map(r => { const v = B.result(r.id, c.id); return {r, v, ok: B.okOf(v)}; }).sort((a, b) => (a.ok - b.ok) || B.byOrder(a.r, b.r));
   const img = B.isImageTask(c.task), cols = img ? 7 : 6;
   const toggle = id => { track('result_toggle', {expanded: !open.has(id)}); setOpen(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; }); };
   const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
   return <>
+    {excluded.length > 0 && <Notice><strong>Not evaluated: image required.</strong> {excluded.map(B.runName).join(", ")} were not sent this image. Their answers are not scored.</Notice>}
     {/* Phones: one line per model, tap for the probabilities and the raw response. */}
     <List className="md:hidden">{rows.map(({r, v, ok}) => { const on = open.has(r.id), k = B.keyOf(r);
       return <Item key={r.id} onClick={() => toggle(r.id)} aria-expanded={on} chevron={false} lead={<Logo k={k} size={26} className="rounded-lg" />} title={B.ident(r).name}

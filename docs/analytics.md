@@ -1,6 +1,6 @@
 # Site analytics
 
-The existing GA4 web stream is configured by `ga-measurement-id` in `web/index.html` and `site/privacy.html`. The loader runs only on decisionbench.ai and www.decisionbench.ai, after explicit opt-in. No new package or server is required.
+The existing GA4 web stream is configured by `ga-measurement-id` in `web/index.html`. The loader runs only on decisionbench.ai and www.decisionbench.ai, after explicit opt-in. No new package or server is required.
 
 Page views are emitted after React commits a loaded route, once per canonical path transition, including browser back/forward. Filter-only changes do not create page views. Accepting consent records the current page; withdrawing it blocks custom events and disables the Google tag. Previously declined interactions are not replayed. Blocked browser storage fails closed.
 
