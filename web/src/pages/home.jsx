@@ -194,14 +194,14 @@ function Leaderboard({route, runs, cases, more}) {
               return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40">
                 <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{m.questions ? B.rankOf(m, all) : '—'}</td>
                 {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
-                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><ModelName k={B.keyOf(r)} /></td>
+                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <span className="block text-xs text-muted-foreground">{m.questions} scored · {m.excluded} image-only excluded</span>}</td>
                 <td className="px-3 py-2.5" data-tip={tip(B.runName(r), [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(ci)], ['Correct', `${m.correct}/${m.questions}`]])}>
                   <span className="flex items-center gap-3 whitespace-nowrap">
                     <span className="w-12 font-semibold tabular-nums">{pct(m.accuracy)}</span>
                     {ci && <span className="relative inline-block h-2.5 w-14 shrink-0" aria-hidden="true"><i className="absolute inset-x-0 top-[4.5px] h-px bg-border" /><i className="absolute top-[3px] h-1 rounded-full bg-foreground/20" style={{left: cx(ci[0]), width: Math.max(2, cx(ci[1]) - cx(ci[0]))}} /><b className="absolute top-px h-2 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}
                   </span>
                 </td>
-                {cols.map(k => { const s = B.subsetMetrics(r, colCases(k)); return <td key={k} className="px-1.5 py-2.5 text-right text-foreground/80 tabular-nums" data-tip={s.questions ? tip(`${B.runName(r)} · ${colName(k)}`, [['Accuracy', pct(s.accuracy)], ['95% interval', ciText(s.wilson)], ['Correct', `${s.correct}/${s.questions}`]]) : undefined}>{s.questions ? pct0(s.accuracy) : <Dash />}</td>; })}
+                {cols.map(k => { const s = B.subsetMetrics(r, colCases(k)); return <td key={k} className="px-1.5 py-2.5 text-right text-foreground/80 tabular-nums" data-tip={s.questions ? tip(`${B.runName(r)} · ${colName(k)}`, [['Accuracy', pct(s.accuracy)], ['95% interval', ciText(s.wilson)], ['Correct', `${s.correct}/${s.questions}`]]) : undefined}>{s.questions ? pct0(s.accuracy) : s.excluded ? <span title="Not evaluated: image required, but no image was sent.">N/E</span> : <Dash />}</td>; })}
                 <td className="px-3 py-2.5 text-right whitespace-nowrap tabular-nums">{ms(m.latency.p50)}</td>
                 <td className={cn('px-3 py-2.5 text-right whitespace-nowrap tabular-nums', !more && 'pr-5')}>{money(m.costPer1k)}{m.costCoverage != null && m.costCoverage < 1 && <sup className="text-warn" title={`Cost known for ${pct(m.costCoverage)} of rows`}>*</sup>}</td>
                 {more && <><td className="px-3 py-2.5 text-right tabular-nums" data-tip={tp != null ? tip(B.runName(r), [['Input / row', compact(m.tokensIn)], ['Output / row', compact(m.tokensOut)]]) : undefined}>{compact(tp)}</td><td className="px-3 py-2.5 text-right tabular-nums">{pct(B.macroF1(r, tasks))}</td><td className="px-3 py-2.5 text-right tabular-nums">{metric(m.ece)}</td><td className="px-3 py-2.5 text-right tabular-nums">{metric(m.brier)}</td><td className="py-2.5 pr-5 pl-3 text-right tabular-nums">{num(m.errors)}</td></>}
@@ -212,7 +212,7 @@ function Leaderboard({route, runs, cases, more}) {
     </div>
     <Notes items={[
       'Overlapping 95% intervals share a rank.',
-      B.allCases.some(c => B.isImageTask(c.task)) && 'Image tasks count only for models sent the image.',
+      B.allCases.some(c => B.isImageTask(c.task)) && 'Image-only tasks are not evaluated when no image was sent. Text renderings remain scored where usable. Overall denominators may differ; use the Text filter for a shared text-only comparison.',
       partial && '* Cost known for part of the rows.',
       B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
     ]} />
