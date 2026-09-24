@@ -194,7 +194,7 @@ function Leaderboard({route, runs, cases, more}) {
               return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40">
                 <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{m.questions ? B.rankOf(m, all) : '—'}</td>
                 {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
-                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <span className="block text-xs text-muted-foreground">{m.questions} scored · {m.excluded} image-only excluded</span>}</td>
+                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <sup className="text-[10px] text-muted-foreground" title={`${m.excluded} image-only cases excluded; ${m.questions} scored. Image required but not sent.`}>**</sup>}</span></td>
                 <td className="px-3 py-2.5" data-tip={tip(B.runName(r), [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(ci)], ['Correct', `${m.correct}/${m.questions}`]])}>
                   <span className="flex items-center gap-3 whitespace-nowrap">
                     <span className="w-12 font-semibold tabular-nums">{pct(m.accuracy)}</span>
@@ -212,7 +212,7 @@ function Leaderboard({route, runs, cases, more}) {
     </div>
     <Notes items={[
       'Overlapping 95% intervals share a rank.',
-      B.allCases.some(c => B.isImageTask(c.task)) && 'Image-only tasks are not evaluated when no image was sent. Text renderings remain scored where usable. Overall denominators may differ; use the Text filter for a shared text-only comparison.',
+      B.allCases.some(c => B.isImageTask(c.task)) && '** Image-only cases excluded when the image was not sent. N/E = not evaluated.',
       partial && '* Cost known for part of the rows.',
       B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
     ]} />
