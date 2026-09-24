@@ -24,7 +24,7 @@ export function parseTrace(lines) {
 function Fence({text}) {
   const f = text.trim().match(/^<function=([\w.$-]+)>([\s\S]*)<\/function>$/);
   if (f) return <div className="my-2 flex items-center gap-2 font-mono text-xs text-muted-foreground"><WrenchIcon className="size-3.5" />requests <span className="font-medium text-foreground">{f[1]}</span><span className="truncate">{f[2]}</span></div>;
-  return <pre className="my-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre">{text}</pre>;
+  return <pre tabIndex={0} className="my-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre">{text}</pre>;
 }
 
 const Arg = ({k, v}) => <span className="inline-flex max-w-full items-baseline gap-1 rounded-md border bg-background px-1.5 py-0.5 font-mono text-[11px]"><span className="text-muted-foreground">{k}</span><span className="truncate text-foreground">{typeof v === 'string' ? v : JSON.stringify(v)}</span></span>;

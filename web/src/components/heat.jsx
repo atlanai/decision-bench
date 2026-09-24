@@ -7,14 +7,14 @@ import {tip} from '@/components/tip';
 import {Logo} from '@/components/common';
 import {cn} from '@/lib/utils';
 
-const SHADES = [[.95, 0], [.9, 12], [.8, 24], [.65, 42], [-1, 66]];
+const SHADES = [[.95, 0], [.9, 12], [.8, 24], [.65, 42], [-1, 60]];
 const shade = a => SHADES.find(([t]) => a >= t)[1];
 const bg = s => s ? `color-mix(in oklab, var(--bad) ${s}%, transparent)` : undefined;
 
 function Cell({r, m, label}) {
-  if (!m?.questions) return <td className="px-1.5 py-1 text-center text-muted-foreground/40">—</td>;
+  if (!m?.questions) return <td className="px-1.5 py-1 text-center text-muted-foreground">—</td>;
   const s = shade(m.accuracy), v = m.accuracy >= .995 ? '100' : m.accuracy === 0 ? '0' : (m.accuracy * 100).toFixed(m.accuracy >= .1 ? 0 : 1);
-  return <td className={cn('px-1 py-1 text-center tabular-nums md:px-1.5', s ? 'text-foreground' : 'text-muted-foreground/60')} style={{background: bg(s)}}
+  return <td className={cn('px-1 py-1 text-center tabular-nums md:px-1.5', s ? 'text-foreground' : 'text-muted-foreground')} style={{background: bg(s)}}
     data-tip={tip(`${runName(r)} · ${label}`, [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(m.wilson)], ['Correct', `${m.correct}/${m.questions}`]])}>{v}</td>;
 }
 
@@ -49,7 +49,7 @@ export function HeatTasks({runs, cases}) {
         </table>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1 border-t px-5 py-3 text-xs text-muted-foreground">
-        {[['≥ 95%', 0], ['90–95', 12], ['80–90', 24], ['65–80', 42], ['< 65', 66]].map(([l, s]) => <span key={l} className="inline-flex items-center gap-1.5"><i className="inline-block h-2.5 w-3.5 rounded-[2px] border" style={{background: bg(s)}} />{l}</span>)}
+        {[['≥ 95%', 0], ['90–95', 12], ['80–90', 24], ['65–80', 42], ['< 65', 60]].map(([l, s]) => <span key={l} className="inline-flex items-center gap-1.5"><i className="inline-block h-2.5 w-3.5 rounded-[2px] border" style={{background: bg(s)}} />{l}</span>)}
       </div>
     </div>
   );

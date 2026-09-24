@@ -12,7 +12,7 @@ import {Tip} from '@/components/ui/tooltip';
 import {Strip, HowToAdd} from '@/pages/home';
 import {Badge} from '@/components/ui/badge';
 import {Button} from '@/components/ui/button';
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
 
 const CONTAMINATION = {low: 'A fresh derivation, unlikely to be in training data.', medium: 'A public dataset that may be in training data.', high: 'A well-known benchmark, probably in training data.'};
 const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
@@ -120,7 +120,7 @@ export function TaskPage({id: t}) {
     </Section>
 
     <Section title="Rows" description="Every record in this task with its answer key. Open a row to read the record as the model saw it."
-      actions={<Tabs value={sort} onValueChange={v => { track('ui_click', {control: 'row_sort', sort: v}); setSort(v); }} className="max-md:w-full"><TabsList aria-label="Sort rows" className="max-md:w-full"><TabsTrigger value="order">Corpus order</TabsTrigger><TabsTrigger value="hardest">Hardest first</TabsTrigger><TabsTrigger value="title">Title</TabsTrigger></TabsList></Tabs>}>
+      actions={<SegmentedControl aria-label="Sort rows" value={sort} onValueChange={v => { track('ui_click', {control: 'row_sort', sort: v}); setSort(v); }} className="max-md:w-full"><SegmentedList aria-label="Sort rows" className="max-md:w-full"><SegmentedOption value="order">Corpus order</SegmentedOption><SegmentedOption value="hardest">Hardest first</SegmentedOption><SegmentedOption value="title">Title</SegmentedOption></SegmentedList></SegmentedControl>}>
       <List className="md:hidden">{shown.map(c => { const st = B.caseStats(c);
         return <Item key={c.id} href={rowHref(c)} wrap lead={<span className="w-6 text-[13px] text-muted-foreground tabular-nums">{rows.indexOf(c) + 1}</span>} title={B.caseTitle(c)} sub={`Key: ${B.goldText(c)}`}
           trail={st.n ? <span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums"><span className={cn('font-medium', st.ok < st.n ? 'text-foreground' : 'text-muted-foreground')}>{st.ok}</span>/{st.n}</span> : null} />; })}</List>

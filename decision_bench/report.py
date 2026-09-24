@@ -2,6 +2,7 @@
 
 Writes into site/:
   data.json      everything the viewer renders (schema in docs/results-format.md)
+  viewer.json    compact initial viewer data; details/ contains on-demand full rows and answers
   corpus.json    the active corpus rows, including reader-only fields (rationale, note, source)
   assets/rows/   copies of the row images under data/assets/
   datasets.json  copy of data/datasets.json, when it exists
@@ -20,6 +21,7 @@ from .corpus import PROMPT_VERSION, SYSTEM
 from .metrics import paired_comparison, summarize
 from .results import export_run, leaderboard, load_published, records_from_predictions
 from .runner import runs_dir
+from .viewer import write_viewer
 
 DATA_SCHEMA_VERSION = 2
 
@@ -103,6 +105,7 @@ def build(include_runs=False):
     temporary = site / "data.json.tmp"
     temporary.write_text(json.dumps(output, ensure_ascii=False, allow_nan=False))
     temporary.replace(site / "data.json")
+    write_viewer(output, site)
     (site / "corpus.json").write_text(json.dumps(cases, ensure_ascii=False, indent=2) + "\n")
     datasets = corpus.ROOT / "data/datasets.json"
     if datasets.exists():

@@ -50,7 +50,7 @@ export function Markdown({text, className, code: CodeFence}) {
   let i = 0, k = 0;
   while (i < lines.length) {
     const l = lines[i];
-    if (/^\s*```/.test(l)) { const body = []; i++; while (i < lines.length && !/^\s*```/.test(lines[i])) body.push(lines[i++]); i++; out.push(CodeFence ? <CodeFence key={k++} text={body.join('\n')} /> : <pre key={k++} className="my-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre">{body.join('\n')}</pre>); continue; }
+    if (/^\s*```/.test(l)) { const body = []; i++; while (i < lines.length && !/^\s*```/.test(lines[i])) body.push(lines[i++]); i++; out.push(CodeFence ? <CodeFence key={k++} text={body.join('\n')} /> : <pre tabIndex={0} key={k++} className="my-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre">{body.join('\n')}</pre>); continue; }
     const h = l.match(/^(#{1,4})\s+(.*)$/);
     if (h) { out.push(<div key={k++} className={cn('font-semibold text-foreground', h[1].length === 1 ? 'mt-4 text-base first:mt-0' : 'mt-3 text-sm first:mt-0')}>{inline(h[2])}</div>); i++; continue; }
     if (/^\s*[-*•]\s+/.test(l)) { const items = []; while (i < lines.length && /^\s*[-*•]\s+/.test(lines[i])) { let t = lines[i].replace(/^\s*[-*•]\s+/, ''); i++; while (i < lines.length && /^\s{2,}\S/.test(lines[i]) && !/^\s*[-*•]\s+/.test(lines[i])) t += ' ' + lines[i++].trim(); items.push(t); } out.push(<ul key={k++} className="my-1.5 list-disc space-y-1 pl-5 marker:text-muted-foreground/60">{items.map((t, j) => <li key={j}>{inline(t, j)}</li>)}</ul>); continue; }

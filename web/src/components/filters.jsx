@@ -7,7 +7,7 @@ import {usePhone, haptic} from '@/lib/device';
 import {plural} from '@/lib/format';
 import {withQ, go, replace} from '@/lib/route';
 import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {ModelName, Logo} from '@/components/common';
@@ -24,7 +24,7 @@ export function UseCaseSelect({route, className}) {
   if (phone) {
     const pick = v => { haptic(); setOpen(false); go(withQ(route, {category: v})); };
     return <>
-      <Button variant="outline" className={cn('justify-between rounded-full font-normal', className)} data-track="use_case_menu" aria-label="Use case" onClick={() => setOpen(true)}>{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button>
+      <Button variant="outline" className={cn('justify-between rounded-full font-normal', className)} data-track="use_case_menu" aria-label={cur ? `Use case: ${catInfo(cur).name}` : 'All use cases'} onClick={() => setOpen(true)}>{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button>
       <BottomSheet open={open} onOpenChange={setOpen} title="Pick a use case" description="Every table and chart on the page follows.">
         <SheetOption selected={!cur} onClick={() => pick('')} lead={<Tick on={!cur} />} sub={plural(allCases.length, 'row')}>All use cases</SheetOption>
         {categoryOrder().map(k => <SheetOption key={k} selected={cur === k} onClick={() => pick(k)} lead={<Tick on={cur === k} />} sub={catInfo(k).description}>{catInfo(k).name}</SheetOption>)}
@@ -33,7 +33,7 @@ export function UseCaseSelect({route, className}) {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild><Button variant="outline" className={cn('justify-between font-normal', className)} data-track="use_case_menu" aria-label="Use case">{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild><Button variant="outline" className={cn('justify-between font-normal', className)} data-track="use_case_menu" aria-label={cur ? `Use case: ${catInfo(cur).name}` : 'All use cases'}>{cur ? catInfo(cur).name : 'All use cases'}<ChevronDownIcon className="opacity-50" /></Button></DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-(--radix-dropdown-menu-trigger-width)">
         <DropdownMenuRadioGroup value={cur || 'all'} onValueChange={v => go(withQ(route, {category: v === 'all' ? '' : v}))}>
           <DropdownMenuRadioItem value="all">All use cases</DropdownMenuRadioItem>
@@ -47,9 +47,9 @@ export function UseCaseSelect({route, className}) {
 
 export function ModalityTabs({route}) {
   return (
-    <Tabs value={route.q.get('modality') || 'all'} onValueChange={v => go(withQ(route, {modality: v === 'all' ? '' : v}))}>
-      <TabsList aria-label="Input"><TabsTrigger value="all">All inputs</TabsTrigger><TabsTrigger value="text">Text</TabsTrigger><TabsTrigger value="image">Image</TabsTrigger></TabsList>
-    </Tabs>
+    <SegmentedControl aria-label="Input modality" value={route.q.get('modality') || 'all'} onValueChange={v => go(withQ(route, {modality: v === 'all' ? '' : v}))}>
+      <SegmentedList aria-label="Input"><SegmentedOption value="all">All inputs</SegmentedOption><SegmentedOption value="text">Text</SegmentedOption><SegmentedOption value="image">Image</SegmentedOption></SegmentedList>
+    </SegmentedControl>
   );
 }
 

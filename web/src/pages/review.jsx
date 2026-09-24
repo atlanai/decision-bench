@@ -13,7 +13,7 @@ import {toast} from '@/components/toast';
 import {haptic, usePhone} from '@/lib/device';
 import {Button} from '@/components/ui/button';
 import {Textarea} from '@/components/ui/input';
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
 
 const KEY = sha => `db-review:${sha}`;
 const mem = {};
@@ -68,12 +68,12 @@ export function Review({id}) {
     <div className="sticky top-[calc(env(safe-area-inset-top)+48px)] z-30 -mx-4 -mt-5 mb-6 border-b bg-background/90 px-4 py-3 backdrop-blur-md md:-mx-8 md:-mt-8 md:mb-8 md:px-8 lg:top-14 lg:-mt-10">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
         <div className="flex min-w-60 flex-1 items-center gap-3">
-          <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuemin={0} aria-valuemax={all.length} aria-valuenow={done}>
+          <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label="Rows reviewed" aria-valuemin={0} aria-valuemax={all.length} aria-valuenow={done}>
             <i className="absolute inset-y-0 left-0 bg-good" style={{width: `${all.length ? done / all.length * 100 : 0}%`}} /><i className="absolute inset-y-0 left-0 bg-warn" style={{width: `${all.length ? flagged / all.length * 100 : 0}%`}} />
           </div>
           <span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums">{num(done)} / {num(all.length)} reviewed · {num(flagged)} flagged</span>
         </div>
-        <Tabs value={filter} onValueChange={v => { track('review_filter', {filter: v}); setFilter(v); setMsg(''); }}><TabsList><TabsTrigger value="all">All<span className="max-md:hidden"> rows</span></TabsTrigger><TabsTrigger value="todo"><span className="md:hidden">To review</span><span className="max-md:hidden">Not reviewed</span></TabsTrigger><TabsTrigger value="flagged">Flagged</TabsTrigger></TabsList></Tabs>
+        <SegmentedControl aria-label="Review filter" value={filter} onValueChange={v => { track('review_filter', {filter: v}); setFilter(v); setMsg(''); }}><SegmentedList><SegmentedOption value="all">All<span className="max-md:hidden"> rows</span></SegmentedOption><SegmentedOption value="todo"><span className="md:hidden">To review</span><span className="max-md:hidden">Not reviewed</span></SegmentedOption><SegmentedOption value="flagged">Flagged</SegmentedOption></SegmentedList></SegmentedControl>
         <div className="flex gap-2 max-md:ml-auto">
           <Button variant="outline" size="sm" className="max-md:size-9 max-md:px-0" data-track="review_export" onClick={exportReviews} aria-label="Export reviews"><DownloadIcon /><span className="max-md:hidden">Export</span></Button>
           <Button variant="outline" size="sm" className="max-md:size-9 max-md:px-0" data-track="review_import" onClick={() => fileRef.current?.click()} aria-label="Import reviews"><UploadIcon /><span className="max-md:hidden">Import</span></Button>

@@ -14,7 +14,7 @@ import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/c
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
 
 const scopeCases = route => { const cat = route.q.get('category') || '', mod = route.q.get('modality') || ''; return B.rowsInOrder().filter(c => (!cat || B.catKey(c) === cat) && (!mod || (mod === 'image') === B.isImageTask(c.task))); };
 export const ChartCard = ({title, description, foot, children, className}) => (
@@ -25,7 +25,7 @@ export const ChartCard = ({title, description, foot, children, className}) => (
     {foot && <p className="mt-3 text-xs text-muted-foreground">{foot}</p>}
   </div>
 );
-const Link = ({href, children}) => <a href={href} className="text-brand underline-offset-4 hover:underline">{children}</a>;
+const Link = ({href, children}) => <a href={href} className="text-brand underline underline-offset-4">{children}</a>;
 const HowToAdd = () => <>Results are added by pull request: run a model on every row, publish the run into <code>results/</code>, and open a PR. {B.repoOk() && <Link href={B.gh('results/README.md')}>How to submit results</Link>}</>;
 const SubmitLink = () => B.repoOk() ? <Link href={B.gh('results/README.md')}>How to submit results</Link> : null;
 
@@ -240,9 +240,9 @@ function LeaderList({runs, cases}) {
   useSettle(box, key);
   const others = m => Object.entries(BY).filter(([k]) => k !== key).map(([k, [, , , f]]) => `${f(m)}${k === 'cost' ? ' / 1k' : ''}`).join(' · ');
   return <>
-    <Tabs value={key} onValueChange={v => { track('ui_click', {control: 'leaderboard_sort', sort: v}); haptic(); setKey(v); }} className="mb-3">
-      <TabsList aria-label="Sort the leaderboard" className="h-10 w-full rounded-xl">{Object.entries(BY).map(([k, [t]]) => <TabsTrigger key={k} value={k} className="rounded-[9px]">{t}</TabsTrigger>)}</TabsList>
-    </Tabs>
+    <SegmentedControl aria-label="Sort the leaderboard" value={key} onValueChange={v => { track('ui_click', {control: 'leaderboard_sort', sort: v}); haptic(); setKey(v); }} className="mb-3">
+      <SegmentedList aria-label="Sort the leaderboard" className="h-10 w-full rounded-xl">{Object.entries(BY).map(([k, [t]]) => <SegmentedOption key={k} value={k} className="rounded-[9px]">{t}</SegmentedOption>)}</SegmentedList>
+    </SegmentedControl>
     <div ref={box}><List>
       {sorted.map(([r, m], i) => { const k = B.keyOf(r), id = B.ident(r), ci = m.wilson;
         return <Item key={r.id} data-flip={r.id} href={modelHref(k)} chevron={false}

@@ -11,7 +11,7 @@ const isDiff = s => /^diff --git /m.test(s) || (/^--- \S/m.test(s) && /^\+\+\+ \
 const CODE_LINE = /^\s{2,}\S|[{};]\s*$|^\s*(def |function |class |import |from \S+ import|SELECT |FROM |WHERE |\$ |>>> |#!|<\/?[a-z][\w-]*[ >])|^\[?\d{4}-\d\d-\d\d[T ]\d\d:|\S {3,}\S/;
 function isCodeish(s) { if (/```/.test(s)) return true; const lines = s.split('\n').filter(l => l.trim()); if (lines.length < 2) return /^\s*(def|function|class|import|SELECT|CREATE TABLE)\b/.test(s); return lines.filter(l => CODE_LINE.test(l)).length >= Math.max(2, lines.length * .3); }
 
-export const Code = ({children, wrap, className}) => <pre className={cn('max-h-[560px] overflow-auto rounded-lg border bg-muted/50 px-3.5 py-3 font-mono text-xs leading-relaxed [tab-size:4]', wrap ? 'break-words whitespace-pre-wrap' : 'whitespace-pre', className)}>{children}</pre>;
+export const Code = ({children, wrap, className}) => <pre tabIndex={0} className={cn('max-h-[560px] overflow-auto rounded-lg border bg-muted/50 px-3.5 py-3 font-mono text-xs leading-relaxed [tab-size:4]', wrap ? 'break-words whitespace-pre-wrap' : 'whitespace-pre', className)}>{children}</pre>;
 const None = ({children = 'none'}) => <span className="text-muted-foreground">{children}</span>;
 
 function Str({s}) {

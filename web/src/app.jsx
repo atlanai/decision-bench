@@ -1,4 +1,4 @@
-import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {Component, lazy, Suspense, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {init, caseMap, caseTitle, taskName, M} from '@/lib/bench';
 import {pageView, installClicks} from '@/lib/analytics';
 import {useRoute} from '@/lib/route';
@@ -8,41 +8,26 @@ import {ChartTip} from '@/components/tip';
 import {TooltipProvider} from '@/components/ui/tooltip';
 import {EmptyPage} from '@/components/common';
 import {Home} from '@/pages/home';
-import {Tasks} from '@/pages/tasks';
-import {TaskPage} from '@/pages/task';
-import {RowPage} from '@/pages/row';
-import {Models, ModelPage} from '@/pages/models';
-import {Compare} from '@/pages/compare';
-import {DataPage} from '@/pages/data';
-import {Methodology} from '@/pages/methodology';
-import {Review} from '@/pages/review';
+const Tasks = lazy(() => import('@/pages/tasks').then(m => ({default: m.Tasks})));
+const TaskPage = lazy(() => import('@/pages/task').then(m => ({default: m.TaskPage})));
+const RowPage = lazy(() => import('@/pages/row').then(m => ({default: m.RowPage})));
+const Models = lazy(() => import('@/pages/models').then(m => ({default: m.Models})));
+const ModelPage = lazy(() => import('@/pages/models').then(m => ({default: m.ModelPage})));
+const Compare = lazy(() => import('@/pages/compare').then(m => ({default: m.Compare})));
+const DataPage = lazy(() => import('@/pages/data').then(m => ({default: m.DataPage})));
+const Methodology = lazy(() => import('@/pages/methodology').then(m => ({default: m.Methodology})));
+const Review = lazy(() => import('@/pages/review').then(m => ({default: m.Review})));
 
 const TITLES = {home: 'Leaderboard', tasks: 'Tasks', models: 'Models', compare: 'Compare', data: 'Data', methodology: 'Methodology', review: 'Review'};
 
-/* The loading screen lives in index.html, outside React. It is also the splash screen: on the first load of a
-   visit it stays long enough for the mark to finish assembling, then bursts apart as the app zooms in behind it. */
+/* CSS ships precompiled. Reveal content after layout, without waiting for fonts or a decorative timer. */
 const boot = (msg, f) => window.dbBoot?.(msg, f);
-const SPLASH_MS = 1150;
-const BOOT_HOLD_MS = 1500;
-function splashLeft() { let seen = false; try { seen = sessionStorage.getItem('db-splash') === '1'; sessionStorage.setItem('db-splash', '1'); } catch {} return seen ? 0 : Math.max(0, SPLASH_MS - performance.now()); }
-function hideBoot(hold = 0) {
-  const el = document.getElementById('boot'); if (!el || el.dataset.leaving) return;
-  el.dataset.leaving = '1'; boot('Ready', 1);
-  setTimeout(() => { el.dataset.done = ''; setTimeout(() => el.remove(), 900); }, Math.max(hold, splashLeft()));
-
-}
-/* The Tailwind runtime writes the stylesheet after the page mounts, so the first layout is unstyled and charts
-   measure the wrong width until their ResizeObserver catches up. Lift the loading screen once the stylesheet has
-   been quiet for a moment, the fonts are in and two frames have let the charts re-measure. */
-function hideBootWhenSettled() {
-  let t;
-  const mo = new MutationObserver(() => quiet()), done = () => { mo.disconnect(); clearTimeout(t); clearTimeout(cap); hideBoot(BOOT_HOLD_MS); };
-  const sized = () => [...document.querySelectorAll('[role=img] > svg[width]')].every(s => Math.abs(+s.getAttribute('width') - Math.max(220, s.parentElement.clientWidth)) <= 1);
-  const check = () => sized() ? done() : requestAnimationFrame(check);
-  const quiet = () => { clearTimeout(t); t = setTimeout(() => (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(() => requestAnimationFrame(check))), 150); };
-  const cap = setTimeout(done, 5000);
-  mo.observe(document.head, {subtree: true, childList: true, characterData: true});
-  boot('Drawing the charts', .85); quiet();
+function hideBoot() {
+  const el = document.getElementById('boot');
+  if (!el || el.dataset.done != null) return;
+  boot('Ready', 1);
+  el.dataset.done = '';
+  setTimeout(() => el.remove(), 200);
 }
 
 function useBench() {
@@ -51,17 +36,25 @@ function useBench() {
     (async () => {
       try {
         boot('Fetching the results', .25);
-        const res = await fetch('data.json', {cache: 'no-store'}); if (!res.ok) throw Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        boot('Checking the licences', .45);
-        let ds = null; try { const d = await fetch('datasets.json', {cache: 'no-store'}); ds = d.ok ? await d.json() : null; } catch {}
+        const [json, ds] = await Promise.all([
+          fetch('viewer.json', {cache: 'no-cache', signal: AbortSignal.timeout(30000)}).then(res => res.status === 404 ? fetch('data.json', {cache: 'no-cache', signal: AbortSignal.timeout(30000)}) : res).then(res => { if (!res.ok) throw Error('Results unavailable'); return res.json(); }),
+          fetch('datasets.json', {cache: 'no-cache', signal: AbortSignal.timeout(10000)}).then(res => res.ok ? res.json() : null).catch(() => null),
+        ]);
         boot('Scoring every model', .6);
         await new Promise(r => setTimeout(r));
         init(json, ds); setState({ready: true, error: null});
-      } catch (e) { console.error(e); setState({ready: false, error: e.message}); }
+      } catch { setState({ready: false, error: 'The benchmark could not be loaded. Please try again.'}); }
     })();
   }, []);
   return state;
+}
+
+class PageBoundary extends Component {
+  state = {failed: false};
+  static getDerivedStateFromError() { return {failed: true}; }
+  render() {
+    return this.state.failed ? <div className="p-8"><h1 className="text-2xl font-semibold">Unable to load this page</h1><p role="alert" className="mt-3">Please reload to try again.</p><button type="button" className="mt-4 rounded-md border px-4 py-2" onClick={() => location.reload()}>Reload page</button></div> : this.props.children;
+  }
 }
 
 function Page({route}) {
@@ -96,9 +89,9 @@ export function App() {
   useEffect(() => { if (ready) pageView(route); }, [ready, route]);
   useEffect(() => installClicks(), []);
 
-  useEffect(() => { if (ready) hideBootWhenSettled(); else if (error) hideBoot(); }, [ready, error]);
+  useEffect(() => { if (ready || error) hideBoot(); }, [ready, error]);
 
-  if (error) return <EmptyPage title="Nothing to show yet">Run <code>python3 -m decision_bench report</code>, then refresh.<div className="mt-2 opacity-70">{error}</div></EmptyPage>;
+  if (error) return <main id="main"><EmptyPage title="Unable to load results"><p role="alert">{error}</p><button type="button" className="mt-4 rounded-md border px-4 py-2" onClick={() => location.reload()}>Try again</button></EmptyPage></main>;
   if (!ready) return null;
   const wide = route.page === 'home';
   return (
@@ -106,7 +99,7 @@ export function App() {
       <a href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }} className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:shadow">Skip to content</a>
       <Header page={route.page} id={route.id} />
       <main id="main" tabIndex={-1} className={wide ? 'outline-none' : 'mx-auto max-w-[1240px] px-4 pt-5 pb-16 outline-none md:px-8 md:pt-8 lg:pt-10 lg:pb-20'}>
-        <Page route={route} />
+        <PageBoundary key={`${route.page}/${route.id}`}><Suspense fallback={<p role="status" className="p-8">Loading page…</p>}><Page route={route} /></Suspense></PageBoundary>
       </main>
       <Footer />
       <TabBar page={route.page} />

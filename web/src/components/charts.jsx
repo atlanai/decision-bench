@@ -22,10 +22,12 @@ export function useWidth(min = 220) {
 }
 export function Chart({label, className, children}) {
   const [ref, w] = useWidth();
-  return <div ref={ref} role="img" aria-label={label} className={cn('w-full min-w-0', className)}>{w > 0 && children(w)}</div>;
+  return <div ref={ref} role="group" aria-label={label} className={cn('w-full min-w-0', className)}>{w > 0 && children(w)}</div>;
 }
 const Hatch = () => <defs><pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="var(--background)" /><line x1="0" y1="0" x2="0" y2="4" stroke="var(--bad)" strokeWidth="1.5" /></pattern></defs>;
-const Svg = ({w, h, children}) => <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-hidden="true" className={SVG_CLS}><Hatch />{children}</svg>;
+const Svg = ({w, h, children}) => <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="group" className={SVG_CLS}><Hatch />{children}</svg>;
+
+const tipLabel = value => { try { const {t, r = []} = JSON.parse(value); return [t, ...r.map(([k, v]) => `${k}: ${v}`)].join('. '); } catch { return 'Chart point'; } };
 
 const lin = (d0, d1, r0, r1) => v => r0 + (v - d0) / (d1 - d0 || 1) * (r1 - r0);
 const logS = (d0, d1, r0, r1) => v => r0 + (Math.log10(v) - Math.log10(d0)) / (Math.log10(d1) - Math.log10(d0) || 1) * (r1 - r0);
@@ -79,7 +81,7 @@ export function Scatter({items, xFmt, xLabel, label}) {
       {niceTicks(y0, 1, 4).filter(t => t >= y0 - 1e-9).map(t => <g key={t}><line className="grid" x1={L} x2={L + pw} y1={y(t)} y2={y(t)} /><text x={L - 6} y={y(t) + 4} textAnchor="end">{pct0(t)}</text></g>)}
       {xTicks.map(t => <g key={t.v}><line className={cn('grid', !t.major && 'minor')} x1={x(t.v)} x2={x(t.v)} y1={T} y2={T + ph} />{t.major && <text x={x(t.v)} y={T + ph + 16} textAnchor="middle">{tickText(t.v)}</text>}</g>)}
       <line className="axis" x1={L} x2={L + pw} y1={T + ph} y2={T + ph} /><text x={L + pw / 2} y={h - 4} textAnchor="middle">{xLabel}</text>
-      {pts.map(p => <g key={p.key} data-tip={p.tip} tabIndex={0}><circle className="hit" cx={p.px} cy={p.py} r="12" /><path d={`M${p.px} ${y(p.lo)}V${y(p.hi)}`} stroke={p.color} strokeWidth="1.5" strokeOpacity=".45" /><circle cx={p.px} cy={p.py} r="4.5" fill={p.color} /></g>)}
+      {pts.map(p => <g key={p.key} data-tip={p.tip} tabIndex={0} role="img" aria-label={tipLabel(p.tip)}><circle className="hit" cx={p.px} cy={p.py} r="12" /><path d={`M${p.px} ${y(p.lo)}V${y(p.hi)}`} stroke={p.color} strokeWidth="1.5" strokeOpacity=".45" /><circle cx={p.px} cy={p.py} r="4.5" fill={p.color} /></g>)}
       {labels}
     </Svg>;
   }}</Chart>;
@@ -196,7 +198,7 @@ export function RecordGrid({runs, cases}) {
     c.addEventListener('pointermove', move); c.addEventListener('pointerleave', leave); c.addEventListener('click', click);
     return () => { mo.disconnect(); c.removeEventListener('pointermove', move); c.removeEventListener('pointerleave', leave); c.removeEventListener('click', click); hideTip(); };
   }, [w, runs, cases]);
-  return <div ref={ref} role="img" aria-label="Result of every model on every row" className="w-full min-w-0 overflow-x-auto pb-1">{body}</div>;
+  return <div ref={ref} role="img" tabIndex={0} aria-label="Result of every model on every row" className="w-full min-w-0 overflow-x-auto pb-1">{body}</div>;
 }
 
 export const Legend = ({items}) => (

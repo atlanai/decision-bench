@@ -137,9 +137,9 @@ function Answers({c}) {
         <thead><tr className="border-b"><th className={TH}>Model</th><th className={TH}>Answer</th><th className={cn(TH, 'text-right')}>Confidence</th><th className={cn(TH, 'text-right')}>Latency</th><th className={cn(TH, 'text-right')}>Cost</th><th className={cn(TH, 'text-right')}>Tokens in / out</th>{img && <th className={TH}>Saw</th>}</tr></thead>
         <tbody>{rows.map(({r, v, ok}) => { const s = v.scores[0], on = open.has(r.id);
           return <Fragment key={r.id}>
-            <tr onClick={() => toggle(r.id)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(r.id); } }} tabIndex={0} aria-expanded={on}
+            <tr onClick={e => { if (!e.target.closest('button')) toggle(r.id); }}
               className={cn('cursor-pointer border-b transition-colors outline-none hover:bg-muted/40 focus-visible:bg-muted/50', on && 'bg-muted/40')}>
-              <td className="py-2.5 pl-5"><span className="flex items-center gap-2"><ChevronRightIcon className={cn('size-4 shrink-0 text-muted-foreground transition-transform', on && 'rotate-90')} /><ModelName k={B.keyOf(r)} link={false} /></span></td>
+              <td className="py-2.5 pl-5"><button type="button" aria-expanded={on} onClick={() => toggle(r.id)} className="flex cursor-pointer items-center gap-2 rounded focus-visible:outline-2 focus-visible:outline-offset-2"><ChevronRightIcon className={cn('size-4 shrink-0 text-muted-foreground transition-transform', on && 'rotate-90')} /><ModelName k={B.keyOf(r)} link={false} /></button></td>
               <td className="max-w-[280px] px-3 py-2.5">
                 <span className={cn('inline-flex max-w-full items-center gap-1.5', ok ? 'text-foreground' : 'text-bad')}>
                   <span className={cn('grid size-4 shrink-0 place-items-center rounded-full text-[10px] font-bold', ok ? 'bg-good-soft text-good' : 'bg-bad-soft text-bad')}>{ok ? '✓' : '✗'}</span>
@@ -160,7 +160,25 @@ function Answers({c}) {
   </>;
 }
 
-export function RowView({c, review = false, nav}) {
+export function RowView(props) {
+  const {c} = props;
+  const [state, setState] = useState({id: c.id, ready: !c.detail_url || Object.hasOwn(c, 'state'), error: false});
+  const [attempt, retry] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setState({id: c.id, ready: !c.detail_url || Object.hasOwn(c, 'state'), error: false});
+    B.loadCaseDetail(c).then(() => { if (active) setState({id: c.id, ready: true, error: false}); })
+      .catch(() => { if (active) setState({id: c.id, ready: false, error: true}); });
+    return () => { active = false; };
+  }, [c, attempt]);
+  if (state.id !== c.id || !state.ready) return <div className="py-8">
+    <h1 className="text-2xl font-semibold">{B.caseTitle(c)}</h1>
+    {state.id === c.id && state.error ? <><p role="alert" className="mt-3">This record could not be loaded. Please try again.</p><Button className="mt-4" onClick={() => retry(n => n + 1)}>Try again</Button></> : <p role="status" className="mt-3">Loading the record and model answers…</p>}
+  </div>;
+  return <LoadedRowView key={c.id} {...props} />;
+}
+
+function LoadedRowView({c, review = false, nav}) {
   const t = c.task, rows = B.taskRows(t), i = rows.indexOf(c), d = B.dsOf(c);
   const [raw, setRaw] = useState(false);
   return <>

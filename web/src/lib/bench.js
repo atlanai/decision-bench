@@ -169,3 +169,23 @@ export function init(json, datasetsDoc) {
   ORDER.sort((a, b) => (acc.get(b) ?? -1) - (acc.get(a) ?? -1));
   RUNS.sort(byOrder);
 }
+
+/* Load a row once, sharing concurrent requests. Mutate indexed objects so existing
+   references (task lists, datasets, and review navigation) retain their identity. */
+const detailRequests = new Map();
+export function loadCaseDetail(c) {
+  if (!c?.detail_url || Object.hasOwn(c, 'state')) return Promise.resolve();
+  if (detailRequests.has(c.id)) return detailRequests.get(c.id);
+  const request = (async () => {
+    if (!/^details\/[a-f0-9]{64}\.json$/.test(c.detail_url)) throw Error('Invalid detail reference');
+    const res = await fetch(c.detail_url, {signal: AbortSignal.timeout(30000)});
+    if (!res.ok) throw Error('Row unavailable');
+    const detail = await res.json();
+    if (detail.corpus_sha256 !== data.corpus_sha256 || detail.case?.id !== c.id || !Array.isArray(detail.results)) throw Error('Row version mismatch');
+    if (detail.results.some(r => r.case_id !== c.id || !result(r.run_id, c.id))) throw Error('Row results mismatch');
+    for (const r of detail.results) Object.assign(result(r.run_id, c.id), r);
+    Object.assign(c, detail.case);
+  })().finally(() => detailRequests.delete(c.id));
+  detailRequests.set(c.id, request);
+  return request;
+}

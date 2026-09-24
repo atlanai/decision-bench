@@ -22,8 +22,8 @@ export function Item({href, onClick, lead, title, sub, trail, chevron, wrap, cla
     {(chevron ?? !!(href || onClick)) && <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground/50" />}
   </>;
   const cls = cn('flex min-h-[52px] w-full items-center gap-3 px-4 py-2.5 text-left transition-[background-color,transform] duration-150', (href || onClick) && 'cursor-pointer active:scale-[.99] active:bg-muted/70', className);
-  return <li {...p}>
-    {href ? <a href={href} className={cls}>{inner}</a> : onClick ? <button type="button" onClick={onClick} className={cls}>{inner}</button> : <div className={cls}>{inner}</div>}
+  return <li>
+    {href ? <a href={href} className={cls} {...p}>{inner}</a> : onClick ? <button type="button" onClick={onClick} className={cls} {...p}>{inner}</button> : <div className={cls} {...p}>{inner}</div>}
     {children}
   </li>;
 }
