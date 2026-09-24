@@ -320,6 +320,35 @@
       },
       "notes": "Haiku does not accept an effort setting. Claude Code reports its own API-equivalent cost per call.",
       "vision": false
+    },
+    {
+      "id": "sage",
+      "label": "Sage (Levanto)",
+      "short_label": "Sage",
+      "vendor": "Levanto",
+      "provider": "sage",
+      "model": "levanto-sage-v1.1",
+      "color": "#1438d4",
+      "vision": false,
+      "notes": "Hosted default model; version recorded from API response, not pinned. Reasoning auto; no grounding. Independent option probabilities are renormalized for benchmark calibration (native-renormalized); raw probabilities retained. Null choices remain invalid answers under the existing forced-choice contract. Subscription decision-unit pricing is not estimated as token pricing."
+    },
+    {
+      "id": "tev1-4b-experimental",
+      "label": "Tev1 4B Experimental",
+      "short_label": "Tev1 4B",
+      "vendor": "Together AI",
+      "provider": "tev1",
+      "model": "together/Tev1-4B-experimental",
+      "vision": false,
+      "color": "#6366f1",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://www.together.ai/blog/how-to-train-your-own-jev",
+        "as_of": "2026-09",
+        "note": "Announced serverless rate; estimate from API token usage."
+      },
+      "notes": "Native constrained letter output with thinking disabled. Accuracy-only: raw top-5 token logprobs retained; calibration unavailable."
     }
   ]
 }

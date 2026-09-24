@@ -24,6 +24,7 @@ precedence over `.env`.
 | `DECISION_BENCH_BASE_URL` | `openai-compatible` | Base URL that `/chat/completions` is appended to, usually ending in `/v1`. HTTPS is required except for `localhost`. |
 | `DECISION_BENCH_API_KEY` | `openai-compatible` | Bearer key. Optional for a `localhost` endpoint. |
 | `TYPESAFE_API_KEY` | `typesafe` | Key for `https://api.typesafe.ai`. |
+| `SAGE_API_KEY` | `sage` | Levanto key from Intelligence → API Keys. |
 | `DJEV_API_KEY` | `djev` | Key for the hosted DiffusionGemma-Jev API at `https://api.djev.dev`. |
 | `LAYA_BASE_URL` | `laya` | Laya System One base URL ending in `/v1`. Use `https://api.impossibl.com/v1` or a self-hosted `http://localhost:8000/v1`. |
 | `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
@@ -65,7 +66,7 @@ Each entry:
 {
   "id": "gemini-3.5-flash",              // our stable slug: run ids and results/ paths use it
   "label": "Gemini 3.5 Flash", "short_label": "Gemini Flash", "vendor": "Google", "color": "#2563eb",
-  "provider": "openai-compatible",       // openai-compatible | typesafe | djev | laya | claude-cli | codex-cli
+  "provider": "openai-compatible",       // openai-compatible | typesafe | djev | sage | laya | claude-cli | codex-cli
   "model": "gemini-3.5-flash",           // the model name sent to the provider
   "request": {"response_format": "json_schema", "token_limit_field": "max_tokens", "max_output_tokens": 8192,
               "reasoning_effort": "low", "temperature": null, "json_wrapper_policy": "allow_single_code_fence"},
@@ -174,3 +175,31 @@ or `make check`. Tests use a local fake endpoint and never call a model.
 - Latency includes the network or CLI start-up and depends on `--jobs`; compare latency only between runs made the
   same way.
 - File locking uses `fcntl`, so runs need Linux or macOS (or WSL on Windows).
+
+## Levanto Sage
+
+Set `SAGE_API_KEY` in the ignored `.env` after account activation. Smoke-test with
+`python3 -m decision_bench run --model sage --limit 5 --jobs 1 --max-attempts 1`.
+Once credits are available, run `python3 -m decision_bench run --model sage --jobs 1`.
+The text-only adapter sends one native Choice decision per corpus row to `/decide`,
+with reasoning `auto` and no web grounding. The server selects the model; its returned
+version is recorded. `--api-model` overrides are rejected.
+
+Sage's option probabilities are independent and need not sum to one. The adapter
+renormalizes them for the benchmark's categorical metrics and marks their source
+`native-renormalized`; raw responses preserve the original values. These derived
+calibration scores are not Sage's original calibrated probabilities. A null choice
+is kept as null and fails the existing forced-choice output contract; no argmax
+is substituted. Costs remain unknown because Sage bills decision units by plan,
+not tokens. See the [Choice contract](https://docs.levanto.ai/decision-model/choice).
+
+## Together Tev1
+
+Set `TOGETHER_API_KEY` in ignored `.env`. Run `python3 scripts/run_tev1.py smoke`,
+then `pilot`, then `full` after checking each completed stage. These select only
+rows with no image assets (949 in bench-v4), use one serial worker, and retain
+separate resumable run IDs. `--dry-run` prints selection counts without an API call.
+The model is `together/Tev1-4B-experimental`, with native A–X labels, regex
+constraints and thinking disabled. Accuracy is scored; calibration is unavailable
+because the native top-5 token logprobs do not cover every option. Raw logprobs
+remain available locally for inspection. No model-generated distribution is requested.

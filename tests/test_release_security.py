@@ -31,6 +31,7 @@ class ReleaseSecurity(unittest.TestCase):
     def test_persistence_redacts_all_configured_provider_keys(self):
         settings = {"DECISION_BENCH_API_KEY": "synthetic-" + "openai-key", "TYPESAFE_API_KEY": "synthetic-ts-key",
                     "DJEV_API_KEY": "synthetic-djev-key",
+                    "TOGETHER_API_KEY": "synthetic-together-key",
                     "LAYA_API_KEY": "synthetic-laya-key", "LAYA_BASE_URL": "https://models.example.test/v1"}
         with repo(settings) as root:
             path = root / "record.json"
@@ -86,7 +87,7 @@ class ReleaseSecurity(unittest.TestCase):
                         self.assertEqual(attempt.get("error"), results.public_error(attempt.get("error"), attempt.get("status")))
 
     def test_scanner_checks_provider_keys_in_data_without_echoing_them(self):
-        keys = ["sk-" + "a1B2c3D4" * 4, "github_pat_" + "a1B2c3D4" * 5, "imp-rt-" + "a1B2c3D4" * 4]
+        keys = ["tgp_v1_" + "a1B2c3D4" * 4, "sk-" + "a1B2c3D4" * 4, "github_pat_" + "a1B2c3D4" * 5, "imp-rt-" + "a1B2c3D4" * 4]
         for key in keys:
             findings = check_secrets.scan_text("data/corpus/test/cases.jsonl", key)
             self.assertTrue(findings)
