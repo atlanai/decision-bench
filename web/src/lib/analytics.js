@@ -15,7 +15,9 @@ export function context(route) {
   if (page === 'model' && Object.hasOwn(B.MODELS, route.id)) { id = route.id; out.model_id = id; }
   if (page === 'data' && B.DATASETS.some(d => d.id === route.id)) { id = route.id; out.dataset_id = id; }
   if (page === 'methodology' && sections.includes(route.id)) { id = route.id; out.section = id; }
-  out.page_path = '/#/' + (page === 'home' ? '' : page) + (id ? '/' + encodeURIComponent(id) : '');
+  // GA4 derives its Page path report from page_location and drops URL fragments.
+  // Represent hash routes as virtual paths so each page appears separately there.
+  out.page_path = '/' + (page === 'home' ? '' : page) + (id ? '/' + encodeURIComponent(id) : '');
   out.page_location = location.origin + out.page_path;
   out.page_title = `${page} · Decision Bench`;
   return out;
