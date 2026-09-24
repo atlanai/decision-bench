@@ -2,7 +2,7 @@
   <img src="docs/assets/decision-bench-frontier.png" alt="Decision Bench in black pixel lettering with a small blue accent on an off-white background." width="960">
 </p>
 
-<h1 align="center">Decision Bench Methodology</h1>
+<h1 align="center">Decision Bench</h1>
 
 <p align="center">
   <strong>Small decisions. Real evidence. Measurable tradeoffs.</strong><br>
@@ -10,13 +10,13 @@
 </p>
 
 <!-- Badge snapshot: 2026-09-23. Refresh corpus counts and results status when updating the benchmark.
-GitHub destination: <https://github.com/atlanai/decision-bench>. CI badges can be added after the first public run. -->
+GitHub destination: <https://github.com/atlanai/decision-bench>. -->
 <p align="center">
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/updated-2026--09--23-3028C8?style=flat-square&amp;labelColor=161616" alt="README and benchmark snapshot updated September 23, 2026"></a>
   <a href="data/corpus/bench-v4/manifest.json"><img src="https://img.shields.io/badge/rows-1%2C071-3028C8?style=flat-square&amp;labelColor=161616" alt="1,071 benchmark rows"></a>
   <a href="docs/tasks.md"><img src="https://img.shields.io/badge/use%20cases-11-ED9FC8?style=flat-square&amp;labelColor=161616" alt="11 use cases"></a>
   <a href="data/SOURCES.md"><img src="https://img.shields.io/badge/datasets-36-ED9FC8?style=flat-square&amp;labelColor=161616" alt="36 public source datasets"></a>
-  <a href="#latest-bench"><img src="https://img.shields.io/badge/results-pending-ED9FC8?style=flat-square&amp;labelColor=161616" alt="Benchmark results awaiting publication"></a>
+  <a href="#latest-bench"><img src="https://img.shields.io/badge/models-12-ED9FC8?style=flat-square&amp;labelColor=161616" alt="12 models evaluated"></a>
 </p>
 
 <p align="center">
@@ -42,30 +42,33 @@ GitHub destination: <https://github.com/atlanai/decision-bench>. CI badges can b
 ## Latest bench
 
 <!-- LATEST-BENCH:START -->
-> **bench-v4 · Corpus ready · Results awaiting publication**
+> **bench-v4 · 12 models · published 23 September 2026**
 >
-> This space is reserved for the latest completed benchmark. No model scores have been published in this checkout yet.
+> Overlapping 95% intervals mean the order is not a reliable ranking. The full table, with per-task results, is on [decisionbench.ai](https://decisionbench.ai/) and in [results/bench-v4/leaderboard.md](results/bench-v4/leaderboard.md).
 
 | Corpus | Tasks | Use cases | Public datasets | Rows with images |
 | :---: | :---: | :---: | :---: | :---: |
 | **1,071 rows** | **35** | **11** | **36** | **122** |
 
-| Latest run | Status |
-| :--- | :--- |
-| Published on | — |
-| Models evaluated | — |
-| Results & comparison | Awaiting the first published run |
-
 | Model / input modality | Accuracy (95% CI) | Coverage | Median latency / row | Total cost (basis) | Predictions |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Awaiting publication | — | — | — | — | — |
+| Gemini 3.5 Flash · text + image | 94.2% (92.6%–95.5%) | 1,071 / 1,071 | 3.59 s | $3.55 (provider-reported) | [predictions](results/bench-v4/gemini-3.5-flash/predictions.jsonl) |
+| Gemini Flash Lite · text + image | 94.1% (92.5%–95.4%) | 1,071 / 1,071 | 3.37 s | $0.99 (provider-reported) | [predictions](results/bench-v4/gemini-flash-lite-latest/predictions.jsonl) |
+| GPT-6 Luna · text + image | 93.7% (92.0%–95.0%) | 1,071 / 1,071 | 2.01 s | $0.17 (estimated from list price; known for 99.0% of attempts) | [predictions](results/bench-v4/gpt-6-luna/predictions.jsonl) |
+| DeepSeek V4.1 Flash · text only | 92.7% (91.0%–94.1%) | 1,071 / 1,071 | 1.41 s | $0.73 (provider-reported; known for 99.9% of attempts) | [predictions](results/bench-v4/deepseek-v4.1-flash/predictions.jsonl) |
+| Claude Sonnet 5 · text + image | 92.6% (90.9%–94.0%) | 1,071 / 1,071 | 3.59 s | $5.37 (provider-reported; known for 99.9% of attempts) | [predictions](results/bench-v4/claude-sonnet-5/predictions.jsonl) |
+| GPT-5.6 Luna · text + image | 92.6% (90.9%–94.0%) | 1,071 / 1,071 | 1.81 s | $0.43 (provider-reported) | [predictions](results/bench-v4/gpt-5.6-luna/predictions.jsonl) |
+| Jev 1.13 · text only | 92.4% (90.7%–93.9%) | 1,071 / 1,071 | 439 ms | $0.05 (estimated from list price) | [predictions](results/bench-v4/jev-1.13/predictions.jsonl) |
+| GLM 5.3 Flash · text only | 92.3% (90.5%–93.7%) | 1,071 / 1,071 | 2.36 s | $1.10 (provider-reported) | [predictions](results/bench-v4/glm-5.3-flash/predictions.jsonl) |
+| Claude Haiku 4.5 · text + image | 90.6% (88.7%–92.2%) | 1,071 / 1,071 | 2.13 s | $2.08 (provider-reported) | [predictions](results/bench-v4/claude-haiku-4.5/predictions.jsonl) |
+| Qwen3-32B · text only | 79.6% (77.1%–81.9%) | 1,071 / 1,071 | 373 ms | $0.22 (provider-reported) | [predictions](results/bench-v4/qwen3-32b/predictions.jsonl) |
+| Amazon Nova Micro · text only | 66.4% (63.5%–69.2%) | 1,071 / 1,071 | 735 ms | $0.08 (provider-reported; known for 99.9% of attempts) | [predictions](results/bench-v4/nova-micro-v1/predictions.jsonl) |
+| Laya (routed) · text only | 52.8% (49.8%–55.7%) | 1,071 / 1,071 | 1.52 s | unknown | [predictions](results/bench-v4/laya-routed/predictions.jsonl) |
 
-*Dashes mean unavailable, not zero. Populate this table from validated, completed runs on the current corpus; record the publication date above.*
+*Text-only models receive a text rendering of the 122 image rows. Latency includes retries and gateway overhead; see [results/README.md](results/README.md) for how each run was made. Unknown cost is shown as unknown, never zero.*
 
-<!-- Replace the status and run table above when results are published. Link to
-results/bench-v4/leaderboard.md and the relevant model folders only once they exist.
-Include accuracy with Wilson 95% intervals, coverage, latency, cost and cost basis.
-Keep this block aligned with data/corpus/current.json; never mix corpus versions. -->
+<!-- Regenerate this block from results/bench-v4/leaderboard.json when results change. Keep it aligned with
+data/corpus/current.json; never mix corpus versions. -->
 <!-- LATEST-BENCH:END -->
 
 [How to publish a result →](results/README.md) · [Result format →](docs/results-format.md)
@@ -141,7 +144,7 @@ Project: a PHP UUID library
 
 **How it scores:** the frozen answer is `minor`, derived from the source's version change from 2.3.0 to 2.4.0. The example earns one correct answer; its probabilities also contribute to calibration (Brier score **0.015**, log loss **≈ 0.105**). A valid `major` or `patch` answer counts as wrong. Missing probabilities make the response invalid, which also counts as wrong and is recorded as an operational error.
 
-Source: the committed [ramsey/uuid changelog](data/sources/changelogs/ramsey__uuid.md), under MIT; provenance is preserved in the corpus row. The response envelope shown here is used by the OpenAI-compatible and CLI adapters; TypeSafe uses `choice` instead of `label`.
+Source: the [ramsey/uuid changelog](https://github.com/ramsey/uuid/blob/dc681915388ca5fd55a7fcb7c85bd9202f20fd4a/CHANGELOG.md) at a pinned commit, under MIT; provenance is preserved in the corpus row. The response envelope shown here is used by the OpenAI-compatible and CLI adapters; TypeSafe uses `choice` instead of `label`.
 
 ## Methodology
 
@@ -247,12 +250,14 @@ Publishing writes the latest run for a model to `results/<suite>/<model-id>/` an
 
 ## Data and licences
 
-The code is MIT. Each row keeps its source terms. The selection policy requires redistribution rights for both the dataset and the material inside it; the build checks declared license labels, not legal rights. The [release data review](docs/data-release-review.md) records the source evidence and unresolved publication decisions. Datasets that failed that test were not used, even when the dataset itself was MIT (the reasons are recorded in each module's docstring under `authoring/bench/`).
+The code is MIT. Each row keeps its source terms. The selection policy requires redistribution rights for both the dataset and the material inside it; the build checks declared license labels, not legal rights. The [data and privacy review](docs/data-release-review.md) records the source evidence, the privacy screening and the notes still open. Datasets that failed that test were not used, even when the dataset itself was MIT (the reasons are recorded in each module's docstring under `authoring/bench/`).
 
 - Real secrets in code rows are replaced with fake values of the same shape.
 - Contact details in contracts are replaced with placeholders.
 - Row images are resized copies of the source images, under 400 KB each.
 - Rows can be traced to their upstream record, but not to a live secret.
+
+The MIT licence covers the code only. The corpus rows, images and source excerpts stay under their own terms, listed per dataset in [data/SOURCES.md](data/SOURCES.md). In particular, rows from FiNER-139, Spider and WikiTableQuestions (CC BY-SA 4.0) and HAGRID's passages (CC BY-SA 3.0) are share-alike; the In-The-Wild Jailbreak Prompts card adds a research-use disclaimer; and the vendor logos in `site/assets/logos/` belong to their owners and do not imply endorsement.
 
 `scripts/fetch_sources.py` re-downloads every upstream file and checks it against the pinned sha256 in `data/sources/manifest.json`. `scripts/build_bench.py --dry-run` then rebuilds the rows.
 

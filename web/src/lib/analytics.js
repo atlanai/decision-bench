@@ -65,7 +65,7 @@ export function installClicks() {
       track('file_download', {file_name: ['corpus.json', 'datasets.json', 'data.json', 'predictions.jsonl', 'protocol.txt', 'CITATION.cff'].includes(file) ? file : 'benchmark_file', area});
     } else if (url.origin !== location.origin) {
       track('outbound_click', {link_domain: url.hostname, area});
-    } else if (url.pathname.endsWith('/privacy.html')) track('navigation_click', {destination_page: 'privacy', area});
+    }
   };
   document.addEventListener('click', onClick, true);
   return () => document.removeEventListener('click', onClick, true);

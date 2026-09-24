@@ -204,7 +204,6 @@ export function Footer() {
           <span>Code MIT · rows keep their <a href="/data" className="underline-offset-4 hover:text-foreground hover:underline">source licences</a></span>
           <a href="/review" className="hover:text-foreground">Review mode</a>
           {repoOk() && <a href={REPO} target="_blank" rel="noopener" className="hover:text-foreground lg:hidden">GitHub</a>}
-          <a href="privacy.html" className="hover:text-foreground">Privacy</a>
           <a href="#" data-analytics-preferences className="hover:text-foreground">Analytics preferences</a>
         </span>
       </div>

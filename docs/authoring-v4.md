@@ -1,8 +1,7 @@
 # Authoring Decision Bench v4
 
 This is the contract for every category module in `authoring/bench/`. `authoring/bench/__init__.py` enforces the
-mechanical parts; this page holds the judgement calls. The v3 modules under `authoring/bench/v3/` are reference
-code only (they are not imported): reuse their parsing, screening and attribution patterns freely.
+mechanical parts; this page holds the judgement calls.
 
 ## What the bench is for
 

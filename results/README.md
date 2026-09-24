@@ -20,7 +20,20 @@ Publishing replaces the previous folder for that model and suite, and rebuilds t
 model is kept; older runs remain in git history. The full schema is in [docs/results-format.md](../docs/results-format.md).
 
 Nothing here contains an API key, an endpoint URL, a hostname or a provider request id. Endpoints appear only as an
-opaque `endpoint_id` (a hash). Error messages have URLs removed.
+opaque `endpoint_id` (a hash). Errors are published as a status class only (for example `HTTP 429`).
+
+## About the bench-v4 runs
+
+The twelve bench-v4 runs were made on 23 September 2026 with harness 0.3.0, before the repository was published as
+a single public snapshot. The `harness.git_commit` values in their `metadata.json` point to that earlier private
+history and cannot be checked out here, and five runs (Claude Haiku 4.5, Claude Sonnet 5, GLM 5.3 Flash, Jev 1.13
+and Amazon Nova Micro) record `git_dirty: true`. Every run used prompt `choice-v1` on the same corpus hash, and
+`validate` recomputes each published score from its predictions.
+
+Ten API models were called through one OpenAI-compatible gateway (`endpoint-2a0f85ecc26e`); Jev and Laya were called
+through their own APIs. Gateway routing, reasoning settings (see each model's `request`) and concurrency (`jobs`)
+all affect latency, so compare latency with those in view. Rate-limited attempts (HTTP 429) never reached a model
+and are left out of cost coverage.
 
 ## Submitting results
 

@@ -23,6 +23,7 @@ from pathlib import Path
 from . import __version__, adapters, config, corpus, openai_compat
 from .corpus import PROMPT_VERSION, canonical, digest, public_input
 from .errors import CallError
+from .metrics import billable
 from .rate_limit import RequestPacer
 from .scoring import normalize_answers, score
 
@@ -258,7 +259,8 @@ def _run(args, model, cases, cfg, run_id, folder):
         record["rate_wait_ms"] = rate_wait * 1000
         known = [x["cost_usd"] for x in record["attempts"] if x.get("cost_usd") is not None]
         record["known_attempt_cost_usd"] = sum(known) if known else None
-        record["cost_coverage"] = len(known) / len(record["attempts"])
+        charged = billable(record["attempts"])
+        record["cost_coverage"] = len(known) / len(charged) if charged else 1
         append("results.jsonl", record)
         with lock:
             done += 1

@@ -2,7 +2,7 @@
 
 LEG-1 "Does the NDA say this?" — ContractNLI (CC BY 4.0; Koreeda and Manning 2021), test split. One real NDA
    and one of the dataset's fixed hypotheses; answer yes / says the opposite / not addressed. A port of the v3 task
-   CP-1 (authoring/bench/v3/contract_policy.py) with the same EXCLUDE table, consent-gating rule, copyright-notice
+   CP-1 with the same EXCLUDE table, consent-gating rule, copyright-notice
    rule and contact-detail scrubbing, grown from 30 to 33 rows (11 per label).
 LEG-2 "What kind of clause is this?" — CUAD (CC BY 4.0; Hendrycks et al. 2021), test split. One clause that CUAD's
    lawyer-supervised reviewers highlighted, shown with one sentence of context either side; pick which of six
@@ -67,7 +67,7 @@ def _quote(text, cues, limit=220):
 
 
 # ======================================================================================================================
-# LEG-1 — ContractNLI. Everything in this section is carried over from v3 CP-1 (authoring/bench/v3/contract_policy.py);
+# LEG-1 — ContractNLI. Everything in this section is carried over from v3 CP-1;
 # PER_LABEL changed (10 -> 11), the newly sampled agreements got short names (AGREEMENTS) and one newly sampled pair
 # was excluded after review (NDA_EXCLUDE, last entry).
 # ======================================================================================================================

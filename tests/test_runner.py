@@ -62,7 +62,7 @@ class Runner(unittest.TestCase):
             self.assertEqual(len(results), 3)
             r1 = next(r for r in results if r["case_id"] == "r1")
             self.assertEqual([a["status"] for a in r1["attempts"]], ["429", "ok"])
-            self.assertEqual((r1["cost_coverage"], r1["known_attempt_cost_usd"]), (.5, .01))
+            self.assertEqual((r1["cost_coverage"], r1["known_attempt_cost_usd"]), (1, .01))
             self.assertNotIn("error", r1)
             self.assertEqual(len(runner.read_jsonl(folder / "attempts.jsonl")), 8)
             meta = json.loads((folder / "run.json").read_text())

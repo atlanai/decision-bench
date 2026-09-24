@@ -108,7 +108,7 @@
       "rows": 1071,
       "errors": 1,
       "cost_usd": 5.37457,
-      "cost_coverage": 0.6205098493626883,
+      "cost_coverage": 0.9990671641791045,
       "cost_per_1000_rows_usd": 5.01827264239029,
       "latency_p50_ms": 3588.1204580073245,
       "corpus_current": true,
