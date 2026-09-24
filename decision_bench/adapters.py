@@ -20,7 +20,7 @@ from .errors import CallError
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 DJEV_URL = "https://api.djev.dev/v1/request"
 # Credentials the harness itself uses are never passed to a CLI child process.
-HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "TYPESAFE_API_KEY", "DJEV_API_KEY",
+HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
                    "LAYA_API_KEY", "LAYA_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
@@ -35,6 +35,12 @@ def call(model, case, timeout, api_model=None):
         return typesafe(model, case, timeout, api_model)
     if provider == "djev":
         return djev(model, case, timeout, api_model)
+    if provider == "tev1":
+        from .tev1 import completion
+        return completion(model, case, timeout, api_model)
+    if provider == "sage":
+        from .sage import completion
+        return completion(model, case, timeout, api_model)
     if provider == "laya":
         return laya(model, case, timeout, api_model)
     if provider in ("claude-cli", "codex-cli"):

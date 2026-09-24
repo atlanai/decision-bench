@@ -7,14 +7,22 @@ import math
 def normalize_answers(raw, case, source="verbalized"):
     """Validate a parsed response. Raises ValueError on a missing answer, wrong labels or bad probabilities.
 
-    `source` is "verbalized" (the model wrote label + probabilities) or "native" (TypeSafe's API: `choice` +
-    `probabilities`). The returned label is the model's own; it is never replaced by the argmax."""
+    `source` is "verbalized" (label + probabilities), "native" (choice + probabilities),
+    "native-renormalized", or "label-only" (accuracy without calibration).
+    The returned label is the model's own; it is never replaced by the argmax."""
     answers = raw.get("answers", {}) if isinstance(raw, dict) else {}
     out = {}
     for q in case["questions"]:
         a = answers.get(q["id"]) if isinstance(answers, dict) else None
         if not isinstance(a, dict):
             raise ValueError(f"Missing answer: {q['id']}")
+        if source == "label-only":
+            label = a.get("label")
+            if label not in q["options"]:
+                raise ValueError(f"Wrong label: {q['id']}")
+            out[q["id"]] = {"label": label, "probabilities": None,
+                             "probability_source": source, "label_is_argmax": None}
+            continue
         probs = a.get("probabilities", {})
         if not isinstance(probs, dict):
             raise ValueError(f"Invalid probabilities: {q['id']}")

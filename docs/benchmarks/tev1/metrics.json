@@ -1,0 +1,935 @@
+{
+  "cases": 949,
+  "questions": 949,
+  "correct": 810,
+  "accuracy": 0.8535300316122234,
+  "accuracy_wilson95": [
+    0.8296088183800417,
+    0.8746005696231688
+  ],
+  "macro_category_accuracy": 0.8545500489419193,
+  "macro_task_f1": 0.8402078625540214,
+  "operational_errors": 0,
+  "wrong_decisions": 139,
+  "attempts": 949,
+  "retries": 0,
+  "incomplete_attempts": 0,
+  "attempt_errors": 0,
+  "cost_usd": 0.031389498,
+  "cost_coverage": 1.0,
+  "cost_bases": [
+    "price_table_estimate"
+  ],
+  "tokens": {
+    "input_tokens": 747369,
+    "input_tokens_coverage": 1.0,
+    "output_tokens": 1898,
+    "output_tokens_coverage": 1.0,
+    "cached_input_tokens": null,
+    "cached_input_tokens_coverage": 0.0,
+    "reasoning_output_tokens": null,
+    "reasoning_output_tokens_coverage": 0.0,
+    "cache_creation_input_tokens": null,
+    "cache_creation_input_tokens_coverage": 0.0
+  },
+  "latency_ms": {
+    "p50": 387.2856249799952,
+    "p95": 494.53921641688794,
+    "p99": 671.6433498309923,
+    "mean": 407.7966212794514,
+    "sum": 386998.9935941994
+  },
+  "cost_per_1000_cases_usd": 0.03307639409905164,
+  "brier": null,
+  "log_loss": null,
+  "reliability": {
+    "bins": [
+      {
+        "lo": 0.0,
+        "hi": 0.1,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.1,
+        "hi": 0.2,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.2,
+        "hi": 0.3,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.3,
+        "hi": 0.4,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.4,
+        "hi": 0.5,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.5,
+        "hi": 0.6,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.6,
+        "hi": 0.7,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.7,
+        "hi": 0.8,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.8,
+        "hi": 0.9,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lo": 0.9,
+        "hi": 1.0,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      }
+    ],
+    "ece": null,
+    "valid_count": 0
+  },
+  "risk_coverage": [
+    {
+      "threshold": 0.0,
+      "coverage": 0.0,
+      "risk": null,
+      "accepted": 0,
+      "errors": 0
+    },
+    {
+      "threshold": 1.0,
+      "coverage": 0.0,
+      "risk": null,
+      "accepted": 0,
+      "errors": 0
+    }
+  ],
+  "high_confidence_errors": 0,
+  "slices": {
+    "category": [
+      {
+        "name": "agents",
+        "count": 154,
+        "correct": 115,
+        "accuracy": 0.7467532467532467,
+        "wilson95": [
+          0.6726392711633615,
+          0.8088561014126894
+        ],
+        "brier": null
+      },
+      {
+        "name": "commerce",
+        "count": 90,
+        "correct": 76,
+        "accuracy": 0.8444444444444444,
+        "wilson95": [
+          0.755669687335892,
+          0.9050181099736166
+        ],
+        "brier": null
+      },
+      {
+        "name": "data",
+        "count": 94,
+        "correct": 86,
+        "accuracy": 0.9148936170212766,
+        "wilson95": [
+          0.8409618787007068,
+          0.9562450353317701
+        ],
+        "brier": null
+      },
+      {
+        "name": "documents",
+        "count": 57,
+        "correct": 38,
+        "accuracy": 0.6666666666666666,
+        "wilson95": [
+          0.5372226902277747,
+          0.7750636401777372
+        ],
+        "brier": null
+      },
+      {
+        "name": "engineering",
+        "count": 150,
+        "correct": 125,
+        "accuracy": 0.8333333333333334,
+        "wilson95": [
+          0.7655327510904788,
+          0.8844864894790421
+        ],
+        "brier": null
+      },
+      {
+        "name": "finance",
+        "count": 91,
+        "correct": 88,
+        "accuracy": 0.967032967032967,
+        "wilson95": [
+          0.9075053921522588,
+          0.9887257975366542
+        ],
+        "brier": null
+      },
+      {
+        "name": "legal",
+        "count": 126,
+        "correct": 116,
+        "accuracy": 0.9206349206349206,
+        "wilson95": [
+          0.8600577420320875,
+          0.9563216001818101
+        ],
+        "brier": null
+      },
+      {
+        "name": "product",
+        "count": 60,
+        "correct": 47,
+        "accuracy": 0.7833333333333333,
+        "wilson95": [
+          0.6637973165265748,
+          0.8687707895359299
+        ],
+        "brier": null
+      },
+      {
+        "name": "safety",
+        "count": 60,
+        "correct": 53,
+        "accuracy": 0.8833333333333333,
+        "wilson95": [
+          0.7782097940014187,
+          0.9423235259654995
+        ],
+        "brier": null
+      },
+      {
+        "name": "support",
+        "count": 67,
+        "correct": 66,
+        "accuracy": 0.9850746268656716,
+        "wilson95": [
+          0.9201794802686531,
+          0.997360496242323
+        ],
+        "brier": null
+      }
+    ],
+    "task": [
+      {
+        "name": "AGT-1",
+        "count": 36,
+        "correct": 35,
+        "accuracy": 0.9722222222222222,
+        "wilson95": [
+          0.8582996626496918,
+          0.9950797197044302
+        ],
+        "brier": null
+      },
+      {
+        "name": "AGT-2",
+        "count": 30,
+        "correct": 27,
+        "accuracy": 0.9,
+        "wilson95": [
+          0.7437855868473339,
+          0.9654007400402839
+        ],
+        "brier": null
+      },
+      {
+        "name": "AGT-3",
+        "count": 30,
+        "correct": 20,
+        "accuracy": 0.6666666666666666,
+        "wilson95": [
+          0.48779725813830266,
+          0.807697044731538
+        ],
+        "brier": null
+      },
+      {
+        "name": "AGT-4",
+        "count": 30,
+        "correct": 14,
+        "accuracy": 0.4666666666666667,
+        "wilson95": [
+          0.30232127224128236,
+          0.6385798671847496
+        ],
+        "brier": null
+      },
+      {
+        "name": "AGT-5",
+        "count": 28,
+        "correct": 19,
+        "accuracy": 0.6785714285714286,
+        "wilson95": [
+          0.4933850455563118,
+          0.8206695245657927
+        ],
+        "brier": null
+      },
+      {
+        "name": "COM-1",
+        "count": 30,
+        "correct": 16,
+        "accuracy": 0.5333333333333333,
+        "wilson95": [
+          0.3614201328152505,
+          0.6976787277587178
+        ],
+        "brier": null
+      },
+      {
+        "name": "COM-2",
+        "count": 30,
+        "correct": 30,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8864829086095221,
+          1
+        ],
+        "brier": null
+      },
+      {
+        "name": "COM-3",
+        "count": 30,
+        "correct": 30,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8864829086095221,
+          1
+        ],
+        "brier": null
+      },
+      {
+        "name": "DAT-1",
+        "count": 30,
+        "correct": 30,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8864829086095221,
+          1
+        ],
+        "brier": null
+      },
+      {
+        "name": "DAT-2",
+        "count": 30,
+        "correct": 26,
+        "accuracy": 0.8666666666666667,
+        "wilson95": [
+          0.7031831605558306,
+          0.9469043057578189
+        ],
+        "brier": null
+      },
+      {
+        "name": "DAT-4",
+        "count": 34,
+        "correct": 30,
+        "accuracy": 0.8823529411764706,
+        "wilson95": [
+          0.7337882520370121,
+          0.9532862902656388
+        ],
+        "brier": null
+      },
+      {
+        "name": "DOC-2",
+        "count": 30,
+        "correct": 21,
+        "accuracy": 0.7,
+        "wilson95": [
+          0.5212387898833981,
+          0.8333543735604105
+        ],
+        "brier": null
+      },
+      {
+        "name": "DOC-3",
+        "count": 27,
+        "correct": 17,
+        "accuracy": 0.6296296296296297,
+        "wilson95": [
+          0.442289046234463,
+          0.7846771293206314
+        ],
+        "brier": null
+      },
+      {
+        "name": "ENG-1",
+        "count": 30,
+        "correct": 29,
+        "accuracy": 0.9666666666666667,
+        "wilson95": [
+          0.8332924860304112,
+          0.9940915620051425
+        ],
+        "brier": null
+      },
+      {
+        "name": "ENG-2",
+        "count": 30,
+        "correct": 18,
+        "accuracy": 0.6,
+        "wilson95": [
+          0.42320052498273836,
+          0.7540960567391659
+        ],
+        "brier": null
+      },
+      {
+        "name": "ENG-3",
+        "count": 30,
+        "correct": 28,
+        "accuracy": 0.9333333333333333,
+        "wilson95": [
+          0.7867618227892791,
+          0.9815233646723066
+        ],
+        "brier": null
+      },
+      {
+        "name": "ENG-4",
+        "count": 30,
+        "correct": 21,
+        "accuracy": 0.7,
+        "wilson95": [
+          0.5212387898833981,
+          0.8333543735604105
+        ],
+        "brier": null
+      },
+      {
+        "name": "ENG-5",
+        "count": 30,
+        "correct": 29,
+        "accuracy": 0.9666666666666667,
+        "wilson95": [
+          0.8332924860304112,
+          0.9940915620051425
+        ],
+        "brier": null
+      },
+      {
+        "name": "FIN-1",
+        "count": 30,
+        "correct": 27,
+        "accuracy": 0.9,
+        "wilson95": [
+          0.7437855868473339,
+          0.9654007400402839
+        ],
+        "brier": null
+      },
+      {
+        "name": "FIN-2",
+        "count": 30,
+        "correct": 30,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8864829086095221,
+          1
+        ],
+        "brier": null
+      },
+      {
+        "name": "FIN-4",
+        "count": 31,
+        "correct": 31,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.889740999265246,
+          0.9999999999999999
+        ],
+        "brier": null
+      },
+      {
+        "name": "LEG-1",
+        "count": 33,
+        "correct": 25,
+        "accuracy": 0.7575757575757576,
+        "wilson95": [
+          0.5897505131450971,
+          0.8716843865335271
+        ],
+        "brier": null
+      },
+      {
+        "name": "LEG-2",
+        "count": 30,
+        "correct": 30,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8864829086095221,
+          1
+        ],
+        "brier": null
+      },
+      {
+        "name": "LEG-3",
+        "count": 33,
+        "correct": 32,
+        "accuracy": 0.9696969696969697,
+        "wilson95": [
+          0.8468093832683193,
+          0.9946307279103482
+        ],
+        "brier": null
+      },
+      {
+        "name": "LEG-4",
+        "count": 30,
+        "correct": 29,
+        "accuracy": 0.9666666666666667,
+        "wilson95": [
+          0.8332924860304112,
+          0.9940915620051425
+        ],
+        "brier": null
+      },
+      {
+        "name": "PRD-1",
+        "count": 30,
+        "correct": 17,
+        "accuracy": 0.5666666666666667,
+        "wilson95": [
+          0.3919700954540873,
+          0.7262276256938489
+        ],
+        "brier": null
+      },
+      {
+        "name": "PRD-2",
+        "count": 30,
+        "correct": 30,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8864829086095221,
+          1
+        ],
+        "brier": null
+      },
+      {
+        "name": "SAF-1",
+        "count": 30,
+        "correct": 27,
+        "accuracy": 0.9,
+        "wilson95": [
+          0.7437855868473339,
+          0.9654007400402839
+        ],
+        "brier": null
+      },
+      {
+        "name": "SAF-2",
+        "count": 30,
+        "correct": 26,
+        "accuracy": 0.8666666666666667,
+        "wilson95": [
+          0.7031831605558306,
+          0.9469043057578189
+        ],
+        "brier": null
+      },
+      {
+        "name": "SUP-1",
+        "count": 35,
+        "correct": 34,
+        "accuracy": 0.9714285714285714,
+        "wilson95": [
+          0.8546659090672868,
+          0.9949386386341466
+        ],
+        "brier": null
+      },
+      {
+        "name": "SUP-2",
+        "count": 32,
+        "correct": 32,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.8928172849426366,
+          1
+        ],
+        "brier": null
+      }
+    ],
+    "source_kind": [
+      {
+        "name": "real",
+        "count": 949,
+        "correct": 810,
+        "accuracy": 0.8535300316122234,
+        "wilson95": [
+          0.8296088183800417,
+          0.8746005696231688
+        ],
+        "brier": null
+      }
+    ]
+  },
+  "confusion": {
+    "ENG-1": {
+      "sympy/printing/latex.py \u2192 sympy/printing/latex.py": 1,
+      "django/contrib/admin/options.py \u2192 django/contrib/admin/options.py": 1,
+      "sphinx/util/docfields.py \u2192 sphinx/writers/latex.py": 1,
+      "django/forms/fields.py \u2192 django/forms/fields.py": 1,
+      "django/core/management/commands/runserver.py \u2192 django/core/management/commands/runserver.py": 1,
+      "django/db/migrations/autodetector.py \u2192 django/db/migrations/autodetector.py": 1,
+      "django/db/models/fields/__init__.py \u2192 django/db/models/fields/__init__.py": 1,
+      "astropy/io/ascii/html.py \u2192 astropy/io/ascii/html.py": 1,
+      "django/db/models/manager.py \u2192 django/db/models/manager.py": 1,
+      "django/core/management/base.py \u2192 django/core/management/base.py": 1,
+      "django/utils/decorators.py \u2192 django/utils/decorators.py": 1,
+      "sphinx/extension.py \u2192 sphinx/extension.py": 1,
+      "sklearn/utils/_set_output.py \u2192 sklearn/utils/_set_output.py": 1,
+      "sympy/matrices/sparse.py \u2192 sympy/matrices/sparse.py": 1,
+      "astropy/utils/introspection.py \u2192 astropy/utils/introspection.py": 1,
+      "sympy/physics/vector/vector.py \u2192 sympy/physics/vector/vector.py": 1,
+      "sphinx/ext/napoleon/docstring.py \u2192 sphinx/ext/napoleon/docstring.py": 1,
+      "sklearn/linear_model/logistic.py \u2192 sklearn/linear_model/logistic.py": 1,
+      "sphinx/ext/autodoc/__init__.py \u2192 sphinx/ext/autodoc/__init__.py": 1,
+      "sympy/core/add.py \u2192 sympy/core/add.py": 1,
+      "sphinx/ext/autodoc/typehints.py \u2192 sphinx/ext/autodoc/typehints.py": 1,
+      "sympy/utilities/codegen.py \u2192 sympy/utilities/codegen.py": 1,
+      "sphinx/directives/code.py \u2192 sphinx/directives/code.py": 1,
+      "sympy/combinatorics/homomorphisms.py \u2192 sympy/combinatorics/homomorphisms.py": 1,
+      "sympy/printing/repr.py \u2192 sympy/printing/repr.py": 1,
+      "sklearn/ensemble/voting.py \u2192 sklearn/ensemble/voting.py": 1,
+      "sphinx/util/rst.py \u2192 sphinx/util/rst.py": 1,
+      "sympy/combinatorics/permutations.py \u2192 sympy/combinatorics/permutations.py": 1,
+      "astropy/wcs/wcsapi/wrappers/sliced_wcs.py \u2192 astropy/wcs/wcsapi/wrappers/sliced_wcs.py": 1,
+      "sphinx/builders/html/transforms.py \u2192 sphinx/builders/html/transforms.py": 1
+    },
+    "ENG-2": {
+      "test \u2192 test": 6,
+      "feat \u2192 feat": 5,
+      "feat \u2192 refactor": 1,
+      "docs \u2192 refactor": 2,
+      "fix \u2192 refactor": 5,
+      "fix \u2192 fix": 1,
+      "refactor \u2192 refactor": 5,
+      "docs \u2192 feat": 2,
+      "docs \u2192 docs": 1,
+      "docs \u2192 fix": 1,
+      "refactor \u2192 feat": 1
+    },
+    "ENG-3": {
+      "injection \u2192 injection": 5,
+      "path_traversal \u2192 path_traversal": 5,
+      "memory_safety \u2192 memory_safety": 4,
+      "memory_safety \u2192 injection": 1,
+      "broken_auth \u2192 broken_auth": 5,
+      "csrf \u2192 csrf": 4,
+      "csrf \u2192 broken_auth": 1,
+      "info_exposure \u2192 info_exposure": 5
+    },
+    "ENG-4": {
+      "real_credential \u2192 real_credential": 10,
+      "placeholder_or_test \u2192 placeholder_or_test": 4,
+      "placeholder_or_test \u2192 real_credential": 6,
+      "not_a_secret \u2192 not_a_secret": 7,
+      "not_a_secret \u2192 real_credential": 2,
+      "not_a_secret \u2192 placeholder_or_test": 1
+    },
+    "ENG-5": {
+      "37f90904 \u2192 37f90904": 1,
+      "16fd8a7b \u2192 16fd8a7b": 1,
+      "83d742b7 \u2192 83d742b7": 1,
+      "c27b72e3 \u2192 c27b72e3": 1,
+      "728d26c8 \u2192 728d26c8": 1,
+      "a955a107 \u2192 a955a107": 1,
+      "bdd0ff06 \u2192 bdd0ff06": 1,
+      "5dacd118 \u2192 5dacd118": 1,
+      "4f40da27 \u2192 4f40da27": 1,
+      "d3dd3e6b \u2192 d3dd3e6b": 1,
+      "006003ae \u2192 006003ae": 1,
+      "6de1e967 \u2192 6de1e967": 1,
+      "2a09617f \u2192 2a09617f": 1,
+      "8421e780 \u2192 8421e780": 1,
+      "3c1e5613 \u2192 3c1e5613": 1,
+      "f8ba371b \u2192 f8ba371b": 1,
+      "8f035b87 \u2192 8f035b87": 1,
+      "9e04d271 \u2192 9e04d271": 1,
+      "aaf8384f \u2192 aaf8384f": 1,
+      "aa1f8fb5 \u2192 aa1f8fb5": 1,
+      "e2b75720 \u2192 e2b75720": 1,
+      "c98bfb1f \u2192 c98bfb1f": 1,
+      "69fe3050 \u2192 69fe3050": 1,
+      "90c42dc2 \u2192 90c42dc2": 1,
+      "36db20dd \u2192 d65f5e07": 1,
+      "ad6e109d \u2192 ad6e109d": 1,
+      "aa71c88d \u2192 aa71c88d": 1,
+      "2a014c0b \u2192 2a014c0b": 1,
+      "a0f1aab0 \u2192 a0f1aab0": 1,
+      "2f523e21 \u2192 2f523e21": 1
+    },
+    "AGT-1": {
+      "Flights_4_SearchOnewayFlight \u2192 Flights_4_SearchOnewayFlight": 1,
+      "Events_3_FindEvents \u2192 Events_3_FindEvents": 1,
+      "version_api.VersionApi.get_version \u2192 version_api.VersionApi.get_version": 1,
+      "get_time_to_collision \u2192 get_time_to_collision": 1,
+      "Hotels_4_SearchHotel \u2192 Hotels_4_SearchHotel": 1,
+      "add_mtnards_server \u2192 add_mtnards_server": 1,
+      "Services_4_FindProvider \u2192 Services_4_FindProvider": 1,
+      "Services_1_FindProvider \u2192 Services_1_FindProvider": 1,
+      "get_contact_information \u2192 get_contact_information": 1,
+      "get_service_providers \u2192 get_service_providers": 1,
+      "get_custom_dashboard \u2192 none": 1,
+      "cookbook.search_recipe \u2192 cookbook.search_recipe": 1,
+      "play_song \u2192 play_song": 1,
+      "get_current_weather \u2192 get_current_weather": 1,
+      "get_website_geo_mapping_rules \u2192 get_website_geo_mapping_rules": 1,
+      "project_api.ProjectApi.get_project_by_name_and_version \u2192 project_api.ProjectApi.get_project_by_name_and_version": 1,
+      "close_project \u2192 close_project": 1,
+      "CalcProduct \u2192 CalcProduct": 1,
+      "get_sensor_readings_latest \u2192 get_sensor_readings_latest": 1,
+      "list_directory_contents \u2192 list_directory_contents": 1,
+      "play_spotify_song \u2192 play_spotify_song": 1,
+      "segment \u2192 segment": 1,
+      "search_web_tool \u2192 search_web_tool": 1,
+      "set_volume \u2192 set_volume": 1,
+      "dartfx_help \u2192 dartfx_help": 1,
+      "analysis_api.AnalysisApi.retrieve_analysis \u2192 analysis_api.AnalysisApi.retrieve_analysis": 1,
+      "uber.eat.order \u2192 uber.eat.order": 1,
+      "none \u2192 none": 9
+    },
+    "AGT-2": {
+      "hijacked \u2192 not_hijacked": 3,
+      "hijacked \u2192 hijacked": 12,
+      "not_hijacked \u2192 not_hijacked": 15
+    },
+    "AGT-3": {
+      "not_completed \u2192 not_completed": 11,
+      "completed \u2192 completed": 9,
+      "completed \u2192 not_completed": 6,
+      "not_completed \u2192 completed": 4
+    },
+    "AGT-4": {
+      "supported \u2192 supported": 13,
+      "not_supported \u2192 supported": 14,
+      "supported \u2192 not_supported": 2,
+      "not_supported \u2192 not_supported": 1
+    },
+    "AGT-5": {
+      "A \u2192 A": 10,
+      "B \u2192 B": 9,
+      "A \u2192 B": 4,
+      "B \u2192 A": 5
+    },
+    "SAF-1": {
+      "injection \u2192 injection": 8,
+      "injection \u2192 benign": 2,
+      "jailbreak \u2192 jailbreak": 10,
+      "benign \u2192 benign": 9,
+      "benign \u2192 injection": 1
+    },
+    "SAF-2": {
+      "toxic \u2192 not_toxic": 4,
+      "toxic \u2192 toxic": 11,
+      "not_toxic \u2192 not_toxic": 15
+    },
+    "SUP-1": {
+      "credit_reporting \u2192 credit_reporting": 5,
+      "debt_collection \u2192 debt_collection": 5,
+      "mortgage \u2192 mortgage": 5,
+      "credit_card \u2192 credit_card": 5,
+      "bank_account \u2192 bank_account": 5,
+      "student_loan \u2192 student_loan": 4,
+      "student_loan \u2192 credit_reporting": 1,
+      "money_transfer \u2192 money_transfer": 5
+    },
+    "SUP-2": {
+      "incorrect_info_on_report \u2192 incorrect_info_on_report": 4,
+      "debt_not_owed \u2192 debt_not_owed": 4,
+      "collector_conduct \u2192 collector_conduct": 4,
+      "trouble_during_payment \u2192 trouble_during_payment": 4,
+      "managing_an_account \u2192 managing_an_account": 4,
+      "purchase_dispute \u2192 purchase_dispute": 4,
+      "closing_an_account \u2192 closing_an_account": 4,
+      "struggling_to_pay \u2192 struggling_to_pay": 4
+    },
+    "COM-1": {
+      "irrelevant \u2192 irrelevant": 7,
+      "exact \u2192 exact": 6,
+      "exact \u2192 substitute": 2,
+      "substitute \u2192 substitute": 2,
+      "substitute \u2192 irrelevant": 6,
+      "complement \u2192 complement": 1,
+      "complement \u2192 irrelevant": 2,
+      "complement \u2192 substitute": 2,
+      "complement \u2192 exact": 2
+    },
+    "COM-2": {
+      "grocery \u2192 grocery": 3,
+      "rug \u2192 rug": 4,
+      "shoes \u2192 shoes": 3,
+      "table \u2192 table": 4,
+      "chair \u2192 chair": 4,
+      "sofa \u2192 sofa": 4,
+      "wall_art \u2192 wall_art": 4,
+      "lamp \u2192 lamp": 4
+    },
+    "COM-3": {
+      "finance \u2192 finance": 6,
+      "manufacturing \u2192 manufacturing": 6,
+      "services \u2192 services": 6,
+      "mining \u2192 mining": 4,
+      "transport_comms_utilities \u2192 transport_comms_utilities": 4,
+      "retail \u2192 retail": 3,
+      "wholesale \u2192 wholesale": 1
+    },
+    "FIN-1": {
+      "business \u2192 business": 6,
+      "risk_factors \u2192 risk_factors": 3,
+      "mdna \u2192 mdna": 6,
+      "controls \u2192 controls": 6,
+      "legal_proceedings \u2192 legal_proceedings": 6,
+      "risk_factors \u2192 business": 2,
+      "risk_factors \u2192 mdna": 1
+    },
+    "FIN-2": {
+      "results \u2192 results": 6,
+      "officer_change \u2192 officer_change": 6,
+      "agreement \u2192 agreement": 6,
+      "other \u2192 other": 6,
+      "shareholder_vote \u2192 shareholder_vote": 6
+    },
+    "FIN-4": {
+      "borrowings \u2192 borrowings": 6,
+      "goodwill \u2192 goodwill": 6,
+      "share_based_compensation \u2192 share_based_compensation": 6,
+      "income_tax_expense \u2192 income_tax_expense": 4,
+      "amortization \u2192 amortization": 4,
+      "revenue \u2192 revenue": 5
+    },
+    "LEG-1": {
+      "not_addressed \u2192 not_addressed": 11,
+      "yes \u2192 yes": 8,
+      "says_opposite \u2192 says_opposite": 6,
+      "yes \u2192 says_opposite": 2,
+      "yes \u2192 not_addressed": 1,
+      "says_opposite \u2192 not_addressed": 2,
+      "says_opposite \u2192 yes": 3
+    },
+    "LEG-2": {
+      "anti_assignment \u2192 anti_assignment": 5,
+      "cap_on_liability \u2192 cap_on_liability": 5,
+      "governing_law \u2192 governing_law": 5,
+      "termination_for_convenience \u2192 termination_for_convenience": 5,
+      "non_compete \u2192 non_compete": 5,
+      "license_grant \u2192 license_grant": 5
+    },
+    "LEG-3": {
+      "not_unfair \u2192 not_unfair": 9,
+      "unilateral_change \u2192 unilateral_change": 2,
+      "contract_by_using \u2192 contract_by_using": 3,
+      "choice_of_law \u2192 choice_of_law": 3,
+      "unilateral_change \u2192 not_unfair": 1,
+      "limitation_of_liability \u2192 limitation_of_liability": 3,
+      "unilateral_termination \u2192 unilateral_termination": 3,
+      "arbitration \u2192 arbitration": 3,
+      "jurisdiction \u2192 jurisdiction": 3,
+      "content_removal \u2192 content_removal": 3
+    },
+    "LEG-4": {
+      "no \u2192 no": 14,
+      "no \u2192 yes": 1,
+      "yes \u2192 yes": 15
+    },
+    "PRD-1": {
+      "B \u2192 B": 8,
+      "B \u2192 A": 5,
+      "A \u2192 A": 9,
+      "A \u2192 B": 8
+    },
+    "PRD-2": {
+      "major \u2192 major": 10,
+      "minor \u2192 minor": 10,
+      "patch \u2192 patch": 10
+    },
+    "DAT-1": {
+      "q4 \u2192 q4": 10,
+      "q3 \u2192 q3": 9,
+      "q2 \u2192 q2": 6,
+      "q1 \u2192 q1": 5
+    },
+    "DAT-2": {
+      "cell_3 \u2192 cell_1": 1,
+      "cell_3 \u2192 cell_3": 5,
+      "cell_4 \u2192 cell_4": 7,
+      "cell_1 \u2192 cell_1": 10,
+      "cell_2 \u2192 cell_1": 1,
+      "cell_2 \u2192 cell_2": 4,
+      "cell_4 \u2192 cell_2": 1,
+      "cell_1 \u2192 cell_2": 1
+    },
+    "DAT-4": {
+      "date \u2192 date": 4,
+      "count_or_measurement \u2192 count_or_measurement": 5,
+      "geography \u2192 geography": 5,
+      "count_or_measurement \u2192 identifier": 2,
+      "category \u2192 category": 6,
+      "identifier \u2192 identifier": 4,
+      "money \u2192 money": 3,
+      "money \u2192 count_or_measurement": 2,
+      "free_text \u2192 free_text": 3
+    },
+    "DOC-2": {
+      "neither \u2192 neither": 10,
+      "action_item \u2192 action_item": 7,
+      "action_item \u2192 neither": 3,
+      "decision \u2192 neither": 6,
+      "decision \u2192 decision": 4
+    },
+    "DOC-3": {
+      "a \u2192 a": 6,
+      "d \u2192 d": 4,
+      "b \u2192 a": 1,
+      "d \u2192 a": 2,
+      "c \u2192 d": 2,
+      "b \u2192 b": 4,
+      "c \u2192 c": 3,
+      "b \u2192 d": 1,
+      "b \u2192 c": 3,
+      "c \u2192 b": 1
+    }
+  }
+}

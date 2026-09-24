@@ -51,7 +51,7 @@ class ClaudeAndCodex(unittest.TestCase):
         self.assertEqual(json.loads(out["output_text"]), ANSWER)
 
     def test_cli_runs_in_an_empty_directory_without_harness_secrets(self):
-        env = {"DECISION_BENCH_API_KEY": "harness-key", "TYPESAFE_API_KEY": "ts-key", "DJEV_API_KEY": "djev-key",
+        env = {"DECISION_BENCH_API_KEY": "harness-key", "TYPESAFE_API_KEY": "ts-key", "DJEV_API_KEY": "djev-key", "SAGE_API_KEY": "sage-key", "TOGETHER_API_KEY": "together-key",
                "LAYA_API_KEY": "laya-key", "LAYA_BASE_URL": "http://localhost:8000/v1"}
         response = {"structured_output": ANSWER, "is_error": False, "usage": {}}
         _, call = self.run_cli(SONNET, json.dumps(response), env=env)
@@ -59,6 +59,8 @@ class ClaudeAndCodex(unittest.TestCase):
         self.assertNotIn("DECISION_BENCH_API_KEY", child)
         self.assertNotIn("TYPESAFE_API_KEY", child)
         self.assertNotIn("DJEV_API_KEY", child)
+        self.assertNotIn("SAGE_API_KEY", child)
+        self.assertNotIn("TOGETHER_API_KEY", child)
         self.assertNotIn("LAYA_API_KEY", child)
         self.assertNotIn("LAYA_BASE_URL", child)
         self.assertIn("decision-bench-", str(call.call_args.kwargs["cwd"]))

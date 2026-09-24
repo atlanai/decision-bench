@@ -1,0 +1,13 @@
+{
+  "repeat": {
+    "calls": 100,
+    "correct": 84,
+    "changed_from_full_run": 0
+  },
+  "permutation": {
+    "calls": 150,
+    "correct": 121,
+    "changed_from_full_run": 7
+  },
+  "estimated_cost_usd": 0.00798651
+}

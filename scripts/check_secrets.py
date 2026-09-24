@@ -24,6 +24,8 @@ MAX_BYTES = 20_000_000
 
 # Live credential formats. Checked everywhere, including corpus data.
 CREDENTIALS = [
+    ("Together API key", r"\btgp_v[0-9]+_[A-Za-z0-9_-]{20,}"),
+    ("Levanto API key", r"\blv_live_[A-Za-z0-9_-]{20,}"),
     ("AWS access key", r"\bAKIA[0-9A-Z]{16}\b"),
     ("GitHub token", r"\bgh[pousr]_[A-Za-z0-9]{30,}"),
     ("Slack token", r"\bxox[baprs]-[A-Za-z0-9-]{10,}"),
