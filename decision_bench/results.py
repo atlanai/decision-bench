@@ -99,6 +99,8 @@ def predictions_from_run(records, ledger, case_map):
                              "error": public_error(a.get("error"), a.get("status")), "duration_ms": a.get("duration_ms"),
                              "cost_usd": a.get("cost_usd"), "cost_basis": a.get("cost_basis"),
                              "tokens": _tokens(a.get("usage"))} for a in own]}
+        if answer and answer.get("probability_source"):
+            row["probability_source"] = answer["probability_source"]
         if isinstance(text, str) and len(text) > MAX_OUTPUT_CHARS:
             row["output_truncated"] = True
         out.append(row)

@@ -56,7 +56,7 @@ export const exclusionReason = (runId, caseId) => imageInputExclusion(caseMap.ge
 export const result = (runId, caseId) => exclusionReason(runId, caseId) ? undefined : rawResult(runId, caseId);
 export const okOf = v => !!v && v.scores.length > 0 && v.scores.every(s => s.correct);
 export const answered = v => !!v && v.scores.some(s => s.label != null);
-export const answerOf = v => !v ? 'Not run' : !answered(v) ? 'No valid answer' : v.scores.map(s => human(s.label)).join(', ');
+export const answerOf = v => !v ? 'Not run' : !answered(v) ? (v.status === 'ok' ? 'Abstained' : 'No valid answer') : v.scores.map(s => human(s.label)).join(', ');
 
 /* ---------- Corpus vocabulary: use case › task › row ---------- */
 export const catKey = c => c.category;

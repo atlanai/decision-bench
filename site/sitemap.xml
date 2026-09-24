@@ -1124,6 +1124,8 @@
   <url><loc>https://decisionbench.ai/model/laya-routed/</loc></url>
   <url><loc>https://decisionbench.ai/model/nova-micro-v1/</loc></url>
   <url><loc>https://decisionbench.ai/model/qwen3-32b/</loc></url>
+  <url><loc>https://decisionbench.ai/model/sage/</loc></url>
+  <url><loc>https://decisionbench.ai/model/tev1-4b-experimental/</loc></url>
   <url><loc>https://decisionbench.ai/data/swe-bench-verified/</loc></url>
   <url><loc>https://decisionbench.ai/data/commitpackft/</loc></url>
   <url><loc>https://decisionbench.ai/data/nvd/</loc></url>

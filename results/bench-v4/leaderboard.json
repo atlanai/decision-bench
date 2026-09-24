@@ -182,6 +182,28 @@
       "completed_at": "2026-09-23T13:59:55.821544+00:00"
     },
     {
+      "model_id": "sage",
+      "label": "Sage (Levanto)",
+      "vendor": "Levanto",
+      "provider": "sage",
+      "api_model": "levanto-sage-v1.1",
+      "accuracy": 0.9209694415173867,
+      "wilson95": [
+        0.9020579977883235,
+        0.9364864150500748
+      ],
+      "correct": 874,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 732.7618750277907,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-09-24T21:28:54.840522+00:00"
+    },
+    {
       "model_id": "claude-haiku-4.5",
       "label": "Claude Haiku 4.5",
       "vendor": "Anthropic",

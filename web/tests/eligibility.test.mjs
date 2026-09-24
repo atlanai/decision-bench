@@ -28,3 +28,9 @@ test('vision-model icon scores remain intact', () => {
  const run=B.RUNS.find(r=>B.keyOf(r)==='gemini-3.5-flash');
  assert.equal(B.subsetMetrics(run,B.taskRows('DSN-1')).questions,30);
 });
+
+test('successful null answers are abstentions, not API failures', () => {
+  assert.equal(B.answerOf({status:'ok',scores:[{label:null,correct:false}]}), 'Abstained');
+  assert.equal(B.answerOf({status:'invalid_output',scores:[{label:null,correct:false}]}), 'No valid answer');
+  assert.equal(B.answerOf(undefined), 'Not run');
+});

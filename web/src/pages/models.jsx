@@ -117,7 +117,7 @@ export function ModelPage({id: k}) {
     </Section>
     <Section title={m.provider === 'sage' ? 'Renormalized probability diagnostics' : 'Confidence'} description={`Expected calibration error ${metric(all.ece)} · Brier ${metric(all.brier)} · ${plural(all.highConfErrors, 'wrong answer')} given with 90% confidence or more.`}>
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Reliability" description="On the diagonal, stated confidence matches observed accuracy. Dot size is the number of decisions in the bin."><Reliability runs={[run, ...others]} cases={textCases} focus={[k]} label="Reliability diagram" /></ChartCard>
+        <ChartCard title="Reliability" description={m.provider === 'sage' ? 'Renormalized option scores versus observed accuracy; these are transformed scores, not Sage’s original confidence.' : 'On the diagonal, stated confidence matches observed accuracy. Dot size is the number of decisions in the bin.'}><Reliability runs={[run, ...others]} cases={textCases} focus={[k]} label="Reliability diagram" /></ChartCard>
         <ChartCard title="Risk and coverage" description="Error rate if answers below a confidence threshold are handed to a person. Other models in grey."><Risk runs={[run, ...others]} cases={textCases} focus={[k]} label="Risk against coverage" /></ChartCard>
       </div>
     </Section>

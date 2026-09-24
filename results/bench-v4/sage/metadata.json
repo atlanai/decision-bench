@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "sage",
+    "label": "Sage (Levanto)",
+    "short_label": "Sage",
+    "vendor": "Levanto",
+    "provider": "sage",
+    "color": "#1438d4",
+    "vision": false,
+    "api_model": "levanto-sage-v1.1",
+    "resolved_models": [
+      "levanto-sage-v1.1"
+    ]
+  },
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "00d96d01e22d4efc1e5f02553e1f33640d682a23",
+    "git_dirty": true,
+    "git_commits": [
+      "00d96d01e22d4efc1e5f02553e1f33640d682a23"
+    ]
+  },
+  "run": {
+    "run_id": "sage-bench-v4-full-v1",
+    "status": "completed",
+    "created_at": "2026-09-24T21:11:29.038616+00:00",
+    "completed_at": "2026-09-24T21:28:54.840522+00:00",
+    "published_at": "2026-09-24T21:29:02.141016+00:00",
+    "executions": 1,
+    "jobs": 1,
+    "timeout_seconds": 60,
+    "max_attempts": 1,
+    "endpoint_id": null,
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 949,
+    "rows_completed": 949,
+    "rows_ok": 949,
+    "rows_error": 0,
+    "full": false
+  },
+  "totals": {
+    "correct": 874,
+    "accuracy": 0.9209694415173867,
+    "wilson95": [
+      0.9020579977883235,
+      0.9364864150500748
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 632432,
+    "output_tokens": null,
+    "latency_p50_ms": 732.7618750277907
+  },
+  "published_with_warnings": [
+    "it covers 949 of 1071 rows"
+  ]
+}

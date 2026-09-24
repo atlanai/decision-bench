@@ -4,7 +4,7 @@ import json
 import unittest
 import urllib.error
 from unittest.mock import MagicMock, patch
-from decision_bench import adapters, sage
+from decision_bench import adapters, sage, results
 from decision_bench.errors import CallError
 from decision_bench.scoring import normalize_answers, score
 from test_adapters import CASE
@@ -78,3 +78,16 @@ class SageTests(unittest.TestCase):
             self.assertEqual(ctx.exception.status, 'auth_missing')
         with self.assertRaises(CallError):
             sage.completion(MODEL, CASE, 10, 'another-model')
+
+    def test_abstention_export_preserves_provenance_without_confidence(self):
+        out, _ = self.invoke(chosen=None)
+        normalized = normalize_answers(out['response'], CASE, out['source'])
+        record = {'case_id': CASE['id'], 'status': 'ok', 'answers': normalized,
+                  'scores': score(CASE, normalized), 'duration_ms': 100, 'output_text': out['output_text']}
+        case = {**CASE, 'task': 'routing', 'category': 'support'}
+        exported = results.predictions_from_run([record], [], {CASE['id']: case})[0]
+        self.assertIsNone(exported['answer'])
+        self.assertIsNone(exported['confidence'])
+        self.assertFalse(exported['correct'])
+        self.assertEqual(exported['status'], 'ok')
+        self.assertEqual(exported['probability_source'], 'native-renormalized')
