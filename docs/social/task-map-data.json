@@ -1,0 +1,149 @@
+[
+  {
+    "domain": "Engineering",
+    "task_ids": [
+      "ENG-1",
+      "ENG-2",
+      "ENG-3",
+      "ENG-4",
+      "ENG-5"
+    ],
+    "tasks": [
+      "Find the file a fix changed",
+      "Classify a code change",
+      "Classify a vulnerability",
+      "Triage a secret-scanner alert",
+      "Match a diff to a commit"
+    ]
+  },
+  {
+    "domain": "AI agents & evals",
+    "task_ids": [
+      "AGT-1",
+      "AGT-2",
+      "AGT-3",
+      "AGT-4",
+      "AGT-5"
+    ],
+    "tasks": [
+      "Select the right tool",
+      "Detect a hijacked agent",
+      "Check task completion",
+      "Verify citation support",
+      "Compare two replies"
+    ]
+  },
+  {
+    "domain": "Trust & safety",
+    "task_ids": [
+      "SAF-1",
+      "SAF-2"
+    ],
+    "tasks": [
+      "Detect injections and jailbreaks",
+      "Classify toxic comments"
+    ]
+  },
+  {
+    "domain": "Customer support",
+    "task_ids": [
+      "SUP-1",
+      "SUP-2"
+    ],
+    "tasks": [
+      "Route a complaint",
+      "Classify its issue"
+    ]
+  },
+  {
+    "domain": "Sales & commerce",
+    "task_ids": [
+      "COM-1",
+      "COM-2",
+      "COM-3"
+    ],
+    "tasks": [
+      "Judge product relevance",
+      "Classify a product",
+      "Identify a company\u2019s industry"
+    ]
+  },
+  {
+    "domain": "Finance",
+    "task_ids": [
+      "FIN-1",
+      "FIN-2",
+      "FIN-3",
+      "FIN-4"
+    ],
+    "tasks": [
+      "Identify a 10-K section",
+      "Classify an 8-K event",
+      "Find a receipt total",
+      "Classify a financial amount"
+    ]
+  },
+  {
+    "domain": "Legal",
+    "task_ids": [
+      "LEG-1",
+      "LEG-2",
+      "LEG-3",
+      "LEG-4"
+    ],
+    "tasks": [
+      "Check what an NDA entails",
+      "Classify a contract clause",
+      "Identify unfair terms",
+      "Detect a specified clause"
+    ]
+  },
+  {
+    "domain": "Product management",
+    "task_ids": [
+      "PRD-1",
+      "PRD-2"
+    ],
+    "tasks": [
+      "Predict an A/B headline winner",
+      "Classify a version bump"
+    ]
+  },
+  {
+    "domain": "Data & analytics",
+    "task_ids": [
+      "DAT-1",
+      "DAT-2",
+      "DAT-3",
+      "DAT-4"
+    ],
+    "tasks": [
+      "Select the right SQL query",
+      "Find an answer in a table",
+      "Check a chart against a claim",
+      "Infer a column\u2019s value type"
+    ]
+  },
+  {
+    "domain": "Documents & meetings",
+    "task_ids": [
+      "DOC-1",
+      "DOC-2",
+      "DOC-3"
+    ],
+    "tasks": [
+      "Classify a document page",
+      "Label decisions and action items",
+      "Match a summary to a meeting"
+    ]
+  },
+  {
+    "domain": "Design",
+    "task_ids": [
+      "DSN-1"
+    ],
+    "tasks": [
+      "Identify an icon\u2019s official name"
+    ]
+  }
+]

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="1224pt" viewBox="0 0 1152 1224" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-24T13:16:39.070261</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 1224
+L 1152 1224
+L 1152 0
+L 0 0
+z
+" style="fill: #fafaf8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 51.84 463.896
+L 384.768 463.896
+L 384.768 275.4
+L 51.84 275.4
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 51.84 281.52
+L 95.616 281.52
+L 95.616 275.4
+L 51.84 275.4
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 407.808 463.896
+L 740.736 463.896
+L 740.736 275.4
+L 407.808 275.4
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 407.808 281.52
+L 451.584 281.52
+L 451.584 275.4
+L 407.808 275.4
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 763.776 463.896
+L 1096.704 463.896
+L 1096.704 275.4
+L 763.776 275.4
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 763.776 281.52
+L 807.552 281.52
+L 807.552 275.4
+L 763.776 275.4
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 51.84 679.32
+L 384.768 679.32
+L 384.768 490.824
+L 51.84 490.824
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 51.84 496.944
+L 95.616 496.944
+L 95.616 490.824
+L 51.84 490.824
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 407.808 679.32
+L 740.736 679.32
+L 740.736 490.824
+L 407.808 490.824
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 407.808 496.944
+L 451.584 496.944
+L 451.584 490.824
+L 407.808 490.824
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 763.776 679.32
+L 1096.704 679.32
+L 1096.704 490.824
+L 763.776 490.824
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 763.776 496.944
+L 807.552 496.944
+L 807.552 490.824
+L 763.776 490.824
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 51.84 894.744
+L 384.768 894.744
+L 384.768 706.248
+L 51.84 706.248
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 51.84 712.368
+L 95.616 712.368
+L 95.616 706.248
+L 51.84 706.248
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 407.808 894.744
+L 740.736 894.744
+L 740.736 706.248
+L 407.808 706.248
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 407.808 712.368
+L 451.584 712.368
+L 451.584 706.248
+L 407.808 706.248
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 763.776 894.744
+L 1096.704 894.744
+L 1096.704 706.248
+L 763.776 706.248
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 763.776 712.368
+L 807.552 712.368
+L 807.552 706.248
+L 763.776 706.248
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 51.84 1110.168
+L 384.768 1110.168
+L 384.768 921.672
+L 51.84 921.672
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 51.84 927.792
+L 95.616 927.792
+L 95.616 921.672
+L 51.84 921.672
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 407.808 1110.168
+L 740.736 1110.168
+L 740.736 921.672
+L 407.808 921.672
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #ffffff; stroke: #dededb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 407.808 927.792
+L 451.584 927.792
+L 451.584 921.672
+L 407.808 921.672
+z
+" clip-path="url(#p3c4828ccd4)" style="fill: #3028c8"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #3028c8" x="51.84" y="53.856" transform="rotate(-0 51.84 53.856)">DECISION BENCH</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 31px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="51.84" y="110.16" transform="rotate(-0 51.84 110.16)">Small decisions. Across real work.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #555555" x="51.84" y="161.568" transform="rotate(-0 51.84 161.568)">11 domains  /  35 tasks  /  1,071 source-backed cases</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #3028c8" x="51.84" y="214.2" transform="rotate(-0 51.84 214.2)">CLASSIFY    ROUTE    VERIFY    COMPARE    DETECT    LOCATE</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="317.397656" transform="rotate(-0 67.968 317.397656)">Engineering</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="360.576" y="315.877969" transform="rotate(-0 360.576 315.877969)">5</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="353.138109" transform="rotate(-0 67.968 353.138109)">Find the file a fix changed</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="375.170109" transform="rotate(-0 67.968 375.170109)">Classify a code change</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="397.202109" transform="rotate(-0 67.968 397.202109)">Classify a vulnerability</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="419.234109" transform="rotate(-0 67.968 419.234109)">Triage a secret-scanner alert</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="441.266109" transform="rotate(-0 67.968 441.266109)">Match a diff to a commit</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="317.397656" transform="rotate(-0 423.936 317.397656)">AI agents &amp; evals</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="716.544" y="315.877969" transform="rotate(-0 716.544 315.877969)">5</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="353.138109" transform="rotate(-0 423.936 353.138109)">Select the right tool</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="375.170109" transform="rotate(-0 423.936 375.170109)">Detect a hijacked agent</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="397.202109" transform="rotate(-0 423.936 397.202109)">Check task completion</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="419.234109" transform="rotate(-0 423.936 419.234109)">Verify citation support</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="441.266109" transform="rotate(-0 423.936 441.266109)">Compare two replies</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="317.397656" transform="rotate(-0 779.904 317.397656)">Trust &amp; safety</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="1072.512" y="315.877969" transform="rotate(-0 1072.512 315.877969)">2</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="353.138109" transform="rotate(-0 779.904 353.138109)">Detect injections and jailbreaks</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="375.170109" transform="rotate(-0 779.904 375.170109)">Classify toxic comments</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="532.821656" transform="rotate(-0 67.968 532.821656)">Customer support</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="360.576" y="531.301969" transform="rotate(-0 360.576 531.301969)">2</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="568.562109" transform="rotate(-0 67.968 568.562109)">Route a complaint</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="590.594109" transform="rotate(-0 67.968 590.594109)">Classify its issue</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="532.821656" transform="rotate(-0 423.936 532.821656)">Sales &amp; commerce</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="716.544" y="531.301969" transform="rotate(-0 716.544 531.301969)">3</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="568.562109" transform="rotate(-0 423.936 568.562109)">Judge product relevance</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="590.594109" transform="rotate(-0 423.936 590.594109)">Classify a product</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="612.626109" transform="rotate(-0 423.936 612.626109)">Identify a company’s industry</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="532.821656" transform="rotate(-0 779.904 532.821656)">Finance</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="1072.512" y="531.301969" transform="rotate(-0 1072.512 531.301969)">4</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="568.562109" transform="rotate(-0 779.904 568.562109)">Identify a 10-K section</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="590.594109" transform="rotate(-0 779.904 590.594109)">Classify an 8-K event</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="612.626109" transform="rotate(-0 779.904 612.626109)">Find a receipt total</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="634.658109" transform="rotate(-0 779.904 634.658109)">Classify a financial amount</text>
+   </g>
+   <g id="text_38">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="748.245656" transform="rotate(-0 67.968 748.245656)">Legal</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="360.576" y="746.725969" transform="rotate(-0 360.576 746.725969)">4</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="783.986109" transform="rotate(-0 67.968 783.986109)">Check what an NDA entails</text>
+   </g>
+   <g id="text_41">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="806.018109" transform="rotate(-0 67.968 806.018109)">Classify a contract clause</text>
+   </g>
+   <g id="text_42">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="828.050109" transform="rotate(-0 67.968 828.050109)">Identify unfair terms</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="850.082109" transform="rotate(-0 67.968 850.082109)">Detect a specified clause</text>
+   </g>
+   <g id="text_44">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="748.245656" transform="rotate(-0 423.936 748.245656)">Product management</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="716.544" y="746.725969" transform="rotate(-0 716.544 746.725969)">2</text>
+   </g>
+   <g id="text_46">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="783.986109" transform="rotate(-0 423.936 783.986109)">Predict an A/B headline winner</text>
+   </g>
+   <g id="text_47">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="806.018109" transform="rotate(-0 423.936 806.018109)">Classify a version bump</text>
+   </g>
+   <g id="text_48">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="748.245656" transform="rotate(-0 779.904 748.245656)">Data &amp; analytics</text>
+   </g>
+   <g id="text_49">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="1072.512" y="746.725969" transform="rotate(-0 1072.512 746.725969)">4</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="783.986109" transform="rotate(-0 779.904 783.986109)">Select the right SQL query</text>
+   </g>
+   <g id="text_51">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="806.018109" transform="rotate(-0 779.904 806.018109)">Find an answer in a table</text>
+   </g>
+   <g id="text_52">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="828.050109" transform="rotate(-0 779.904 828.050109)">Check a chart against a claim</text>
+   </g>
+   <g id="text_53">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="850.082109" transform="rotate(-0 779.904 850.082109)">Infer a column’s value type</text>
+   </g>
+   <g id="text_54">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="963.669656" transform="rotate(-0 67.968 963.669656)">Documents &amp; meetings</text>
+   </g>
+   <g id="text_55">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="360.576" y="962.149969" transform="rotate(-0 360.576 962.149969)">3</text>
+   </g>
+   <g id="text_56">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="999.410109" transform="rotate(-0 67.968 999.410109)">Classify a document page</text>
+   </g>
+   <g id="text_57">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="1021.442109" transform="rotate(-0 67.968 1021.442109)">Label decisions and action items</text>
+   </g>
+   <g id="text_58">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="67.968" y="1043.474109" transform="rotate(-0 67.968 1043.474109)">Match a summary to a meeting</text>
+   </g>
+   <g id="text_59">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="963.669656" transform="rotate(-0 423.936 963.669656)">Design</text>
+   </g>
+   <g id="text_60">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #3028c8" x="716.544" y="962.149969" transform="rotate(-0 716.544 962.149969)">1</text>
+   </g>
+   <g id="text_61">
+    <text style="font-size: 12.1px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="423.936" y="999.410109" transform="rotate(-0 423.936 999.410109)">Identify an icon’s official name</text>
+   </g>
+   <g id="text_62">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #171717" x="779.904" y="969.029812" transform="rotate(-0 779.904 969.029812)">Text, structured data &amp; images</text>
+   </g>
+   <g id="text_63">
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #555555" transform="translate(779.904 1010.730047)">36 public source datasets</text>
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #555555" transform="translate(779.904 1029.476336)">122 cases with images</text>
+    <text style="font-size: 12.5px; font-family: 'DejaVu Sans'; fill: #555555" transform="translate(779.904 1048.222625)">Receipts · charts · pages · icons</text>
+   </g>
+   <g id="text_64">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #555555" x="51.84" y="1164.024" transform="rotate(-0 51.84 1164.024)">Each task asks a fixed question with a bounded set of answers.</text>
+   </g>
+   <g id="text_65">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #555555" x="51.84" y="1194.624" transform="rotate(-0 51.84 1194.624)">decisionbench.ai   ·   Full task inventory, verified against the frozen corpus</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p3c4828ccd4">
+   <rect x="0" y="0" width="1152" height="1224"/>
+  </clipPath>
+ </defs>
+</svg>

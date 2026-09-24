@@ -4,7 +4,7 @@ import * as B from '@/lib/bench';
 import {pct, pct0, ms, money, metric, plural, ciText} from '@/lib/format';
 import {href, modelHref, catHref, taskHref, rowHref, go as navigate} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {PageHeader, Crumbs, Section, ModelName, Logo, Fit, Meter, Stat, EmptyPage, Dash, Notes} from '@/components/common';
+import {PageHeader, Crumbs, Section, ModelName, Logo, Fit, Meter, Stat, EmptyPage, Dash, Notes, Notice} from '@/components/common';
 import {List, Item} from '@/components/list';
 import {Reliability, Risk} from '@/components/charts';
 import {Code} from '@/components/record';
