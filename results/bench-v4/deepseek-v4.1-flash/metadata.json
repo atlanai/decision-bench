@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "deepseek-v4.1-flash",
+    "label": "DeepSeek V4.1 Flash",
+    "short_label": "DeepSeek Flash",
+    "vendor": "DeepSeek",
+    "provider": "openai-compatible",
+    "color": "#6c6ccf",
+    "vision": false,
+    "api_model": "deepseek/deepseek-v4.1-flash",
+    "resolved_models": [
+      "deepseek/deepseek-v4.1-flash"
+    ]
+  },
+  "request": {
+    "response_format": "json_schema",
+    "token_limit_field": "max_tokens",
+    "max_output_tokens": 8192,
+    "reasoning_effort": "low",
+    "temperature": null,
+    "json_wrapper_policy": "allow_single_code_fence"
+  },
+  "pricing": {
+    "input_per_mtok": 0.3,
+    "cached_input_per_mtok": 0.006,
+    "output_per_mtok": 1.2,
+    "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+    "as_of": "2026-09",
+    "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "4b919ae6f2c97e69dfe05f378c495e8604df994e",
+    "git_dirty": false,
+    "git_commits": [
+      "4b919ae6f2c97e69dfe05f378c495e8604df994e"
+    ]
+  },
+  "run": {
+    "run_id": "deepseek-v4.1-flash-bench-v4-1b446f7f",
+    "status": "completed_with_errors",
+    "created_at": "2026-09-23T13:44:19.242350+00:00",
+    "completed_at": "2026-09-23T13:58:50.363352+00:00",
+    "published_at": "2026-09-23T13:59:56.640265+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-2a0f85ecc26e",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1065,
+    "rows_error": 6,
+    "full": true
+  },
+  "totals": {
+    "correct": 993,
+    "accuracy": 0.927170868347339,
+    "wilson95": [
+      0.9100340910468661,
+      0.941254135981191
+    ],
+    "errors": 6,
+    "cost_usd": 0.73073896,
+    "cost_coverage": 0.9990671641791045,
+    "input_tokens": 1101170,
+    "output_tokens": 344274,
+    "latency_p50_ms": 1408.9679169701412
+  }
+}

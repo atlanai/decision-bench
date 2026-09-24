@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "glm-5.3-flash",
+    "label": "GLM 5.3 Flash",
+    "short_label": "GLM Flash",
+    "vendor": "Z.AI",
+    "provider": "openai-compatible",
+    "color": "#7c3aed",
+    "vision": false,
+    "api_model": "z-ai/glm-5.3-flash",
+    "resolved_models": [
+      "z-ai/glm-5.3-flash"
+    ]
+  },
+  "request": {
+    "response_format": "json_object",
+    "token_limit_field": "max_tokens",
+    "max_output_tokens": 8192,
+    "reasoning_effort": null,
+    "temperature": null,
+    "json_wrapper_policy": "allow_single_code_fence"
+  },
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "9f5708a7e5e21757d221585d86792d66da71ceed",
+    "git_dirty": true,
+    "git_commits": [
+      "9f5708a7e5e21757d221585d86792d66da71ceed"
+    ]
+  },
+  "run": {
+    "run_id": "glm-5.3-flash-bench-v4-8d231f96",
+    "status": "completed_with_errors",
+    "created_at": "2026-09-23T13:36:13.754912+00:00",
+    "completed_at": "2026-09-23T13:59:55.821544+00:00",
+    "published_at": "2026-09-23T13:59:57.479937+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-2a0f85ecc26e",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1064,
+    "rows_error": 7,
+    "full": true
+  },
+  "totals": {
+    "correct": 988,
+    "accuracy": 0.9225023342670402,
+    "wilson95": [
+      0.9049361248659793,
+      0.9370484056918258
+    ],
+    "errors": 7,
+    "cost_usd": 1.09885639,
+    "cost_coverage": 1.0,
+    "input_tokens": 1069133,
+    "output_tokens": 440199,
+    "latency_p50_ms": 2358.7047909968533
+  }
+}

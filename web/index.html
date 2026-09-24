@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Decision Bench — Small Language Model Benchmark</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Added to a home screen it opens full screen, like an app. theme-color follows the site's theme (see below). -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Decision Bench">
+<link rel="canonical" href="https://decisionbench.ai/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Decision Bench">
+<meta property="og:description" content="Can a small model make this decision for you? An open benchmark built from real records and open datasets.">
+<meta property="og:url" content="https://decisionbench.ai/">
+<meta property="og:image" content="https://decisionbench.ai/social-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Decision Bench: Can a small model make this decision for you?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Decision Bench">
+<meta name="twitter:description" content="Can a small model make this decision for you? An open benchmark built from real records and open datasets.">
+<meta name="twitter:image" content="https://decisionbench.ai/social-preview.png">
+<meta name="description" content="An open benchmark of the bounded decisions software asks language models to make, built from real records in open-licence datasets: engineering, agents, safety, support, commerce, finance, legal, product, data, documents and design.">
+<!-- The one place the repository URL is set. Every GitHub link on the site is derived from it. -->
+<meta name="repo" content="https://github.com/atlanai/decision-bench">
+<meta name="ga-measurement-id" content="G-Y0L8VH8M13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<script>try{const q=new URLSearchParams(location.search).get('theme'),s=q==='light'||q==='dark'?q:localStorage.getItem('db-theme'),d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);document.querySelector('meta[name=theme-color]').content=d?'#19191b':'#ffffff';}catch(e){}</script>
+<style>html{background:#fff;color:#0a0a0a;font-family:Geist,system-ui,sans-serif}html.dark{background:#19191b;color:#f1f1f3;color-scheme:dark}</style>
+<!-- Loading indicator; production CSS is compiled by Vite before deployment. -->
+<style>
+#boot{--ink:#0a0a0a;position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#fff;transition:opacity .15s ease,visibility 0s linear .15s}
+html.dark #boot{--ink:#f1f1f3;background:#19191b}
+#boot[data-done]{opacity:0;visibility:hidden}
+#boot .in{display:flex;flex-direction:column;align-items:center;gap:22px;transition:transform .6s cubic-bezier(.5,0,.2,1)}
+#boot[data-done] .in{transform:scale(1.18)}
+#boot .mark{display:grid;grid-template-columns:repeat(11,10px);gap:3px}
+#boot .mark i,#boot .bar i{display:block;width:10px;height:10px;border-radius:1px;background:var(--ink);opacity:.08}
+#boot .mark i.on{opacity:1;animation:boot-in .55s cubic-bezier(.34,1.56,.64,1) var(--d) both,boot-wave 1.8s ease-in-out calc(var(--d) + .9s) infinite}
+#boot .mark i:not(.on){animation:boot-twinkle 2.6s steps(1) var(--r) infinite}
+#boot .word{font:500 13px/1 "Geist Pixel","Geist Mono",ui-monospace,monospace;letter-spacing:.2em;color:var(--ink)}
+#boot .tag{margin-top:-12px;font:400 13px/1.4 Geist,system-ui,sans-serif;color:var(--ink);opacity:.55;animation:boot-fade .6s ease .5s both}
+#boot .bar{display:flex;gap:2px}
+#boot .bar i{width:8px;height:8px;transition:opacity .2s ease}
+#boot .bar i.on{opacity:1}
+#boot .bar i.next{animation:boot-blink .7s steps(1) infinite}
+#boot .msg{min-height:14px;font:500 11px/14px "Geist Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.5}
+/* On the way out the lit pixels burst outward from the mark while the screen zooms through and fades. */
+#boot[data-done] .mark i.on{animation:boot-out .6s cubic-bezier(.5,0,.75,0) var(--o) forwards}
+#boot[data-done] .mark i:not(.on),#boot[data-done] .word,#boot[data-done] .tag,#boot[data-done] .bar,#boot[data-done] .msg{animation:none;opacity:0;transition:opacity .2s ease}
+@keyframes boot-in{0%{opacity:0;transform:translateY(-14px) scale(.4)}100%{opacity:1;transform:none}}
+@keyframes boot-out{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.4)}}
+@keyframes boot-fade{from{opacity:0;transform:translateY(4px)}}
+@keyframes boot-wave{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes boot-twinkle{0%,88%{opacity:.08}89%,100%{opacity:.3}}
+@keyframes boot-blink{0%{opacity:.55}50%{opacity:.08}}
+@media (prefers-reduced-motion:reduce){#boot *{animation:none!important}#boot[data-done] .in{transform:none}}
+</style>
+<link rel="stylesheet" href="/src/styles.css">
+<noscript><style>#boot{display:none}</style></noscript>
+</head>
+<body>
+<div id="boot" role="status" aria-live="polite"><div class="in"><div class="mark" aria-hidden="true"></div><div class="word">DECISION BENCH</div><div class="tag">Real records, answered by their source.</div><div class="bar" aria-hidden="true"></div><div class="msg">Waking up</div></div></div>
+<script>
+/* "DB" in a 5×7 pixel face. Lit pixels drop in column by column, then a wave runs across them; the rest twinkle.
+   Each lit pixel also gets a direction away from the centre, which it flies along when the screen lifts. */
+(function(){
+  var g=['11110011110','10001010001','10001010001','10001011110','10001010001','10001010001','11110011110'],b=document.getElementById('boot'),m=b.querySelector('.mark'),bar=b.querySelector('.bar'),h='',n=20;
+  function burst(x,y){var dx=x-5,dy=y-3,a=Math.atan2(dy,dx)+(Math.random()-.5)*.6,r=90+Math.random()*160+Math.hypot(dx,dy)*14;return '--dx:'+(Math.cos(a)*r).toFixed(0)+'px;--dy:'+(Math.sin(a)*r).toFixed(0)+'px;--rot:'+((Math.random()-.5)*160).toFixed(0)+'deg;--o:'+(Math.random()*90).toFixed(0)+'ms';}
+  g.forEach(function(row,y){for(var x=0;x<row.length;x++)h+=row[x]==='1'?'<i class="on" style="--d:'+(x*45+y*18)+'ms;'+burst(x,y)+'"></i>':'<i style="--r:'+(-Math.random()*2.6).toFixed(2)+'s"></i>';});
+  m.innerHTML=h;for(var i=0,s='';i<n;i++)s+='<i></i>';bar.innerHTML=s;
+  /* app.jsx reports progress through this: a message and how far along, 0 to 1. */
+  window.dbBoot=function(msg,f){var k=Math.round(Math.max(0,Math.min(1,f))*n);if(msg)b.querySelector('.msg').textContent=msg;[].forEach.call(bar.children,function(e,j){e.className=j<k?'on':j===k?'next':'';});};
+  window.dbBoot('',.1);
+})();
+</script>
+<div id="root"><main style="max-width:70ch;margin:4rem auto;padding:1.5rem">
+<h1>Decision Bench</h1>
+<p>Can a small model make this decision for you?</p>
+<p>An open benchmark of bounded decisions software asks language models to make, built from real records in open-licence datasets. Compare accuracy, latency, and cost across engineering, agents, safety, support, commerce, finance, legal, product, data, documents, and design.</p>
+<p>Every row includes its source, licence, and answer key. Model results are published for inspection and reproduction.</p>
+<p><a href="corpus.json">Download benchmark rows</a> · <a href="datasets.json">Explore dataset sources</a> · <a href="protocol.txt">Read the benchmark protocol</a> · <a href="privacy.html">Privacy</a></p>
+<noscript><p>Enable JavaScript to explore the interactive leaderboard, compare models, and review individual decisions. The benchmark downloads above are available without JavaScript.</p></noscript>
+</main></div>
+<script type="module" src="/src/main.jsx"></script>
+<script src="analytics.js" defer></script>
+</body>
+</html>

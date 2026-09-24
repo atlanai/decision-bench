@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "laya-routed",
+    "label": "Laya (routed)",
+    "short_label": "Laya",
+    "vendor": "Laya",
+    "provider": "laya",
+    "color": "#8b5cf6",
+    "vision": false,
+    "api_model": "convaiinnovations/laya",
+    "resolved_models": [
+      "laya-0.3.4/english",
+      "laya-0.3.4/multilingual"
+    ]
+  },
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "4b919ae6f2c97e69dfe05f378c495e8604df994e",
+    "git_dirty": false,
+    "git_commits": [
+      "4b919ae6f2c97e69dfe05f378c495e8604df994e"
+    ]
+  },
+  "run": {
+    "run_id": "laya-routed-bench-v4-5df829cd",
+    "status": "completed",
+    "created_at": "2026-09-23T13:43:09.259817+00:00",
+    "completed_at": "2026-09-23T14:06:18.839538+00:00",
+    "published_at": "2026-09-23T14:08:17.740154+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-841b0722cfd8",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 565,
+    "accuracy": 0.5275443510737629,
+    "wilson95": [
+      0.49759921203803387,
+      0.5572925971364528
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 752018,
+    "output_tokens": 0,
+    "latency_p50_ms": 1524.6552079916
+  }
+}

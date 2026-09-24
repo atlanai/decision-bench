@@ -1,0 +1,34 @@
+name: Data removal request
+description: You hold rights to, or are the subject of, a row and want it removed.
+title: "Removal request: <row id or dataset>"
+labels: ["data-removal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the request itself is sensitive (for example it involves personal data), report it privately through the
+        Security tab instead; see SECURITY.md. You don't need to prove a legal claim first. Removed rows are dropped
+        from the next corpus version.
+  - type: textarea
+    id: rows
+    attributes:
+      label: Rows or dataset
+      description: Row ids, or the source dataset if you want every row from it removed.
+    validations:
+      required: true
+  - type: dropdown
+    id: basis
+    attributes:
+      label: Your relationship to the content
+      options:
+        - I hold rights to the content
+        - I am the person the content is about
+        - I represent the upstream dataset
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Anything that helps us act on the request. Do not include personal data you want removed.

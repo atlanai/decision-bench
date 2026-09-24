@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "claude-sonnet-5",
+    "label": "Claude Sonnet 5",
+    "short_label": "Sonnet API",
+    "vendor": "Anthropic",
+    "provider": "openai-compatible",
+    "color": "#cc782e",
+    "vision": true,
+    "api_model": "claude-sonnet-5",
+    "resolved_models": [
+      "claude-sonnet-5"
+    ]
+  },
+  "request": {
+    "response_format": "json_schema",
+    "token_limit_field": "max_tokens",
+    "max_output_tokens": 8192,
+    "reasoning_effort": "low",
+    "temperature": null,
+    "json_wrapper_policy": "allow_single_code_fence"
+  },
+  "pricing": {
+    "input_per_mtok": 2,
+    "cached_input_per_mtok": 0.2,
+    "output_per_mtok": 10,
+    "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+    "as_of": "2026-09",
+    "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "5f96ef1f40f575fdffcd85b5f1e3100c985ff118",
+    "git_dirty": true,
+    "git_commits": [
+      "5f96ef1f40f575fdffcd85b5f1e3100c985ff118",
+      "9f5708a7e5e21757d221585d86792d66da71ceed"
+    ]
+  },
+  "run": {
+    "run_id": "claude-sonnet-5-bench-v4-dc0f874a",
+    "status": "completed_with_errors",
+    "created_at": "2026-09-23T13:33:55.486142+00:00",
+    "completed_at": "2026-09-23T14:20:57.286897+00:00",
+    "published_at": "2026-09-23T14:21:30.936659+00:00",
+    "executions": 2,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-2a0f85ecc26e",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1070,
+    "rows_error": 1,
+    "full": true
+  },
+  "totals": {
+    "correct": 992,
+    "accuracy": 0.9262371615312792,
+    "wilson95": [
+      0.9090130881693816,
+      0.940414399564625
+    ],
+    "errors": 1,
+    "cost_usd": 5.37457,
+    "cost_coverage": 0.6205098493626883,
+    "input_tokens": 2273255,
+    "output_tokens": 82806,
+    "latency_p50_ms": 3588.1204580073245
+  }
+}

@@ -1,0 +1,54 @@
+# Safety category (SAF-1 … SAF-3) — build report
+
+Module: `authoring/bench/safety.py`. `python3 scripts/fetch_sources.py --only safety` exits 0 (all 96 declared files present; nothing is pinned yet, so no hash check ran). `python3 scripts/build_bench.py --dry-run --only safety` ends with `"problems": []`, 90 rows, all real.
+
+New download folders: `data/sources/openai-moderation-eval/` (one 478 KB gzip) and `data/sources/civil-comments/` (80 JSON windows, ~4 MB). The deepset and in-the-wild folders were reused unchanged.
+
+## Tasks built
+
+| Task | Name | Rows | Answer balance | Datasets |
+| --- | --- | --- | --- | --- |
+| SAF-1 | Attack on the assistant (injection · jailbreak · benign) | 30 | 10 / 10 / 10 | deepset/prompt-injections, In-The-Wild Jailbreak Prompts |
+| SAF-2 | Which moderation category (none · harassment · hate · self_harm · sexual · violence) | 30 | 8 / 5 / 5 / 4 / 3 / 5 | OpenAI moderation API evaluation set |
+| SAF-3 | Toxic comment or not (toxic · not_toxic) | 30 | 15 / 15 | Civil Comments |
+| SAF-4 | Wikipedia vandalism | — | not built (see below) | — |
+
+Labels: SAF-1 and SAF-2 `trained annotators`, SAF-3 `crowd`. All three `expertise="none"`, `contamination="high"` (all four datasets are well-known public sets).
+
+## Datasets and licence evidence
+
+**deepset/prompt-injections** — Apache-2.0. Read: the dataset card at commit 4f61ecb (`https://huggingface.co/datasets/deepset/prompt-injections/blob/4f61ecb038e9c3fb77e21034b22511b523772cdd/README.md`, also cached at `data/sources/deepset-prompt-injections/LICENSE-CARD.md`). The YAML header says `license: apache-2.0`; a second `license: cc-by-4.0` sits inside `dataset_info` (also permissive). No upstream source for the prompts is documented. Same reasoning as v3.
+
+**In-The-Wild Jailbreak Prompts (TrustAIRLab)** — MIT. Read: `https://github.com/verazuo/jailbreak_llms/blob/main/LICENSE` and the HF card (`data/sources/in-the-wild-jailbreak-prompts/LICENSE-CARD.md`, `license: mit`). Content is user-posted Reddit/Discord/FlowGPT text released by the collectors under MIT; the card's "research purposes only" disclaimer is recorded in `content_terms` as in v3.
+
+**OpenAI moderation API evaluation set** — MIT. Read: `https://raw.githubusercontent.com/openai/moderation-api-release/f4ab51b5edd3bfbcb349a56324274235b674e0e4/LICENSE` ("MIT License / Copyright (c) 2022 OpenAI"), the README at the same commit (category definitions for S, H, V, HR, SH, S3, H2, V2; no usage statement), and the paper (Markov et al., AAAI 2023, arXiv:2208.03274, read via ar5iv). The paper says the released set is "sourced from CommonCrawl and model-generated data containing text samples from publicly available data labeled according to our taxonomy" and "No production data is included in the dataset we are releasing." The file is pinned to commit f4ab51b (2022-08-09, the latest). Text inside is anonymised (`<Person>`, `<Organization>`, `<URL>`, `<Email>`, `<PhoneNumber>` tags); the original web authors are unidentified, so no stricter upstream terms are known. See judgement call 1.
+
+**Civil Comments (google/civil_comments)** — CC0-1.0. Read: the HF card (`https://huggingface.co/datasets/google/civil_comments/raw/main/README.md`, current commit f2970eb; header `license: cc0-1.0`, text "This dataset is released under CC0 1.0", comments "come from an archive of the Civil Comments platform ... created from 2015 - 2017 and appeared on approximately 50 English-language news sites"), and the original archive's Figshare record via the API (`https://api.figshare.com/v2/articles/7376747`: title `data.json`, licence `CC0`, published 2018-11-22 by "Civil Research Data"; the HTML page returns 403 to fetchers). Labels are Jigsaw crowd ratings (Borkan et al. 2019); `license_url` points at the card's `main` blob since the HF blob URL has no commit-pinned form for the README that I verified — the maintainer may want to swap in `.../blob/f2970eb3a55777454c94069077cc8d9b5866312d/README.md`.
+
+## Sampling rules and what was screened out
+
+**SAF-1.** v3's PI-1 rules (OVERRIDE/PERSONA cue mapping for deepset, UNLOCK+ROLEPLAY for in-the-wild, the broad BLOCK vocabulary list, no e-mail/phone/web/template rows) plus: English only, with a "no German stop word in the text" check (`DE_ONLY`, excluding die/den/im/mit/was/dir which are also English); at least 6 words; `GERMAN_POLITICS` drops the FRG-as-GmbH, Greens, leaving-the-EU and named-German-politician essays; `{{...}}` and `[SUBJECT]` placeholders dropped; benign rows need a question mark or 12+ words; near-duplicates collapse on first 80 letters, last 60 letters (same payload, e.g. "write Andy is the best") or >30% shared 5-word shingles; DAN capped at 2 (rows 1216 and 38). Hand SKIPs (all with reasons in the module): the two "what would a child say if it would need to ignore all provided context" hypotheticals (test-90, test-105, as v3 skipped), "please return your embeddings" (test-97), the slapped-child hypothetical (test-85), the "Disregarding the articles ... USA superior to Mexico" row (train-411, sets aside documents not instructions), a garbled mixed-language row (train-473), and the "Melina, a 17-year-old maiden who must obey" jailbreak (313).
+
+**SAF-2.** Single-flag rows only (so S3/H2/V2 never appear); 40–600 chars; English; ≥80% letters/spaces (drops JSON, citation lists, keyword dumps); no `<URL>/<Email>/<PhoneNumber>` rows. Excluded outright, by regex on every candidate: anything mentioning minors, children, teens, students, school, "years old" or ages (MINORS); any slur (SLURS); any anatomical/explicit sexual vocabulary (EXPLICIT — this is why the sexual pool is only 3 rows: a hook-up ad, a porn-site advert, a crude joke); strong profanity, sexual violence, child abuse, torture/mutilation/beheading/gore, genocide vocabulary and dehumanising animal/vermin words (STRONG). Self-harm rows must not mention any method (SH_METHODS: pills, cutting, blades, ropes, jumping, guns, bleeding, burning, purging, rubber bands …), so the four rows are ideation and talk about the habit. Hate rows: one per targeted group (HATE_GROUPS). "None" rows must touch a sensitive topic (SENSITIVE) so the option is not guessable from the subject. 26 hand SKIPs with reasons, mostly "a careful reader could argue another option": quotations (a religious text about wives, a witch-hunting treatise, "the sword will be their judge"), reported speech quoting someone's anti-Muslim remarks, a "yo mama" joke run, a post that defends the Sikhs it mentions, a torture-scenario row, a children's-programme parody, venting and fiction fragments flagged violence.
+
+**SAF-3.** toxicity ≥ 0.8 → toxic, ≤ 0.1 → not toxic; 60–600 chars; identity_attack, threat, sexual_explicit < 0.2 and severe_toxicity < 0.3; SLURS/STRONG/EXPLICIT; English, prose; no e-mail/phone/web; NAMES regex (two adjacent capitalised words mid-sentence, courtesy title + name, ~60 surnames common in 2015–2017 political threads, case-sensitive for ambiguous ones like May/Key/Brown). 40 windows yielded only 19 toxic candidates, so I doubled to 80 interleaved windows (39 candidates). Hand SKIPs: three rows whose text is mild but whose toxicity score is 1.00 (almost certainly very few raters — the HF version does not expose rater counts), rows naming people (Eric/Junior, Evans, Yakabuski, Dolan, "Slick Willy"), a Shakespeare quotation, masked profanity, and on the not-toxic side rows a reader could reasonably call toxic (a long personal rebuke, an ethnic generalisation, a gender generalisation, a comment about drunk consent, an accusatory reply).
+
+## SAF-4 (Wikipedia vandalism): not built
+
+The only clean labelled source I found is PAN-WVC-10 (Zenodo record 3341487, licence "Creative Commons Attribution 4.0 International"; 32,452 edits, MTurk-labelled, ≥3 annotators each; article text CC BY-SA 3.0). It is one 459 MB zip, and `fetch_sources.py` would download the whole archive once per `zip_member`, breaking the ~50 MB-per-dataset rule; the edit text would also have to come from the Wikipedia revision API (some vandalism revisions are suppressed), and vandalism text is heavily profane, so screening would be severe. Live `mw-reverted` recent-changes data is not reproducible (30-day window). Not doable cleanly in an hour; skipped.
+
+## Judgement calls for the maintainer
+
+1. **Model-generated samples in the OpenAI set.** The paper says the released 1,680 samples are "sourced from CommonCrawl and model-generated data", and the file does not mark which is which. The contract forbids model-generated text. I built SAF-2 as briefed and recorded the quote in `content`/`content_terms`; if the rule is applied strictly, SAF-2 has to go. The `<Person>`/`<Organization>` tags on most chosen rows suggest scraped text, but that is not proof.
+2. **SAF-2 sexual has only 3 rows** (10%): once explicit vocabulary is excluded almost nothing in the S pool is publishable. Every option is still the answer at least once; the mix is otherwise 8/5/5/4/5.
+3. **Hate rows are still hateful** (a "LGBT cancer" remark, "stupid africans", "jews as a whole r enemies", "most women are lazy and worthless", a call to intern Muslim citizens). No slurs, no violence beyond the internment row; this is the mildest the pool offers. Row 1413 (Australia/Muslims) is the harshest and could be swapped for 115 (racial pseudo-science) if the per-group cap is relaxed.
+4. **SAF-2 harassment rows come from r/RoastMe-style content**, where the target consented to be roasted; the label is still harassment per OpenAI's taxonomy.
+5. **Civil Comments toxicity scores with few raters.** Three rows scored 1.00 on mild text and were hand-skipped; others at 0.80–0.83 are mild ("What a load of PC crap", "what a stupid idea"). The crowd label is the answer, but a reader may find some toxic rows tame. A stricter written rule (e.g. insult ≥ 0.6) would fix this at the cost of the pool; I left the brief's thresholds.
+6. **`english()` allows emoji** (only letters must be Latin) — otherwise 8 of 19 jailbreak candidates were lost to 🔒/🔓 formatting.
+7. **Civil Comments `license_url`** points at the `main` README blob; consider pinning it to commit f2970eb.
+8. **Row 742 (SAF-2 violence)** names Zambian politicians by initials (ECL, HH) — public figures.
+9. The first Civil Comments fetch hit HF rate limits (429) when run in parallel; the module's 80 windows fetch fine sequentially, but `fetch_sources.py --jobs 8` may need to be run with `--jobs 1` or retried for this dataset.
+
+## Summary
+
+Three tasks, 90 rows, all real, all licence-checked (Apache-2.0, MIT, MIT, CC0-1.0), dry-run clean. SAF-4 skipped for lack of a clean small source. The one thing to decide before publishing is whether the OpenAI moderation set's admitted "model-generated" fraction disqualifies SAF-2 under the real-records rule.

@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "about": "Models Decision Bench can evaluate. `id` is our stable slug (used in run ids and results/ paths); `model` is the name sent to the provider. Endpoints and keys come from environment variables, never from this file. See docs/running.md.",
+  "models": [
+    {
+      "id": "gemini-3.5-flash",
+      "label": "Gemini 3.5 Flash",
+      "short_label": "Gemini Flash",
+      "vendor": "Google",
+      "provider": "openai-compatible",
+      "model": "gemini-3.5-flash",
+      "color": "#2563eb",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": "low",
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 1.5,
+        "cached_input_per_mtok": 0.15,
+        "output_per_mtok": 9,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": true
+    },
+    {
+      "id": "gemini-flash-lite-latest",
+      "label": "Gemini Flash Lite",
+      "short_label": "Flash Lite",
+      "vendor": "Google",
+      "provider": "openai-compatible",
+      "model": "gemini-flash-lite-latest",
+      "color": "#06a1c9",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": "low",
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 0.3,
+        "cached_input_per_mtok": 0.03,
+        "output_per_mtok": 2.5,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": true
+    },
+    {
+      "id": "gpt-6-luna",
+      "label": "GPT-6 Luna",
+      "short_label": "Luna API",
+      "vendor": "OpenAI",
+      "provider": "openai-compatible",
+      "model": "gpt-6-luna",
+      "color": "#109467",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_completion_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": "low",
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 0.1,
+        "cached_input_per_mtok": 0.01,
+        "output_per_mtok": 0.5,
+        "source_url": "https://docs.litellm.ai/blog/gpt_6_sol_luna",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": true
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "label": "Claude Haiku 4.5",
+      "short_label": "Haiku API",
+      "vendor": "Anthropic",
+      "provider": "openai-compatible",
+      "model": "claude-haiku-4-5-20251001",
+      "color": "#a85c27",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": null,
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 1,
+        "cached_input_per_mtok": 0.1,
+        "output_per_mtok": 5,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": true
+    },
+    {
+      "id": "claude-sonnet-5",
+      "label": "Claude Sonnet 5",
+      "short_label": "Sonnet API",
+      "vendor": "Anthropic",
+      "provider": "openai-compatible",
+      "model": "claude-sonnet-5",
+      "color": "#cc782e",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": "low",
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 2,
+        "cached_input_per_mtok": 0.2,
+        "output_per_mtok": 10,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": true
+    },
+    {
+      "id": "glm-5.3-flash",
+      "label": "GLM 5.3 Flash",
+      "short_label": "GLM Flash",
+      "vendor": "Z.AI",
+      "provider": "openai-compatible",
+      "model": "z-ai/glm-5.3-flash",
+      "color": "#7c3aed",
+      "request": {
+        "response_format": "json_object",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": null,
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "vision": false
+    },
+    {
+      "id": "nova-micro-v1",
+      "label": "Amazon Nova Micro",
+      "short_label": "Nova Micro",
+      "vendor": "Amazon",
+      "provider": "openai-compatible",
+      "model": "Amazon Nova Micro v1",
+      "color": "#c02683",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 4096,
+        "reasoning_effort": null,
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 0.035,
+        "cached_input_per_mtok": 0.00875,
+        "output_per_mtok": 0.14,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": false
+    },
+    {
+      "id": "qwen3-32b",
+      "label": "Qwen3-32B",
+      "short_label": "Qwen 32B",
+      "vendor": "Qwen",
+      "provider": "openai-compatible",
+      "model": "Qwen3-32B",
+      "color": "#64748b",
+      "request": {
+        "response_format": "json_object",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": "low",
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 0.15,
+        "output_per_mtok": 0.6,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": false
+    },
+    {
+      "id": "deepseek-v4.1-flash",
+      "label": "DeepSeek V4.1 Flash",
+      "short_label": "DeepSeek Flash",
+      "vendor": "DeepSeek",
+      "provider": "openai-compatible",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "color": "#6c6ccf",
+      "request": {
+        "response_format": "json_schema",
+        "token_limit_field": "max_tokens",
+        "max_output_tokens": 8192,
+        "reasoning_effort": "low",
+        "temperature": null,
+        "json_wrapper_policy": "allow_single_code_fence"
+      },
+      "pricing": {
+        "input_per_mtok": 0.3,
+        "cached_input_per_mtok": 0.006,
+        "output_per_mtok": 1.2,
+        "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+        "as_of": "2026-09",
+        "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+      },
+      "vision": false
+    },
+    {
+      "id": "laya-routed",
+      "label": "Laya (routed)",
+      "short_label": "Laya",
+      "vendor": "Laya",
+      "provider": "laya",
+      "model": "convaiinnovations/laya",
+      "color": "#8b5cf6",
+      "notes": "The Laya server selects a checkpoint per request. Set LAYA_BASE_URL to a hosted or self-hosted /v1 endpoint. API cost is not estimated; self-hosting compute is excluded.",
+      "vision": false
+    },
+    {
+      "id": "djev",
+      "label": "DiffusionGemma-Jev (djev)",
+      "short_label": "djev",
+      "vendor": "Maisa",
+      "provider": "djev",
+      "model": "djev",
+      "color": "#b45309",
+      "pricing": {
+        "input_per_mtok": 0.035,
+        "output_per_mtok": 0,
+        "source_url": "https://djev.dev/llms.txt",
+        "as_of": "2026-09",
+        "note": "Announced preview rate; billing may not yet be enabled. Used only as an estimate."
+      },
+      "vision": false
+    },
+    {
+      "id": "jev-1.13",
+      "label": "Jev 1.13",
+      "short_label": "Jev 1.13",
+      "vendor": "TypeSafe",
+      "provider": "typesafe",
+      "model": "jev-1.13.0",
+      "color": "#0f766e",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://docs.typesafe.ai/models",
+        "as_of": "2026-09",
+        "note": "Published input rate; output tokens are not billed."
+      },
+      "vision": false
+    },
+    {
+      "id": "gpt-6-luna-codex",
+      "label": "GPT-6 Luna",
+      "short_label": "Luna CLI",
+      "vendor": "OpenAI",
+      "provider": "codex-cli",
+      "model": "gpt-6-luna",
+      "color": "#15803d",
+      "request": {
+        "reasoning_effort": "low"
+      },
+      "pricing": {
+        "input_per_mtok": 0.1,
+        "cached_input_per_mtok": 0.01,
+        "output_per_mtok": 0.5,
+        "source_url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+        "as_of": "2026-09",
+        "note": "API-equivalent estimate; a Codex subscription is billed differently."
+      },
+      "vision": false
+    },
+    {
+      "id": "claude-sonnet-5-cli",
+      "label": "Claude Sonnet 5",
+      "short_label": "Sonnet CLI",
+      "vendor": "Anthropic",
+      "provider": "claude-cli",
+      "model": "claude-sonnet-5",
+      "color": "#b45309",
+      "request": {
+        "reasoning_effort": "low"
+      },
+      "notes": "Claude Code reports its own API-equivalent cost per call.",
+      "vision": false
+    },
+    {
+      "id": "claude-haiku-4.5-cli",
+      "label": "Claude Haiku 4.5",
+      "short_label": "Haiku CLI",
+      "vendor": "Anthropic",
+      "provider": "claude-cli",
+      "model": "claude-haiku-4-5-20251001",
+      "color": "#92400e",
+      "request": {
+        "reasoning_effort": null
+      },
+      "notes": "Haiku does not accept an effort setting. Claude Code reports its own API-equivalent cost per call.",
+      "vision": false
+    }
+  ]
+}

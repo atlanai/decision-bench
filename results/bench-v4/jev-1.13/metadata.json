@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "jev-1.13",
+    "label": "Jev 1.13",
+    "short_label": "Jev 1.13",
+    "vendor": "TypeSafe",
+    "provider": "typesafe",
+    "color": "#0f766e",
+    "vision": false,
+    "api_model": "jev-1.13.0",
+    "resolved_models": [
+      "jev-1.13.0"
+    ]
+  },
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.042,
+    "output_per_mtok": 0,
+    "source_url": "https://docs.typesafe.ai/models",
+    "as_of": "2026-09",
+    "note": "Published input rate; output tokens are not billed."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "4b919ae6f2c97e69dfe05f378c495e8604df994e",
+    "git_dirty": true,
+    "git_commits": [
+      "4b919ae6f2c97e69dfe05f378c495e8604df994e"
+    ]
+  },
+  "run": {
+    "run_id": "jev-1.13-bench-v4-c861f2a4",
+    "status": "completed",
+    "created_at": "2026-09-23T13:48:27.267664+00:00",
+    "completed_at": "2026-09-23T13:50:29.093424+00:00",
+    "published_at": "2026-09-23T13:59:58.045740+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": null,
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 990,
+    "accuracy": 0.9243697478991597,
+    "wilson95": [
+      0.9069732206842946,
+      0.9387327884616112
+    ],
+    "errors": 0,
+    "cost_usd": 0.046292988,
+    "cost_coverage": 1.0,
+    "input_tokens": 1102214,
+    "output_tokens": 63528,
+    "latency_p50_ms": 438.5520829819143
+  }
+}

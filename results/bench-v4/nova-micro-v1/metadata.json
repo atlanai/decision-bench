@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "nova-micro-v1",
+    "label": "Amazon Nova Micro",
+    "short_label": "Nova Micro",
+    "vendor": "Amazon",
+    "provider": "openai-compatible",
+    "color": "#c02683",
+    "vision": false,
+    "api_model": "Amazon Nova Micro v1",
+    "resolved_models": [
+      "Amazon Nova Micro v1"
+    ]
+  },
+  "request": {
+    "response_format": "json_schema",
+    "token_limit_field": "max_tokens",
+    "max_output_tokens": 4096,
+    "reasoning_effort": null,
+    "temperature": null,
+    "json_wrapper_policy": "allow_single_code_fence"
+  },
+  "pricing": {
+    "input_per_mtok": 0.035,
+    "cached_input_per_mtok": 0.00875,
+    "output_per_mtok": 0.14,
+    "source_url": "https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json",
+    "as_of": "2026-09",
+    "note": "Per-token rates from the LiteLLM model cost map; used only when the provider reports no cost."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "9f5708a7e5e21757d221585d86792d66da71ceed",
+    "git_dirty": true,
+    "git_commits": [
+      "9f5708a7e5e21757d221585d86792d66da71ceed"
+    ]
+  },
+  "run": {
+    "run_id": "nova-micro-v1-bench-v4-18877b97",
+    "status": "completed_with_errors",
+    "created_at": "2026-09-23T13:39:00.223537+00:00",
+    "completed_at": "2026-09-23T13:42:34.950666+00:00",
+    "published_at": "2026-09-23T13:59:58.348106+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-2a0f85ecc26e",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 964,
+    "rows_error": 107,
+    "full": true
+  },
+  "totals": {
+    "correct": 711,
+    "accuracy": 0.6638655462184874,
+    "wilson95": [
+      0.6350327781778906,
+      0.6915269679279541
+    ],
+    "errors": 107,
+    "cost_usd": 0.076742033,
+    "cost_coverage": 0.9990662931839402,
+    "input_tokens": 1726625,
+    "output_tokens": 86871,
+    "latency_p50_ms": 735.2302920189686
+  }
+}

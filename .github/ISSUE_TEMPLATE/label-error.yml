@@ -1,0 +1,45 @@
+name: Label error on a row
+description: A row's answer, options or evidence looks wrong.
+title: "Label error: <row id>"
+labels: ["label-error"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Answers are frozen per corpus version. A confirmed error is fixed in the next version, never by editing the
+        current one, and results on the current version keep the original answer. Please don't cite model outputs
+        as the only evidence: models can agree with each other and still be wrong.
+  - type: input
+    id: row
+    attributes:
+      label: Row id
+      description: The `id` of the row, e.g. `pi-1-deepset-train-143`. Shown on the row's page in the viewer.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Corpus version
+      description: From `data/corpus/current.json` or the site footer.
+      placeholder: 1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is wrong?
+      options:
+        - The answer (gold label) is wrong
+        - The question is ambiguous; more than one option is defensible
+        - The evidence is missing something needed to answer
+        - The options or instructions are unclear
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: What should it be, and why?
+      description: Quote the part of the evidence that decides it. For real rows, say whether the upstream dataset has the same label.
+    validations:
+      required: true
