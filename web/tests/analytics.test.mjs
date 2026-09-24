@@ -52,8 +52,9 @@ function app() {
 }
 test('unknown route identifiers and private queries never enter metadata', () => {
   const a=app(); const r={page:'row', id:'person@example.com', q:new URLSearchParams('q=SECRET&category=SECRET&a=SECRET')};
-  a.page(r); assert.equal(a.events[0][1].page_path,'/#/row'); assert(!JSON.stringify(a.events).includes('SECRET')); assert(!JSON.stringify(a.events).includes('person@'));
+  a.page(r); assert.equal(a.events[0][1].page_path,'/row'); assert(!JSON.stringify(a.events).includes('SECRET')); assert(!JSON.stringify(a.events).includes('person@'));
   a.page({...r,id:'public-row'}); assert.equal(a.events[1][1].task_id,'T-1'); assert.equal(a.events[1][1].dataset_id,'dataset');
+  assert.equal(a.events[1][1].page_location,'https://decisionbench.ai/row/public-row');
 });
 test('filter changes have separate events, search tracks presence only, compare names are validated', () => {
   const a=app(), r={page:'home',id:'',q:new URLSearchParams()}; a.page(r);
