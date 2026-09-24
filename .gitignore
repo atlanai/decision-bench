@@ -102,8 +102,9 @@ logs/
 .env.*
 !.env.example
 .claude/*
-!.claude/launch.json
 .codex/
+/AGENTS.md
+/CLAUDE.md
 
 # Python and tooling
 __pycache__/
