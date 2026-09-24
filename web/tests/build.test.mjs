@@ -34,9 +34,9 @@ test('generated viewer defers record bodies and is smaller than complete data', 
   }
 });
 
-test('clean model routes exist only for published runs', {skip: !existsSync(new URL('../site/data.json', root)) || !existsSync(new URL('../site/model/', root))}, () => {
+test('clean model routes include completed partial evaluations', {skip: !existsSync(new URL('../site/data.json', root)) || !existsSync(new URL('../site/model/', root))}, () => {
   const data = JSON.parse(read('../site/data.json'));
-  const published = new Set(data.runs.filter(r => r.coverage?.full !== false).map(r => r.model_id || r.model?.id));
+  const published = new Set(data.runs.filter(r => String(r.status || '').startsWith('completed')).map(r => r.model_id || r.model?.id));
   for (const id of published) assert(existsSync(new URL(`../site/model/${id}/index.html`, root)), `${id} needs a direct URL`);
   for (const model of data.models.filter(m => !published.has(m.id)))
     assert(!existsSync(new URL(`../site/model/${model.id}/index.html`, root)), `${model.id} should not appear as a published page`);

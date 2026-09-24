@@ -204,6 +204,28 @@
       "completed_at": "2026-09-23T13:39:00.056705+00:00"
     },
     {
+      "model_id": "tev1-4b-experimental",
+      "label": "Tev1 4B Experimental",
+      "vendor": "Together AI",
+      "provider": "tev1",
+      "api_model": "together/Tev1-4B-experimental",
+      "accuracy": 0.8535300316122234,
+      "wilson95": [
+        0.8296088183800417,
+        0.8746005696231688
+      ],
+      "correct": 810,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": 0.031389498,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.03307639409905164,
+      "latency_p50_ms": 387.2856249799952,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-09-24T20:06:55.885806+00:00"
+    },
+    {
       "model_id": "qwen3-32b",
       "label": "Qwen3-32B",
       "vendor": "Qwen",

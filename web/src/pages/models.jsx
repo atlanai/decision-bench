@@ -18,21 +18,22 @@ const TD = 'px-3 py-2.5 first:pl-5 last:pr-5';
 const go = h => e => { if (!e.target.closest('a,button')) navigate(h); };
 
 export function Models() {
-  const published = new Set(B.RUNS.map(B.keyOf));
+  const available = [...B.RUNS, ...B.PARTIAL];
+  const published = new Set(available.map(B.keyOf));
   const keys = B.ORDER.filter(k => published.has(k));
   return <>
     <PageHeader title="Models" description="Models with published benchmark results. Open one for its fit by use case, failures and calibration."
       actions={B.RUNS.length > 1 && <Button variant="outline" asChild className="max-md:h-11 max-md:w-full max-md:rounded-xl"><a href={href('compare')}>Compare two models</a></Button>} />
-    <List className="md:hidden">{keys.map(k => { const m = B.M(k), run = B.RUNS.find(r => B.keyOf(r) === k), mm = B.subsetMetrics(run, B.allCases);
+    <List className="md:hidden">{keys.map(k => { const m = B.M(k), run = available.find(r => B.keyOf(r) === k), mm = B.subsetMetrics(run, B.allCases);
       return <Item key={k} href={modelHref(k)} lead={<Logo k={k} size={30} className="rounded-lg" />} title={B.fullName(k)}
-        sub={[m.vendor, m.vision ? 'Text and images' : 'Text only', ms(mm.latency.p50)].filter(Boolean).join(' · ')}
+        sub={[m.vendor, m.vision ? 'Text and images' : 'Text only', ms(mm.latency.p50), run.coverage?.full === false && `${run.coverage.rows_completed} rows · partial`].filter(Boolean).join(' · ')}
         trail={<span className="text-[15px] font-semibold tabular-nums">{pct(mm.accuracy)}</span>} />; })}</List>
     <TableCard className="max-md:hidden">
       <table className="w-full text-sm">
         <thead><tr className="border-b"><th className={TH}>Model</th><th className={TH}>Vendor</th><th className={TH}>Interface</th><th className={TH}>Model name sent</th><th className={TH}>Input</th><th className={cn(TH, 'text-right')}>Accuracy</th><th className={cn(TH, 'text-right')}>Latency</th><th className={cn(TH, 'text-right')}>$ / 1k rows</th></tr></thead>
-        <tbody>{keys.map(k => { const m = B.M(k), run = B.RUNS.find(r => B.keyOf(r) === k), mm = B.subsetMetrics(run, B.allCases);
+        <tbody>{keys.map(k => { const m = B.M(k), run = available.find(r => B.keyOf(r) === k), mm = B.subsetMetrics(run, B.allCases);
           return <tr key={k} onClick={go(modelHref(k))} className="cursor-pointer border-b last:border-0 hover:bg-muted/40">
-            <td className={TD}><ModelName k={k} /></td>
+            <td className={TD}><ModelName k={k} />{run.coverage?.full === false && <Badge variant="secondary" className="mt-1">{run.coverage.rows_completed} rows · partial</Badge>}</td>
             <td className={cn(TD, 'text-muted-foreground')}>{m.vendor}</td>
             <td className={cn(TD, 'text-muted-foreground')}>{m.iface}</td>
             <td className={TD}><code className="text-muted-foreground">{m.api_model}</code></td>
@@ -50,7 +51,7 @@ export function Models() {
 export function ModelPage({id: k}) {
   const [adv, setAdv] = useState(false);
   const m = B.MODELS[k];
-  const run = B.RUNS.find(r => B.keyOf(r) === k);
+  const run = [...B.RUNS, ...B.PARTIAL].find(r => B.keyOf(r) === k);
   if (!m || !run) return <EmptyPage title="No published result">See the <a href="/models" className="text-brand hover:underline">models with results</a>.</EmptyPage>;
   const head = <>
     <Crumbs items={[['Models', href('models')], [m.name, '']]} />
@@ -71,14 +72,15 @@ export function ModelPage({id: k}) {
       <Stat label={`Accuracy · ${all.questions} scored rows`} value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
       <Stat label="$ / 1k rows" value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
+    {run.coverage?.full === false && <Notice>This is a partial evaluation: {run.coverage.rows_completed} of {run.coverage.rows_in_corpus} corpus rows were run. Unrun rows are not scored, and this run is not ranked on the full leaderboard. {m.provider === 'tev1' && 'Tev1 was evaluated on 949 text-only cases; all 122 image-containing cases were excluded. Calibration metrics are unavailable for this label-only evaluation.'}</Notice>}
     {all.excluded > 0 && <Notice>{all.excluded} image-only rows excluded: the required image was not sent. Overall metrics use {all.questions} eligible rows. Downloaded run files retain the original, unadjusted results for audit.</Notice>}
     <Section title="Fit by use case" description="Fits: accuracy at or above 90% with the whole 95% interval above 85%. Risky: above 80%. Not fit: below 80%.">
-      <List className="md:hidden">{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
+      <List className="md:hidden">{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c && (run.coverage?.full !== false || B.rawResult(run.id, x.id))), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
         return <Item key={c} href={catHref(c)} chevron={false} title={B.catInfo(c).name} sub={best ? `Best: ${B.ident(best[0]).short}, ${pct0(best[1].accuracy)}` : ''}
           trail={<span className="flex flex-col items-end gap-1"><span className="text-[15px] font-semibold tabular-nums">{mm.questions ? pct(mm.accuracy) : '—'}</span><Fit v={B.verdict(mm)} /></span>} />; })}</List>
       <TableCard className="max-md:hidden"><table className="w-full text-sm">
         <thead><tr className="border-b"><th className={TH}>Use case</th><th className={TH}>This model</th><th className={cn(TH, 'text-right')}>Best model</th><th className={TH}>Verdict</th></tr></thead>
-        <tbody>{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
+        <tbody>{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c && (run.coverage?.full !== false || B.rawResult(run.id, x.id))), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];
           return <tr key={c} onClick={go(catHref(c))} className="cursor-pointer border-b last:border-0 hover:bg-muted/40">
             <td className={TD}><a href={catHref(c)} className="font-medium hover:underline">{B.catInfo(c).name}</a></td>
             <td className={TD}>{mm.questions ? <span className="flex items-center gap-3"><span className="w-12 font-semibold tabular-nums">{pct(mm.accuracy)}</span><Meter value={mm.accuracy} color={m.color} /></span> : <span className="text-muted-foreground">{mm.excluded ? 'Not evaluated: image required' : 'not run'}</span>}</td>

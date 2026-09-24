@@ -26,7 +26,7 @@ for (const row of data?.cases || []) {
   add(`review/${id(row.id)}`, `Review ${row.id}`);
 }
 const configuredModels = new Map((data?.models || []).map(model => [model.id, model]));
-for (const run of (data?.runs || []).filter(run => run.coverage?.full !== false)) {
+for (const run of (data?.runs || []).filter(run => String(run.status || '').startsWith('completed'))) {
   const modelId = run.model_id || run.model?.id;
   const model = configuredModels.get(modelId) || run.model || {};
   add(`model/${id(modelId)}`, model.label || modelId);
