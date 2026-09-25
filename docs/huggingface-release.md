@@ -1,6 +1,6 @@
 # Publishing Decision Bench on Hugging Face
 
-The dataset is hosted at https://huggingface.co/datasets/atlanai/decision-bench.
+The dataset is hosted on [Hugging Face](https://huggingface.co/datasets/atlanai/decision-bench).
 The website's footer and Data page use the `huggingface-dataset` metadata value in `web/index.html`.
 
 Create a new staging directory for each export:
