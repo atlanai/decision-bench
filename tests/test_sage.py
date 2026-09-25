@@ -4,9 +4,9 @@ import json
 import unittest
 import urllib.error
 from unittest.mock import MagicMock, patch
-from decision_bench import adapters, sage
+from decision_bench import adapters, sage, results
 from decision_bench.errors import CallError
-from decision_bench.scoring import normalize_answers
+from decision_bench.scoring import normalize_answers, score
 from test_adapters import CASE
 
 MODEL = {"id": "sage", "provider": "sage", "model": "levanto-sage-v1.1"}
@@ -16,7 +16,7 @@ class SageTests(unittest.TestCase):
     def invoke(self, chosen='billing', probs=None, error=None):
         body = {"id": "q", "kind": "choice", "result": {"chosen": chosen, "probabilities": probs or [
             {"option": "billing", "probability": .8}, {"option": "technical", "probability": .4}]},
-            "meta": {"model": "levanto-sage-v1.1", "latency_ms": 123}, "debug": "test-sage-secret"}
+            "meta": {"model": "levanto-sage-v1.1", "latency_ms": 123, "usage": {"billed_input_tokens": 512}}, "debug": "test-sage-secret"}
         response = MagicMock(status=200)
         response.read.return_value = json.dumps(body).encode()
         response.__enter__.return_value = response
@@ -46,13 +46,16 @@ class SageTests(unittest.TestCase):
         self.assertEqual(normalized['q']['probability_source'], 'native-renormalized')
         self.assertEqual(out['raw']['result']['probabilities'][0]['probability'], .8)
         self.assertEqual(out['provider_duration_ms'], 123)
+        self.assertEqual(out['usage']['input_tokens'], 512)
         self.assertIsNone(out['cost_usd'])
 
     def test_abstention_is_not_replaced(self):
         out, _ = self.invoke(chosen=None)
         self.assertIsNone(out['response']['answers']['q']['label'])
-        with self.assertRaises(ValueError):
-            normalize_answers(out['response'], CASE, out['source'])
+        normalized = normalize_answers(out['response'], CASE, out['source'])
+        self.assertIsNone(normalized['q']['label'])
+        self.assertFalse(score(CASE, normalized)[0]['correct'])
+        self.assertNotIn('confidence', score(CASE, normalized)[0])
 
     def test_invalid_probability_rejected(self):
         with self.assertRaises(CallError):
@@ -75,3 +78,16 @@ class SageTests(unittest.TestCase):
             self.assertEqual(ctx.exception.status, 'auth_missing')
         with self.assertRaises(CallError):
             sage.completion(MODEL, CASE, 10, 'another-model')
+
+    def test_abstention_export_preserves_provenance_without_confidence(self):
+        out, _ = self.invoke(chosen=None)
+        normalized = normalize_answers(out['response'], CASE, out['source'])
+        record = {'case_id': CASE['id'], 'status': 'ok', 'answers': normalized,
+                  'scores': score(CASE, normalized), 'duration_ms': 100, 'output_text': out['output_text']}
+        case = {**CASE, 'task': 'routing', 'category': 'support'}
+        exported = results.predictions_from_run([record], [], {CASE['id']: case})[0]
+        self.assertIsNone(exported['answer'])
+        self.assertIsNone(exported['confidence'])
+        self.assertFalse(exported['correct'])
+        self.assertEqual(exported['status'], 'ok')
+        self.assertEqual(exported['probability_source'], 'native-renormalized')

@@ -180,7 +180,8 @@ or `make check`. Tests use a local fake endpoint and never call a model.
 
 Set `SAGE_API_KEY` in the ignored `.env` after account activation. Smoke-test with
 `python3 -m decision_bench run --model sage --limit 5 --jobs 1 --max-attempts 1`.
-Once credits are available, run `python3 -m decision_bench run --model sage --jobs 1`.
+For the same 949-row text subset as Tev1, use `python3 scripts/run_sage.py smoke`,
+then `pilot`, then `full`. Each stage is serial, resumable, and uses a separate run ID.
 The text-only adapter sends one native Choice decision per corpus row to `/decide`,
 with reasoning `auto` and no web grounding. The server selects the model; its returned
 version is recorded. `--api-model` overrides are rejected.
@@ -189,9 +190,10 @@ Sage's option probabilities are independent and need not sum to one. The adapter
 renormalizes them for the benchmark's categorical metrics and marks their source
 `native-renormalized`; raw responses preserve the original values. These derived
 calibration scores are not Sage's original calibrated probabilities. A null choice
-is kept as null and fails the existing forced-choice output contract; no argmax
-is substituted. Costs remain unknown because Sage bills decision units by plan,
-not tokens. See the [Choice contract](https://docs.levanto.ai/decision-model/choice).
+is kept as null and counts as unanswered/incorrect, not an API failure; no argmax
+is substituted. Sage bills decision units by plan. An audited `decision_pricing` annotation in run metadata
+allows export-time plan-value estimates, reconciled against a verified unit total; measured
+request ledgers stay unchanged. These are full-utilization subscription estimates, not actual charges. See the [Choice contract](https://docs.levanto.ai/decision-model/choice).
 
 ## Together Tev1
 

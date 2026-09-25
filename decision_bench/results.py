@@ -87,7 +87,7 @@ def predictions_from_run(records, ledger, case_map):
         row = {"row_id": r["case_id"], "task": case["task"], "category": case["category"], "status": r["status"],
                "answer": answer["label"] if answer else None, "gold": q["gold"],
                "correct": bool(answer and answer["label"] == q["gold"]),
-               "confidence": answer["probabilities"][answer["label"]] if answer and answer.get("probabilities") else None,
+               "confidence": answer["probabilities"][answer["label"]] if answer and answer.get("probabilities") and answer.get("label") is not None else None,
                "probabilities": answer["probabilities"] if answer else None,
                "output_text": text[:MAX_OUTPUT_CHARS] if isinstance(text, str) else None,
                "error": public_error(r.get("error"), r["status"]) if r["status"] != "ok" else None,
@@ -99,6 +99,10 @@ def predictions_from_run(records, ledger, case_map):
                              "error": public_error(a.get("error"), a.get("status")), "duration_ms": a.get("duration_ms"),
                              "cost_usd": a.get("cost_usd"), "cost_basis": a.get("cost_basis"),
                              "tokens": _tokens(a.get("usage"))} for a in own]}
+        if own and all(a.get("decision_units") is not None for a in own):
+            row["decision_units"] = sum(a["decision_units"] for a in own)
+        if answer and answer.get("probability_source"):
+            row["probability_source"] = answer["probability_source"]
         if isinstance(text, str) and len(text) > MAX_OUTPUT_CHARS:
             row["output_truncated"] = True
         out.append(row)
@@ -168,6 +172,7 @@ def metadata_for(meta, records, cases, manifest, metrics, published_at=None):
     return {"schema_version": SCHEMA_VERSION, "suite": cfg["suite"],
             "model": {**meta.get("model", {"id": cfg["model_id"]}), "id": cfg["model_id"],
                       "provider": cfg["provider"], "api_model": cfg["api_model"], "resolved_models": resolved},
+            "decision_pricing": meta.get("decision_pricing"),
             "request": cfg.get("request", {}), "pricing": meta.get("pricing"), "prompt_version": cfg["prompt_version"],
             "corpus": {"version": cfg.get("corpus_version"), "sha256": cfg["corpus_sha256"],
                        "current": cfg["corpus_sha256"] == manifest["sha256"]},
@@ -196,6 +201,11 @@ def export_run(run_id, cases=None, manifest=None):
     if meta["config"]["corpus_sha256"] != manifest["sha256"]:
         raise ValueError(f"Run {run_id} used corpus {meta['config']['corpus_sha256'][:12]}, not the current "
                          f"{manifest['sha256'][:12]}; its rows cannot be scored against the current answers")
+    if meta.get("decision_pricing"):
+        if meta["config"]["provider"] != "sage" or any(case_map[r["case_id"]].get("assets") for r in records):
+            raise ValueError("Audited decision pricing is only supported for text-only Sage runs")
+        from .decision_pricing import apply
+        ledger = apply(ledger, meta["decision_pricing"])
     predictions = predictions_from_run(records, ledger, case_map)
     rebuilt, events = records_from_predictions(predictions, run_id)
     metrics = summarize(rebuilt, case_map, events)

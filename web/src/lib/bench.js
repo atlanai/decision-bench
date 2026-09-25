@@ -21,7 +21,7 @@ export const ghIssue = (template, params = {}) => `${REPO}/issues/new?template=$
 /* ---------- Models: label, colour, vendor logo and interface come from data.json models[] ---------- */
 const IFACE = {'openai-compatible': 'API', typesafe: 'API', djev: 'API', sage: 'API', tev1: 'API', laya: 'API', 'claude-cli': 'Claude Code CLI', 'codex-cli': 'Codex CLI'};
 const PALETTE = ['#2563eb', '#7c3aed', '#0f766e', '#d97706', '#db2777', '#0891b2', '#65a30d', '#c2410c', '#6d28d9', '#475569'];
-const LOGOS = {'together ai': 'together.ai', together: 'together.ai', google: 'google.com', anthropic: 'anthropic.com', openai: 'openai.com', deepseek: 'deepseek.com', 'z.ai': 'z.ai', zhipu: 'z.ai', qwen: 'qwen.ai', alibaba: 'alibabacloud.com', amazon: 'amazon.com', aws: 'amazon.com', typesafe: 'typesafe.ai', laya: 'convaiinnovations.com', convai: 'convaiinnovations.com'};
+const LOGOS = {levanto: 'levanto.ai', 'together ai': 'together.ai', together: 'together.ai', google: 'google.com', anthropic: 'anthropic.com', openai: 'openai.com', deepseek: 'deepseek.com', 'z.ai': 'z.ai', zhipu: 'z.ai', qwen: 'qwen.ai', alibaba: 'alibabacloud.com', amazon: 'amazon.com', aws: 'amazon.com', typesafe: 'typesafe.ai', laya: 'convaiinnovations.com', convai: 'convaiinnovations.com'};
 function registerModel(m, configured) {
   if (!m?.id || MODELS[m.id]) return;
   const hash = [...m.id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0), vendor = m.vendor || '', logo = LOGOS[vendor.toLowerCase()];
@@ -56,7 +56,7 @@ export const exclusionReason = (runId, caseId) => imageInputExclusion(caseMap.ge
 export const result = (runId, caseId) => exclusionReason(runId, caseId) ? undefined : rawResult(runId, caseId);
 export const okOf = v => !!v && v.scores.length > 0 && v.scores.every(s => s.correct);
 export const answered = v => !!v && v.scores.some(s => s.label != null);
-export const answerOf = v => !v ? 'Not run' : !answered(v) ? 'No valid answer' : v.scores.map(s => human(s.label)).join(', ');
+export const answerOf = v => !v ? 'Not run' : !answered(v) ? (v.status === 'ok' ? 'Abstained' : 'No valid answer') : v.scores.map(s => human(s.label)).join(', ');
 
 /* ---------- Corpus vocabulary: use case › task › row ---------- */
 export const catKey = c => c.category;
