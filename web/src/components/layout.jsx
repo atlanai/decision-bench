@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {BookOpenIcon, BoxesIcon, ChevronDownIcon, ChevronLeftIcon, ChevronUpIcon, DatabaseIcon, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, ListChecksIcon, MoonIcon, SunIcon, TrophyIcon} from 'lucide-react';
-import {man, data, taskOrder, taskName, taskRows, caseMap, M, REPO, repoOk} from '@/lib/bench';
+import {man, data, taskOrder, taskName, taskRows, caseMap, M, REPO, repoOk, HUGGING_FACE_DATASET} from '@/lib/bench';
 import {go, replace, href, taskHref, rowHref, navHint, historyPos} from '@/lib/route';
 import {haptic} from '@/lib/device';
 import {nextTask} from '@/lib/dice';
@@ -203,6 +203,7 @@ export function Footer() {
         <span className="flex flex-wrap gap-x-4 gap-y-1">
           <span>Code MIT · rows keep their <a href="/data" className="underline-offset-4 hover:text-foreground hover:underline">source licences</a></span>
           <a href="/review" className="hover:text-foreground">Review mode</a>
+          {HUGGING_FACE_DATASET && <a href={HUGGING_FACE_DATASET} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Hugging Face</a>}
           {repoOk() && <a href={REPO} target="_blank" rel="noopener" className="hover:text-foreground lg:hidden">GitHub</a>}
           <a href="#" data-analytics-preferences className="hover:text-foreground">Analytics preferences</a>
         </span>

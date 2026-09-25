@@ -60,7 +60,9 @@ def public_repository_url(value):
     except ValueError:
         return False
     repository = "/at" + "lanai/decision-bench"
-    return (parsed.scheme == "https" and parsed.netloc == "github.com"
+    if parsed.netloc == "huggingface.co":
+        repository = "/datasets" + repository
+    return (parsed.scheme == "https" and parsed.netloc in {"github.com", "huggingface.co"}
             and ".." not in parsed.path.split("/")
             and (parsed.path == repository or parsed.path.startswith(repository + "/")))
 
