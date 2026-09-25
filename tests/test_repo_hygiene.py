@@ -31,6 +31,14 @@ class RepoHygiene(unittest.TestCase):
         findings = check_secrets.scan(ROOT)
         self.assertEqual(findings, [], "\n".join(f"{f[0]}:{f[1]} {f[2]}" for f in findings))
 
+    def test_only_public_benchmark_dataset_is_exempt_on_hugging_face(self):
+        base = "https://huggingface.co/datasets/at" + "lanai/decision-bench"
+        self.assertEqual(check_secrets.scan_text("README.md", base), [])
+        self.assertEqual(check_secrets.scan_text("README.md", base + "/blob/main/DATA_LICENSE.md"), [])
+        for url in (base + "-private", base + "/../private", base.replace("decision-bench", "private"),
+                    base.replace("huggingface.co", "huggingface.co.evil.test")):
+            self.assertTrue(check_secrets.scan_text("README.md", url), url)
+
     def test_no_internal_host_company_url_or_home_path_in_committed_text(self):
         for rel in check_secrets.files(ROOT):
             if rel.startswith(check_secrets.THIRD_PARTY):

@@ -4,7 +4,7 @@ language:
   - en
 license: other
 license_name: mixed-source-licenses
-license_link: https://huggingface.co/datasets/goelrohan6/decision-bench/blob/main/DATA_LICENSE.md
+license_link: https://huggingface.co/datasets/atlanai/decision-bench/blob/main/DATA_LICENSE.md
 size_categories:
   - 1K<n<10K
 task_categories:
@@ -43,7 +43,7 @@ The model receives evidence, instructions, and options. It returns one choice an
 import json
 from datasets import load_dataset
 
-dataset = load_dataset("goelrohan6/decision-bench", "bench-v4", split="test")
+dataset = load_dataset("atlanai/decision-bench", "bench-v4", split="test")
 row = dataset[0]
 state = json.loads(row["state"])
 questions = json.loads(row["questions"])
