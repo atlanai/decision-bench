@@ -14,6 +14,24 @@
       "levanto-sage-v1.1"
     ]
   },
+  "decision_pricing": {
+    "plan": "Starter",
+    "monthly_price_usd": 49,
+    "monthly_units": 60000,
+    "tokens_per_unit": 4000,
+    "benchmark_requests": 949,
+    "benchmark_units": 950,
+    "smoke_requests": 5,
+    "smoke_units": 5,
+    "pilot_requests": 50,
+    "pilot_units": 50,
+    "dashboard_requests": 1004,
+    "dashboard_units": 1005,
+    "source_url": "https://docs.levanto.ai/pricing",
+    "verified_on": "2026-09-25",
+    "basis": "Subscription value assuming full allowance utilization; granted credits covered usage, not a dollar charge.",
+    "unit_evidence": "Dashboard: 1005 billed decisions / 1004 calls. Local responses reconcile: one full-run request had 4083 billed input tokens; all other calls were at most 4000. No images or grounding."
+  },
   "request": {},
   "pricing": null,
   "prompt_version": "choice-v1",
@@ -35,7 +53,7 @@
     "status": "completed",
     "created_at": "2026-09-24T21:11:29.038616+00:00",
     "completed_at": "2026-09-24T21:28:54.840522+00:00",
-    "published_at": "2026-09-24T21:29:02.141016+00:00",
+    "published_at": "2026-09-25T03:51:39.590351+00:00",
     "executions": 1,
     "jobs": 1,
     "timeout_seconds": 60,
@@ -62,8 +80,8 @@
       0.9364864150500748
     ],
     "errors": 0,
-    "cost_usd": null,
-    "cost_coverage": 0.0,
+    "cost_usd": 0.7758333333333334,
+    "cost_coverage": 1.0,
     "input_tokens": 632432,
     "output_tokens": null,
     "latency_p50_ms": 732.7618750277907

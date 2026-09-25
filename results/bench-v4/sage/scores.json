@@ -521,12 +521,12 @@
     "high_confidence_errors": 27
   },
   "cost": {
-    "usd": null,
-    "coverage": 0.0,
+    "usd": 0.7758333333333334,
+    "coverage": 1.0,
     "basis": [
-      "unavailable"
+      "decision_plan_estimate"
     ],
-    "per_1000_rows_usd": null
+    "per_1000_rows_usd": 0.8175272216368108
   },
   "latency_ms": {
     "p50": 732.7618750277907,

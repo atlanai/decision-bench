@@ -15,10 +15,10 @@
   "retries": 0,
   "incomplete_attempts": 0,
   "attempt_errors": 0,
-  "cost_usd": null,
-  "cost_coverage": 0.0,
+  "cost_usd": 0.7758333333333334,
+  "cost_coverage": 1.0,
   "cost_bases": [
-    "unavailable"
+    "decision_plan_estimate"
   ],
   "tokens": {
     "input_tokens": 632432,
@@ -39,7 +39,7 @@
     "mean": 1100.7143998355677,
     "sum": 1044577.9654439539
   },
-  "cost_per_1000_cases_usd": null,
+  "cost_per_1000_cases_usd": 0.8175272216368108,
   "brier": 0.1408915812920527,
   "log_loss": 0.3033319373836447,
   "reliability": {

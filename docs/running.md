@@ -191,8 +191,9 @@ renormalizes them for the benchmark's categorical metrics and marks their source
 `native-renormalized`; raw responses preserve the original values. These derived
 calibration scores are not Sage's original calibrated probabilities. A null choice
 is kept as null and counts as unanswered/incorrect, not an API failure; no argmax
-is substituted. Costs remain unknown because Sage bills decision units by plan,
-not tokens. See the [Choice contract](https://docs.levanto.ai/decision-model/choice).
+is substituted. Sage bills decision units by plan. An audited `decision_pricing` annotation in run metadata
+allows export-time plan-value estimates, reconciled against a verified unit total; measured
+request ledgers stay unchanged. These are full-utilization subscription estimates, not actual charges. See the [Choice contract](https://docs.levanto.ai/decision-model/choice).
 
 ## Together Tev1
 

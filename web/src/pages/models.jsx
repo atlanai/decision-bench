@@ -70,10 +70,19 @@ export function ModelPage({id: k}) {
     {head}
     <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:grid-cols-5 [&>:last-child:nth-child(odd)]:max-md:col-span-2">
       <Stat label={`Accuracy · ${all.questions} scored rows`} value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
-      <Stat label="$ / 1k rows" value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
+      <Stat label={run.decision_pricing ? "Est. $ / 1k rows · Starter" : "$ / 1k rows"} value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
     {run.coverage?.full === false && <Notice>This is a partial evaluation: {run.coverage.rows_completed} of {run.coverage.rows_in_corpus} corpus rows were run. Unrun rows are not scored, and this run is not ranked on the full leaderboard. {m.provider === 'tev1' && 'Tev1 was evaluated on 949 text-only cases; all 122 image-containing cases were excluded. Calibration metrics are unavailable for this label-only evaluation.'}</Notice>}
-    {m.provider === 'sage' && <Notice>Sage abstained on {B.allCases.filter(c => { const r = B.rawResult(run.id, c.id); return r?.status === 'ok' && r.scores.some(s => s.label == null); }).length} rows. These count as incorrect in accuracy, not as API failures. Probability metrics use renormalized independent option probabilities and do not measure Sage’s original calibrated confidence. Dollar cost is unavailable for this subscription-funded run.</Notice>}
+    {m.provider === 'sage' && <Notice>Sage abstained on {B.allCases.filter(c => { const r = B.rawResult(run.id, c.id); return r?.status === 'ok' && r.scores.some(s => s.label == null); }).length} rows. These count as incorrect in accuracy, not as API failures. Probability metrics use renormalized independent option probabilities and do not measure Sage’s original calibrated confidence. The cost shown is an estimated Starter-plan value, not an actual dollar charge.</Notice>}
+    {run.decision_pricing && <Section title="Decision usage and estimated cost">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Stat label="Benchmark units · 949 calls" value={String(run.decision_pricing.benchmark_units)} />
+        <Stat label="Estimated benchmark value" value={money(run.decision_pricing.benchmark_units * run.decision_pricing.monthly_price_usd / run.decision_pricing.monthly_units)} />
+        <Stat label="Total units · including smoke and pilot" value={String(run.decision_pricing.dashboard_units)} />
+      </div>
+      <p className="mt-3 text-sm text-muted-foreground">Sage’s usage dashboard reports 1,005 units across 1,004 calls: 950 benchmark units, 50 pilot units and 5 smoke-test units. One benchmark request exceeded 4,000 input tokens and used two units.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Estimate uses <a className="underline" href={run.decision_pricing.source_url} target="_blank" rel="noreferrer">Starter pricing: $49 for 60,000 units/month</a>, assuming full allowance use. Granted credits covered this run; these amounts are list-price equivalents, not actual charges. Verified {run.decision_pricing.verified_on}.</p>
+    </Section>}
     {all.excluded > 0 && <Notice>{all.excluded} image-only rows excluded: the required image was not sent. Overall metrics use {all.questions} eligible rows. Downloaded run files retain the original, unadjusted results for audit.</Notice>}
     <Section title="Fit by use case" description="Fits: accuracy at or above 90% with the whole 95% interval above 85%. Risky: above 80%. Not fit: below 80%.">
       <List className="md:hidden">{B.categoryOrder().map(c => { const cs = B.allCases.filter(x => B.catKey(x) === c && (run.coverage?.full !== false || B.rawResult(run.id, x.id))), mm = B.subsetMetrics(run, cs), best = B.RUNS.map(r => [r, B.subsetMetrics(r, cs)]).filter(([, x]) => x.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0];

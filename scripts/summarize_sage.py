@@ -15,7 +15,11 @@ if not meta['status'].startswith('completed'):
     raise SystemExit('Sage run is not complete')
 records=list({r['case_id']:r for r in read_jsonl(folder/'results.jsonl')}.values())
 cases={r['id']:r for r in corpus.load_cases()}
-summary=metrics.summarize(records,cases,read_jsonl(folder/'attempts.jsonl'))
+ledger=read_jsonl(folder/'attempts.jsonl')
+if meta.get('decision_pricing'):
+    from decision_bench.decision_pricing import apply
+    ledger=apply(ledger,meta['decision_pricing'])
+summary=metrics.summarize(records,cases,ledger)
 abstentions=sum(r['status']=='ok' and s['label'] is None for r in records for s in r['scores'])
 summary['abstentions']=abstentions
 answered=sum(r['status']=='ok' and s['label'] is not None for r in records for s in r['scores'])
@@ -50,8 +54,11 @@ lines=['# Sage (Levanto) benchmark','',
        'A null choice counts as unanswered and incorrect, not an API failure. No argmax is substituted. '
        'Independent option probabilities are renormalized for categorical diagnostics; these metrics do not '
        'measure the provider’s original calibrated confidence. Raw probabilities are retained in local responses.',
-       'The run uses granted decision credits. Dollar cost remains unavailable because subscription '
-       'decision units cannot be converted into a measured per-call dollar charge. Input token counts are '
+       'The run used 950 decision units across 949 calls (one 4,083-token input used two units). '
+       'Smoke and pilot consumed another 55 units; the dashboard total reconciles at 1,005 units / 1,004 calls. '
+       'At Starter’s $49 / 60,000 units, the benchmark has an estimated plan value of $0.775833 '
+       '($0.817527 per 1,000 rows), assuming full utilization. Granted credits covered usage; this is not an actual charge. '
+       'See decision-usage.json for the audit and official pricing source. Input token counts are '
        'the provider’s billed_input_tokens field, not a local tokenizer estimate.',
        'Training-data overlap has not been ruled out. Historical latency comparisons include different '
        'provider/network setups; they are not controlled inference-speed comparisons.','',

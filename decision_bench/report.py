@@ -38,6 +38,7 @@ def _run_entry(metadata, metrics, source, cases):
                        "selected_case_ids": [c["id"] for c in cases]},
             "coverage": metadata["coverage"], "current_corpus": metadata["corpus"]["current"],
             "harness": metadata.get("harness"), "pricing": metadata.get("pricing"),
+            "decision_pricing": metadata.get("decision_pricing"),
             "files": ({k: f"results/{metadata['suite']}/{m['id']}/{f}" for k, f in
                        [("metadata", "metadata.json"), ("predictions", "predictions.jsonl"),
                         ("scores", "scores.json"), ("readme", "README.md")]} if source == "published" else None),
