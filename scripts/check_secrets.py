@@ -59,6 +59,8 @@ def public_repository_url(value):
         parsed = urlsplit(value)
     except ValueError:
         return False
+    if parsed.scheme == "https" and parsed.netloc == "x.com":
+        return parsed.path == "/rohan" + "atlan/article/2103188107143307541"
     repository = "/at" + "lanai/decision-bench"
     if parsed.netloc == "huggingface.co":
         repository = "/datasets" + repository
