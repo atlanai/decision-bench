@@ -202,6 +202,7 @@ export function Footer() {
         <span>Decision Bench {man().version} · corpus <code>{sha}</code> · built {data?.generated_at ? new Date(data.generated_at).toLocaleDateString() : ''}</span>
         <span className="flex flex-wrap gap-x-4 gap-y-1">
           <span>Code MIT · rows keep their <a href="/data" className="underline-offset-4 hover:text-foreground hover:underline">source licences</a></span>
+          <a href="https://x.com/rohanatlan/article/2103188107143307541" target="_blank" rel="noopener noreferrer" className="hover:text-foreground" title="Putting Jev to the test with Decision Bench">Jev benchmark article</a>
           <a href="/review" className="hover:text-foreground">Review mode</a>
           {HUGGING_FACE_DATASET && <a href={HUGGING_FACE_DATASET} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Hugging Face</a>}
           {repoOk() && <a href={REPO} target="_blank" rel="noopener" className="hover:text-foreground lg:hidden">GitHub</a>}

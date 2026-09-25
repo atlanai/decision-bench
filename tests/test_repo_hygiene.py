@@ -20,6 +20,13 @@ HOME = re.compile(r"/" + r"Users/[A-Za-z]")
 
 
 class RepoHygiene(unittest.TestCase):
+    def test_only_verified_launch_article_is_exempt_on_x(self):
+        base = "https://x.com/rohan" + "atlan/article/2103188107143307541"
+        self.assertEqual(check_secrets.scan_text("README.md", base), [])
+        for url in (base + "/private", base.replace("x.com", "x.com.evil.test"),
+                    base.replace("2103188107143307541", "123")):
+            self.assertTrue(check_secrets.scan_text("README.md", url), url)
+
     def test_only_this_public_repository_is_exempt_from_company_url_rule(self):
         base = "https://github.com/at" + "lanai/decision-bench"
         self.assertEqual(check_secrets.scan_text("README.md", base + "/issues"), [])

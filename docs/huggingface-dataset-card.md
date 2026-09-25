@@ -31,6 +31,12 @@ An open benchmark for how accurately, quickly, and cheaply language models make 
 
 [Leaderboard](https://decisionbench.ai/) · [Code and evaluation harness](https://github.com/atlanai/decision-bench) · [Protocol](docs/protocol.md) · [Task catalog](docs/tasks.md)
 
+## Background and analysis
+
+[Putting Jev to the test with Decision Bench](https://x.com/rohanatlan/article/2103188107143307541) — Rohan Goel, 24 September 2026.
+
+The launch article explains why Decision Bench was built, how its 35 tasks use real public records, and what the initial 12-model evaluation found about Jev’s accuracy, latency, cost, and task-specific limitations. For current model coverage and results, use the [live leaderboard](https://decisionbench.ai/); the article describes the launch snapshot.
+
 ## What it measures
 
 Decision Bench tests choices that software asks models to make: route a complaint, identify a clause, select a tool, classify a code change, or pick the total from a receipt. Each row has one question with at least two options. Answers come from the source dataset's label or an objective record. There are 122 image-bearing rows referencing 106 unique images.

@@ -11,7 +11,9 @@ An open benchmark for how accurately, quickly, and cheaply language models make 
 ![12 models evaluated](https://img.shields.io/badge/models-12-ED9FC8?style=flat-square&labelColor=161616)
 [![Code license: MIT](https://img.shields.io/badge/code-MIT-3028C8?style=flat-square&labelColor=161616)](LICENSE)
 
-[Explore the leaderboard](https://decisionbench.ai/) · [Read the docs](docs/protocol.md)
+[Explore the leaderboard](https://decisionbench.ai/) · [Read the docs](docs/protocol.md) · [Dataset on Hugging Face](https://huggingface.co/datasets/atlanai/decision-bench)
+
+Read the launch article: [Putting Jev to the test with Decision Bench](https://x.com/rohanatlan/article/2103188107143307541) by Rohan Goel, covering the benchmark’s design and the initial 12-model results.
 
 ## What it measures
 
