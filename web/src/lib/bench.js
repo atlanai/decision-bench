@@ -15,6 +15,7 @@ const statCache = new Map(), metricCache = new Map();
 export const man = () => data?.manifest || {};
 export const REPO = (document.querySelector('meta[name="repo"]')?.content || '').replace(/\/+$/, '');
 export const repoOk = () => REPO && !REPO.includes('OWNER');
+export const HUGGING_FACE_DATASET = document.querySelector('meta[name="huggingface-dataset"]')?.content || '';
 export const gh = path => `${REPO}/blob/main/${path}`;
 export const ghIssue = (template, params = {}) => `${REPO}/issues/new?template=${template}${Object.entries(params).map(([k, v]) => `&${k}=${encodeURIComponent(v)}`).join('')}`;
 

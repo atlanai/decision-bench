@@ -116,6 +116,9 @@ export function DataPage({id, route}) {
         </table>
       </div>
     </div>
+    {B.HUGGING_FACE_DATASET && <div className="mt-6 text-[13px]">
+      <a href={B.HUGGING_FACE_DATASET} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"><ExternalLinkIcon className="size-4" />Dataset on Hugging Face</a>
+    </div>}
     {B.repoOk() && <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
       <a href={B.gh('data/SOURCES.md')} target="_blank" rel="noopener" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"><GitHubIcon className="size-4" />Sources and attribution</a>
       <a href={B.ghIssue('data-removal.yml')} target="_blank" rel="noopener" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"><FlagIcon className="size-4" />Ask for a row to be removed</a>
