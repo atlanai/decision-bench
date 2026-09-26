@@ -349,6 +349,17 @@
         "note": "Announced serverless rate; estimate from API token usage."
       },
       "notes": "Native constrained letter output with thinking disabled. Accuracy-only: raw top-5 token logprobs retained; calibration unavailable."
+    },
+    {
+      "id": "imajev-4b",
+      "label": "imajev-4b (phase 3)",
+      "short_label": "imajev-4b",
+      "vendor": "mohit67890",
+      "provider": "laya",
+      "model": "imajev-4b",
+      "color": "#b45309",
+      "notes": "Open-weight Jev-class model (Qwen3.5-4B + LoRA + decision readout), served by its own playground server at a self-hosted /v1 endpoint with 4 option rotations and the shipped calibration. Text rows only through this adapter; no cost estimate (self-hosted).",
+      "vision": false
     }
   ]
 }

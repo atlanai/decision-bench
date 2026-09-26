@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "imajev-4b",
+    "label": "imajev-4b (phase 3)",
+    "short_label": "imajev-4b",
+    "vendor": "mohit67890",
+    "provider": "laya",
+    "color": "#b45309",
+    "vision": false,
+    "api_model": "imajev-4b",
+    "resolved_models": [
+      "imajev-4b"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "6fed2cd4c3608b070e649180796ccaef3d020a23",
+    "git_dirty": true,
+    "git_commits": [
+      "6fed2cd4c3608b070e649180796ccaef3d020a23"
+    ]
+  },
+  "run": {
+    "run_id": "imajev-4b-bench-v4-6c39c6c0",
+    "status": "completed",
+    "created_at": "2026-09-26T20:44:02.322575+00:00",
+    "completed_at": "2026-09-26T21:09:23.846794+00:00",
+    "published_at": "2026-09-26T21:09:37.868930+00:00",
+    "executions": 2,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-270fca225883",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.6"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 928,
+    "accuracy": 0.8664799253034547,
+    "wilson95": [
+      0.844793309373158,
+      0.8855468635416232
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 834177,
+    "output_tokens": null,
+    "latency_p50_ms": 2254.8545000026934
+  }
+}
