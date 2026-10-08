@@ -217,3 +217,17 @@ and categorical probabilities, records images sent, and uses the reported token
 usage and USD cost. No chat completion or generated probability distribution is used.
 
 [OpenRouter Decisions reference](https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request)
+
+## OpenAI GPT-6 Luna Decisions via OpenRouter
+
+Use the same ignored `OPENROUTER_API_KEY` with
+`python3 -m decision_bench run --model gpt-6-luna-decisions --limit 5 --jobs 1 --max-attempts 1`
+for a smoke test, then remove `--limit 5` for the full corpus. This entry sends
+native Choice questions to OpenRouter's Decisions endpoint, with text and image
+evidence and unchanged native probabilities. It is separate from `gpt-6-luna`,
+which uses chat completions with generated structured output. Input tokens are
+billed at the Decisions rate; output tokens are free, and provider-reported
+cost takes precedence over the fallback price table.
+
+[OpenRouter model](https://openrouter.ai/openai/gpt-6-luna-decisions) ·
+[OpenAI Decisions guide](https://developers.openai.com/api/docs/guides/decisions)
