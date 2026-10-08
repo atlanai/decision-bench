@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "gpt-6-luna-decisions",
+    "label": "GPT-6 Luna Decisions",
+    "short_label": "Luna Decisions",
+    "vendor": "OpenAI",
+    "provider": "openrouter-decisions",
+    "color": "#006b54",
+    "vision": true,
+    "api_model": "openai/gpt-6-luna-decisions",
+    "resolved_models": [
+      "openai/gpt-6-luna-decisions-20261006"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.1,
+    "cached_input_per_mtok": 0,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/openai/gpt-6-luna-decisions",
+    "as_of": "2026-10-08"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "9cac8f8acd256512a4fec8ee499f97da7eea861c",
+    "git_dirty": false,
+    "git_commits": [
+      "9cac8f8acd256512a4fec8ee499f97da7eea861c"
+    ]
+  },
+  "run": {
+    "run_id": "gpt-6-luna-decisions-bench-v4-full-v1",
+    "status": "completed",
+    "created_at": "2026-10-08T16:31:01.823199+00:00",
+    "completed_at": "2026-10-08T16:33:12.989324+00:00",
+    "published_at": "2026-10-08T16:33:46.428476+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 180,
+    "max_attempts": 3,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 969,
+    "accuracy": 0.9047619047619048,
+    "wilson95": [
+      0.8857065548896963,
+      0.9209239290811513
+    ],
+    "errors": 0,
+    "cost_usd": 0.0886974,
+    "cost_coverage": 1.0,
+    "input_tokens": 886974,
+    "output_tokens": 0,
+    "latency_p50_ms": 325.5317920120433
+  }
+}

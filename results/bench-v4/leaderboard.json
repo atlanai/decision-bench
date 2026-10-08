@@ -248,6 +248,28 @@
       "completed_at": "2026-09-23T13:39:00.056705+00:00"
     },
     {
+      "model_id": "gpt-6-luna-decisions",
+      "label": "GPT-6 Luna Decisions",
+      "vendor": "OpenAI",
+      "provider": "openrouter-decisions",
+      "api_model": "openai/gpt-6-luna-decisions",
+      "accuracy": 0.9047619047619048,
+      "wilson95": [
+        0.8857065548896963,
+        0.9209239290811513
+      ],
+      "correct": 969,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.0886974,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.08281736694677871,
+      "latency_p50_ms": 325.5317920120433,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-08T16:33:12.989324+00:00"
+    },
+    {
       "model_id": "tev1-4b-experimental",
       "label": "Tev1 4B Experimental",
       "vendor": "Together AI",
