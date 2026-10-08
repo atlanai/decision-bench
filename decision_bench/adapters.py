@@ -20,7 +20,7 @@ from .errors import CallError
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 DJEV_URL = "https://api.djev.dev/v1/request"
 # Credentials the harness itself uses are never passed to a CLI child process.
-HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
+HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
                    "LAYA_API_KEY", "LAYA_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
@@ -31,6 +31,9 @@ def call(model, case, timeout, api_model=None):
     provider = model["provider"]
     if provider == "openai-compatible":
         return openai_compat.completion(model, case, timeout, api_model)
+    if provider == "openrouter-decisions":
+        from .openrouter_decisions import completion
+        return completion(model, case, timeout, api_model)
     if provider == "typesafe":
         return typesafe(model, case, timeout, api_model)
     if provider == "djev":
@@ -88,14 +91,15 @@ def laya(model, case, timeout, api_model=None):
     return systemone(model, case, timeout, api_model, url, laya_key(url), "Laya")
 
 
-def systemone(model, case, timeout, api_model, url, key, provider_name):
+def systemone(model, case, timeout, api_model, url, key, provider_name, *, payload=None):
     def redact(value):
         return openai_compat.redact(value, extra_secrets=(key,), extra_endpoints=(url,))
 
     data = public_input(case)
     questions = {q["id"]: {"type": q["type"], "instructions": JUDGMENT_POLICY + q["instructions"],
                            "criteria": q["options"]} for q in data["questions"]}
-    payload = {"model": api_model or model["model"], "state": data["state"], "questions": questions}
+    if payload is None:
+        payload = {"model": api_model or model["model"], "state": data["state"], "questions": questions}
     headers = {"Content-Type": "application/json", "User-Agent": "DecisionBench (classification evaluation)"}
     if key:
         headers["Authorization"] = f"Bearer {key}"

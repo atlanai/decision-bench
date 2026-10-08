@@ -205,3 +205,15 @@ The model is `together/Tev1-4B-experimental`, with native A–X labels, regex
 constraints and thinking disabled. Accuracy is scored; calibration is unavailable
 because the native top-5 token logprobs do not cover every option. Raw logprobs
 remain available locally for inspection. No model-generated distribution is requested.
+
+## Perplexity Decider via OpenRouter
+
+Set `OPENROUTER_API_KEY` in the ignored `.env`. Use
+`python3 -m decision_bench run --model pplx-decider-v1.1-27b --limit 5 --jobs 1 --max-attempts 1`
+for a smoke test, then remove `--limit 5` for the full corpus. The native adapter
+sends one Choice question per row to OpenRouter's `/api/alpha/decisions`, including
+image assets as base64 image parts when present. It preserves the returned choice
+and categorical probabilities, records images sent, and uses the reported token
+usage and USD cost. No chat completion or generated probability distribution is used.
+
+[OpenRouter Decisions reference](https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request)

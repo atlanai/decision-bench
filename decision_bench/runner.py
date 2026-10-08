@@ -84,6 +84,9 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
         cfg["endpoint_id"] = openai_compat.endpoint_id(openai_compat.base_url())
     elif model["provider"] == "laya":
         cfg["endpoint_id"] = openai_compat.endpoint_id(adapters.laya_endpoint())
+    elif model["provider"] == "openrouter-decisions":
+        from .openrouter_decisions import URL
+        cfg["endpoint_id"] = openai_compat.endpoint_id(URL)
     return cfg
 
 
@@ -120,6 +123,9 @@ def preflight(model):
     provider = model["provider"]
     if provider == "openai-compatible":
         openai_compat.api_key(openai_compat.base_url())
+    elif provider == "openrouter-decisions":
+        from .openrouter_decisions import api_key
+        api_key()
     elif provider == "typesafe" and not config.env_value("TYPESAFE_API_KEY"):
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
     elif provider == "djev" and not config.env_value("DJEV_API_KEY"):

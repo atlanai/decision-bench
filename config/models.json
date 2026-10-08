@@ -349,6 +349,24 @@
         "note": "Announced serverless rate; estimate from API token usage."
       },
       "notes": "Native constrained letter output with thinking disabled. Accuracy-only: raw top-5 token logprobs retained; calibration unavailable."
+    },
+    {
+      "id": "pplx-decider-v1.1-27b",
+      "label": "Perplexity Decider V1.1 27B",
+      "short_label": "Decider V1.1",
+      "vendor": "Perplexity",
+      "provider": "openrouter-decisions",
+      "model": "perplexity/pplx-decider-v1.1-27b",
+      "vision": true,
+      "color": "#20808d",
+      "request": {},
+      "pricing": {
+        "input_per_mtok": 0.02,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/perplexity/pplx-decider-v1.1-27b",
+        "as_of": "2026-10-08"
+      },
+      "notes": "Native Choice decisions via OpenRouter alpha Decisions API; text and image evidence; probabilities preserved without renormalization."
     }
   ]
 }
