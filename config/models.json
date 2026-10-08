@@ -367,6 +367,25 @@
         "as_of": "2026-10-08"
       },
       "notes": "Native Choice decisions via OpenRouter alpha Decisions API; text and image evidence; probabilities preserved without renormalization."
+    },
+    {
+      "id": "gpt-6-luna-decisions",
+      "label": "GPT-6 Luna Decisions",
+      "short_label": "Luna Decisions",
+      "vendor": "OpenAI",
+      "provider": "openrouter-decisions",
+      "model": "openai/gpt-6-luna-decisions",
+      "vision": true,
+      "color": "#006b54",
+      "request": {},
+      "pricing": {
+        "input_per_mtok": 0.1,
+        "cached_input_per_mtok": 0,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/openai/gpt-6-luna-decisions",
+        "as_of": "2026-10-08"
+      },
+      "notes": "GPT-6 Luna served through the native Decisions API via OpenRouter; text and image evidence with native Choice probabilities. Separate from the chat-completions GPT-6 Luna benchmark."
     }
   ]
 }
