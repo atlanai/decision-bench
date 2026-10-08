@@ -84,6 +84,12 @@ def predictions_from_run(records, ledger, case_map):
         own = sorted(by_case.get(r["case_id"], []), key=lambda a: (a.get("started_at") or "", a["attempt_id"]))
         totals = attempt_totals(own)
         text = r.get("output_text") if r["status"] == "ok" else None
+        # Native envelopes may contain request ids and provider routing. Publish only the
+        # original typed answers; usage and resolved models have dedicated public fields.
+        native = r.get("raw_response")
+        if (r["status"] == "ok" and answer and answer.get("probability_source") == "native"
+                and isinstance(native, dict) and isinstance(native.get("answers"), dict)):
+            text = json.dumps({"answers": native["answers"]}, ensure_ascii=False)
         row = {"row_id": r["case_id"], "task": case["task"], "category": case["category"], "status": r["status"],
                "answer": answer["label"] if answer else None, "gold": q["gold"],
                "correct": bool(answer and answer["label"] == q["gold"]),

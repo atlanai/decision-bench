@@ -37,6 +37,7 @@ def completion(model, case, timeout, api_model=None):
                    for q in data["questions"]}}
     result = systemone(model, case, timeout, api_model, URL, key, "OpenRouter Decisions", payload=payload)
     cost = number((result["raw"].get("usage") or {}).get("cost"))
+    result["output_text"] = json.dumps({"answers": result["response"].get("answers", {})}, ensure_ascii=False)
     result.update(images_sent=len(images), cost_usd=cost,
                   cost_basis="provider_reported" if cost is not None else "unavailable")
     return result

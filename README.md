@@ -8,7 +8,7 @@ An open benchmark for how accurately, quickly, and cheaply language models make 
 
 ![1,071 benchmark rows](https://img.shields.io/badge/rows-1%2C071-3028C8?style=flat-square&labelColor=161616)
 ![35 benchmark tasks](https://img.shields.io/badge/tasks-35-ED9FC8?style=flat-square&labelColor=161616)
-![12 models evaluated](https://img.shields.io/badge/models-12-ED9FC8?style=flat-square&labelColor=161616)
+![15 models evaluated](https://img.shields.io/badge/models-15-ED9FC8?style=flat-square&labelColor=161616)
 [![Code license: MIT](https://img.shields.io/badge/code-MIT-3028C8?style=flat-square&labelColor=161616)](LICENSE)
 
 [Explore the leaderboard](https://decisionbench.ai/) · [Read the docs](docs/protocol.md) · [Dataset on Hugging Face](https://huggingface.co/datasets/atlanai/decision-bench)
@@ -27,7 +27,7 @@ We report accuracy with 95% confidence intervals, calibration, latency, token us
 
 ## Published results
 
-**Results for 12 models on bench-v4 were published on 23 September 2026.** Browse the [leaderboard and per-task results](https://decisionbench.ai/), or inspect the [published runs](results/README.md) for predictions, scores, and run metadata.
+**Published results now cover 15 models, including full-corpus and text-only evaluations.** Perplexity Decider V1.1 27B was evaluated through OpenRouter’s native Decisions API on all 1,071 rows, including 122 image-containing rows, on 8 October 2026. Browse the [leaderboard and per-task results](https://decisionbench.ai/), or inspect the [published runs](results/README.md) for predictions, scores, and run metadata.
 
 Start with the task you need the model to perform. Small accuracy differences may be noise, and public datasets may appear in model training data. Text-only models receive available text renderings; vision models also receive the images. The viewer excludes image-only icon cases when the image was not sent and marks them N/E; see the [viewer scoring policy](docs/viewer-scoring.md). Latency includes retries and network or CLI overhead. Cost is provider-reported or estimated, with unknown cost recorded as unknown.
 

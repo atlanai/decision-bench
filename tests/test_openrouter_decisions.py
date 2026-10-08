@@ -3,7 +3,7 @@ import json
 import unittest
 from unittest.mock import MagicMock, patch
 
-from decision_bench import adapters, openai_compat, openrouter_decisions, runner
+from decision_bench import adapters, openai_compat, openrouter_decisions, runner, results, corpus
 from decision_bench.errors import CallError
 from test_adapters import CASE
 from fixtures import repo
@@ -49,3 +49,19 @@ class OpenRouterDecisions(unittest.TestCase):
             runner.preflight(self.MODEL)
             self.assertEqual(openai_compat.redact("synthetic-openrouter-key"), "[REDACTED]")
         self.assertIn("OPENROUTER_API_KEY", adapters.HARNESS_SECRETS)
+
+    def test_public_native_output_excludes_transport_identifiers(self):
+        with repo():
+            case = corpus.load_cases()[0]
+            question = case["questions"][0]
+            original = {"answers": {question["id"]: {"choice": question["gold"],
+                        "probabilities": {"a": .9, "b": .1}}},
+                        "id": "private-request-id", "provider": "private-provider-route"}
+            record = {"case_id": case["id"], "status": "ok", "raw_response": original,
+                      "output_text": json.dumps(original), "answers": {question["id"]: {
+                          "label": question["gold"], "probabilities": {"a": .9, "b": .1},
+                          "probability_source": "native"}}}
+            public = results.predictions_from_run([record], [], {case["id"]: case})[0]
+        self.assertEqual(json.loads(public["output_text"]), {"answers": original["answers"]})
+        self.assertNotIn("private-request-id", json.dumps(public))
+        self.assertNotIn("private-provider-route", json.dumps(public))
