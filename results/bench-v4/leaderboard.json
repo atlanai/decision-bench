@@ -6,6 +6,28 @@
   "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
   "models": [
     {
+      "model_id": "pplx-decider-v1.1-27b",
+      "label": "Perplexity Decider V1.1 27B",
+      "vendor": "Perplexity",
+      "provider": "openrouter-decisions",
+      "api_model": "perplexity/pplx-decider-v1.1-27b",
+      "accuracy": 0.9449112978524743,
+      "wilson95": [
+        0.9295888752733975,
+        0.9570533983416171
+      ],
+      "correct": 1012,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.01818296,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.016977553688141925,
+      "latency_p50_ms": 539.4668329972774,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-08T15:50:51.499968+00:00"
+    },
+    {
       "model_id": "gemini-3.5-flash",
       "label": "Gemini 3.5 Flash",
       "vendor": "Google",
