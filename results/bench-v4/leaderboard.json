@@ -205,25 +205,25 @@
     },
     {
       "model_id": "sage",
-      "label": "Sage (Levanto)",
+      "label": "Sage 1.3 (Levanto)",
       "vendor": "Levanto",
       "provider": "sage",
-      "api_model": "levanto-sage-v1.1",
-      "accuracy": 0.9209694415173867,
+      "api_model": "levanto-sage-v1.3",
+      "accuracy": 0.9178338001867413,
       "wilson95": [
-        0.9020579977883235,
-        0.9364864150500748
+        0.8998549310498828,
+        0.9328259030376701
       ],
-      "correct": 874,
-      "rows": 949,
+      "correct": 983,
+      "rows": 1071,
       "errors": 0,
-      "cost_usd": 0.7758333333333334,
+      "cost_usd": 0.436404434,
       "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.8175272216368108,
-      "latency_p50_ms": 732.7618750277907,
+      "cost_per_1000_rows_usd": 0.40747379458450045,
+      "latency_p50_ms": 441.34887494146824,
       "corpus_current": true,
-      "full_coverage": false,
-      "completed_at": "2026-09-24T21:28:54.840522+00:00"
+      "full_coverage": true,
+      "completed_at": "2026-10-09T12:38:31.114352+00:00"
     },
     {
       "model_id": "claude-haiku-4.5",

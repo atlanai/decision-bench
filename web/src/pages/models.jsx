@@ -70,10 +70,10 @@ export function ModelPage({id: k}) {
     {head}
     <div className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:grid-cols-5 [&>:last-child:nth-child(odd)]:max-md:col-span-2">
       <Stat label={`Accuracy · ${all.questions} scored rows`} value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
-      <Stat label={run.decision_pricing ? "Est. $ / 1k rows · Starter" : "$ / 1k rows"} value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
+      <Stat label={run.decision_pricing ? "Historical est. $ / 1k rows" : m.provider === 'sage' ? "Est. $ / 1k rows · Starter" : "$ / 1k rows"} value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
     {run.coverage?.full === false && <Notice>This is a partial evaluation: {run.coverage.rows_completed} of {run.coverage.rows_in_corpus} corpus rows were run. Unrun rows are not scored, and this run is not ranked on the full leaderboard. {m.provider === 'tev1' && 'Tev1 was evaluated on 949 text-only cases; all 122 image-containing cases were excluded. Calibration metrics are unavailable for this label-only evaluation.'}</Notice>}
-    {m.provider === 'sage' && <Notice>Sage abstained on {B.allCases.filter(c => { const r = B.rawResult(run.id, c.id); return r?.status === 'ok' && r.scores.some(s => s.label == null); }).length} rows. These count as incorrect in accuracy, not as API failures. Probability metrics use renormalized independent option probabilities and do not measure Sage’s original calibrated confidence. The cost shown is an estimated Starter-plan value, not an actual dollar charge.</Notice>}
+    {m.provider === 'sage' && <Notice>Sage abstained on {B.allCases.filter(c => { const r = B.rawResult(run.id, c.id); return r?.status === 'ok' && r.scores.some(s => s.label == null); }).length} rows. These count as incorrect in accuracy, not as API failures. Sage 1.3 returns native categorical probabilities. Cost is estimated from measured text, image and billed output tokens at Starter rates: $0.046 per million input tokens and $10 per million output tokens. Billed output includes reasoning; no web search was used. This is metered usage value covered by credits, not a card charge.</Notice>}
     {run.decision_pricing && <Section title="Decision usage and estimated cost">
       <div className="grid gap-3 sm:grid-cols-3">
         <Stat label="Benchmark units · 949 calls" value={String(run.decision_pricing.benchmark_units)} />
@@ -126,7 +126,7 @@ export function ModelPage({id: k}) {
     </Section>
     <Section title={m.provider === 'sage' ? 'Renormalized probability diagnostics' : 'Confidence'} description={`Expected calibration error ${metric(all.ece)} · Brier ${metric(all.brier)} · ${plural(all.highConfErrors, 'wrong answer')} given with 90% confidence or more.`}>
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Reliability" description={m.provider === 'sage' ? 'Renormalized option scores versus observed accuracy; these are transformed scores, not Sage’s original confidence.' : 'On the diagonal, stated confidence matches observed accuracy. Dot size is the number of decisions in the bin.'}><Reliability runs={[run, ...others]} cases={textCases} focus={[k]} label="Reliability diagram" /></ChartCard>
+        <ChartCard title="Reliability" description={m.provider === 'sage' ? 'Native categorical probabilities versus observed accuracy.' : 'On the diagonal, stated confidence matches observed accuracy. Dot size is the number of decisions in the bin.'}><Reliability runs={[run, ...others]} cases={textCases} focus={[k]} label="Reliability diagram" /></ChartCard>
         <ChartCard title="Risk and coverage" description="Error rate if answers below a confidence threshold are handed to a person. Other models in grey."><Risk runs={[run, ...others]} cases={textCases} focus={[k]} label="Risk against coverage" /></ChartCard>
       </div>
     </Section>

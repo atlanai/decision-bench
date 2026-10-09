@@ -176,24 +176,24 @@ or `make check`. Tests use a local fake endpoint and never call a model.
   same way.
 - File locking uses `fcntl`, so runs need Linux or macOS (or WSL on Windows).
 
-## Levanto Sage
+## Levanto Sage 1.3
 
-Set `SAGE_API_KEY` in the ignored `.env` after account activation. Smoke-test with
-`python3 -m decision_bench run --model sage --limit 5 --jobs 1 --max-attempts 1`.
-For the same 949-row text subset as Tev1, use `python3 scripts/run_sage.py smoke`,
-then `pilot`, then `full`. Each stage is serial, resumable, and uses a separate run ID.
-The text-only adapter sends one native Choice decision per corpus row to `/decide`,
-with reasoning `auto` and no web grounding. The server selects the model; its returned
-version is recorded. `--api-model` overrides are rejected.
+Set `SAGE_API_KEY` in the ignored `.env`. The hosted server selects its version;
+the adapter verifies `levanto-sage-v1.3` on every response. Use a fresh run ID for
+this rerun: `python3 -m decision_bench run --model sage --run-id sage-v1.3-bench-v4-full-v1`.
+The entry evaluates all 1,071 rows, including 122 images, with reasoning `auto`
+and no web grounding. Native categorical Choice probabilities are retained;
+a null choice counts as unanswered/incorrect, not an API failure, and no argmax
+is substituted.
 
-Sage's option probabilities are independent and need not sum to one. The adapter
-renormalizes them for the benchmark's categorical metrics and marks their source
-`native-renormalized`; raw responses preserve the original values. These derived
-calibration scores are not Sage's original calibrated probabilities. A null choice
-is kept as null and counts as unanswered/incorrect, not an API failure; no argmax
-is substituted. Sage bills decision units by plan. An audited `decision_pricing` annotation in run metadata
-allows export-time plan-value estimates, reconciled against a verified unit total; measured
-request ledgers stay unchanged. These are full-utilization subscription estimates, not actual charges. See the [Choice contract](https://docs.levanto.ai/decision-model/choice).
+Pricing changed from decision-unit subscriptions to metered token usage. The
+verified Starter rates are $0.046 per million input tokens and $10 per million
+output tokens. Sage reports text/reasoning input separately from image tokens;
+both are billed as input. Use measured `meta.usage.output_tokens`, which includes
+billed reasoning, rather than assuming output is free. Benchmark costs are
+price-table usage estimates covered by account credits, not card charges.
+[Current pricing](https://levanto.ai/pricing). The earlier Sage v1.1 text run and
+its dated decision-unit audit are archived in `docs/benchmarks/sage/v1.1/`.
 
 ## Together Tev1
 

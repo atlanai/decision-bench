@@ -4,27 +4,27 @@
   "model_id": "sage",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
   "overall": {
-    "rows": 949,
-    "correct": 874,
-    "accuracy": 0.9209694415173867,
+    "rows": 1071,
+    "correct": 983,
+    "accuracy": 0.9178338001867413,
     "wilson95": [
-      0.9020579977883235,
-      0.9364864150500748
+      0.8998549310498828,
+      0.9328259030376701
     ],
     "errors": 0,
-    "macro_category_accuracy": 0.9177118680969528,
-    "macro_task_f1": 0.915098927410137
+    "macro_category_accuracy": 0.9075892253764505,
+    "macro_task_f1": 0.9156155143475918
   },
   "by_category": [
     {
       "id": "agents",
       "name": "AI agents & evals",
       "rows": 154,
-      "correct": 135,
-      "accuracy": 0.8766233766233766,
+      "correct": 133,
+      "accuracy": 0.8636363636363636,
       "wilson95": [
-        0.8153385729602641,
-        0.9195754167610767
+        0.8005217292555206,
+        0.9090503987512913
       ]
     },
     {
@@ -41,67 +41,78 @@
     {
       "id": "data",
       "name": "Data & analytics",
-      "rows": 94,
-      "correct": 92,
-      "accuracy": 0.9787234042553191,
+      "rows": 126,
+      "correct": 124,
+      "accuracy": 0.9841269841269841,
       "wilson95": [
-        0.9257083451044751,
-        0.9941457864714599
+        0.9439701231255323,
+        0.9956362896112178
+      ]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "rows": 30,
+      "correct": 27,
+      "accuracy": 0.9,
+      "wilson95": [
+        0.7437855868473339,
+        0.9654007400402839
       ]
     },
     {
       "id": "documents",
       "name": "Documents & meetings",
-      "rows": 57,
-      "correct": 45,
-      "accuracy": 0.7894736842105263,
+      "rows": 87,
+      "correct": 78,
+      "accuracy": 0.896551724137931,
       "wilson95": [
-        0.6671363132153347,
-        0.875255734331081
+        0.8149483835215049,
+        0.9446155167180331
       ]
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "rows": 150,
-      "correct": 140,
-      "accuracy": 0.9333333333333333,
+      "correct": 141,
+      "accuracy": 0.94,
       "wilson95": [
-        0.8816364734751868,
-        0.9633885392651903
+        0.8899090795570952,
+        0.9681163179946721
       ]
     },
     {
       "id": "finance",
       "name": "Finance",
-      "rows": 91,
-      "correct": 89,
-      "accuracy": 0.978021978021978,
+      "rows": 121,
+      "correct": 119,
+      "accuracy": 0.9834710743801653,
       "wilson95": [
-        0.9233668616945964,
-        0.9939521206928791
+        0.9417321024498186,
+        0.9954555016821374
       ]
     },
     {
       "id": "legal",
       "name": "Legal",
       "rows": 126,
-      "correct": 117,
-      "accuracy": 0.9285714285714286,
+      "correct": 118,
+      "accuracy": 0.9365079365079365,
       "wilson95": [
-        0.8698134381416339,
-        0.9619692878876204
+        0.879706260059649,
+        0.9674798497849617
       ]
     },
     {
       "id": "product",
       "name": "Product management",
       "rows": 60,
-      "correct": 50,
-      "accuracy": 0.8333333333333334,
+      "correct": 39,
+      "accuracy": 0.65,
       "wilson95": [
-        0.7196814850279217,
-        0.9068692279867897
+        0.5236238380947751,
+        0.7583239827618451
       ]
     },
     {
@@ -119,11 +130,11 @@
       "id": "support",
       "name": "Customer support",
       "rows": 67,
-      "correct": 65,
-      "accuracy": 0.9701492537313433,
+      "correct": 63,
+      "accuracy": 0.9402985074626866,
       "wilson95": [
-        0.8975324995811698,
-        0.991775477652546
+        0.8563029501122377,
+        0.9765410285669565
       ]
     }
   ],
@@ -157,11 +168,11 @@
       "name": "Did the agent complete the task?",
       "category": "agents",
       "rows": 30,
-      "correct": 24,
-      "accuracy": 0.8,
+      "correct": 21,
+      "accuracy": 0.7,
       "wilson95": [
-        0.6269395261897256,
-        0.9049502189759876
+        0.5212387898833981,
+        0.8333543735604105
       ]
     },
     {
@@ -169,11 +180,11 @@
       "name": "Is the answer backed by sources?",
       "category": "agents",
       "rows": 30,
-      "correct": 18,
-      "accuracy": 0.6,
+      "correct": 21,
+      "accuracy": 0.7,
       "wilson95": [
-        0.42320052498273836,
-        0.7540960567391659
+        0.5212387898833981,
+        0.8333543735604105
       ]
     },
     {
@@ -181,11 +192,11 @@
       "name": "Which reply is better?",
       "category": "agents",
       "rows": 28,
-      "correct": 27,
-      "accuracy": 0.9642857142857143,
+      "correct": 25,
+      "accuracy": 0.8928571428571429,
       "wilson95": [
-        0.8228742388150135,
-        0.9936676435024582
+        0.7280377463234293,
+        0.9628823079452005
       ]
     },
     {
@@ -249,6 +260,18 @@
       ]
     },
     {
+      "id": "DAT-3",
+      "name": "Does the chart support the claim?",
+      "category": "data",
+      "rows": 32,
+      "correct": 32,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8928172849426366,
+        1
+      ]
+    },
+    {
       "id": "DAT-4",
       "name": "What does this column hold?",
       "category": "data",
@@ -258,6 +281,18 @@
       "wilson95": [
         0.8508409778365519,
         0.9947892280744034
+      ]
+    },
+    {
+      "id": "DOC-1",
+      "name": "Where is this page from?",
+      "category": "documents",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -277,11 +312,23 @@
       "name": "Which summary is this meeting's?",
       "category": "documents",
       "rows": 27,
-      "correct": 24,
-      "accuracy": 0.8888888888888888,
+      "correct": 27,
+      "accuracy": 1.0,
       "wilson95": [
-        0.7194181745602705,
-        0.9614803521050127
+        0.8754409628553641,
+        1
+      ]
+    },
+    {
+      "id": "DSN-1",
+      "name": "What does this icon mean?",
+      "category": "design",
+      "rows": 30,
+      "correct": 27,
+      "accuracy": 0.9,
+      "wilson95": [
+        0.7437855868473339,
+        0.9654007400402839
       ]
     },
     {
@@ -289,11 +336,11 @@
       "name": "Which file must change?",
       "category": "engineering",
       "rows": 30,
-      "correct": 30,
-      "accuracy": 1.0,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.8864829086095221,
-        1
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -313,11 +360,11 @@
       "name": "Which weakness class is this?",
       "category": "engineering",
       "rows": 30,
-      "correct": 30,
-      "accuracy": 1.0,
+      "correct": 28,
+      "accuracy": 0.9333333333333333,
       "wilson95": [
-        0.8864829086095221,
-        1
+        0.7867618227892791,
+        0.9815233646723066
       ]
     },
     {
@@ -325,11 +372,11 @@
       "name": "Live secret or placeholder?",
       "category": "engineering",
       "rows": 30,
-      "correct": 25,
-      "accuracy": 0.8333333333333334,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.6643529481431982,
-        0.9266356575964831
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -359,6 +406,18 @@
     {
       "id": "FIN-2",
       "name": "What does this 8-K report?",
+      "category": "finance",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "FIN-3",
+      "name": "Which figure is the total?",
       "category": "finance",
       "rows": 30,
       "correct": 30,
@@ -409,11 +468,11 @@
       "name": "Is this term unfair, and how?",
       "category": "legal",
       "rows": 33,
-      "correct": 31,
-      "accuracy": 0.9393939393939394,
+      "correct": 32,
+      "accuracy": 0.9696969696969697,
       "wilson95": [
-        0.8039341828220181,
-        0.9832194695709291
+        0.8468093832683193,
+        0.9946307279103482
       ]
     },
     {
@@ -433,11 +492,11 @@
       "name": "Which headline won?",
       "category": "product",
       "rows": 30,
-      "correct": 20,
-      "accuracy": 0.6666666666666666,
+      "correct": 9,
+      "accuracy": 0.3,
       "wilson95": [
-        0.48779725813830266,
-        0.807697044731538
+        0.16664562643958933,
+        0.4787612101166018
       ]
     },
     {
@@ -457,11 +516,11 @@
       "name": "Attack on the assistant",
       "category": "safety",
       "rows": 30,
-      "correct": 28,
-      "accuracy": 0.9333333333333333,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.7867618227892791,
-        0.9815233646723066
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -469,11 +528,11 @@
       "name": "Toxic comment or not",
       "category": "safety",
       "rows": 30,
-      "correct": 30,
-      "accuracy": 1.0,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
       "wilson95": [
-        0.8864829086095221,
-        1
+        0.8332924860304112,
+        0.9940915620051425
       ]
     },
     {
@@ -481,11 +540,11 @@
       "name": "Which team owns this complaint?",
       "category": "support",
       "rows": 35,
-      "correct": 35,
-      "accuracy": 1.0,
+      "correct": 34,
+      "accuracy": 0.9714285714285714,
       "wilson95": [
-        0.9010957324106112,
-        1
+        0.8546659090672868,
+        0.9949386386341466
       ]
     },
     {
@@ -493,11 +552,11 @@
       "name": "What is the complaint about?",
       "category": "support",
       "rows": 32,
-      "correct": 30,
-      "accuracy": 0.9375,
+      "correct": 29,
+      "accuracy": 0.90625,
       "wilson95": [
-        0.7985253275199642,
-        0.9826897968048427
+        0.7578150066422116,
+        0.9675990373736805
       ]
     }
   ],
@@ -505,44 +564,44 @@
     {
       "id": "real",
       "name": "real",
-      "rows": 949,
-      "correct": 874,
-      "accuracy": 0.9209694415173867,
+      "rows": 1071,
+      "correct": 983,
+      "accuracy": 0.9178338001867413,
       "wilson95": [
-        0.9020579977883235,
-        0.9364864150500748
+        0.8998549310498828,
+        0.9328259030376701
       ]
     }
   ],
   "calibration": {
-    "brier": 0.1408915812920527,
-    "log_loss": 0.3033319373836447,
-    "ece": 0.036902097672549206,
-    "high_confidence_errors": 27
+    "brier": 0.11585510195943138,
+    "log_loss": 0.22920130880278175,
+    "ece": 0.03205499169040837,
+    "high_confidence_errors": 37
   },
   "cost": {
-    "usd": 0.7758333333333334,
+    "usd": 0.436404434,
     "coverage": 1.0,
     "basis": [
-      "decision_plan_estimate"
+      "price_table_estimate"
     ],
-    "per_1000_rows_usd": 0.8175272216368108
+    "per_1000_rows_usd": 0.40747379458450045
   },
   "latency_ms": {
-    "p50": 732.7618750277907,
-    "p95": 4459.802574547937,
-    "p99": 5472.949361521749,
-    "mean": 1100.7143998355677
+    "p50": 441.34887494146824,
+    "p95": 2658.3424165146425,
+    "p99": 8465.79780447063,
+    "mean": 900.8756754955757
   },
   "tokens": {
-    "input": 632432,
-    "output": null,
+    "input": 989879,
+    "output": 39087,
     "cached_input": null,
-    "reasoning_output": 98031,
+    "reasoning_output": 39087,
     "coverage": 1.0
   },
   "attempts": {
-    "attempts": 949,
+    "attempts": 1071,
     "retries": 0,
     "attempt_errors": 0,
     "incomplete_attempts": 0
