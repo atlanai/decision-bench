@@ -27,7 +27,7 @@ We report accuracy with 95% confidence intervals, calibration, latency, token us
 
 ## Published results
 
-**Published results now cover 16 models, including full-corpus and text-only evaluations.** Perplexity Decider V1.1 27B and OpenAI GPT-6 Luna Decisions were evaluated through OpenRouter’s native Decisions API on all 1,071 rows, including 122 image-containing rows, on 8 October 2026. Browse the [leaderboard and per-task results](https://decisionbench.ai/), or inspect the [published runs](results/README.md) for predictions, scores, and run metadata.
+**Published results now cover 16 models, including full-corpus and text-only evaluations.** Perplexity Decider V1.1 27B and OpenAI GPT-6 Luna Decisions were evaluated through OpenRouter’s native Decisions API on all 1,071 rows, including 122 image-containing rows, on 8 October 2026. Sage 1.3 was rerun on all 1,071 rows with current token-based pricing on 9 October 2026. Browse the [leaderboard and per-task results](https://decisionbench.ai/), or inspect the [published runs](results/README.md) for predictions, scores, and run metadata.
 
 Start with the task you need the model to perform. Small accuracy differences may be noise, and public datasets may appear in model training data. Text-only models receive available text renderings; vision models also receive the images. The viewer excludes image-only icon cases when the image was not sent and marks them N/E; see the [viewer scoring policy](docs/viewer-scoring.md). Latency includes retries and network or CLI overhead. Cost is provider-reported or estimated, with unknown cost recorded as unknown.
 

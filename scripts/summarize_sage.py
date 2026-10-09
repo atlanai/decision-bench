@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarize the Sage text run, including abstentions and identical-row comparisons."""
+"""Summarize the Sage 1.3 full run and identical-row comparisons."""
 import json
 from pathlib import Path
 import random
@@ -9,7 +9,7 @@ from decision_bench import corpus, metrics
 from decision_bench.runner import read_jsonl
 
 root=corpus.ROOT
-folder=root/'runs/sage-bench-v4-full-v1'
+folder=root/'runs/sage-v1.3-bench-v4-full-v1'
 meta=json.loads((folder/'run.json').read_text())
 if not meta['status'].startswith('completed'):
     raise SystemExit('Sage run is not complete')
@@ -47,19 +47,17 @@ lines=['# Sage (Levanto) benchmark','',
        f"Median end-to-end latency: {summary['latency_ms']['p50']:.0f} ms; p95: {summary['latency_ms']['p95']:.0f} ms.",
        f"Accuracy Wilson 95% interval: {summary['accuracy_wilson95'][0]:.2%}–{summary['accuracy_wilson95'][1]:.2%}.",'',
        '## Method','',
-       'One serial request per row, reasoning `auto`, no grounding/web search. Native Choice endpoint; '
-       'the server selects the version, recorded in each result. All 949 rows without image assets from '
-       'bench-v4 were evaluated; all 122 image-containing rows were excluded. This is a partial evaluation, '
-       'not a full-corpus leaderboard entry. Model inputs contain only state, question instructions and options.',
-       'A null choice counts as unanswered and incorrect, not an API failure. No argmax is substituted. '
-       'Independent option probabilities are renormalized for categorical diagnostics; these metrics do not '
-       'measure the provider’s original calibrated confidence. Raw probabilities are retained in local responses.',
-       'The run used 950 decision units across 949 calls (one 4,083-token input used two units). '
-       'Smoke and pilot consumed another 55 units; the dashboard total reconciles at 1,005 units / 1,004 calls. '
-       'At Starter’s $49 / 60,000 units, the benchmark has an estimated plan value of $0.775833 '
-       '($0.817527 per 1,000 rows), assuming full utilization. Granted credits covered usage; this is not an actual charge. '
-       'See decision-usage.json for the audit and official pricing source. Input token counts are '
-       'the provider’s billed_input_tokens field, not a local tokenizer estimate.',
+       'All 1,071 rows, including 122 image-containing rows, were evaluated with three workers, '
+       'reasoning `auto`, no grounding/web search, and the native Choice endpoint. The hosted model '
+       'version is verified on every response. Inputs contain only evidence, instructions and options.',
+       'A null choice is an abstention and counts as incorrect, not an API failure. Native categorical '
+       'probabilities are retained; no answer is replaced by an argmax.',
+       'Cost is a token-price usage estimate at verified Starter rates: $0.046 per million input tokens '
+       'and $10 per million output tokens. Measured input includes separately reported image tokens; '
+       'measured output includes billed reasoning. No web searches were used. Account credits covered '
+       'usage; this is not a card charge. Current source: https://levanto.ai/pricing.',
+       'The earlier 949-text-row Sage v1.1 run and its dated decision-unit estimate are preserved in v1.1/. '
+       'Those historical subscription assumptions are not the current pricing model.',
        'Training-data overlap has not been ruled out. Historical latency comparisons include different '
        'provider/network setups; they are not controlled inference-speed comparisons.','',
        f"Corpus SHA256: `{meta['config']['corpus_sha256']}`.",
@@ -75,7 +73,7 @@ for c in comparisons:
     lines.append(f"| {c['model']} | {c['n']} | {c['accuracy']:.2%} | {c['delta']*100:+.2f} pp | "
                  f"{c['paired_bootstrap95'][0]*100:+.2f} to {c['paired_bootstrap95'][1]*100:+.2f} pp |")
 lines+=['','## Reproduce','',
-        '`python3 scripts/run_sage.py full` resumes the frozen text run. '
+        '`python3 scripts/run_sage.py full` resumes the frozen Sage 1.3 full-corpus run. '
         '`python3 scripts/summarize_sage.py` rebuilds this report. '
         'Published predictions and scores are in `results/bench-v4/sage/`; private raw responses remain under `runs/`.','',
         'Levanto logo: official site icon, downloaded from https://levanto.ai/favicon/android-chrome-192x192.png.','']

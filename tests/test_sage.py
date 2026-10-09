@@ -13,10 +13,13 @@ MODEL = {"id": "sage", "provider": "sage", "model": "levanto-sage-v1.1"}
 
 
 class SageTests(unittest.TestCase):
-    def invoke(self, chosen='billing', probs=None, error=None):
+    def invoke(self, chosen='billing', probs=None, error=None, current=False, case=CASE):
+        model = {**MODEL, 'model': 'levanto-sage-v1.3', 'vision': True} if current else MODEL
         body = {"id": "q", "kind": "choice", "result": {"chosen": chosen, "probabilities": probs or [
             {"option": "billing", "probability": .8}, {"option": "technical", "probability": .4}]},
             "meta": {"model": "levanto-sage-v1.1", "latency_ms": 123, "usage": {"billed_input_tokens": 512}}, "debug": "test-sage-secret"}
+        if current:
+            body['meta'].update(model='levanto-sage-v1.3', usage={'input_tokens':512,'image_tokens':100 if case.get('assets') else 0,'output_tokens':31}, reasoning={'tokens':30})
         response = MagicMock(status=200)
         response.read.return_value = json.dumps(body).encode()
         response.__enter__.return_value = response
@@ -26,7 +29,7 @@ class SageTests(unittest.TestCase):
             opener.open.side_effect = error
         with patch.object(sage, 'env_value', return_value='test-sage-secret'), patch.object(
                 sage.urllib.request, 'build_opener', return_value=opener) as build:
-            out = adapters.call(MODEL, CASE, 10)
+            out = adapters.call(model, case, 10)
         self.assertEqual(build.call_args.args, (sage.openai_compat.NoRedirect,))
         return out, opener.open.call_args.args[0]
 
@@ -91,3 +94,27 @@ class SageTests(unittest.TestCase):
         self.assertFalse(exported['correct'])
         self.assertEqual(exported['status'], 'ok')
         self.assertEqual(exported['probability_source'], 'native-renormalized')
+
+    def test_v13_image_usage_and_native_probabilities(self):
+        case = {**CASE, 'assets': [{'path': 'data/assets/test.png', 'mime_type': 'image/png'}]}
+        with patch.object(sage, 'image_assets', return_value=[('image/png', b'image')]):
+            out, req = self.invoke(current=True, case=case, probs=[
+                {'option':'billing','probability':.8}, {'option':'technical','probability':.2}])
+        payload = json.loads(req.data)
+        self.assertEqual(payload['content']['kind'], 'image')
+        self.assertEqual(payload['content']['media'], 'data:image/png;base64,aW1hZ2U=')
+        self.assertNotIn('PRIVATE_GOLD', req.data.decode())
+        self.assertEqual(out['usage']['input_tokens'],612)
+        self.assertEqual(out['usage']['output_tokens'],31)
+        self.assertEqual(out['usage']['reasoning_output_tokens'],30)
+        self.assertEqual(out['images_sent'],1)
+        self.assertEqual(out['source'],'native')
+        self.assertEqual(out['response']['answers']['q']['probabilities'],{'billing':.8,'technical':.2})
+
+    def test_v13_native_null_is_an_abstention(self):
+        out, _ = self.invoke(current=True, chosen=None, probs=[
+            {'option':'billing','probability':.51}, {'option':'technical','probability':.49}])
+        normalized = normalize_answers(out['response'],CASE,out['source'])
+        self.assertIsNone(normalized['q']['label'])
+        self.assertFalse(score(CASE,normalized)[0]['correct'])
+        self.assertEqual(normalized['q']['probability_source'],'native')

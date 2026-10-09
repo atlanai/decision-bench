@@ -1,34 +1,36 @@
-# Sage (Levanto) benchmark
+# Sage 1.3 (Levanto) benchmark
 
-**874/949 correct (92.10%)**. 6 abstentions; 0 operational errors.
+**983/1071 correct (91.78%)**. 18 abstentions; 0 operational errors.
 
-Median end-to-end latency: 733 ms; p95: 4460 ms.
-Accuracy Wilson 95% interval: 90.21%–93.65%.
+Median end-to-end latency: 441 ms; p95: 2658 ms.
+Accuracy Wilson 95% interval: 89.99%–93.28%.
 
 ## Method
 
-One serial request per row, reasoning `auto`, no grounding/web search. Native Choice endpoint; the server selects the version, recorded in each result. All 949 rows without image assets from bench-v4 were evaluated; all 122 image-containing rows were excluded. This is a partial evaluation, not a full-corpus leaderboard entry. Model inputs contain only state, question instructions and options.
-A null choice counts as unanswered and incorrect, not an API failure. No argmax is substituted. Independent option probabilities are renormalized for categorical diagnostics; these metrics do not measure the provider’s original calibrated confidence. Raw probabilities are retained in local responses.
-The run used 950 decision units across 949 calls (one 4,083-token input used two units). Smoke and pilot consumed another 55 units; the dashboard total reconciles at 1,005 units / 1,004 calls. At Starter’s $49 / 60,000 units, the benchmark has an estimated plan value of $0.775833 ($0.817527 per 1,000 rows), assuming full utilization. Granted credits covered usage; this is not an actual charge. See decision-usage.json for the audit and official pricing source. Input token counts are the provider’s billed_input_tokens field, not a local tokenizer estimate.
+All 1,071 rows, including 122 image-containing rows, were evaluated with three workers, reasoning `auto`, no grounding/web search, and the native Choice endpoint. The hosted model version is verified on every response. Inputs contain only evidence, instructions and options.
+A null choice is an abstention and counts as incorrect, not an API failure. Native categorical probabilities are retained; no answer is replaced by an argmax.
+Cost is a token-price usage estimate at verified Starter rates: $0.046 per million input tokens and $10 per million output tokens. Measured input includes separately reported image tokens; measured output includes billed reasoning. No web searches were used. Account credits covered usage; this is not a card charge. Current source: https://levanto.ai/pricing.
+The earlier 949-text-row Sage v1.1 run and its dated decision-unit estimate are preserved in v1.1/. Those historical subscription assumptions are not the current pricing model.
 Training-data overlap has not been ruled out. Historical latency comparisons include different provider/network setups; they are not controlled inference-speed comparisons.
 
 Corpus SHA256: `3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725`.
-Resolved model(s): levanto-sage-v1.1.
+Resolved model(s): levanto-sage-v1.3.
 
 ## Category results
 
 | Category | Correct / rows | Accuracy |
 |---|---:|---:|
-| agents | 135/154 | 87.66% |
+| agents | 133/154 | 86.36% |
 | commerce | 83/90 | 92.22% |
-| data | 92/94 | 97.87% |
-| documents | 45/57 | 78.95% |
-| engineering | 140/150 | 93.33% |
-| finance | 89/91 | 97.80% |
-| legal | 117/126 | 92.86% |
-| product | 50/60 | 83.33% |
+| data | 124/126 | 98.41% |
+| design | 27/30 | 90.00% |
+| documents | 78/87 | 89.66% |
+| engineering | 141/150 | 94.00% |
+| finance | 119/121 | 98.35% |
+| legal | 118/126 | 93.65% |
+| product | 39/60 | 65.00% |
 | safety | 58/60 | 96.67% |
-| support | 65/67 | 97.01% |
+| support | 63/67 | 94.03% |
 
 ## Identical-row comparisons
 
@@ -36,22 +38,28 @@ Sage minus each comparison model. Intervals use 2,000 paired row bootstrap sampl
 
 | Model | Shared rows | Accuracy | Sage difference | 95% interval |
 |---|---:|---:|---:|---:|
-| deepseek-v4.1-flash | 949 | 93.68% | -1.58 pp | -3.27 to +0.21 pp |
-| gemini-3.5-flash | 949 | 93.47% | -1.37 pp | -3.06 to +0.32 pp |
-| gemini-flash-lite-latest | 949 | 93.36% | -1.26 pp | -3.16 to +0.53 pp |
-| jev-1.13 | 949 | 93.15% | -1.05 pp | -2.63 to +0.63 pp |
-| glm-5.3-flash | 949 | 93.05% | -0.95 pp | -2.53 to +0.74 pp |
-| gpt-6-luna | 949 | 92.94% | -0.84 pp | -2.74 to +0.95 pp |
-| claude-sonnet-5 | 949 | 91.68% | +0.42 pp | -1.37 to +2.32 pp |
-| gpt-5.6-luna | 949 | 91.68% | +0.42 pp | -1.58 to +2.42 pp |
-| claude-haiku-4.5 | 949 | 89.57% | +2.53 pp | +0.63 to +4.53 pp |
-| tev1-4b-experimental | 949 | 85.35% | +6.74 pp | +4.53 to +8.96 pp |
-| qwen3-32b | 949 | 80.93% | +11.17 pp | +8.75 to +13.70 pp |
-| nova-micro-v1 | 949 | 66.91% | +25.18 pp | +21.92 to +28.56 pp |
-| laya-routed | 949 | 51.21% | +40.89 pp | +37.51 to +44.26 pp |
+| pplx-decider-v1.1-27b | 1071 | 94.49% | -2.71 pp | -4.11 to -1.31 pp |
+| gemini-3.5-flash | 1071 | 94.21% | -2.43 pp | -3.92 to -0.84 pp |
+| gemini-flash-lite-latest | 1071 | 94.12% | -2.33 pp | -3.73 to -0.84 pp |
+| gpt-6-luna | 1071 | 93.65% | -1.87 pp | -3.55 to -0.19 pp |
+| deepseek-v4.1-flash | 1071 | 92.72% | -0.93 pp | -2.52 to +0.75 pp |
+| claude-sonnet-5 | 1071 | 92.62% | -0.84 pp | -2.52 to +0.84 pp |
+| gpt-5.6-luna | 1071 | 92.62% | -0.84 pp | -2.61 to +0.84 pp |
+| jev-1.13 | 1071 | 92.44% | -0.65 pp | -2.24 to +0.93 pp |
+| glm-5.3-flash | 1071 | 92.25% | -0.47 pp | -2.05 to +1.21 pp |
+| claude-haiku-4.5 | 1071 | 90.57% | +1.21 pp | -0.47 to +2.89 pp |
+| gpt-6-luna-decisions | 1071 | 90.48% | +1.31 pp | -0.47 to +3.08 pp |
+| tev1-4b-experimental | 949 | 85.35% | +5.69 pp | +3.48 to +7.90 pp |
+| qwen3-32b | 1071 | 79.65% | +12.14 pp | +9.90 to +14.38 pp |
+| nova-micro-v1 | 1071 | 66.39% | +25.40 pp | +22.50 to +28.48 pp |
+| laya-routed | 1071 | 52.75% | +39.03 pp | +35.85 to +42.20 pp |
 
 ## Reproduce
 
-`python3 scripts/run_sage.py full` resumes the frozen text run. `python3 scripts/summarize_sage.py` rebuilds this report. Published predictions and scores are in `results/bench-v4/sage/`; private raw responses remain under `runs/`.
+`python3 scripts/run_sage.py full` resumes the frozen Sage 1.3 full-corpus run. `python3 scripts/summarize_sage.py` rebuilds this report. Published predictions and scores are in `results/bench-v4/sage/`; private raw responses remain under `runs/`.
 
 Levanto logo: official site icon, downloaded from https://levanto.ai/favicon/android-chrome-192x192.png.
+
+## Pricing reconciliation
+
+The full run used 989,879 input tokens (including images) and 39,087 billed output tokens. At the verified Starter rates, its metered usage estimate is $0.436404434 ($0.407473795 per 1,000 cases). The full run, five smoke calls and two successful probes total $0.43745551; the provider dashboard reports $0.4375 for Sage 1.3, matching at its displayed precision. See [pricing-audit.json](pricing-audit.json).

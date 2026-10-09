@@ -1,0 +1,36 @@
+{
+  "verified_on": "2026-10-09",
+  "plan": "Starter",
+  "input_per_mtok": 0.046,
+  "output_per_mtok": 10,
+  "web_search_usd": 0.1,
+  "sources": [
+    "https://levanto.ai/pricing",
+    "https://docs.levanto.ai/pricing"
+  ],
+  "basis": "Price-table metered-usage estimate from measured API tokens, reconciled with provider dashboard; account credits covered usage, not a card charge.",
+  "full_run": {
+    "requests": 1071,
+    "input_tokens": 989879,
+    "image_input_tokens": 85612,
+    "output_tokens": 39087,
+    "usd": 0.436404434
+  },
+  "smoke": {
+    "requests": 5,
+    "usd": 0.000954566
+  },
+  "probes": {
+    "requests": 2,
+    "usd": 9.6508e-05
+  },
+  "reconciliation": {
+    "calculated_v13_usd": 0.437455508,
+    "dashboard_v13_usd_rounded": 0.4375,
+    "dashboard_calls_all_models": 2082,
+    "historic_v11_calls": 1004,
+    "v13_calls": 1078,
+    "precision": 4
+  },
+  "accounting": "Sage input_tokens and billed_input_tokens exclude the separately reported image_tokens; their sum is charged as input. Billed output_tokens include reasoning. Answers were observed with zero output tokens when reasoning did not run."
+}
