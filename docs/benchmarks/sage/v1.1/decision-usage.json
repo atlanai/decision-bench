@@ -1,0 +1,18 @@
+{
+  "plan": "Starter",
+  "monthly_price_usd": 49,
+  "monthly_units": 60000,
+  "tokens_per_unit": 4000,
+  "benchmark_requests": 949,
+  "benchmark_units": 950,
+  "smoke_requests": 5,
+  "smoke_units": 5,
+  "pilot_requests": 50,
+  "pilot_units": 50,
+  "dashboard_requests": 1004,
+  "dashboard_units": 1005,
+  "source_url": "https://docs.levanto.ai/pricing",
+  "verified_on": "2026-09-25",
+  "basis": "Subscription value assuming full allowance utilization; granted credits covered usage, not a dollar charge.",
+  "unit_evidence": "Dashboard: 1005 billed decisions / 1004 calls. Local responses reconcile: one full-run request had 4083 billed input tokens; all other calls were at most 4000. No images or grounding."
+}

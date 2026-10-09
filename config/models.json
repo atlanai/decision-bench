@@ -323,14 +323,21 @@
     },
     {
       "id": "sage",
-      "label": "Sage (Levanto)",
-      "short_label": "Sage",
+      "label": "Sage 1.3 (Levanto)",
+      "short_label": "Sage 1.3",
       "vendor": "Levanto",
       "provider": "sage",
-      "model": "levanto-sage-v1.1",
+      "model": "levanto-sage-v1.3",
       "color": "#1438d4",
-      "vision": false,
-      "notes": "Hosted default model; version recorded from API response, not pinned. Reasoning auto; no grounding. Independent option probabilities are renormalized for benchmark calibration (native-renormalized); raw probabilities retained. Null choices count as unanswered and incorrect, not transport errors; no argmax is substituted. Subscription decision-unit pricing is not estimated as token pricing."
+      "vision": true,
+      "notes": "Hosted Sage 1.3, verified on every response. Reasoning auto; no grounding. Native categorical Choice probabilities; null choices count as unanswered and incorrect, not transport errors. Input includes image tokens; output includes billed reasoning. Cost is a token-price estimate at verified Starter rates, not a subscription-per-decision estimate.",
+      "pricing": {
+        "input_per_mtok": 0.046,
+        "output_per_mtok": 10,
+        "source_url": "https://levanto.ai/pricing",
+        "as_of": "2026-10-09",
+        "note": "Starter token rates verified on the account billing page. Image tokens billed as input; billed output includes reasoning. No web search used. Credits cover usage; this is a list-price usage estimate, not a card charge."
+      }
     },
     {
       "id": "tev1-4b-experimental",

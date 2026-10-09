@@ -29,7 +29,7 @@ def normalize_answers(raw, case, source="verbalized"):
         probs = {str(k): v for k, v in probs.items()}
         label = a.get("choice") if source == "native" else a.get("label")
         label = str(label) if label is not None else None
-        abstained = source == "native-renormalized" and label is None
+        abstained = source in ("native", "native-renormalized") and label is None
         if set(probs) != set(q["options"]) or (label not in q["options"] and not abstained):
             raise ValueError(f"Wrong labels: {q['id']}")
         if any(not isinstance(v, (float, int)) or isinstance(v, bool) or not math.isfinite(v) or v < 0 or v > 1
