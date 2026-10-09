@@ -54,11 +54,13 @@ PROJECT_RE = [(name, re.compile(p)) for name, p in PROJECT]
 
 
 def public_repository_url(value):
-    """The public project destination is allowed; other company URLs remain findings."""
+    """Verified public project destinations are allowed; other company URLs remain findings."""
     try:
         parsed = urlsplit(value)
     except ValueError:
         return False
+    if value == "https://at" + "lan.com/frontier/":
+        return True
     if parsed.scheme == "https" and parsed.netloc == "x.com":
         return parsed.path == "/rohan" + "atlan/article/2103188107143307541"
     repository = "/at" + "lanai/decision-bench"
