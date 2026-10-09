@@ -20,6 +20,14 @@ HOME = re.compile(r"/" + r"Users/[A-Za-z]")
 
 
 class RepoHygiene(unittest.TestCase):
+    def test_only_exact_public_frontier_page_is_exempt(self):
+        base = "https://at" + "lan.com/frontier/"
+        self.assertEqual(check_secrets.scan_text("footer.jsx", base), [])
+        for url in (base + "private", base + "?token=private", base + "#private",
+                    base.replace(".com/", ".com.evil.test/"), base.replace("https:", "http:"),
+                    base.replace("/frontier/", "/private/")):
+            self.assertTrue(check_secrets.scan_text("footer.jsx", url), url)
+
     def test_only_verified_launch_article_is_exempt_on_x(self):
         base = "https://x.com/rohan" + "atlan/article/2103188107143307541"
         self.assertEqual(check_secrets.scan_text("README.md", base), [])

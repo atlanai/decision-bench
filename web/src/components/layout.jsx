@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {BookOpenIcon, BoxesIcon, ChevronDownIcon, ChevronLeftIcon, ChevronUpIcon, DatabaseIcon, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, ListChecksIcon, MoonIcon, SunIcon, TrophyIcon} from 'lucide-react';
-import {man, data, taskOrder, taskName, taskRows, caseMap, M, REPO, repoOk, HUGGING_FACE_DATASET} from '@/lib/bench';
+import {taskOrder, taskName, taskRows, caseMap, M, REPO, repoOk, HUGGING_FACE_DATASET} from '@/lib/bench';
 import {go, replace, href, taskHref, rowHref, navHint, historyPos} from '@/lib/route';
 import {haptic} from '@/lib/device';
 import {nextTask} from '@/lib/dice';
@@ -195,19 +195,19 @@ export function Header({page, id}) {
 }
 
 export function Footer() {
-  const sha = (data?.corpus_sha256 || '').slice(0, 12);
   return (
     <footer className="border-t">
-      <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-6 text-xs text-muted-foreground max-lg:pb-[calc(env(safe-area-inset-bottom)+96px)] md:px-8">
-        <span>Decision Bench {man().version} · corpus <code>{sha}</code> · built {data?.generated_at ? new Date(data.generated_at).toLocaleDateString() : ''}</span>
-        <span className="flex flex-wrap gap-x-4 gap-y-1">
-          <span>Code MIT · rows keep their <a href="/data" className="underline-offset-4 hover:text-foreground hover:underline">source licences</a></span>
-          <a href="https://x.com/rohanatlan/article/2103188107143307541" target="_blank" rel="noopener noreferrer" className="hover:text-foreground" title="Putting Jev to the test with Decision Bench">Jev benchmark article</a>
-          <a href="/review" className="hover:text-foreground">Review mode</a>
+      <div className="mx-auto flex max-w-[1240px] flex-col gap-3 px-4 py-6 text-xs text-muted-foreground max-lg:pb-[calc(env(safe-area-inset-bottom)+96px)] md:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <p>Open source project by <a href="https://atlan.com/frontier/" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4">Atlan Frontier Labs</a></p>
+          <a href="https://trybrain.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground underline-offset-4 hover:underline">TryBrain ↗</a>
+        </div>
+        <nav aria-label="Footer resources" className="flex flex-wrap gap-x-4 gap-y-2">
+          {repoOk() && <a href={REPO} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a>}
           {HUGGING_FACE_DATASET && <a href={HUGGING_FACE_DATASET} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Hugging Face</a>}
-          {repoOk() && <a href={REPO} target="_blank" rel="noopener" className="hover:text-foreground lg:hidden">GitHub</a>}
-          <a href="#" data-analytics-preferences className="hover:text-foreground">Analytics preferences</a>
-        </span>
+          <a href="/data" className="hover:text-foreground">Licences</a>
+          <a href="#" data-analytics-preferences className="hover:text-foreground">Analytics settings</a>
+        </nav>
       </div>
     </footer>
   );
