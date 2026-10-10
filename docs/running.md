@@ -231,3 +231,16 @@ cost takes precedence over the fallback price table.
 
 [OpenRouter model](https://openrouter.ai/openai/gpt-6-luna-decisions) ·
 [OpenAI Decisions guide](https://developers.openai.com/api/docs/guides/decisions)
+
+## Microsoft-Decision-1 via OpenRouter
+
+Use the ignored `OPENROUTER_API_KEY` and model id `microsoft-decision-1`. This
+text-only entry uses the native Decisions API and is evaluated on the 949 corpus
+rows without image assets. All 122 image-containing rows are excluded for the
+same shared-text comparison used for Tev1. Its partial run is not ranked on the
+full-corpus leaderboard. Hosted weights may update; the resolved model identity
+is retained for every response. Input costs $0.042 per million tokens and output
+is free as verified on 10 October 2026; measured provider-reported costs take
+precedence over this fallback rate.
+
+[OpenRouter model](https://openrouter.ai/microsoft/microsoft-decision-1)

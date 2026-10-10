@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "microsoft-decision-1",
+    "label": "Microsoft Decision 1",
+    "short_label": "MS Decision 1",
+    "vendor": "Microsoft",
+    "provider": "openrouter-decisions",
+    "color": "#0078d4",
+    "vision": false,
+    "api_model": "microsoft/microsoft-decision-1",
+    "resolved_models": [
+      "microsoft/microsoft-decision-1-20261009"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.042,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/microsoft/microsoft-decision-1",
+    "as_of": "2026-10-10"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "9a93ffc86b74f43522ad72162595764d65d96cd9",
+    "git_dirty": false,
+    "git_commits": [
+      "9a93ffc86b74f43522ad72162595764d65d96cd9"
+    ]
+  },
+  "run": {
+    "run_id": "microsoft-decision-1-bench-v4-text-v1",
+    "status": "completed",
+    "created_at": "2026-10-10T04:45:46.048237+00:00",
+    "completed_at": "2026-10-10T04:49:11.345242+00:00",
+    "published_at": "2026-10-10T04:50:20.290435+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 60,
+    "max_attempts": 3,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 949,
+    "rows_completed": 949,
+    "rows_ok": 949,
+    "rows_error": 0,
+    "full": false
+  },
+  "totals": {
+    "correct": 861,
+    "accuracy": 0.9072708113804004,
+    "wilson95": [
+      0.8871386031101873,
+      0.9241190078085635
+    ],
+    "errors": 0,
+    "cost_usd": 0.02796927,
+    "cost_coverage": 1.0,
+    "input_tokens": 665935,
+    "output_tokens": 949,
+    "latency_p50_ms": 607.4676250573248
+  },
+  "published_with_warnings": [
+    "it covers 949 of 1071 rows"
+  ]
+}
