@@ -393,6 +393,24 @@
         "as_of": "2026-10-08"
       },
       "notes": "GPT-6 Luna served through the native Decisions API via OpenRouter; text and image evidence with native Choice probabilities. Separate from the chat-completions GPT-6 Luna benchmark."
+    },
+    {
+      "id": "microsoft-decision-1",
+      "label": "Microsoft Decision 1",
+      "short_label": "MS Decision 1",
+      "vendor": "Microsoft",
+      "provider": "openrouter-decisions",
+      "model": "microsoft/microsoft-decision-1",
+      "vision": false,
+      "color": "#0078d4",
+      "request": {},
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/microsoft/microsoft-decision-1",
+        "as_of": "2026-10-10"
+      },
+      "notes": "Native Choice probabilities through OpenRouter. Text only: evaluated on the identical 949 rows without image assets; all 122 image-containing rows excluded. Hosted weights may update; returned model identity recorded."
     }
   ]
 }
