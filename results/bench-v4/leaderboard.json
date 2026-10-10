@@ -226,6 +226,28 @@
       "completed_at": "2026-10-09T12:38:31.114352+00:00"
     },
     {
+      "model_id": "microsoft-decision-1",
+      "label": "Microsoft Decision 1",
+      "vendor": "Microsoft",
+      "provider": "openrouter-decisions",
+      "api_model": "microsoft/microsoft-decision-1",
+      "accuracy": 0.9072708113804004,
+      "wilson95": [
+        0.8871386031101873,
+        0.9241190078085635
+      ],
+      "correct": 861,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": 0.02796927,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.02947236037934668,
+      "latency_p50_ms": 607.4676250573248,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-10-10T04:49:11.345242+00:00"
+    },
+    {
       "model_id": "claude-haiku-4.5",
       "label": "Claude Haiku 4.5",
       "vendor": "Anthropic",
