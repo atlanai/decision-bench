@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "kev-27b",
+    "label": "Kev 27B (Kev 1.0)",
+    "short_label": "Kev 27B",
+    "vendor": "Jared Palmer",
+    "provider": "kev",
+    "color": "#181818",
+    "vision": false,
+    "api_model": "kev-latest",
+    "resolved_models": [
+      "kev-latest"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "87b3accdbf42212b85b00620fdcdbffdc29adfb5",
+    "git_dirty": false,
+    "git_commits": [
+      "87b3accdbf42212b85b00620fdcdbffdc29adfb5"
+    ]
+  },
+  "run": {
+    "run_id": "kev-27b-bench-v4-text-v1",
+    "status": "completed",
+    "created_at": "2026-10-12T16:21:20.634883+00:00",
+    "completed_at": "2026-10-12T16:27:13.537366+00:00",
+    "published_at": "2026-10-12T16:27:44.654414+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 60,
+    "max_attempts": 3,
+    "endpoint_id": "endpoint-61086370be2f",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 949,
+    "rows_completed": 949,
+    "rows_ok": 949,
+    "rows_error": 0,
+    "full": false
+  },
+  "totals": {
+    "correct": 866,
+    "accuracy": 0.9125395152792413,
+    "wilson95": [
+      0.8928611795423784,
+      0.9288913551916214
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 668744,
+    "output_tokens": 82582,
+    "latency_p50_ms": 1024.4037080556154
+  },
+  "published_with_warnings": [
+    "it covers 949 of 1071 rows"
+  ]
+}

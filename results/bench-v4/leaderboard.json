@@ -226,6 +226,28 @@
       "completed_at": "2026-10-09T12:38:31.114352+00:00"
     },
     {
+      "model_id": "kev-27b",
+      "label": "Kev 27B (Kev 1.0)",
+      "vendor": "Jared Palmer",
+      "provider": "kev",
+      "api_model": "kev-latest",
+      "accuracy": 0.9125395152792413,
+      "wilson95": [
+        0.8928611795423784,
+        0.9288913551916214
+      ],
+      "correct": 866,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 1024.4037080556154,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-10-12T16:27:13.537366+00:00"
+    },
+    {
       "model_id": "microsoft-decision-1",
       "label": "Microsoft Decision 1",
       "vendor": "Microsoft",

@@ -1,0 +1,22 @@
+{
+  "model": "jaredpalmer/kev-27b",
+  "revision": "af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf",
+  "serving_code_revision": "fc4a17e194bca35a48c57211392ec49ea54a94ac",
+  "deployment_template_revision": "85ccf56a0afb952323c621055b02876e8498d60c",
+  "hardware": "NVIDIA H100 80GB HBM3",
+  "hosting": "Modal",
+  "models_endpoint_record": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-27b@af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf",
+    "base": "Qwen/Qwen3.8-27B",
+    "lora": 0,
+    "device": "cuda",
+    "backend": "torch",
+    "dtype": "bfloat16",
+    "temperature": 1.319507910772894,
+    "max_state_tokens": 65536,
+    "truncate_states": false
+  },
+  "unauthenticated_inference_status": 401,
+  "request_cost": "Not returned by the self-hosted endpoint. GPU infrastructure charges are tracked separately, not OpenRouter token pricing."
+}
