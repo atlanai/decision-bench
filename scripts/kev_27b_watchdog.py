@@ -15,4 +15,4 @@ a = p.parse_args()
 if not 1 <= a.seconds <= 1800:
     p.error('The benchmark shutdown timer must be at most 30 minutes')
 time.sleep(a.seconds)
-subprocess.run([a.modal, 'app', 'stop', 'decision-bench-kev-27b'], check=True, timeout=60)
+subprocess.run([a.modal, 'app', 'stop', 'decision-bench-kev-27b', '--yes'], check=True, timeout=60)
