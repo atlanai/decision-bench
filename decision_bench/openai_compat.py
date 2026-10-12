@@ -69,10 +69,10 @@ def endpoint_id(base):
 
 def redact(value, *, extra_secrets=(), extra_endpoints=()):
     """Remove the key, the endpoint URL and its hostname from anything that may be written to disk."""
-    secrets = [s for s in [env_value(KEY_ENV), env_value("OPENROUTER_API_KEY"), env_value("TYPESAFE_API_KEY"), env_value("DJEV_API_KEY"), env_value("SAGE_API_KEY"), env_value("TOGETHER_API_KEY"), env_value("LAYA_API_KEY"),
+    secrets = [s for s in [env_value(KEY_ENV), env_value("OPENROUTER_API_KEY"), env_value("TYPESAFE_API_KEY"), env_value("DJEV_API_KEY"), env_value("SAGE_API_KEY"), env_value("TOGETHER_API_KEY"), env_value("LAYA_API_KEY"), env_value("KEV_API_KEY"),
                            *extra_secrets] if s]
     hosts = []
-    for base in [env_value(BASE_ENV), env_value("LAYA_BASE_URL"), *extra_endpoints]:
+    for base in [env_value(BASE_ENV), env_value("LAYA_BASE_URL"), env_value("KEV_BASE_URL"), *extra_endpoints]:
         if not base:
             continue
         base = base.strip().rstrip("/")

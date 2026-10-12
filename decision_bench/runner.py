@@ -82,6 +82,9 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
            "selected_case_ids": [c["id"] for c in cases]}
     if model["provider"] == "openai-compatible":
         cfg["endpoint_id"] = openai_compat.endpoint_id(openai_compat.base_url())
+    elif model["provider"] == "kev":
+        from .kev import endpoint
+        cfg["endpoint_id"] = openai_compat.endpoint_id(endpoint())
     elif model["provider"] == "laya":
         cfg["endpoint_id"] = openai_compat.endpoint_id(adapters.laya_endpoint())
     elif model["provider"] == "openrouter-decisions":
@@ -134,6 +137,9 @@ def preflight(model):
         raise CallError("TOGETHER_API_KEY is not set", status="auth_missing")
     elif provider == "sage" and not config.env_value("SAGE_API_KEY"):
         raise CallError("SAGE_API_KEY is not set; see .env.example", status="auth_missing")
+    elif provider == "kev":
+        from .kev import endpoint, api_key
+        api_key(endpoint())
     elif provider == "laya":
         adapters.laya_key(adapters.laya_endpoint())
     elif provider in ("claude-cli", "codex-cli"):

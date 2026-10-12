@@ -259,3 +259,22 @@ This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16. As of
 The [OpenRouter model listing](https://openrouter.ai/jaredpalmer/kev-4b) prices
 input at $0.042 per million tokens, with free output. Use provider-reported
 cost where available; GPU rental costs for self-hosted Kev-27B are unrelated.
+
+## Kev 27B on a temporary GPU
+
+The `kev` provider uses `KEV_BASE_URL` and `KEV_API_KEY` from ignored secret
+storage. It sends the same native System One payload as TypeSafe and records
+the endpoint hash, resolved model, native probabilities and reported model
+latency without publishing the endpoint or bearer key. A remote endpoint must
+use HTTPS and authentication.
+
+`python3 scripts/run_kev_27b.py smoke` runs five spread-out text cases; `full`
+runs all 949 text-only cases, excluding the 122 image-containing rows.
+
+`scripts/serve_kev_27b.py` adapts Jared Palmer's official Modal serving script,
+with pinned code and weights, a dedicated app/cache name, a single H100
+container, mandatory bearer authentication, and a 60-second idle shutdown.
+An external watchdog must stop the app after a 30-minute wall-clock limit;
+always stop the named app after the run, including on failures. GPU/CPU/memory
+charges are separate infrastructure costs and must not be represented as
+OpenRouter token pricing. No benchmark result exists until the live run completes.

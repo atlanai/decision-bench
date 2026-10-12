@@ -429,6 +429,18 @@
         "as_of": "2026-10-12"
       },
       "notes": "Kev 4B through OpenRouter native Decisions API; not the Kev-27B requested in GitHub issue 16. Evaluated on the identical 949 text-only rows; all 122 image-containing rows excluded. OpenRouter lists 8,192 token context; returned checkpoint recorded."
+    },
+    {
+      "id": "kev-27b",
+      "label": "Kev 27B (Kev 1.0)",
+      "short_label": "Kev 27B",
+      "vendor": "Jared Palmer",
+      "provider": "kev",
+      "model": "kev-latest",
+      "vision": false,
+      "color": "#181818",
+      "request": {},
+      "notes": "Kev-27B v2 full bf16 weights, temperature 1.32, pinned Hub revision af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf. Self-hosted System One endpoint. Evaluate the same 949 text-only rows; exclude all 122 image cases. GPU cost is recorded separately, never inferred from Kev 4B OpenRouter token pricing."
     }
   ]
 }
