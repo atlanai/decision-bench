@@ -1,3 +1,4 @@
+import {TableScroll} from '@/components/table-scroll';
 import {track} from '@/lib/analytics';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ArrowDownIcon, ArrowUpIcon, ChevronDownIcon} from 'lucide-react';
@@ -179,7 +180,7 @@ function Leaderboard({route, runs, cases, more}) {
   const partial = all.some(m => m.costCoverage != null && m.costCoverage < 1);
   return <>
     <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
-      <div className="overflow-x-auto">
+      <TableScroll label="Leaderboard table">
         <table className="w-full text-sm">
           <thead><tr className="border-b text-left align-bottom [&>th]:py-2">
             <Th title="1 + the number of models whose 95% interval lies entirely above this one" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
@@ -208,7 +209,7 @@ function Leaderboard({route, runs, cases, more}) {
               </tr>; })}
           </tbody>
         </table>
-      </div>
+      </TableScroll>
     </div>
     <Notes items={[
       'Overlapping 95% intervals share a rank.',
@@ -290,7 +291,7 @@ function HardestRows({cases}) {
   return <>
     <List className="md:hidden">{items.map(({c, st}) => <Item key={c.id} href={rowHref(c)} wrap title={B.caseTitle(c)} sub={`${B.taskName(c.task)} · key: ${B.goldText(c)}`}
       trail={<span className="text-[13px] whitespace-nowrap text-muted-foreground tabular-nums"><span className="font-medium text-foreground">{st.ok}</span>/{st.n}</span>} />)}</List>
-    <div className="overflow-hidden rounded-xl border bg-card shadow-xs max-md:hidden"><div className="overflow-x-auto">
+    <div className="overflow-hidden rounded-xl border bg-card shadow-xs max-md:hidden"><TableScroll label="Row comparison table">
       <table className="w-full text-sm">
         <thead><tr className="border-b text-left text-[13px] text-muted-foreground"><th className="h-10 pl-5 font-medium">Row</th><th className="px-3 font-medium">Task</th><th className="px-3 font-medium">Answer key</th><th className="px-3 font-medium">Models answered</th><th className="pr-5 text-right font-medium">Models right</th></tr></thead>
         <tbody>{items.map(({c, st}) => (
@@ -302,7 +303,7 @@ function HardestRows({cases}) {
             <td className="py-2.5 pr-5 text-right"><Strip st={st} /></td>
           </tr>))}</tbody>
       </table>
-    </div></div>
+    </TableScroll></div>
   </>;
 }
 export const Strip = ({st}) => st.n ? <span className="inline-flex items-center gap-2 whitespace-nowrap"><span className="tabular-nums">{st.ok}/{st.n}</span><span className="inline-flex gap-0.5" aria-hidden="true">{st.dots.map(d => <i key={d.k} title={`${B.fullName(d.k)}: ${d.ok ? 'correct' : 'wrong'}`} className={cn('h-2.5 w-[5px] rounded-[1px]', d.ok ? 'bg-good/40' : 'bg-bad')} />)}</span></span> : <Dash />;

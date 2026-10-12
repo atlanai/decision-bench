@@ -1,3 +1,4 @@
+import {TableScroll} from '@/components/table-scroll';
 import {track} from '@/lib/analytics';
 import {Fragment, useState} from 'react';
 import {ChevronDownIcon, ChevronRightIcon, DownloadIcon, ImageIcon, InfoIcon} from 'lucide-react';
@@ -89,7 +90,7 @@ export function Tasks({route}) {
       <p className="mt-3 text-xs text-muted-foreground">{plural(tasks.length, 'task')} · {num(tasks.reduce((n, t) => n + B.taskRows(t).length, 0))} rows. The verdict is the best model’s.</p>
     </div>
     <div className="overflow-hidden rounded-xl border bg-card shadow-xs max-md:hidden">
-      <div className="overflow-x-auto">
+      <TableScroll label="Task catalogue table">
         <table className="w-full min-w-[640px] table-fixed text-sm">
           <colgroup><col />{wide && <><col className="w-[220px]" /><col className="w-[84px]" /></>}<col className="w-[64px]" /><col className="w-[124px]" /><col className="w-[108px]" /><col className="w-[52px]" /></colgroup>
           {/* Task names line up with the group heading, which sits after its chevron: 20px padding + 16px icon + 8px gap. */}
@@ -126,7 +127,7 @@ export function Tasks({route}) {
             </tbody>); })}
           {!groups.length && <tbody><tr><td colSpan={cols} className="px-5 py-12 text-center text-sm text-muted-foreground">No task matches. Try a shorter search, or all use cases.</td></tr></tbody>}
         </table>
-      </div>
+      </TableScroll>
     </div>
     <TaskDialog t={info} onOpenChange={o => { if (!o) setInfo(null); }} />
   </>;

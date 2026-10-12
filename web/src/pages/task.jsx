@@ -1,3 +1,4 @@
+import {TableScroll} from '@/components/table-scroll';
 import {track} from '@/lib/analytics';
 import {useState} from 'react';
 import {BadgeCheckIcon, FileTextIcon, ImageIcon, InfoIcon, ListChecksIcon} from 'lucide-react';
@@ -18,7 +19,7 @@ const CONTAMINATION = {low: 'A fresh derivation, unlikely to be in training data
 const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
 const TD = 'px-3 py-2.5 first:pl-5 last:pr-5';
 
-export const TableCard = ({children, className}) => <div className={cn('overflow-hidden rounded-xl border bg-card shadow-xs', className)}><div className="overflow-x-auto">{children}</div></div>;
+export const TableCard = ({children, className, label}) => <div className={cn('overflow-hidden rounded-xl border bg-card shadow-xs', className)}><TableScroll label={label}>{children}</TableScroll></div>;
 
 /* Training-data risk as three grey bars, not a colour. */
 const Risk = ({level}) => { const n = {low: 1, medium: 2, high: 3}[level] || 0;

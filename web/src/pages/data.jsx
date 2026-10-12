@@ -1,3 +1,4 @@
+import {TableScroll} from '@/components/table-scroll';
 /* Data: every dataset in one calm, grouped list. Details (licence terms, selection rule, changes, citation)
    open in a side sheet, so the list stays scannable. /data/<id> opens that dataset's sheet. */
 import {Fragment} from 'react';
@@ -95,7 +96,7 @@ export function DataPage({id, route}) {
       </Fragment>)}</List> : <Notice>No dataset matches. Try a licence name like CC-BY-4.0, or a task.</Notice>}
     </div>
     <div className="overflow-hidden rounded-xl border bg-card shadow-xs max-md:hidden">
-      <div className="overflow-x-auto">
+      <TableScroll label="Dataset table">
         <table className="w-full min-w-[560px] table-fixed text-sm">
           <colgroup><col /><col className="w-[220px]" />{wide && <col className="w-[150px]" />}<col className="w-[72px]" /><col className="w-[44px]" /></colgroup>
           <thead><tr className="border-b"><th className={cn(H, 'pl-5')}>Dataset</th><th className={H}>Licence</th>{wide && <th className={H}>Tasks</th>}<th className={cn(H, 'text-right')}>Rows</th><th className={H}><span className="sr-only">Open</span></th></tr></thead>
@@ -114,7 +115,7 @@ export function DataPage({id, route}) {
           </tbody>)}
           {!groups.length && <tbody><tr><td colSpan={cols} className="px-5 py-12 text-center text-sm text-muted-foreground">No dataset matches. Try a licence name like CC-BY-4.0, or a task.</td></tr></tbody>}
         </table>
-      </div>
+      </TableScroll>
     </div>
     {B.HUGGING_FACE_DATASET && <div className="mt-6 text-[13px]">
       <a href={B.HUGGING_FACE_DATASET} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"><ExternalLinkIcon className="size-4" />Dataset on Hugging Face</a>

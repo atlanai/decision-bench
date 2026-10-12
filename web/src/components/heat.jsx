@@ -1,3 +1,4 @@
+import {TableScroll} from '@/components/table-scroll';
 /* Heatmap of accuracy by task (rows) and model (columns). Only misses are coloured: ≥95% stays faded. */
 import {Fragment} from 'react';
 import {taskOrder, taskCat, catInfo, taskName, subsetMetrics, runName, keyOf, ident, isImageTask} from '@/lib/bench';
@@ -23,7 +24,7 @@ export function HeatTasks({runs, cases}) {
   let last = null;
   return (
     <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
-      <div className="overflow-x-auto">
+      <TableScroll label="Accuracy by task table">
         <table className="w-full min-w-max border-collapse text-[13px]">
           <thead>
             <tr className="border-b">
@@ -47,7 +48,7 @@ export function HeatTasks({runs, cases}) {
               </Fragment>; })}
           </tbody>
         </table>
-      </div>
+      </TableScroll>
       <div className="flex flex-wrap gap-x-4 gap-y-1 border-t px-5 py-3 text-xs text-muted-foreground">
         {[['≥ 95%', 0], ['90–95', 12], ['80–90', 24], ['65–80', 42], ['< 65', 60]].map(([l, s]) => <span key={l} className="inline-flex items-center gap-1.5"><i className="inline-block h-2.5 w-3.5 rounded-[2px] border" style={{background: bg(s)}} />{l}</span>)}
       </div>
