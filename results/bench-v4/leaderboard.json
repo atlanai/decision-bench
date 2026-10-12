@@ -314,6 +314,28 @@
       "completed_at": "2026-09-24T20:06:55.885806+00:00"
     },
     {
+      "model_id": "kev-4b",
+      "label": "Kev 4B",
+      "vendor": "Jared Palmer",
+      "provider": "openrouter-decisions",
+      "api_model": "jaredpalmer/kev-4b",
+      "accuracy": 0.8377239199157007,
+      "wilson95": [
+        0.8129115588231931,
+        0.8598130577342703
+      ],
+      "correct": 795,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": 0.028087248,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.02959667860906217,
+      "latency_p50_ms": 950.2222499577329,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-10-12T15:42:36.770077+00:00"
+    },
+    {
       "model_id": "qwen3-32b",
       "label": "Qwen3-32B",
       "vendor": "Qwen",

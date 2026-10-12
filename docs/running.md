@@ -244,3 +244,18 @@ is free as verified on 10 October 2026; measured provider-reported costs take
 precedence over this fallback rate.
 
 [OpenRouter model](https://openrouter.ai/microsoft/microsoft-decision-1)
+
+## Kev 4B through OpenRouter
+
+`python3 scripts/run_kev_4b.py smoke` checks five spread-out text cases;
+`python3 scripts/run_kev_4b.py full` runs the identical 949 text-only rows.
+Set `OPENROUTER_API_KEY` in ignored local secret storage. This uses the native
+Decisions API and excludes all 122 image-containing cases. Partial evaluations
+are not ranked on the full-corpus leaderboard.
+
+This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16. As of
+12 October 2026, OpenRouter lists only the 4B model and serves checkpoint
+`jaredpalmer/kev-4b-20260924`, rather than the newer Kev 1.0 release weights.
+The [OpenRouter model listing](https://openrouter.ai/jaredpalmer/kev-4b) prices
+input at $0.042 per million tokens, with free output. Use provider-reported
+cost where available; GPU rental costs for self-hosted Kev-27B are unrelated.
