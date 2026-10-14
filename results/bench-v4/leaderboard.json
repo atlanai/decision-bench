@@ -72,6 +72,28 @@
       "completed_at": "2026-09-23T13:36:13.556133+00:00"
     },
     {
+      "model_id": "celeris-1-decision",
+      "label": "Celeris-1 Decision",
+      "vendor": "Celeris",
+      "provider": "celeris",
+      "api_model": "celeris-1-decision",
+      "accuracy": 0.9411764705882353,
+      "wilson95": [
+        0.925444771056673,
+        0.95375454538214
+      ],
+      "correct": 1008,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.03524616,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.032909579831932774,
+      "latency_p50_ms": 181.51758999999856,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-14T17:57:01.326571+00:00"
+    },
+    {
       "model_id": "gemini-flash-lite-latest",
       "label": "Gemini Flash Lite",
       "vendor": "Google",
