@@ -88,6 +88,11 @@ class Endpoint(unittest.TestCase):
         self.assertEqual(out, {"Authorization": "[REDACTED]", "nested": [{"api_key": "[REDACTED]", "text": "[REDACTED]!"}]})
 
 
+    def test_redact_leaves_short_placeholder_keys(self):
+        with patch.dict(os.environ, {"LAYA_API_KEY": "none"}):
+            self.assertEqual(oc.redact({"choice": "none"}), {"choice": "none"})
+
+
 class Completion(unittest.TestCase):
     def complete(self, response, headers=None, model=MODEL):
         with env(REMOTE), patch.object(oc, "request", return_value=(response, headers or {}, 200, 150)) as call:

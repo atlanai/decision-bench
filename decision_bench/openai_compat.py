@@ -67,10 +67,15 @@ def endpoint_id(base):
     return "endpoint-" + hashlib.sha256(base.rstrip("/").encode()).hexdigest()[:12]
 
 
+# Placeholders such as LAYA_API_KEY=none are not secrets; replacing them would rewrite answers (an option named
+# "none" became "[REDACTED]"). Real keys are far longer.
+MIN_SECRET_LENGTH = 8
+
+
 def redact(value, *, extra_secrets=(), extra_endpoints=()):
     """Remove the key, the endpoint URL and its hostname from anything that may be written to disk."""
     secrets = [s for s in [env_value(KEY_ENV), env_value("OPENROUTER_API_KEY"), env_value("TYPESAFE_API_KEY"), env_value("DJEV_API_KEY"), env_value("SAGE_API_KEY"), env_value("TOGETHER_API_KEY"), env_value("LAYA_API_KEY"), env_value("KEV_API_KEY"),
-                           *extra_secrets] if s]
+                           *extra_secrets] if s and len(s) >= MIN_SECRET_LENGTH]
     hosts = []
     for base in [env_value(BASE_ENV), env_value("LAYA_BASE_URL"), env_value("KEV_BASE_URL"), *extra_endpoints]:
         if not base:
