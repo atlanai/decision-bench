@@ -1,6 +1,7 @@
 """Provider adapters. Each returns the same result shape; see `call`."""
 from __future__ import annotations
 
+import base64
 import json
 import os
 import shutil
@@ -14,7 +15,7 @@ from pathlib import Path
 
 from . import openai_compat
 from .config import env_value
-from .corpus import JUDGMENT_POLICY, SYSTEM, prompt, public_input, response_schema
+from .corpus import JUDGMENT_POLICY, SYSTEM, image_assets, prompt, public_input, response_schema
 from .errors import CallError
 
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
@@ -103,6 +104,11 @@ def systemone(model, case, timeout, api_model, url, key, provider_name, *, paylo
                            "criteria": q["options"]} for q in data["questions"]}
     if payload is None:
         payload = {"model": api_model or model["model"], "state": data["state"], "questions": questions}
+        # A vision System One model gets the row's images as data URIs in the request's `images` list, the
+        # protocol's image field; text-only models keep the text rendering every image row carries in its state.
+        images = image_assets(case) if model.get("vision") else []
+        if images:
+            payload["images"] = [f"data:{mime};base64,{base64.b64encode(blob).decode()}" for mime, blob in images]
     headers = {"Content-Type": "application/json", "User-Agent": "DecisionBench (classification evaluation)"}
     if key:
         headers["Authorization"] = f"Bearer {key}"
@@ -134,7 +140,16 @@ def systemone(model, case, timeout, api_model, url, key, provider_name, *, paylo
             "adapter_duration_ms": (time.perf_counter() - started) * 1000,
             "usage": {"input_tokens": usage.get("input_tokens"), "output_tokens": usage.get("output_tokens"),
                       "cached_input_tokens": usage.get("cached_input_tokens"), "reasoning_output_tokens": None},
-            "cost_usd": None, "cost_basis": "unavailable", "payload": payload}
+            "cost_usd": None, "cost_basis": "unavailable", "payload": stored_systemone_payload(payload),
+            "images_sent": len(payload.get("images") or [])}
+
+
+def stored_systemone_payload(payload):
+    """The payload as kept in run records: image bytes are replaced by their size, so records stay small."""
+    if not payload.get("images"):
+        return payload
+    return {**payload, "images": [f"[{url.split(';', 1)[0].removeprefix('data:')} image, {len(url)} characters of "
+                                  "base64 omitted]" for url in payload["images"]]}
 
 
 def claude_usage(event):

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "amos-1-large",
+    "label": "Amos 1 large",
+    "short_label": "Amos large",
+    "vendor": "Amos",
+    "provider": "laya",
+    "color": "#2b4bff",
+    "vision": true,
+    "api_model": "amos-1-large",
+    "resolved_models": [
+      "amos-1-large"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": null,
+    "git_dirty": null,
+    "git_commits": []
+  },
+  "run": {
+    "run_id": "amos-1-large-c4lship-b-20261013",
+    "status": "completed",
+    "created_at": "2026-10-13T16:56:48.861054+00:00",
+    "completed_at": "2026-10-13T17:05:19.522936+00:00",
+    "published_at": "2026-10-13T17:05:51.908233+00:00",
+    "executions": 1,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-5419d6957df4",
+    "platform": {
+      "os": "Linux",
+      "python": "3.12.10"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1016,
+    "accuracy": 0.9486461251167133,
+    "wilson95": [
+      0.9337501427336912,
+      0.960335088057525
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 935051,
+    "output_tokens": 0,
+    "latency_p50_ms": 322.3389050690457
+  }
+}

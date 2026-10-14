@@ -6,6 +6,28 @@
   "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
   "models": [
     {
+      "model_id": "amos-1-large",
+      "label": "Amos 1 large",
+      "vendor": "Amos",
+      "provider": "laya",
+      "api_model": "amos-1-large",
+      "accuracy": 0.9486461251167133,
+      "wilson95": [
+        0.9337501427336912,
+        0.960335088057525
+      ],
+      "correct": 1016,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 322.3389050690457,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-13T17:05:19.522936+00:00"
+    },
+    {
       "model_id": "pplx-decider-v1.1-27b",
       "label": "Perplexity Decider V1.1 27B",
       "vendor": "Perplexity",
