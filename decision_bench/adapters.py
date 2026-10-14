@@ -22,7 +22,7 @@ TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 DJEV_URL = "https://api.djev.dev/v1/request"
 # Credentials the harness itself uses are never passed to a CLI child process.
 HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
-                   "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL", "NACE_API_KEY", "DREX_BASE_URL",
+                   "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL", "NACE_API_KEY", "DREX_BASE_URL", "CELERIS_API_KEY",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
 
@@ -40,6 +40,9 @@ def call(model, case, timeout, api_model=None):
         return completion(model, case, timeout, api_model)
     if provider == "drex":
         from .drex import completion
+        return completion(model, case, timeout, api_model)
+    if provider == "celeris":
+        from .celeris import completion
         return completion(model, case, timeout, api_model)
     if provider == "typesafe":
         return typesafe(model, case, timeout, api_model)
@@ -98,20 +101,25 @@ def laya(model, case, timeout, api_model=None):
     return systemone(model, case, timeout, api_model, url, laya_key(url), "Laya")
 
 
+def systemone_payload(model, case, api_model=None):
+    data = public_input(case)
+    questions = {q["id"]: {"type": q["type"], "instructions": JUDGMENT_POLICY + q["instructions"],
+                           "criteria": q["options"]} for q in data["questions"]}
+    payload = {"model": api_model or model["model"], "state": data["state"], "questions": questions}
+    # A vision System One model gets the row's images as data URIs in the request's `images` list, the
+    # protocol's image field; text-only models keep the text rendering every image row carries in its state.
+    images = image_assets(case) if model.get("vision") else []
+    if images:
+        payload["images"] = [f"data:{mime};base64,{base64.b64encode(blob).decode()}" for mime, blob in images]
+    return payload
+
+
 def systemone(model, case, timeout, api_model, url, key, provider_name, *, payload=None):
     def redact(value):
         return openai_compat.redact(value, extra_secrets=(key,), extra_endpoints=(url,))
 
-    data = public_input(case)
-    questions = {q["id"]: {"type": q["type"], "instructions": JUDGMENT_POLICY + q["instructions"],
-                           "criteria": q["options"]} for q in data["questions"]}
     if payload is None:
-        payload = {"model": api_model or model["model"], "state": data["state"], "questions": questions}
-        # A vision System One model gets the row's images as data URIs in the request's `images` list, the
-        # protocol's image field; text-only models keep the text rendering every image row carries in its state.
-        images = image_assets(case) if model.get("vision") else []
-        if images:
-            payload["images"] = [f"data:{mime};base64,{base64.b64encode(blob).decode()}" for mime, blob in images]
+        payload = systemone_payload(model, case, api_model)
     headers = {"Content-Type": "application/json", "User-Agent": "DecisionBench (classification evaluation)"}
     if key:
         headers["Authorization"] = f"Bearer {key}"
