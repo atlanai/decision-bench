@@ -98,7 +98,7 @@ export function App() {
     <TooltipProvider>
       <a href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }} className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:shadow">Skip to content</a>
       <Header page={route.page} id={route.id} />
-      <main id="main" tabIndex={-1} className={wide ? 'outline-none' : 'mx-auto max-w-[1240px] px-4 pt-5 pb-16 outline-none md:px-8 md:pt-8 lg:pt-10 lg:pb-20'}>
+      <main id="main" tabIndex={-1} className={wide ? 'outline-none' : 'mx-auto max-w-[1600px] px-4 pt-5 pb-16 outline-none md:px-8 md:pt-8 lg:pt-10 lg:pb-20'}>
         <PageBoundary key={`${route.page}/${route.id}`}><Suspense fallback={<p role="status" className="p-8">Loading page…</p>}><Page route={route} /></Suspense></PageBoundary>
       </main>
       <Footer />

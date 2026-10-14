@@ -131,7 +131,7 @@ function Banner({route}) {
         <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute top-0 left-0" />
         <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
-        <div className="relative mx-auto grid max-w-[1240px] items-center gap-x-16 gap-y-10 px-4 pt-8 pb-10 md:px-8 md:pt-14 md:gap-y-12 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
+        <div className="relative mx-auto grid max-w-[1600px] items-center gap-x-16 gap-y-10 px-4 pt-8 pb-10 md:px-8 md:pt-14 md:gap-y-12 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
             <p className="mb-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase md:mb-5"><span className="max-md:hidden">Decision Bench · </span>{B.man().version} · real records, open licences</p>
             <h1 className="max-w-[16ch] font-pixel text-4xl leading-[1.02] uppercase sm:text-5xl lg:text-[52px]">Can a small model make <em className="text-brand not-italic">this decision</em> for you?</h1>
@@ -320,7 +320,7 @@ export function Home({route}) {
   const cases = scopeCases(route), runs = B.evaluated(selectedRuns(route), cases), cat = route.q.get('category') || '';
   return <>
     <Banner route={route} />
-    <div className="mx-auto max-w-[1240px] px-4 pb-20 md:px-8">
+    <div className="mx-auto max-w-[1600px] px-4 pb-20 md:px-8">
       {cat && <div className="pt-8 md:pt-10"><div className="text-sm font-medium text-muted-foreground">Use case</div><h2 className="mt-1 text-2xl font-semibold tracking-tight md:text-3xl">{B.catInfo(cat).name}</h2><p className="mt-2 text-[15px] text-muted-foreground">{B.catInfo(cat).description} <Link href={href('tasks', {category: cat})}>See the tasks</Link></p></div>}
       {/* Sticky under the top bar; on phones one line of chips that scrolls sideways. */}
       <div className="sticky top-[calc(env(safe-area-inset-top)+48px)] z-30 -mx-4 flex items-center gap-2 overflow-x-auto bg-background/85 px-4 py-2.5 backdrop-blur-md [scrollbar-width:none] md:-mx-8 md:mt-6 md:flex-wrap md:overflow-visible md:px-8 md:py-3 lg:top-14">

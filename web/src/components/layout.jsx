@@ -114,7 +114,7 @@ function TopBar({page, id}) {
   const step = (c, k) => { if (!c) return; haptic(); navHint(k); replace(rowHref(c)); };
   return (
     <header className="vt-topbar sticky top-0 z-40 bg-background/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/70 lg:hidden">
-      <div className={cn('relative mx-auto flex h-12 max-w-[1240px] items-center px-1.5 transition-shadow duration-200 md:px-4', scrolled && 'shadow-[inset_0_-1px_0_var(--border)]')}>
+      <div className={cn('relative mx-auto flex h-12 max-w-[1600px] items-center px-1.5 transition-shadow duration-200 md:px-4', scrolled && 'shadow-[inset_0_-1px_0_var(--border)]')}>
         {bar.up ? <button type="button" data-track="back" onClick={back} className="relative z-[1] flex h-9 max-w-[45%] min-w-0 cursor-pointer items-center rounded-lg pr-2 text-[15px] text-foreground transition-opacity active:opacity-50" aria-label={`Back to ${label}`}>
           <ChevronLeftIcon className="size-[26px] shrink-0" strokeWidth={2} />
           <span className={cn('truncate transition-opacity duration-200', tucked && 'opacity-0')}>{label}</span>
@@ -178,7 +178,7 @@ export function TabBar({page}) {
 export function Header({page, id}) {
   return <>
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 max-lg:hidden">
-      <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-6 px-4 md:px-8">
+      <div className="mx-auto flex h-14 max-w-[1600px] items-center gap-6 px-4 md:px-8">
         <a href="/" className="flex shrink-0 items-center gap-2 font-mono text-xs font-medium tracking-[.08em] uppercase" aria-label="Decision Bench home">
           <BrandMark className="h-[15px] w-3 text-brand" /><span className="leading-none [text-box:trim-both_cap_alphabetic]">Decision Bench</span>
         </a>
@@ -197,7 +197,7 @@ export function Header({page, id}) {
 export function Footer() {
   return (
     <footer className="border-t">
-      <div className="mx-auto flex max-w-[1240px] flex-col gap-3 px-4 py-6 text-xs text-muted-foreground max-lg:pb-[calc(env(safe-area-inset-bottom)+96px)] md:px-8">
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-3 px-4 py-6 text-xs text-muted-foreground max-lg:pb-[calc(env(safe-area-inset-bottom)+96px)] md:px-8">
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
           <p>Open source project by <a href="https://atlan.com/frontier/" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4">Atlan Frontier Labs</a></p>
           <a href="https://trybrain.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground underline-offset-4 hover:underline">TryBrain ↗</a>
