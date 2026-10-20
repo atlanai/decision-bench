@@ -68,7 +68,8 @@ which upstream snapshot answered. `published_with_warnings` appears only when `-
 
 `network_baseline` holds the median DNS, TCP connect and TLS handshake times of fresh connections from the tester to
 the provider's host, in milliseconds, and never the host. `server_time_p50_ms_estimate` is `latency_p50_ms` less one
-cold request of that network. Both are `null` when no baseline was recorded, and older files do not have them. See
+cold request of that network. Both are `null` when no baseline was recorded, and older files do not have them. The
+estimate is also `null` when a resumed run ran its rows over different networks. See
 [protocol.md](protocol.md) for the formula and its limits.
 
 ### `predictions.jsonl`

@@ -185,8 +185,9 @@ def metadata_for(meta, records, cases, manifest, metrics, published_at=None):
     last_git = next((e.get("git") for e in reversed(meta.get("executions", [])) if e.get("git")), {}) or {}
     resolved = sorted({str(r["resolved_model"]) for r in records if r.get("resolved_model")})
     last = (meta.get("executions") or [{}])[-1]
-    busiest = max(meta.get("executions") or [{}], key=lambda e: e.get("pending_rows") or 0)
-    baseline = busiest.get("network_baseline")
+    measured = [e.get("network_baseline") for e in meta.get("executions", []) if e.get("pending_rows")]
+    baseline = measured[-1] if measured else None
+    one_network = all(b == baseline for b in measured)
     return {"schema_version": SCHEMA_VERSION, "suite": cfg["suite"],
             "model": {**meta.get("model", {"id": cfg["model_id"]}), "id": cfg["model_id"],
                       "provider": cfg["provider"], "api_model": cfg["api_model"], "resolved_models": resolved},
@@ -209,7 +210,8 @@ def metadata_for(meta, records, cases, manifest, metrics, published_at=None):
                        "input_tokens": metrics["tokens"]["input_tokens"],
                        "output_tokens": metrics["tokens"]["output_tokens"],
                        "latency_p50_ms": metrics["latency_ms"]["p50"],
-                       "server_time_p50_ms_estimate": server_time_estimate(metrics["latency_ms"]["p50"], baseline)}}
+                       "server_time_p50_ms_estimate": (server_time_estimate(metrics["latency_ms"]["p50"], baseline)
+                                                       if one_network else None)}}
 
 
 def export_run(run_id, cases=None, manifest=None):

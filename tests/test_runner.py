@@ -70,13 +70,12 @@ class NetworkBaseline(unittest.TestCase):
         self.assertIsNotNone(meta["executions"][0]["network_baseline"])
         self.assertIsNone(meta["executions"][1]["network_baseline"])
 
-    def test_every_configured_http_provider_has_a_host_to_probe(self):
-        models = json.loads((runner.corpus.ROOT / "config/models.json").read_text())["models"]
+    def test_every_http_provider_has_a_host_to_probe(self):
         env = {"DECISION_BENCH_BASE_URL": "https://a.example.com/v1", "KEV_BASE_URL": "https://b.example.com",
                "LAYA_BASE_URL": "https://c.example.com/v1"}
         with patch.dict(runner.os.environ, env):
-            missing = {m["provider"] for m in models if m["provider"] not in ("claude-cli", "codex-cli")
-                       and runner.endpoint_url(m) is None}
+            missing = {p for p in runner.config.PROVIDERS - {"claude-cli", "codex-cli"}
+                       if runner.endpoint_url({"provider": p}) is None}
         self.assertEqual(missing, set())
 
     def test_probe_tries_each_address_in_turn_like_urllib(self):
