@@ -119,11 +119,11 @@ TLS handshake and one more round trip to send the request. For CLIs it includes 
 Concurrency (`--jobs`) is recorded; throughput is not single-request latency. Raw latency stays measured this way so
 that all published runs stay comparable, but compare it only between runs made from the same client network.
 
-**Network baseline.** At the start of each execution, for an HTTP provider, the harness opens 5 fresh connections to
-the host the adapter calls, as `urllib` opens one, and records the median DNS lookup, TCP connect and TLS handshake
-times (`run.network_baseline` in `metadata.json`). Only the numbers are kept, never the host, URL or address. The
-baseline is `null` for CLI providers, when a proxy carries the requests, when a probe fails (the run continues), and
-for runs published before it existed.
+**Network baseline.** At the start of each execution that has rows to run, for an HTTP provider, the harness opens 5
+fresh connections to the host the adapter calls, as `urllib` opens one, and records the median DNS lookup, TCP
+connect and TLS handshake times. `run.network_baseline` in `metadata.json` comes from the execution that had the most
+rows to run. Only the numbers are kept, never the host, URL or address. The baseline is `null` for CLI providers,
+when a proxy carries the requests, when a probe fails (the run continues), and for runs published before it existed.
 
 **Estimated server time.** `totals.server_time_p50_ms_estimate` is
 `latency_p50_ms - (dns_ms + 2 × tcp_connect_ms + tls_handshake_ms)`, and never below 0. A TCP connect is one round
@@ -137,7 +137,8 @@ estimate, and these are its limits:
 - For a gateway provider (OpenRouter, a LiteLLM proxy), the baseline measures only the path to the gateway, not the
   path to the backend behind it. That backend time counts as serving time of the named provider.
 - It subtracts a median network time measured once per execution, not the network time of each request, and the
-  network can change during a long run.
+  network can change during a long run. When a run is resumed from another network, the rows of the other
+  executions crossed a network that the baseline did not measure.
 
 For a firm latency comparison, run both endpoints from the same client.
 

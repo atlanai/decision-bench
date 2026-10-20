@@ -185,7 +185,8 @@ def metadata_for(meta, records, cases, manifest, metrics, published_at=None):
     last_git = next((e.get("git") for e in reversed(meta.get("executions", [])) if e.get("git")), {}) or {}
     resolved = sorted({str(r["resolved_model"]) for r in records if r.get("resolved_model")})
     last = (meta.get("executions") or [{}])[-1]
-    baseline = last.get("network_baseline")
+    busiest = max(meta.get("executions") or [{}], key=lambda e: e.get("pending_rows") or 0)
+    baseline = busiest.get("network_baseline")
     return {"schema_version": SCHEMA_VERSION, "suite": cfg["suite"],
             "model": {**meta.get("model", {"id": cfg["model_id"]}), "id": cfg["model_id"],
                       "provider": cfg["provider"], "api_model": cfg["api_model"], "resolved_models": resolved},

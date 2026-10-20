@@ -162,15 +162,23 @@ def preflight(model):
 PROBES = 5
 
 
-def connect_timings(host, port, tls, timeout=10):
+def connect_timings(host, port, tls, timeout=5):
     """(DNS, TCP connect, TLS handshake or None) in ms for one fresh connection, opened the way urllib opens one
-    for every request: resolve, connect to the first address, then a default-context TLS handshake."""
+    for every request: resolve, try each address in turn, then a default-context TLS handshake."""
     started = time.perf_counter()
-    family, kind, proto, _, address = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)[0]
+    addresses = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
     resolved = time.perf_counter()
-    with socket.socket(family, kind, proto) as sock:
+    for family, kind, proto, _, address in addresses:
+        sock = socket.socket(family, kind, proto)
         sock.settimeout(timeout)
-        sock.connect(address)
+        try:
+            sock.connect(address)
+            break
+        except OSError:
+            sock.close()
+    else:
+        raise OSError("No address of the provider host accepted a connection")
+    with sock:
         connected = time.perf_counter()
         handshake = None
         if tls:
@@ -183,18 +191,19 @@ def network_baseline(model):
     """Median DNS, TCP connect and TLS handshake times over fresh connections to the host the adapter calls, so
     the tester's network can be told apart from the endpoint's latency. Only the numbers are kept, never the host.
     None for a CLI provider, when a proxy carries the requests (the probe cannot see that path), or when any probe
-    fails: the baseline never fails a run."""
+    fails: a network failure never fails a run."""
+    url = endpoint_url(model)
+    if url is None:
+        return None
+    parts = urllib.parse.urlsplit(url)
+    if parts.scheme in urllib.request.getproxies() and not urllib.request.proxy_bypass(parts.hostname):
+        return None
+    tls = parts.scheme == "https"
+    print(f"Measuring the network to the provider host ({PROBES} connections)", flush=True)
     try:
-        url = endpoint_url(model)
-        if url is None:
-            return None
-        parts = urllib.parse.urlsplit(url)
-        if parts.scheme in urllib.request.getproxies() and not urllib.request.proxy_bypass(parts.hostname):
-            return None
-        tls = parts.scheme == "https"
         port = parts.port or (443 if tls else 80)
         samples = [connect_timings(parts.hostname, port, tls) for _ in range(PROBES)]
-    except Exception:
+    except (OSError, ValueError):
         return None
     dns, tcp, handshake = zip(*samples)
     return {"probes": PROBES, "dns_ms": statistics.median(dns), "tcp_connect_ms": statistics.median(tcp),
@@ -248,7 +257,7 @@ def _run(args, model, cases, cfg, run_id, folder):
                                "timeout_seconds": args.timeout, "max_attempts": args.max_attempts,
                                "retry_errors": args.retry_errors, "pending_rows": len(pending),
                                "rpm": getattr(args, "rpm", None), "global_rpm": getattr(args, "global_rpm", None),
-                               "network_baseline": network_baseline(model)})
+                               "network_baseline": network_baseline(model) if pending else None})
     write_json(run_path, meta)
     lock = threading.Lock()
     done = len(cases) - len(pending)

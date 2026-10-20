@@ -133,6 +133,12 @@ class PublishFlow(unittest.TestCase):
         self.assertNotIn("127.0.0.1", json.dumps(metadata))
         self.assertEqual(results.check_published(load_cases(), load_manifest()), [])
 
+    def test_resume_publishes_the_baseline_of_the_execution_that_ran_the_rows(self):
+        first, _ = self.publish_with_probe({"return_value": (1.0, 2.0, None)})
+        again, _ = self.publish_with_probe({"return_value": (9.0, 99.0, None)})
+        self.assertEqual(again["run"]["executions"], 2)
+        self.assertEqual(again["run"]["network_baseline"], first["run"]["network_baseline"])
+
     def test_run_without_a_baseline_shows_not_recorded(self):
         metadata, readme = self.publish_with_probe({"side_effect": OSError("unreachable")})
         self.assertIsNone(metadata["run"]["network_baseline"])
