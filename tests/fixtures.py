@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-from decision_bench import corpus
+from decision_bench import corpus, runner
 
 FAKE_KEY = "fixture-key-0000"
 
@@ -55,11 +55,13 @@ def build(root, rows=ROWS):
 
 @contextlib.contextmanager
 def repo(env=None, rows=ROWS):
-    """Point the package at a temporary tree, with only the given DECISION_BENCH_* / TYPESAFE_* variables set."""
+    """Point the package at a temporary tree, with only the given DECISION_BENCH_* / TYPESAFE_* variables set.
+    The network probe fails by default, so no test opens a connection to a provider host."""
     with tempfile.TemporaryDirectory() as tmp:
         build(tmp, rows)
         clean = {k: v for k, v in os.environ.items()
                  if not k.startswith(("DECISION_BENCH_", "TYPESAFE_", "LAYA_", "LITELLM_"))}
         clean.update(env or {})
-        with patch.object(corpus, "ROOT", Path(tmp)), patch.dict(os.environ, clean, clear=True):
+        with patch.object(corpus, "ROOT", Path(tmp)), patch.dict(os.environ, clean, clear=True), \
+                patch.object(runner, "connect_timings", side_effect=OSError("no network in tests")):
             yield Path(tmp)

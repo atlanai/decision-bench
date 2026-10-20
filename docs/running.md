@@ -172,8 +172,11 @@ or `make check`. Tests use a local fake endpoint and never call a model.
   but a run that keeps hitting limits will record errors. Retry them later with `--retry-errors`.
 - Proxies and providers may cache responses. Nothing in the harness disables caching, so repeated runs can be
   faster and cheaper than a cold run.
-- Latency includes the network or CLI start-up and depends on `--jobs`; compare latency only between runs made the
-  same way.
+- Latency includes the network or CLI start-up and depends on `--jobs`; compare raw latency only between runs made
+  the same way, from the same client network. Before the rows, a run against an HTTP provider opens 5 connections to
+  the provider's host to measure your network. The published README then gives an estimated server time with that
+  network removed. For a gateway provider (OpenRouter, a LiteLLM proxy) this removes only the path to the gateway, not
+  the path to the backend behind it. See [Latency](protocol.md) in the protocol for the formula and its limits.
 - File locking uses `fcntl`, so runs need Linux or macOS (or WSL on Windows).
 
 ## Levanto Sage 1.3
