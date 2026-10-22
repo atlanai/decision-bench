@@ -14,13 +14,18 @@ import math
 import os
 import platform
 import re
+import socket
+import ssl
+import statistics
 import subprocess
 import threading
 import time
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import __version__, adapters, config, corpus, openai_compat
+from . import __version__, adapters, config, corpus, kev, openai_compat, openrouter_decisions, sage, tev1
 from .corpus import PROMPT_VERSION, canonical, digest, public_input
 from .errors import CallError
 from .metrics import billable
@@ -73,6 +78,22 @@ def write_json(path, value):
     temporary.replace(path)
 
 
+FIXED_ENDPOINTS = {"typesafe": adapters.TYPESAFE_URL, "djev": adapters.DJEV_URL, "sage": sage.URL, "tev1": tev1.URL,
+                   "openrouter-decisions": openrouter_decisions.URL}
+
+
+def endpoint_url(model):
+    """The URL an HTTP provider calls, or None for a CLI provider."""
+    provider = model["provider"]
+    if provider == "openai-compatible":
+        return openai_compat.base_url()
+    if provider == "kev":
+        return kev.endpoint()
+    if provider == "laya":
+        return adapters.laya_endpoint()
+    return FIXED_ENDPOINTS.get(provider)
+
+
 def frozen_config(model, cases, all_cases, manifest, api_model=None):
     """Everything that defines the measurement. Resuming requires an identical frozen configuration."""
     cfg = {"suite": manifest.get("suite"), "corpus_version": manifest.get("version"),
@@ -80,16 +101,8 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
            "model_id": model["id"], "provider": model["provider"], "api_model": api_model or model["model"],
            "request": model.get("request", {}), "vision": bool(model.get("vision")),
            "selected_case_ids": [c["id"] for c in cases]}
-    if model["provider"] == "openai-compatible":
-        cfg["endpoint_id"] = openai_compat.endpoint_id(openai_compat.base_url())
-    elif model["provider"] == "kev":
-        from .kev import endpoint
-        cfg["endpoint_id"] = openai_compat.endpoint_id(endpoint())
-    elif model["provider"] == "laya":
-        cfg["endpoint_id"] = openai_compat.endpoint_id(adapters.laya_endpoint())
-    elif model["provider"] == "openrouter-decisions":
-        from .openrouter_decisions import URL
-        cfg["endpoint_id"] = openai_compat.endpoint_id(URL)
+    if model["provider"] in ("openai-compatible", "kev", "laya", "openrouter-decisions"):
+        cfg["endpoint_id"] = openai_compat.endpoint_id(endpoint_url(model))
     return cfg
 
 
@@ -149,6 +162,57 @@ def preflight(model):
         adapters.executable("claude" if provider == "claude-cli" else "codex")
 
 
+PROBES = 5
+
+
+def connect_timings(host, port, tls, timeout=5):
+    """(DNS, TCP connect, TLS handshake or None) in ms for one fresh connection, opened the way urllib opens one
+    for every request: resolve, try each address in turn, then a default-context TLS handshake."""
+    started = time.perf_counter()
+    addresses = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    resolved = time.perf_counter()
+    for family, kind, proto, _, address in addresses:
+        sock = socket.socket(family, kind, proto)
+        sock.settimeout(timeout)
+        try:
+            sock.connect(address)
+            break
+        except OSError:
+            sock.close()
+    else:
+        raise OSError("No address of the provider host accepted a connection")
+    with sock:
+        connected = time.perf_counter()
+        handshake = None
+        if tls:
+            with ssl.create_default_context().wrap_socket(sock, server_hostname=host):
+                handshake = (time.perf_counter() - connected) * 1000
+    return (resolved - started) * 1000, (connected - resolved) * 1000, handshake
+
+
+def network_baseline(model):
+    """Median DNS, TCP connect and TLS handshake times over fresh connections to the host the adapter calls, so
+    the tester's network can be told apart from the endpoint's latency. Only the numbers are kept, never the host.
+    None for a CLI provider, when a proxy carries the requests (the probe cannot see that path), or when any probe
+    fails: a network failure never fails a run."""
+    url = endpoint_url(model)
+    if url is None:
+        return None
+    parts = urllib.parse.urlsplit(url)
+    if parts.scheme in urllib.request.getproxies() and not urllib.request.proxy_bypass(parts.hostname):
+        return None
+    tls = parts.scheme == "https"
+    print(f"Measuring the network to the provider host ({PROBES} connections)", flush=True)
+    try:
+        port = parts.port or (443 if tls else 80)
+        samples = [connect_timings(parts.hostname, port, tls) for _ in range(PROBES)]
+    except (OSError, ValueError):
+        return None
+    dns, tcp, handshake = zip(*samples)
+    return {"probes": PROBES, "dns_ms": statistics.median(dns), "tcp_connect_ms": statistics.median(tcp),
+            "tls_handshake_ms": statistics.median(handshake) if tls else None}
+
+
 def prepare(args):
     """Resolve the model, selection, frozen configuration and run id without making any call."""
     for name in ("jobs", "max_attempts", "timeout"):
@@ -195,7 +259,8 @@ def _run(args, model, cases, cfg, run_id, folder):
     meta["executions"].append({"started_at": meta["last_started_at"], "git": git_revision(), "jobs": args.jobs,
                                "timeout_seconds": args.timeout, "max_attempts": args.max_attempts,
                                "retry_errors": args.retry_errors, "pending_rows": len(pending),
-                               "rpm": getattr(args, "rpm", None), "global_rpm": getattr(args, "global_rpm", None)})
+                               "rpm": getattr(args, "rpm", None), "global_rpm": getattr(args, "global_rpm", None),
+                               "network_baseline": network_baseline(model) if pending else None})
     write_json(run_path, meta)
     lock = threading.Lock()
     done = len(cases) - len(pending)

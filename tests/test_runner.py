@@ -1,6 +1,7 @@
 """Resume, retries and the attempt ledger, with the provider call mocked."""
 import argparse
 import json
+import socket
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -26,6 +27,78 @@ def response(case, label="a", cost=.01):
                                                   else {"a": .1, "b": .9}}}},
             "usage": {"input_tokens": 20, "output_tokens": 3}, "cost_usd": cost, "cost_basis": "test",
             "payload": {"state": case["state"]}, "output_text": "{}"}
+
+
+def no_proxy(proxies=None):
+    return (patch.object(runner.urllib.request, "getproxies", return_value=proxies or {}),
+            patch.object(runner.urllib.request, "proxy_bypass", return_value=False))
+
+
+class NetworkBaseline(unittest.TestCase):
+    """The tester's network to the provider host is probed once per execution and stored as numbers only."""
+
+    def run_with(self, model, proxies=None):
+        getproxies, bypass = no_proxy(proxies)
+        with getproxies, bypass, patch.object(runner.adapters, "executable", return_value="claude"), \
+                patch.object(runner.adapters, "call", side_effect=lambda m, c, t, a=None: response(c)):
+            meta = runner.run(args(model=model))
+            stored = (runner.runs_dir() / "test-run/run.json").read_text()
+        return meta, stored
+
+    def test_records_the_median_of_fresh_connections_to_the_adapter_host(self):
+        samples = [(2.0, 10.0, 20.0), (1.0, 30.0, 40.0), (1.0, 20.0, 30.0), (9.0, 99.0, 99.0), (1.0, 25.0, 35.0)]
+        env = {"LAYA_BASE_URL": "https://bench-host.example.com/v1", "LAYA_API_KEY": fixtures.FAKE_KEY}
+        with fixtures.repo(env), patch.object(runner, "connect_timings", side_effect=samples) as probe:
+            meta, stored = self.run_with("fake-laya")
+        probe.assert_called_with("bench-host.example.com", 443, True)
+        self.assertEqual(meta["executions"][-1]["network_baseline"],
+                         {"probes": 5, "dns_ms": 1.0, "tcp_connect_ms": 25.0, "tls_handshake_ms": 35.0})
+        self.assertNotIn("bench-host", stored)
+
+    def test_failed_probe_is_null_and_the_run_continues(self):
+        with fixtures.repo(ENV):
+            meta, _ = self.run_with("fake-typesafe")
+            self.assertTrue(runner.connect_timings.called)
+        self.assertEqual(meta["status"], "completed")
+        self.assertIsNone(meta["executions"][-1]["network_baseline"])
+
+    def test_a_resume_with_no_rows_pending_does_not_probe(self):
+        with fixtures.repo(ENV), patch.object(runner, "connect_timings", return_value=(1.0, 20.0, 30.0)) as probe:
+            self.run_with("fake-typesafe")
+            meta, _ = self.run_with("fake-typesafe")
+        self.assertEqual(probe.call_count, runner.PROBES)
+        self.assertIsNotNone(meta["executions"][0]["network_baseline"])
+        self.assertIsNone(meta["executions"][1]["network_baseline"])
+
+    def test_every_http_provider_has_a_host_to_probe(self):
+        env = {"DECISION_BENCH_BASE_URL": "https://a.example.com/v1", "KEV_BASE_URL": "https://b.example.com",
+               "LAYA_BASE_URL": "https://c.example.com/v1"}
+        with patch.dict(runner.os.environ, env):
+            missing = {p for p in runner.config.PROVIDERS - {"claude-cli", "codex-cli"}
+                       if runner.endpoint_url({"provider": p}) is None}
+        self.assertEqual(missing, set())
+
+    def test_probe_tries_each_address_in_turn_like_urllib(self):
+        closed = socket.create_server(("127.0.0.1", 0))
+        closed_address = closed.getsockname()
+        closed.close()
+        with socket.create_server(("127.0.0.1", 0)) as listener:
+            addresses = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", closed_address),
+                         (socket.AF_INET, socket.SOCK_STREAM, 6, "", listener.getsockname())]
+            with patch.object(runner.socket, "getaddrinfo", return_value=addresses):
+                dns, tcp, handshake = runner.connect_timings("bench-host.example.com", 80, False)
+            with patch.object(runner.socket, "getaddrinfo", return_value=addresses[:1]), \
+                    self.assertRaises(OSError):
+                runner.connect_timings("bench-host.example.com", 80, False)
+        self.assertGreaterEqual(tcp, 0)
+        self.assertIsNone(handshake)
+
+    def test_cli_and_proxied_providers_are_null_without_a_probe(self):
+        for model, proxies in [("fake-claude", None), ("fake-typesafe", {"https": "http://proxy.example:3128"})]:
+            with self.subTest(model=model), fixtures.repo(ENV):
+                meta, _ = self.run_with(model, proxies)
+                runner.connect_timings.assert_not_called()
+                self.assertIsNone(meta["executions"][-1]["network_baseline"])
 
 
 class Runner(unittest.TestCase):

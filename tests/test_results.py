@@ -115,6 +115,56 @@ class PublishFlow(unittest.TestCase):
         (folder / "predictions.jsonl").write_text("".join(json.dumps(p) + "\n" for p in predictions))
         self.assertTrue(results.check_published(load_cases(), load_manifest()))
 
+    def publish_with_probe(self, probe, **run):
+        with patch.object(runner.urllib.request, "getproxies", return_value={}), \
+                patch.object(runner, "connect_timings", **probe):
+            run_id = runner.run(run_args(jobs=1, **run))["id"]
+        results.publish(run_id)
+        folder = self.root / "results/mini/fake-model"
+        return json.loads((folder / "metadata.json").read_text()), (folder / "README.md").read_text()
+
+    def test_published_run_carries_the_network_baseline_and_server_time_estimate(self):
+        metadata, readme = self.publish_with_probe({"return_value": (0.0, 0.0, None)})
+        self.assertEqual(metadata["run"]["network_baseline"],
+                         {"probes": 5, "dns_ms": 0.0, "tcp_connect_ms": 0.0, "tls_handshake_ms": None})
+        estimate = metadata["totals"]["server_time_p50_ms_estimate"]
+        self.assertEqual(estimate, metadata["totals"]["latency_p50_ms"])
+        self.assertIn(f"estimated server time {estimate:.0f} ms", readme)
+        self.assertNotIn("127.0.0.1", json.dumps(metadata))
+        self.assertEqual(results.check_published(load_cases(), load_manifest()), [])
+
+    def test_resume_publishes_the_baseline_of_the_execution_that_ran_the_rows(self):
+        first, _ = self.publish_with_probe({"return_value": (1.0, 2.0, None)})
+        again, _ = self.publish_with_probe({"return_value": (9.0, 99.0, None)})
+        self.assertEqual(again["run"]["executions"], 2)
+        self.assertEqual(again["run"]["network_baseline"], first["run"]["network_baseline"])
+        self.assertIsNotNone(again["totals"]["server_time_p50_ms_estimate"])
+
+    def test_rows_run_over_two_networks_have_no_estimate(self):
+        self.publish_with_probe({"return_value": (1.0, 2.0, None)}, max_attempts=1)
+        metadata, readme = self.publish_with_probe({"return_value": (9.0, 99.0, None)}, retry_errors=True)
+        self.assertEqual(metadata["run"]["executions"], 2)
+        self.assertEqual(metadata["coverage"]["rows_error"], 0)
+        self.assertEqual(metadata["run"]["network_baseline"],
+                         {"probes": 5, "dns_ms": 9.0, "tcp_connect_ms": 99.0, "tls_handshake_ms": None})
+        self.assertIsNone(metadata["totals"]["server_time_p50_ms_estimate"])
+        self.assertIn("estimated server time not recorded", readme)
+
+    def test_run_without_a_baseline_shows_not_recorded(self):
+        metadata, readme = self.publish_with_probe({"side_effect": OSError("unreachable")})
+        self.assertIsNone(metadata["run"]["network_baseline"])
+        self.assertIsNone(metadata["totals"]["server_time_p50_ms_estimate"])
+        self.assertIn("estimated server time not recorded", readme)
+
+    def test_server_time_estimate_removes_one_cold_request_of_network(self):
+        baseline = {"probes": 5, "dns_ms": 5.0, "tcp_connect_ms": 255.0, "tls_handshake_ms": 260.0}
+        self.assertEqual(results.server_time_estimate(830.0, baseline), 55.0)
+        self.assertEqual(results.server_time_estimate(30.0, {**baseline, "tls_handshake_ms": None,
+                                                             "tcp_connect_ms": 10.0}), 5.0)
+        self.assertEqual(results.server_time_estimate(182.0, baseline), 0.0)
+        self.assertIsNone(results.server_time_estimate(830.0, None))
+        self.assertIsNone(results.server_time_estimate(None, baseline))
+
     def test_publish_refuses_partial_runs_unless_forced_and_replaces_previous(self):
         partial = runner.run(run_args(limit=2))
         with self.assertRaises(ValueError) as cm:

@@ -104,9 +104,43 @@ estimated from token counts and the per-million-token prices in `config/models.j
 given; cache writes are not priced separately. Unknown cost is `null`, never zero, and totals report the share
 of attempts with a known cost. None of these are verified invoices. Failed attempts that were billed still count.
 
-**Latency.** Wall clock per row, including retries, measured by the harness. For HTTP providers this includes the
-network round trip; for CLIs it includes starting a fresh process. It is not pure inference time. Concurrency
-(`--jobs`) is recorded; throughput is not single-request latency.
+**Latency.** Latency belongs to an endpoint, the model served by the named provider, not to the model alone. It has
+three parts:
+1. Model time.
+2. Provider serving time: hardware, batching, queues and region. This belongs to the vendor, and readers may judge it.
+3. The network between the tester and the provider. This belongs to the tester, not to the vendor.
+
+The comparable number is the time for one decision from the named endpoint, with the tester's network removed or
+held constant.
+
+`latency_ms` is the wall clock per row, including retries, measured by the harness. It includes all three parts.
+Every HTTP request opens a new connection, so before the model starts work it pays a DNS lookup, a TCP connect, a
+TLS handshake and one more round trip to send the request. For CLIs it includes starting a fresh process.
+Concurrency (`--jobs`) is recorded; throughput is not single-request latency. Raw latency stays measured this way so
+that all published runs stay comparable, but compare it only between runs made from the same client network.
+
+**Network baseline.** At the start of each execution that has rows to run, for an HTTP provider, the harness opens 5
+fresh connections to the host the adapter calls, as `urllib` opens one, and records the median DNS lookup, TCP
+connect and TLS handshake times. `run.network_baseline` in `metadata.json` comes from the last execution that had rows
+to run. Only the numbers are kept, never the host, URL or address. The baseline is `null` for CLI providers,
+when a proxy carries the requests, when a probe fails (the run continues), and for runs published before it existed.
+
+**Estimated server time.** `totals.server_time_p50_ms_estimate` is
+`latency_p50_ms - (dns_ms + 2 × tcp_connect_ms + tls_handshake_ms)`, and never below 0. A TCP connect is one round
+trip, so this removes the DNS lookup, the TCP handshake, the measured TLS handshake (one round trip with TLS 1.3, two
+with TLS 1.2) and one round trip for the request and the response. Without a baseline it is "not recorded". It is an
+estimate, and these are its limits:
+- A request body larger than the TCP initial window (about 14 KB) needs more round trips on a new connection, so
+  the estimate is too high. Rows with images are like this.
+- When TLS ends at a CDN or gateway edge near the tester, the baseline measures only the path to that edge. The time
+  from the edge to the model stays in the estimate.
+- For a gateway provider (OpenRouter, a LiteLLM proxy), the baseline measures only the path to the gateway, not the
+  path to the backend behind it. That backend time counts as serving time of the named provider.
+- It subtracts a median network time measured once per execution, not the network time of each request, and the
+  network can change during a long run. When the executions that ran rows recorded different baselines, or some
+  recorded none, the median latency mixes networks and the estimate is `null`.
+
+For a firm latency comparison, run both endpoints from the same client.
 
 **Never recorded:** API keys, endpoint URLs or hostnames (only an opaque `endpoint_id`, a hash of the base URL),
 provider request ids, routing or deployment headers, and local install paths. Error messages are published with

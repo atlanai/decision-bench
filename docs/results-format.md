@@ -53,16 +53,24 @@ without recording either. Concurrency, timeouts and attempt limits are not froze
   "harness": {"version": "0.3.0", "git_commit": "…", "git_dirty": false, "git_commits": ["…"]},
   "run": {"run_id": "…", "status": "completed", "created_at": "…", "completed_at": "…", "published_at": "…",
           "executions": 1, "jobs": 3, "timeout_seconds": 180, "max_attempts": 2,
-          "endpoint_id": "endpoint-…", "platform": {"os": "Linux", "python": "3.12.4"}},
+          "endpoint_id": "endpoint-…", "platform": {"os": "Linux", "python": "3.12.4"},
+          "network_baseline": {"probes": 5, "dns_ms": 2.1, "tcp_connect_ms": 31.0, "tls_handshake_ms": 33.5}},
   "coverage": {"rows_in_corpus": 359, "rows_selected": 359, "rows_completed": 359, "rows_ok": 357,
                "rows_error": 2, "full": true},
   "totals": {"correct": 301, "accuracy": 0.778, "wilson95": [0.734, 0.816], "errors": 2, "cost_usd": 0.19,
-             "cost_coverage": 1.0, "input_tokens": 390000, "output_tokens": 41000, "latency_p50_ms": 1840}
+             "cost_coverage": 1.0, "input_tokens": 390000, "output_tokens": 41000, "latency_p50_ms": 1840,
+             "server_time_p50_ms_estimate": 1742.4}
 }
 ```
 
 `resolved_models` is the model string the provider returned. A proxy may return its own alias, so it does not prove
 which upstream snapshot answered. `published_with_warnings` appears only when `--force` was used.
+
+`network_baseline` holds the median DNS, TCP connect and TLS handshake times of fresh connections from the tester to
+the provider's host, in milliseconds, and never the host. `server_time_p50_ms_estimate` is `latency_p50_ms` less one
+cold request of that network. Both are `null` when no baseline was recorded, and older files do not have them. The
+estimate is also `null` when a resumed run ran its rows over different networks. See
+[protocol.md](protocol.md) for the formula and its limits.
 
 ### `predictions.jsonl`
 
