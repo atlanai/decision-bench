@@ -42,7 +42,9 @@ and are left out of cost coverage.
 3. `python3 -m decision_bench validate` must report no problems. It recomputes `scores.json` from
    `predictions.jsonl` and checks every answer and gold label against the corpus.
 4. Open a pull request with only the `results/<suite>/<model-id>/` folder and the updated leaderboard files. If the
-   model is new, add its entry to `config/models.json` in the same pull request. Say in the description which
-   endpoint type you used (for example "OpenRouter" or "vLLM 0.9 on one H100") and anything unusual about the run.
+   model is new, add its entry to `config/models.json` in the same pull request. Fill in the **Results** fields of
+   the pull request template: endpoint type (for example "OpenRouter" or "vLLM 0.9 on one H100", never the URL), run
+   dates, where the client ran, every full run you made, the kind of key and your affiliation. CI fails until they
+   are filled in.
 
 Do not edit generated files by hand. Maintainers may re-run a submitted model to check it.

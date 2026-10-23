@@ -1112,6 +1112,7 @@
   <url><loc>https://decisionbench.ai/row/dsn-1-check/</loc></url>
   <url><loc>https://decisionbench.ai/row/dsn-1-garage/</loc></url>
   <url><loc>https://decisionbench.ai/row/dsn-1-mic/</loc></url>
+  <url><loc>https://decisionbench.ai/model/amos-1-large/</loc></url>
   <url><loc>https://decisionbench.ai/model/claude-haiku-4.5/</loc></url>
   <url><loc>https://decisionbench.ai/model/claude-sonnet-5/</loc></url>
   <url><loc>https://decisionbench.ai/model/deepseek-v4.1-flash/</loc></url>
