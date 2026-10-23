@@ -78,4 +78,4 @@ A frozen corpus never changes once results exist for it. A fix to a row or label
 
 ## Pull requests
 
-Keep a pull request to one purpose and fill in the template. A pull request that changes `results/` must fill in the **Results** fields, and one that adds or changes an adapter fills in **Provider**. CI runs the tests on Python 3.11 and 3.12, `validate`, the secret scan, a JavaScript syntax check and a check of the Results fields. By contributing, you agree that your code and written examples are released under the MIT licence.
+Keep a pull request to one purpose and fill in the template. A pull request that changes a `results/<suite>/<model-id>/` folder must fill in the **Results** fields, and one that adds or changes an adapter fills in **Provider**. CI runs the tests on Python 3.11 and 3.12, `validate`, the secret scan, the viewer tests and build, and a check of the Results fields. By contributing, you agree that your code and written examples are released under the MIT licence.

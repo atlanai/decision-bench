@@ -9,16 +9,18 @@ import re
 import subprocess
 import sys
 
-RESULTS_FIELDS = ("Model id", "Endpoint type", "Run dates", "Client location", "Full runs made", "Key",
+RESULTS_FIELDS = ("Model id", "Endpoint type", "Run dates", "Client location", "Full runs made", "Key type",
                   "Affiliation")
-FIELD = re.compile(r"^\s*-\s*([^:\n]+):[ \t]*(.*)$", re.MULTILINE)
+MODEL_FOLDER = re.compile(r"^results/[^/]+/[^/]+/")
+HINT = re.compile(r"<!--.*?-->", re.DOTALL)
+FIELD = re.compile(r"^[ \t]*-[ \t]*([^:\n]+):[ \t]*(.*)$", re.MULTILINE)
 
 
 def missing_fields(body, changed_files):
-    if not any(f.startswith("results/") and f.count("/") >= 3 for f in changed_files):
+    if not any(MODEL_FOLDER.match(f) for f in changed_files):
         return []
-    values = {name.strip(): value.strip() for name, value in FIELD.findall(body or "")}
-    return [f for f in RESULTS_FIELDS if not values.get(f) or values[f].startswith("<!--")]
+    values = {name.strip(): value.strip() for name, value in FIELD.findall(HINT.sub("", body or ""))}
+    return [f for f in RESULTS_FIELDS if not values.get(f)]
 
 
 def main():
@@ -28,8 +30,8 @@ def main():
                              check=True).stdout.splitlines()
     missing = missing_fields(body, changed)
     if missing:
-        print("This PR changes results/, so fill in these fields under Results in the PR description: "
-              + ", ".join(missing) + ". See .github/PULL_REQUEST_TEMPLATE.md.")
+        print("This PR changes a results/<suite>/<model-id>/ folder, so fill in these fields under Results in the "
+              "PR description: " + ", ".join(missing) + ". See .github/PULL_REQUEST_TEMPLATE.md.")
         return 1
     return 0
 

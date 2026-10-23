@@ -22,8 +22,8 @@ command output that you can show.
 
 ```sh
 gh pr view <n> --json title,author,headRefOid,files,body,commits
-git fetch origin pull/<n>/head:pr-<n>
-git worktree add /tmp/db-pr<n> pr-<n>
+git fetch origin pull/<n>/head
+git worktree add --detach /tmp/db-pr<n> FETCH_HEAD
 ```
 
 Classify the PR with the kinds in `.github/PULL_REQUEST_TEMPLATE.md`. Note every Results and Provider field that
@@ -63,7 +63,7 @@ the committed leaderboard matches. In `metadata.json`, check:
 
 - `harness.git_commit` is in the PR and `harness.git_dirty` is `false`. If it is `true`, ask what was not committed.
 - coverage is every row, and `corpus.sha256` is the current corpus;
-- the run dates and the request options (`jobs`, `rpm`, `max_attempts`);
+- the run dates and the request options (`run.jobs`, `run.max_attempts`, `run.timeout_seconds`);
 - `run.network_baseline` and `totals.server_time_p50_ms_estimate`, when the harness recorded them.
 
 ## 4. Re-run the model
@@ -74,7 +74,8 @@ Ask the maintainer for a key of the same kind that a customer gets, in `.env`. T
 ln -s <maintainer checkout>/.env /tmp/db-pr<n>/.env
 cd /tmp/db-pr<n>
 python3 -m decision_bench run --model <model-id> --limit 20 --run-id <model-id>-pr<n>-smoke
-python3 -m decision_bench run --model <model-id> --run-id <model-id>-pr<n>-r1 --jobs <same as submitted>
+python3 -m decision_bench run --model <model-id> --run-id <model-id>-pr<n>-r1 \
+    --jobs <run.jobs> --max-attempts <run.max_attempts> --timeout <run.timeout_seconds>
 ```
 
 - Use the submitted request options. Run from a clean tree at the PR head.
@@ -132,4 +133,4 @@ No diagrams, no commands for the author, no notes on how to read a table. Post o
   merges second.
 - After the merge, `python3 -m decision_bench report` and the site build pass on `main`.
 - Clean up: remove the `.env` symlink, copy any run folder you want to keep (`runs/` is ignored), then
-  `git worktree remove /tmp/db-pr<n>` and `git branch -D pr-<n>`.
+  `git worktree remove /tmp/db-pr<n>`.

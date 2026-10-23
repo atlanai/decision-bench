@@ -1,11 +1,7 @@
 """Compare a submitted results folder with our repeat runs of the same model.
 
-Run from the root of the PR checkout, after our runs finished:
-
-    python3 -I .claude/skills/review-provider-pr/compare_runs.py results/bench-v4/<model-id> \
-        --runs <run-id-1>,<run-id-2>,<run-id-3> [--against <published-model-id>]
-
-Exit code 0 when the submitted correct count is inside our range (max + 2 sd), 1 when it is not.
+Step 4 of SKILL.md gives the command. Exit code 0 when the submitted correct count is inside our range
+(max + 2 sd), 1 when it is not or when a run cannot be compared.
 """
 import argparse
 import collections
@@ -18,7 +14,8 @@ from pathlib import Path
 sys.path.insert(0, os.getcwd())
 from decision_bench.corpus import load_cases, load_manifest  # noqa: E402
 from decision_bench.metrics import paired_comparison  # noqa: E402
-from decision_bench.results import export_run, records_from_predictions  # noqa: E402
+from decision_bench.results import _fmt, export_run, records_from_predictions  # noqa: E402
+from decision_bench.runner import read_jsonl  # noqa: E402
 
 MIN_SD = 1.0
 
@@ -26,8 +23,7 @@ MIN_SD = 1.0
 def load_folder(folder):
     folder = Path(folder)
     metadata = json.loads((folder / "metadata.json").read_text())
-    predictions = [json.loads(line) for line in (folder / "predictions.jsonl").read_text().splitlines() if line]
-    return metadata, predictions
+    return metadata, read_jsonl(folder / "predictions.jsonl")
 
 
 def by_row(predictions):
@@ -60,17 +56,19 @@ def main():
         if rows[name].keys() != rows["submitted"].keys():
             sys.exit(f"{name} has {len(rows[name])} rows and the submitted run has {len(rows['submitted'])}. "
                      "Finish the run (the same command resumes it) before you compare.")
+        if any(p["status"] != "ok" for p in rows[name].values()):
+            sys.exit(f"{name} has error rows. Run the same command with --retry-errors before you compare.")
 
     print("| Run | Correct | Accuracy | Median latency | Server time | Errors | git_dirty |")
     print("| --- | --- | --- | --- | --- | --- | --- |")
     counts = {}
-    for name, (metadata, _) in runs.items():
+    for name, (metadata, predictions) in runs.items():
         totals = metadata["totals"]
-        counts[name] = totals["correct"]
-        server = totals.get("server_time_p50_ms_estimate")
-        print(f"| {name} | {totals['correct']} | {totals['accuracy']:.2%} | {totals['latency_p50_ms']:.0f} ms | "
-              f"{f'{server:.0f} ms' if server is not None else 'not recorded'} | {totals['errors']} | "
-              f"{metadata['harness']['git_dirty']} |")
+        counts[name] = sum(p["correct"] for p in predictions)
+        errors = sum(p["status"] != "ok" for p in predictions)
+        print(f"| {name} | {counts[name]} | {counts[name] / len(predictions):.2%} | "
+              f"{_fmt(totals['latency_p50_ms'], 'ms')} | {_fmt(totals.get('server_time_p50_ms_estimate'), 'ms')} | "
+              f"{errors} | {metadata['harness']['git_dirty']} |")
 
     ours_counts = [counts[name] for name in ours]
     mean = statistics.mean(ours_counts)
@@ -100,7 +98,8 @@ def main():
               f"(p(gold) {min(gold_ours):.2f}-{max(gold_ours):.2f})")
 
     def same_probabilities(a, b):
-        return sum(rows[a][i].get("probabilities") == rows[b][i].get("probabilities") for i in submitted)
+        return sum(rows[a][i].get("probabilities") is not None
+                   and rows[a][i].get("probabilities") == rows[b][i].get("probabilities") for i in submitted)
 
     pairs = [same_probabilities(a, b) for n, a in enumerate(ours) for b in ours[n + 1:]]
     print("\nRows with identical probabilities: "

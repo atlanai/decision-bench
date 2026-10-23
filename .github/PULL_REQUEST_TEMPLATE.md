@@ -19,7 +19,8 @@
 
 ## Results
 
-<!-- Required when the PR changes results/: CI fails until every field below has a value.
+<!-- Required when the PR changes a results/<suite>/<model-id>/ folder: CI fails until every field below except
+     "Anything unusual" has a value.
      Delete this section for any other PR. -->
 
 - Model id:
@@ -27,7 +28,7 @@
 - Run dates:
 - Client location: <!-- the cloud region the run came from (for example us-east-1), or the country for a laptop -->
 - Full runs made: <!-- every full run you made with its correct count, and which one this PR publishes -->
-- Key: <!-- a normal customer key, or one with special access (a dedicated deployment, higher limits) -->
+- Key type: <!-- a normal customer key, or one with special access (a dedicated deployment, higher limits). Never the key. -->
 - Affiliation: <!-- your relation to the model vendor or the provider, or "none" -->
 - Anything unusual: <!-- retries, errors, rate limits, git_dirty: true, a model update during the run -->
 
