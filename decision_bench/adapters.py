@@ -22,7 +22,7 @@ TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 DJEV_URL = "https://api.djev.dev/v1/request"
 # Credentials the harness itself uses are never passed to a CLI child process.
 HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
-                   "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL",
+                   "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL", "NACE_API_KEY", "DREX_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
 
@@ -37,6 +37,9 @@ def call(model, case, timeout, api_model=None):
         return completion(model, case, timeout, api_model)
     if provider == "kev":
         from .kev import completion
+        return completion(model, case, timeout, api_model)
+    if provider == "drex":
+        from .drex import completion
         return completion(model, case, timeout, api_model)
     if provider == "typesafe":
         return typesafe(model, case, timeout, api_model)
