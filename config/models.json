@@ -452,6 +452,17 @@
       "color": "#2b4bff",
       "notes": "Amos 1 large (27B, open weights at huggingface.co/mukaddamzaid/amos-1-large) served by its own System One server; text and image evidence (images sent as data URIs), native probabilities in one forward pass.",
       "vision": true
+    },
+    {
+      "id": "vllm-sr-d3",
+      "label": "vLLM-SR Decision 3.0 d3 (27B)",
+      "short_label": "d3",
+      "vendor": "vLLM Semantic Router",
+      "provider": "laya",
+      "model": "vllm-sr/d3",
+      "color": "#0f766e",
+      "notes": "d3 (27B, Apache-2.0 open weights at huggingface.co/vllm-sr/d3) through a System One server (POST /v1/systemone); text and image evidence (images sent as data URIs), native choice probabilities in one forward pass. Run on the hosted vLLM Semantic Router API; the open weights also serve with `vllm serve vllm-sr/d3` or the repository's own d3_server.py.",
+      "vision": true
     }
   ]
 }
