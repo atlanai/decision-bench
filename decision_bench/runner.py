@@ -89,6 +89,9 @@ def endpoint_url(model):
         return openai_compat.base_url()
     if provider == "kev":
         return kev.endpoint()
+    if provider == "drex":
+        from .drex import endpoint
+        return endpoint()
     if provider == "laya":
         return adapters.laya_endpoint()
     return FIXED_ENDPOINTS.get(provider)
@@ -101,7 +104,7 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
            "model_id": model["id"], "provider": model["provider"], "api_model": api_model or model["model"],
            "request": model.get("request", {}), "vision": bool(model.get("vision")),
            "selected_case_ids": [c["id"] for c in cases]}
-    if model["provider"] in ("openai-compatible", "kev", "laya", "openrouter-decisions"):
+    if model["provider"] in ("openai-compatible", "kev", "drex", "laya", "openrouter-decisions"):
         cfg["endpoint_id"] = openai_compat.endpoint_id(endpoint_url(model))
     return cfg
 
@@ -153,6 +156,10 @@ def preflight(model):
     elif provider == "kev":
         from .kev import endpoint, api_key
         api_key(endpoint())
+    elif provider == "drex":
+        from .drex import endpoint, api_key
+        endpoint()
+        api_key()
     elif provider == "laya":
         adapters.laya_key(adapters.laya_endpoint())
     elif provider in ("claude-cli", "codex-cli"):

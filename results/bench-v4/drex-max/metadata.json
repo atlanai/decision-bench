@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "drex-max",
+    "label": "Drex Max",
+    "short_label": "Drex Max",
+    "vendor": "Nace",
+    "provider": "drex",
+    "color": "#e9693c",
+    "vision": true,
+    "api_model": "drex-max",
+    "resolved_models": [
+      "drex-max"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.06,
+    "output_per_mtok": 0,
+    "source_url": "https://[ENDPOINT]/docs/drex/guides/drex-max",
+    "as_of": "2026-10"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "5079d93d208375a5f5de690bf88a03567c3d32fb",
+    "git_dirty": true,
+    "git_commits": [
+      "5079d93d208375a5f5de690bf88a03567c3d32fb"
+    ]
+  },
+  "run": {
+    "run_id": "drex-max-bench-v4-717f5238",
+    "status": "completed",
+    "created_at": "2026-10-20T18:54:11.094253+00:00",
+    "completed_at": "2026-10-20T19:03:54.965094+00:00",
+    "published_at": "2026-10-20T19:03:59.663603+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 90,
+    "max_attempts": 3,
+    "endpoint_id": "endpoint-d9060b3a42eb",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.6"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1007,
+    "accuracy": 0.9402427637721755,
+    "wilson95": [
+      0.9244112465426017,
+      0.952927330602161
+    ],
+    "errors": 0,
+    "cost_usd": 0.05428728,
+    "cost_coverage": 1.0,
+    "input_tokens": 904788,
+    "output_tokens": 174816,
+    "latency_p50_ms": 189.2403750680387
+  }
+}

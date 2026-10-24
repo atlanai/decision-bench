@@ -8,7 +8,7 @@ import re
 
 from . import corpus
 
-PROVIDERS = {"openai-compatible", "openrouter-decisions", "typesafe", "kev", "djev", "sage", "tev1", "laya", "claude-cli", "codex-cli"}
+PROVIDERS = {"openai-compatible", "openrouter-decisions", "typesafe", "kev", "drex", "djev", "sage", "tev1", "laya", "claude-cli", "codex-cli"}
 MODEL_ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
 REQUEST_KEYS = {
     "openrouter-decisions": set(),
@@ -16,6 +16,7 @@ REQUEST_KEYS = {
                           "temperature", "json_wrapper_policy"},
     "typesafe": set(),
     "kev": set(),
+    "drex": set(),
     "djev": set(),
     "sage": set(),
     "tev1": set(),

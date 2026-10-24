@@ -72,7 +72,7 @@ class NetworkBaseline(unittest.TestCase):
 
     def test_every_http_provider_has_a_host_to_probe(self):
         env = {"DECISION_BENCH_BASE_URL": "https://a.example.com/v1", "KEV_BASE_URL": "https://b.example.com",
-               "LAYA_BASE_URL": "https://c.example.com/v1"}
+               "DREX_BASE_URL": "https://drex.example.com/v1", "LAYA_BASE_URL": "https://c.example.com/v1"}
         with patch.dict(runner.os.environ, env):
             missing = {p for p in runner.config.PROVIDERS - {"claude-cli", "codex-cli"}
                        if runner.endpoint_url({"provider": p}) is None}
