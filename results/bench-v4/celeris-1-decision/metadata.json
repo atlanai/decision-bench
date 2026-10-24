@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "celeris-1-decision",
+    "label": "Celeris-1 Decision",
+    "short_label": "Celeris Decision",
+    "vendor": "Celeris",
+    "provider": "celeris",
+    "color": "#c1352b",
+    "vision": true,
+    "api_model": "celeris-1-decision",
+    "resolved_models": [
+      "celeris-1-decision"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.04,
+    "output_per_mtok": 0,
+    "source_url": "https://celeris.ai/celeris-1-decision",
+    "as_of": "2026-10",
+    "note": "Published input rate; output tokens are not billed."
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "7359645e7aafa461d1297520a867f682f333988f",
+    "git_dirty": false,
+    "git_commits": [
+      "7359645e7aafa461d1297520a867f682f333988f"
+    ]
+  },
+  "run": {
+    "run_id": "celeris-1-decision-bench-v4-7359645-use1",
+    "status": "completed",
+    "created_at": "2026-10-14T17:56:08.158787+00:00",
+    "completed_at": "2026-10-14T17:57:01.326571+00:00",
+    "published_at": "2026-10-14T17:58:35.256625+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": null,
+    "platform": {
+      "os": "Linux",
+      "python": "3.12.3"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1008,
+    "accuracy": 0.9411764705882353,
+    "wilson95": [
+      0.925444771056673,
+      0.95375454538214
+    ],
+    "errors": 0,
+    "cost_usd": 0.03524616,
+    "cost_coverage": 1.0,
+    "input_tokens": 881154,
+    "output_tokens": 0,
+    "latency_p50_ms": 181.51758999999856
+  }
+}

@@ -452,6 +452,24 @@
       "color": "#2b4bff",
       "notes": "Amos 1 large (27B, open weights at huggingface.co/mukaddamzaid/amos-1-large) served by its own System One server; text and image evidence (images sent as data URIs), native probabilities in one forward pass.",
       "vision": true
+    },
+    {
+      "id": "celeris-1-decision",
+      "label": "Celeris-1 Decision",
+      "short_label": "Celeris Decision",
+      "vendor": "Celeris",
+      "provider": "celeris",
+      "model": "celeris-1-decision",
+      "color": "#c1352b",
+      "pricing": {
+        "input_per_mtok": 0.04,
+        "output_per_mtok": 0,
+        "source_url": "https://celeris.ai/celeris-1-decision",
+        "as_of": "2026-10",
+        "note": "Published input rate; output tokens are not billed."
+      },
+      "notes": "Hosted System One API. Text and image evidence (images sent as data URIs in x_celeris.images), native probabilities.",
+      "vision": true
     }
   ]
 }

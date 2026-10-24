@@ -28,6 +28,7 @@ precedence over `.env`.
 | `DJEV_API_KEY` | `djev` | Key for the hosted DiffusionGemma-Jev API at `https://api.djev.dev`. |
 | `LAYA_BASE_URL` | `laya` | Laya System One base URL ending in `/v1`. Use `https://api.impossibl.com/v1` or a self-hosted `http://localhost:8000/v1`. |
 | `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
+| `CELERIS_API_KEY` | `celeris` | Key for `https://inference.celeris.ai`, from the Celeris console. |
 
 Examples of `DECISION_BENCH_BASE_URL`: `https://api.openai.com/v1`, `https://openrouter.ai/api/v1`,
 `http://localhost:4000/v1` (a local LiteLLM proxy), `http://localhost:8000/v1` (vLLM).
@@ -50,6 +51,12 @@ Djev uses the same typed answer format through its hosted `POST /v1/request` end
 The configured $0.035 per million input tokens is the announced rate, so reported cost is an
 estimate until the API supplies a charged amount. This entry evaluates text rows; image input
 is not enabled in the Djev adapter. See [Djev's API contract](https://djev.dev/llms.txt).
+
+Celeris uses the same typed System One question format. Set `CELERIS_API_KEY` in `.env`, then run
+`python3 -m decision_bench run --model celeris-1-decision --limit 5`. The model entry has `"vision": true`;
+the adapter sends a row's images as data URIs in Celeris's `x_celeris.images` map, which is where its
+endpoint reads them, instead of the top-level `images` list. Output tokens are not billed, so cost is the
+published input rate times reported input tokens.
 
 ## Choose a model
 

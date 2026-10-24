@@ -144,6 +144,9 @@ def preflight(model):
         api_key()
     elif provider == "typesafe" and not config.env_value("TYPESAFE_API_KEY"):
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
+    elif provider == "celeris":
+        from .celeris import api_key
+        api_key()
     elif provider == "djev" and not config.env_value("DJEV_API_KEY"):
         raise CallError("DJEV_API_KEY is not set; see .env.example", status="auth_missing")
     elif provider == "tev1" and not config.env_value("TOGETHER_API_KEY"):
