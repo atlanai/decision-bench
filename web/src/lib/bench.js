@@ -133,7 +133,64 @@ export const macroF1 = (run, tasks) => meanOf(tasks.map(t => {
 }));
 /* Fit verdict: the plain answer to "can I use this model for this task?" */
 export function verdict(m) { if (!m || m.accuracy == null || !m.questions) return {k: 'na', t: m?.excluded ? 'Not evaluated' : 'Not run'}; const [lo] = m.wilson; if (m.accuracy >= .9 && lo >= .85) return {k: 'ok', t: 'Fits'}; if (m.accuracy >= .8) return {k: 'risk', t: 'Risky'}; return {k: 'no', t: 'Not fit'}; }
-export const rankOf = (m, ms) => { const hi = m.wilson?.[1] ?? m.accuracy; return 1 + ms.filter(o => o !== m && (o.wilson?.[0] ?? o.accuracy) > hi).length; };
+/* Rank spread after Mogstad, Romano, Shaikh and Wilhelm, "Inference for Ranks": a 95% set of plausible ranks for each
+   model. Each pair is compared on the rows both models answered. Rows are resampled within their task with one draw
+   shared by all models, so the pairing is kept and the tasks are treated as fixed. The max-t step makes the set hold
+   over all of one model's comparisons at once. Pairs on the same rows share one weighted sum per model, so a draw
+   costs models x row sets, not pairs. models[i][row] is [correct, questions] or null; returns [best, worst]. */
+export function rankSpreads(models, tasks, draws = 1000, seed = 1) {
+  const n = models.length, byTask = new Map(), sets = new Map(), pairs = [];
+  for (const [r, t] of tasks.entries()) { if (!byTask.has(t)) byTask.set(t, []); byTask.get(t).push(r); }
+  const sumsOn = (rows, i) => {
+    const key = rows.join();
+    if (!sets.has(key)) sets.set(key, {rows: Int32Array.from(rows), sums: new Map()});
+    const set = sets.get(key);
+    if (!set.sums.has(i)) set.sums.set(i, {k: Int32Array.from(rows, r => models[i][r][0]), q: Int32Array.from(rows, r => models[i][r][1]), s: 0, n: 0});
+    return set.sums.get(i);
+  };
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+    const rows = [...tasks.keys()].filter(r => models[i][r] && models[j][r]);
+    if (rows.length) pairs.push({a: sumsOn(rows, i), b: sumsOn(rows, j), i, j, boot: new Float64Array(draws)});
+  }
+  const random = mulberry32(seed), weights = new Int32Array(tasks.length);
+  const resum = w => { for (const {rows, sums} of sets.values()) for (const m of sums.values()) { m.s = m.n = 0; for (let x = 0; x < rows.length; x++) { m.s += w[rows[x]] * m.k[x]; m.n += w[rows[x]] * m.q[x]; } } };
+  const diff = p => p.a.n && p.b.n ? p.a.s / p.a.n - p.b.s / p.b.n : p.d;
+  resum(weights.fill(1));
+  for (const p of pairs) p.d = diff(p);
+  for (let b = 0; b < draws; b++) {
+    weights.fill(0);
+    for (const g of byTask.values()) for (let k = 0; k < g.length; k++) weights[g[Math.floor(random() * g.length)]]++;
+    resum(weights);
+    for (const p of pairs) p.boot[b] = diff(p);
+  }
+  for (const p of pairs) { const mean = p.boot.reduce((x, y) => x + y, 0) / draws; p.se = Math.sqrt(p.boot.reduce((x, y) => x + (y - mean) ** 2, 0) / (draws - 1)); }
+  return models.map((_, i) => {
+    const mine = pairs.filter(p => p.i === i || p.j === i), varying = mine.filter(p => p.se > 0);
+    const maxT = Array.from({length: draws}, (_, b) => Math.max(0, ...varying.map(p => Math.abs(p.boot[b] - p.d) / p.se)));
+    const c = quantile(maxT, .95);
+    let best = 1, worst = n;
+    for (const p of mine) {
+      const ahead = (p.i === i ? 1 : -1) * p.d, margin = c * p.se;
+      if (ahead - margin > 0) worst--;
+      else if (ahead + margin < 0) best++;
+    }
+    return [best, worst];
+  });
+}
+function mulberry32(seed) {
+  return () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+const rankCache = new Map();
+/* Rank spreads for the runs with scored rows in this view, keyed by run id. */
+export function ranks(runs, cases) {
+  const scored = runs.filter(r => subsetMetrics(r, cases).questions);
+  const key = `${scored.map(r => r.id).join()}|${cases.length}|${cases[0]?.id}|${cases.at(-1)?.id}`;
+  if (rankCache.has(key)) return rankCache.get(key);
+  const models = scored.map(r => cases.map(c => { const v = result(r.id, c.id); return v?.scores.length ? [v.scores.filter(s => s.correct).length, v.scores.length] : null; }));
+  const spreads = rankSpreads(models, cases.map(c => c.task)), out = new Map(scored.map((r, i) => [r.id, spreads[i]]));
+  rankCache.set(key, out); return out;
+}
+export const rankText = s => !s ? '—' : s[0] === s[1] ? String(s[0]) : `${s[0]}–${s[1]}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
 export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);
 

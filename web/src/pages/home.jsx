@@ -167,7 +167,7 @@ function Leaderboard({route, runs, cases, more}) {
   const cat = route.q.get('category') || '', cols = cat ? B.taskOrder().filter(t => cases.some(c => c.task === t)) : B.categoryOrder().filter(k => cases.some(c => B.catKey(c) === k));
   const colCases = k => cases.filter(c => (cat ? c.task : B.catKey(c)) === k), colName = k => cat ? B.taskName(k) : B.catInfo(k).name, colHref = k => cat ? taskHref(k) : catHref(k);
   const tasks = [...new Set(cases.map(c => c.task))];
-  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), all = metrics.map(([, m]) => m);
+  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), all = metrics.map(([, m]) => m), rank = B.ranks(runs, cases);
   const los = metrics.flatMap(([, m]) => m.wilson || []), [d0] = los.length ? zoomDomain(los, .1) : [0], cx = v => (v - d0) / (1 - d0 || 1) * 56;
   const value = (m, key, r) => key.startsWith('col:') ? B.subsetMetrics(r, colCases(key.slice(4))).accuracy : {accuracy: m.accuracy, latency: m.latency.p50, cost: m.costPer1k, tokens: m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0), ece: m.ece, brier: m.brier, macro: B.macroF1(r, tasks), errors: m.errors}[key];
   const sorted = metrics.slice().sort(([ra, a], [rb, b]) => { const va = value(a, sort.key, ra), vb = value(b, sort.key, rb); if (va == null) return 1; if (vb == null) return -1; return sort.dir === 'asc' ? va - vb : vb - va; });
@@ -183,7 +183,7 @@ function Leaderboard({route, runs, cases, more}) {
       <TableScroll label="Leaderboard table">
         <table className="w-full text-sm">
           <thead><tr className="border-b text-left align-bottom [&>th]:py-2">
-            <Th title="1 + the number of models whose 95% interval lies entirely above this one" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
+            <Th title="95% range of plausible places: best is 1 + the models reliably ahead, worst is the count minus the models reliably behind" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
@@ -193,7 +193,7 @@ function Leaderboard({route, runs, cases, more}) {
           <tbody>
             {sorted.map(([r, m]) => { const ci = m.wilson, tp = m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0);
               return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40">
-                <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{m.questions ? B.rankOf(m, all) : '—'}</td>
+                <td className="py-2.5 pl-5 whitespace-nowrap text-muted-foreground tabular-nums">{B.rankText(rank.get(r.id))}</td>
                 {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
                 <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <sup className="text-[10px] text-muted-foreground" title={`${m.excluded} image-only cases excluded; ${m.questions} scored. Image required but not sent.`}>**</sup>}</span></td>
                 <td className="px-3 py-2.5" data-tip={tip(B.runName(r), [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(ci)], ['Correct', `${m.correct}/${m.questions}`]])}>
@@ -212,7 +212,7 @@ function Leaderboard({route, runs, cases, more}) {
       </TableScroll>
     </div>
     <Notes items={[
-      'Overlapping 95% intervals share a rank.',
+      'Rank: 95% range of plausible places, from paired row comparisons. Overlapping ranges are not reliably different.',
       B.allCases.some(c => B.isImageTask(c.task)) && '** Image-only cases excluded when the image was not sent. N/E = not evaluated.',
       partial && '* Cost known for part of the rows.',
       B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
@@ -233,7 +233,7 @@ function useSettle(ref, key) {
 const BY = {accuracy: ['Most accurate', m => m.accuracy, -1, m => pct(m.accuracy)], latency: ['Fastest', m => m.latency.p50, 1, m => ms(m.latency.p50)], cost: ['Cheapest', m => m.costPer1k, 1, m => money(m.costPer1k)]};
 function LeaderList({runs, cases}) {
   const [key, setKey] = useState('accuracy'), box = useRef(null), [, val, dir, show] = BY[key];
-  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), all = metrics.map(([, m]) => m);
+  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), rank = B.ranks(runs, cases);
   const sorted = metrics.slice().sort(([, a], [, b]) => { const va = val(a), vb = val(b); if (va == null) return 1; if (vb == null) return -1; return dir * (va - vb) || b.accuracy - a.accuracy; });
   const los = metrics.flatMap(([, m]) => m.wilson || []), [d0] = los.length ? zoomDomain(los, .1) : [0], cx = v => `${(v - d0) / (1 - d0 || 1) * 100}%`;
   useSettle(box, key);
@@ -245,14 +245,14 @@ function LeaderList({runs, cases}) {
     <div ref={box}><List>
       {sorted.map(([r, m], i) => { const k = B.keyOf(r), id = B.ident(r), ci = m.wilson;
         return <Item key={r.id} data-flip={r.id} href={modelHref(k)} chevron={false}
-          lead={<><span className="w-5 text-center text-[13px] text-muted-foreground tabular-nums">{key === 'accuracy' ? B.rankOf(m, all) : i + 1}</span><Logo k={k} size={30} className="ml-2 rounded-lg" /></>}
+          lead={<><span className="w-10 text-center text-[13px] whitespace-nowrap text-muted-foreground tabular-nums">{key === 'accuracy' ? B.rankText(rank.get(r.id)) : i + 1}</span><Logo k={k} size={30} className="ml-2 rounded-lg" /></>}
           title={id.name} sub={<>{id.iface && id.iface !== 'API' && <>{id.iface} · </>}{others(m)}</>}
           trail={<span className="flex flex-col items-end gap-1.5">
             <span className="text-[15px] font-semibold tabular-nums">{show(m)}</span>
             {key === 'accuracy' && ci && <span className="relative block h-1.5 w-14" aria-hidden="true"><i className="absolute inset-x-0 top-[2.5px] h-px bg-border" /><i className="absolute top-0.5 h-0.5 rounded-full bg-foreground/25" style={{left: cx(ci[0]), width: `calc(${cx(ci[1])} - ${cx(ci[0])})`}} /><b className="absolute top-0 h-1.5 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}
           </span>} />; })}
     </List></div>
-    <Notes items={[key === 'accuracy' && 'Overlapping 95% intervals share a rank.', B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => B.ident(r).short).join(', ')}.`, 'Tap a model for its fit by use case.']} />
+    <Notes items={[key === 'accuracy' && 'Rank: 95% range of plausible places, from paired row comparisons. Overlapping ranges are not reliably different.', B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => B.ident(r).short).join(', ')}.`, 'Tap a model for its fit by use case.']} />
   </>;
 }
 
