@@ -10,7 +10,6 @@ from . import corpus
 
 PROVIDERS = {"openai-compatible", "openrouter-decisions", "typesafe", "kev", "drex", "djev", "sage", "tev1", "laya", "claude-cli", "codex-cli"}
 MODEL_ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
-LOGO = re.compile(r"[a-z0-9][a-z0-9.-]{0,62}")
 REQUEST_KEYS = {
     "openrouter-decisions": set(),
     "openai-compatible": {"response_format", "token_limit_field", "max_output_tokens", "reasoning_effort",
@@ -26,7 +25,7 @@ REQUEST_KEYS = {
     "codex-cli": {"reasoning_effort"},
 }
 MODEL_KEYS = {"id", "label", "short_label", "vendor", "provider", "model", "color", "request", "pricing", "notes",
-              "vision", "logo"}
+              "vision"}
 PRICING_KEYS = {"input_per_mtok", "cached_input_per_mtok", "output_per_mtok", "source_url", "as_of", "note"}
 
 
@@ -71,8 +70,6 @@ def _check_model(m):
         raise ConfigError(f"{where}: token_limit_field must be max_tokens or max_completion_tokens")
     if request.get("json_wrapper_policy", "allow_single_code_fence") not in ("allow_single_code_fence", "strict"):
         raise ConfigError(f"{where}: json_wrapper_policy must be allow_single_code_fence or strict")
-    if "logo" in m and not (isinstance(m["logo"], str) and LOGO.fullmatch(m["logo"])):
-        raise ConfigError(f"{where}: logo is the vendor's domain (for example nace.ai) for site/assets/logos/<logo>.png")
     if "vision" in m and not isinstance(m["vision"], bool):
         raise ConfigError(f"{where}: vision must be true or false")
     pricing = m.get("pricing")
@@ -87,15 +84,27 @@ def _check_model(m):
             raise ConfigError(f"{where}: pricing.source_url must be an https URL")
 
 
+def _read():
+    return json.loads((corpus.ROOT / "config/models.json").read_text())
+
+
 def load_models():
-    data = json.loads((corpus.ROOT / "config/models.json").read_text())
-    models = data.get("models", [])
+    models = _read().get("models", [])
     ids = [m.get("id") for m in models]
     if len(ids) != len(set(ids)):
         raise ConfigError("config/models.json: duplicate model ids")
     for m in models:
         _check_model(m)
     return models
+
+
+def load_logos():
+    """Vendor name to the vendor's domain, which names site/assets/logos/<domain>.png."""
+    logos = _read().get("logos", {})
+    for vendor, domain in logos.items():
+        if not isinstance(domain, str) or not MODEL_ID.fullmatch(domain):
+            raise ConfigError(f'config/models.json logos "{vendor}": use the vendor\'s domain, for example google.com')
+    return logos
 
 
 def get_model(model_id):
@@ -110,17 +119,6 @@ def display(m):
     return {"id": m["id"], "label": m["label"], "short_label": m.get("short_label") or m["label"],
             "vendor": m["vendor"], "provider": m["provider"], "color": m.get("color"),
             "vision": bool(m.get("vision"))}
-
-
-def logo(model, models):
-    """The model's own logo, else the logo of a configured model from the same vendor, else None."""
-    if model.get("logo"):
-        return model["logo"]
-    vendor = (model.get("vendor") or "").lower()
-    for m in models:
-        if m.get("logo") and m["vendor"].lower() == vendor:
-            return m["logo"]
-    return None
 
 
 def estimate_cost(pricing, usage):

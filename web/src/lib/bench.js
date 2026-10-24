@@ -24,8 +24,8 @@ const IFACE = {'openai-compatible': 'API', 'openrouter-decisions': 'API', typesa
 const PALETTE = ['#2563eb', '#7c3aed', '#0f766e', '#d97706', '#db2777', '#0891b2', '#65a30d', '#c2410c', '#6d28d9', '#475569'];
 function registerModel(m, configured) {
   if (!m?.id || MODELS[m.id]) return;
-  const hash = [...m.id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0), vendor = m.vendor || '';
-  MODELS[m.id] = {id: m.id, name: m.label || m.id, short: m.short_label || m.label || m.id, vendor, iface: IFACE[m.provider] || m.provider || '', provider: m.provider, color: m.color || PALETTE[hash % PALETTE.length], logo: m.logo ? `assets/logos/${m.logo}.png` : null, vision: !!m.vision, configured, api_model: m.api_model, request: m.request, pricing: m.pricing};
+  const hash = [...m.id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0), vendor = m.vendor || '', logo = data?.logos?.[vendor];
+  MODELS[m.id] = {id: m.id, name: m.label || m.id, short: m.short_label || m.label || m.id, vendor, iface: IFACE[m.provider] || m.provider || '', provider: m.provider, color: m.color || PALETTE[hash % PALETTE.length], logo: logo ? `assets/logos/${logo}.png` : null, vision: !!m.vision, configured, api_model: m.api_model, request: m.request, pricing: m.pricing};
   ORDER.push(m.id);
 }
 export const keyOf = r => r.model_id || r.model?.id || r.config?.model_id;

@@ -86,12 +86,8 @@ def build(include_runs=False):
             if paired:
                 comparisons.append({"a": a["id"], "b": b["id"], "corpus_sha256": manifest["sha256"], **paired})
     published = sum(r["source"] == "published" for r in runs)
-    configured = config.load_models()
     models = [{**config.display(m), "api_model": m["model"], "request": m.get("request", {}),
-               "pricing": m.get("pricing"), "vision": bool(m.get("vision")), "logo": config.logo(m, configured)}
-              for m in configured]
-    for run in runs:
-        run["model"]["logo"] = config.logo(run["model"], configured)
+               "pricing": m.get("pricing")} for m in config.load_models()]
     output = {"schema_version": DATA_SCHEMA_VERSION, "generated_at": datetime.now(timezone.utc).isoformat(),
               "suite": suite, "corpus_sha256": manifest["sha256"], "manifest": manifest,
               "inventory": {"cases": len(cases), "questions": sum(len(c["questions"]) for c in cases),
@@ -99,6 +95,7 @@ def build(include_runs=False):
                             "models_configured": len(models), "runs": len(runs), "published_runs": published},
               "prompt": {"version": PROMPT_VERSION, "system": SYSTEM},
               "models": models,
+              "logos": config.load_logos(),
               "leaderboard": leaderboard(suite, manifest=manifest)["models"],
               "runs": runs,
               "results": [r for rid in records for r in records[rid]],

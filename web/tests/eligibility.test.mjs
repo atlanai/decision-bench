@@ -24,6 +24,9 @@ test('Jev scores exclude blind icon guesses but preserve them for audit', () => 
   assert.equal(B.subsetMetrics(run,B.taskRows('FIN-3')).questions,30);
   assert.ok(!B.caseStats(c).dots.some(d=>d.k==='jev-1.13'));
 });
+test('every evaluated model shows its vendor logo', () => {
+  for (const r of B.RUNS) assert.match(B.M(B.keyOf(r)).logo || '', /^assets\/logos\/[a-z0-9.-]+\.png$/, B.keyOf(r));
+});
 test('vision-model icon scores remain intact', () => {
  const run=B.RUNS.find(r=>B.keyOf(r)==='gemini-3.5-flash');
  assert.equal(B.subsetMetrics(run,B.taskRows('DSN-1')).questions,30);

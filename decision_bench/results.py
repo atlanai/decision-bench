@@ -386,21 +386,23 @@ def check_published(cases, manifest):
     problems = []
     case_map = {c["id"]: c for c in cases}
     suite = manifest.get("suite")
-    models = config.load_models()
-    configured = {m["id"]: m for m in models}
+    logos = config.load_logos()
+    for vendor, domain in logos.items():
+        if not (corpus.ROOT / f"site/assets/logos/{domain}.png").is_file():
+            problems.append(f'config/models.json logos "{vendor}": site/assets/logos/{domain}.png is missing; add the '
+                            "vendor's square PNG logo")
+    vendors = {m["id"]: m["vendor"] for m in config.load_models()}
     for metadata, predictions, scores in load_published(suite):
-        model_id = metadata.get("model", {}).get("id")
-        where = f"results/{suite}/{model_id}"
-        logo = config.logo(configured.get(model_id) or metadata.get("model", {}), models)
-        if not logo:
-            problems.append(f'{where}: config/models.json has no "logo" for this model. Set it to the vendor\'s domain '
-                            "and add a square PNG at site/assets/logos/<logo>.png")
-        elif not (corpus.ROOT / f"site/assets/logos/{logo}.png").is_file():
-            problems.append(f"{where}: site/assets/logos/{logo}.png is missing; add the vendor's square PNG logo")
+        model = metadata.get("model", {})
+        where = f"results/{suite}/{model.get('id')}"
         if metadata.get("corpus", {}).get("sha256") != manifest["sha256"]:
             problems.append(f"{where}: published on corpus {metadata.get('corpus', {}).get('sha256', '')[:12]}, "
                             "not the current one")
             continue
+        vendor = vendors.get(model.get("id"), model.get("vendor"))
+        if vendor not in logos:
+            problems.append(f'{where}: no logo for vendor "{vendor}". Add "{vendor}": "<vendor domain>" to "logos" in '
+                            "config/models.json and a square PNG at site/assets/logos/<vendor domain>.png")
         seen = set()
         for p in predictions:
             c = case_map.get(p.get("row_id"))

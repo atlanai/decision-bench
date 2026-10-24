@@ -16,8 +16,7 @@ class Config(unittest.TestCase):
                dict(good, base_url="https://host"), dict(good, request={"api_base": "x"}),
                dict(good, request={"response_format": "xml"}),
                dict(good, pricing={"input_per_mtok": -1, "output_per_mtok": 1, "source_url": "https://e.com"}),
-               dict(good, pricing={"input_per_mtok": 1, "output_per_mtok": 1, "source_url": "http://e.com"}),
-               dict(good, logo="../secrets"), dict(good, logo="logos/x.png"), dict(good, logo="")]
+               dict(good, pricing={"input_per_mtok": 1, "output_per_mtok": 1, "source_url": "http://e.com"})]
         with fixtures.repo() as root:
             for entry in bad:
                 self.write(root, [entry])
@@ -31,11 +30,13 @@ class Config(unittest.TestCase):
             with self.assertRaises(config.ConfigError):
                 config.get_model("missing")
 
-    def test_a_model_without_a_logo_uses_its_vendors_logo(self):
-        configured = [{"id": "a", "vendor": "OpenAI", "logo": "openai.com"}, {"id": "b", "vendor": "Nace"}]
-        self.assertEqual(config.logo({"id": "retired", "vendor": "openai"}, configured), "openai.com")
-        self.assertEqual(config.logo({"id": "own", "vendor": "OpenAI", "logo": "own.ai"}, configured), "own.ai")
-        self.assertIsNone(config.logo(configured[1], configured))
+    def test_logos_name_a_vendor_domain(self):
+        with fixtures.repo() as root:
+            self.assertEqual(config.load_logos(), {"Test": "example.com"})
+            for domain in ("../secrets", "logos/x.png", "", 1):
+                (root / "config/models.json").write_text(json.dumps({"models": [], "logos": {"Test": domain}}))
+                with self.assertRaises(config.ConfigError, msg=repr(domain)):
+                    config.load_logos()
 
     def test_env_file_is_read_after_the_environment(self):
         with fixtures.repo({"DECISION_BENCH_API_KEY": "from-env"}) as root:

@@ -73,7 +73,6 @@ Each entry:
 {
   "id": "gemini-3.5-flash",              // our stable slug: run ids and results/ paths use it
   "label": "Gemini 3.5 Flash", "short_label": "Gemini Flash", "vendor": "Google", "color": "#2563eb",
-  "logo": "google.com",                  // vendor's domain: site/assets/logos/google.com.png, a square PNG
   "provider": "openai-compatible",       // openai-compatible | typesafe | djev | sage | laya | claude-cli | codex-cli
   "model": "gemini-3.5-flash",           // the model name sent to the provider
   "request": {"response_format": "json_schema", "token_limit_field": "max_tokens", "max_output_tokens": 8192,
@@ -86,8 +85,11 @@ Each entry:
 The `model` names in the committed config are the names one particular proxy used. Your endpoint may call the same
 model something else (for example `google/gemini-3.5-flash` on OpenRouter). Pass `--api-model <name>` to send a
 different name without editing the config; it is recorded in the run. To add a model, add an entry and open a pull
-request. A model with published results needs a logo: `validate` fails until `logo` names a square PNG in
-`site/assets/logos/`, or another model from the same vendor has one.
+request.
+
+Vendor logos live in the `logos` map at the end of `config/models.json`, keyed by the exact `vendor` name:
+`"Google": "google.com"` shows `site/assets/logos/google.com.png`, a square PNG. `validate` fails until every vendor
+with published results has an entry and its PNG exists.
 
 `request` options for `openai-compatible`:
 
