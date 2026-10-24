@@ -3,6 +3,7 @@ import importlib.util
 import json
 import re
 import tempfile
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -112,9 +113,21 @@ class RepoHygiene(unittest.TestCase):
 
     def test_local_files_are_ignored(self):
         text = (ROOT / ".gitignore").read_text().splitlines()
-        for pattern in (".env", ".claude/*", "runs/", "site/data.json", "site/corpus.json", "site/results/",
-                        "__pycache__/"):
+        for pattern in (".env", ".claude/*", "runs/", "__pycache__/"):
             self.assertIn(pattern, text)
+
+    def test_site_tracks_only_hand_made_files(self):
+        def ignored(path):
+            return subprocess.run(["git", "check-ignore", "-q", "--no-index", path], cwd=ROOT).returncode == 0
+
+        for output in ("site/data.json", "site/viewer.json", "site/sitemap.xml", "site/index.html",
+                       "site/model/x/index.html", "site/details/x.json", "site/assets/rows/x.json",
+                       "site/a-future-build-output.json"):
+            self.assertTrue(ignored(output), output)
+        tracked = subprocess.run(["git", "ls-files", "site"], cwd=ROOT, capture_output=True, text=True,
+                                 check=True).stdout.split()
+        for asset in [*tracked, "site/assets/logos/new-vendor.ai.png"]:
+            self.assertFalse(ignored(asset), asset)
 
 
 if __name__ == "__main__":

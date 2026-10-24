@@ -128,6 +128,9 @@ Every value in `scores.json` can be recomputed from `predictions.jsonl` and the 
 
 ## Site data: `site/` (generated, not committed)
 
+Only the hand-made assets that `.gitignore` lists with `!` (icons, logos, `robots.txt`, `analytics.js` and a few
+more) are committed. Everything else in `site/` is build output.
+
 `python3 -m decision_bench report` reads `results/` and writes:
 
 | File | Contents |
