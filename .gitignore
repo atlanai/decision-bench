@@ -103,6 +103,8 @@ logs/
 !.env.example
 .claude/*
 !.claude/skills/
+.claude/skills/*
+!.claude/skills/review-provider-pr/
 .codex/
 
 # Python and tooling

@@ -11,8 +11,9 @@ command output that you can show.
 
 ## Rules for every step
 
-- Never read, print or copy `.env`. The maintainer puts the key there. A worktree gets it through a symlink that you
-  remove after the runs.
+- Never read, print or copy `.env`. Never link or copy the maintainer's main `.env` into a PR worktree: the PR's
+  code runs there and can send any key it finds to its own endpoint. The maintainer writes a worktree `.env` with
+  only the reviewed provider's key.
 - Never write an endpoint URL, a hostname or an IP address into a file, a commit, a PR or a comment. Say "the
   endpoint". `scripts/check_secrets.py` scans committed files only, not comments.
 - Never post a review, approve, request changes or merge until the maintainer says so. Show the draft first.
@@ -31,8 +32,8 @@ is empty or vague. The Results fields are the questions you would otherwise ask 
 
 ## 2. Review the code
 
-Diff with `git diff origin/main...pr-<n>`. Run this step in a subagent when one is available, and give it this list
-and CONTRIBUTING.md as the rubric:
+Diff with `git -C /tmp/db-pr<n> diff origin/main...HEAD`. Run this step in a subagent when one is available, and
+give it this list and CONTRIBUTING.md as the rubric:
 
 - **Shared code.** List every change outside the new adapter module and every provider it reaches. Ask for a test
   that pins the old behaviour of those providers. A payload helper that four adapters share is the usual case.
@@ -68,10 +69,10 @@ the committed leaderboard matches. In `metadata.json`, check:
 
 ## 4. Re-run the model
 
-Ask the maintainer for a key of the same kind that a customer gets, in `.env`. Then:
+Ask the maintainer to write `/tmp/db-pr<n>/.env` with only the environment variable that the provider reads (the
+Provider section of the PR names it), set to a key of the same kind that a customer gets. Then:
 
 ```sh
-ln -s <maintainer checkout>/.env /tmp/db-pr<n>/.env
 cd /tmp/db-pr<n>
 python3 -m decision_bench run --model <model-id> --limit 20 --run-id <model-id>-pr<n>-smoke
 python3 -m decision_bench run --model <model-id> --run-id <model-id>-pr<n>-r1 \
@@ -82,6 +83,8 @@ python3 -m decision_bench run --model <model-id> --run-id <model-id>-pr<n>-r1 \
 - Every run needs a new `--run-id`. The same id resumes the old run. If a run ends with errors, run the same command
   with `--retry-errors`.
 - Make 3 full runs, one after another. Runs in parallel share rate limits and change the latency.
+- If the PR changes `decision_bench/results.py`, `metrics.py`, `scoring.py` or `corpus.py`, stop and tell the
+  maintainer. `compare_runs.py` scores our runs with the PR's own copy of that code.
 - Compare, with the model next to it on the leaderboard as `--against`:
 
   ```sh
@@ -132,5 +135,5 @@ No diagrams, no commands for the author, no notes on how to read a table. Post o
 - If another provider PR is open, check which one adds the `FIXED_ENDPOINTS` entry, and re-run CI on the one that
   merges second.
 - After the merge, `python3 -m decision_bench report` and the site build pass on `main`.
-- Clean up: remove the `.env` symlink, copy any run folder you want to keep (`runs/` is ignored), then
+- Clean up: delete the worktree `.env`, copy any run folder you want to keep (`runs/` is ignored), then
   `git worktree remove /tmp/db-pr<n>`.

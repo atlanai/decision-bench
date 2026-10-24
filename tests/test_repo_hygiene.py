@@ -112,7 +112,8 @@ class RepoHygiene(unittest.TestCase):
 
     def test_local_files_are_ignored(self):
         text = (ROOT / ".gitignore").read_text().splitlines()
-        for pattern in (".env", "runs/", "site/data.json", "site/corpus.json", "site/results/", "__pycache__/"):
+        for pattern in (".env", ".claude/*", "runs/", "site/data.json", "site/corpus.json", "site/results/",
+                        "__pycache__/"):
             self.assertIn(pattern, text)
 
 

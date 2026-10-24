@@ -26,6 +26,13 @@ def load_folder(folder):
     return metadata, read_jsonl(folder / "predictions.jsonl")
 
 
+def pass_rule(ours, submitted):
+    """(mean, sd, limit, passed): the submitted count passes when it is not above our max + 2 sd, sd at least 1 row."""
+    sd = max(statistics.stdev(ours) if len(ours) > 1 else 0.0, MIN_SD)
+    limit = max(ours) + 2 * sd
+    return statistics.mean(ours), sd, limit, submitted <= limit
+
+
 def by_row(predictions):
     return {p["row_id"]: p for p in predictions}
 
@@ -71,10 +78,7 @@ def main():
               f"{errors} | {metadata['harness']['git_dirty']} |")
 
     ours_counts = [counts[name] for name in ours]
-    mean = statistics.mean(ours_counts)
-    sd = max(statistics.stdev(ours_counts) if len(ours_counts) > 1 else 0.0, MIN_SD)
-    limit = max(ours_counts) + 2 * sd
-    inside = counts["submitted"] <= limit
+    mean, sd, limit, inside = pass_rule(ours_counts, counts["submitted"])
     print(f"\nOurs: mean {mean:.1f}, sd {sd:.2f} (floor {MIN_SD}), range {min(ours_counts)}-{max(ours_counts)}.")
     print(f"Submitted {counts['submitted']} is {(counts['submitted'] - mean) / sd:+.2f} sd from our mean; "
           f"limit max + 2 sd = {limit:.1f} -> {'PASS' if inside else 'FAIL'}")
