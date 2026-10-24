@@ -9,7 +9,8 @@ import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/co
 const A = ({href, children}) => <a href={href} target={href.startsWith('#') ? undefined : '_blank'} rel="noopener" className="text-brand underline-offset-4 hover:underline">{children}</a>;
 const Terms = ({items}) => <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-[max-content_minmax(0,1fr)]">{items.map(([k, v]) => <div key={typeof k === 'string' ? k : v} className="contents"><dt className="font-medium text-foreground">{k}</dt><dd className="text-foreground/80 max-sm:mb-2">{v}</dd></div>)}</dl>;
 const METRICS = [
-  ['Accuracy', 'Share of rows answered as the key does; no answer counts as wrong. Shown with a Wilson 95% interval. The # column is the order by accuracy. The rank range is the places a model could hold at 95% confidence (Mogstad et al., Inference for Ranks): each pair of models is compared on the rows both answered, rows are resampled within their task, and models whose ranges overlap are not reliably different.'],
+  ['Accuracy', 'Share of rows answered as the key does; no answer counts as wrong. Shown with a Wilson 95% interval. The # column is the order by accuracy.'],
+  ['Rank range', 'The places a model could hold at 95% confidence (Mogstad et al., Inference for Ranks). Each pair of models is compared on the rows both were scored on, with rows resampled within their task, so the range holds for these tasks. Each range is for one model: two ranges can overlap even when one model is reliably ahead of the other.'],
   ['Per use case, per task', 'The same, recomputed on that subset of rows.'],
   ['Macro F1', 'F1 per option averaged within a task, then across tasks. Rewards the rare options.'],
   ['ECE and Brier', 'Calibration: the gap between stated confidence and observed accuracy, and the squared error of the stated probabilities. Lower is better.'],

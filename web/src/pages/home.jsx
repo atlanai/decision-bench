@@ -153,6 +153,7 @@ const SHORT_CAT = {'AI agents': 'Agents', 'Customer support': 'Support', 'Produc
 const shortCat = name => { const n = name.split(' & ')[0]; return SHORT_CAT[n] || n; };
 const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Why a model has its rank range: the models it reliably beats, those that reliably beat it, and the rest. */
+const RANK_NOTE = '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both were scored on. Hover a range to see which models are reliably ahead or behind.';
 const rangeTip = (name, [best, worst], n) => tip(name, [['Rank range', B.rankText([best, worst])], ['Reliably better than', plural(n - worst, 'model')], ['Reliably worse than', plural(best - 1, 'model')], ['Too close to call', plural(worst - best, 'model')]]);
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
 function LeaderboardSection({route, runs, cases}) {
@@ -216,7 +217,7 @@ function Leaderboard({route, runs, cases, more}) {
       </TableScroll>
     </div>
     <Notes items={[
-      '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both answered. Models whose ranges overlap are not reliably different.',
+      RANK_NOTE,
       B.allCases.some(c => B.isImageTask(c.task)) && '** Image-only cases excluded when the image was not sent. N/E = not evaluated.',
       partial && '* Cost known for part of the rows.',
       B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
@@ -256,7 +257,7 @@ function LeaderList({runs, cases}) {
             {key === 'accuracy' && ci && <span className="relative block h-1.5 w-14" aria-hidden="true"><i className="absolute inset-x-0 top-[2.5px] h-px bg-border" /><i className="absolute top-0.5 h-0.5 rounded-full bg-foreground/25" style={{left: cx(ci[0]), width: `calc(${cx(ci[1])} - ${cx(ci[0])})`}} /><b className="absolute top-0 h-1.5 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}
           </span>} />; })}
     </List></div>
-    <Notes items={[key === 'accuracy' && '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both answered. Models whose ranges overlap are not reliably different.', B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => B.ident(r).short).join(', ')}.`, 'Tap a model for its fit by use case.']} />
+    <Notes items={[key === 'accuracy' && RANK_NOTE, B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => B.ident(r).short).join(', ')}.`, 'Tap a model for its fit by use case.']} />
   </>;
 }
 
