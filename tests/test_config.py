@@ -30,6 +30,14 @@ class Config(unittest.TestCase):
             with self.assertRaises(config.ConfigError):
                 config.get_model("missing")
 
+    def test_logos_name_a_vendor_domain(self):
+        with fixtures.repo() as root:
+            self.assertEqual(config.load_logos(), {"Test": "example.com"})
+            for domain in ("../secrets", "logos/x.png", "", 1):
+                (root / "config/models.json").write_text(json.dumps({"models": [], "logos": {"Test": domain}}))
+                with self.assertRaises(config.ConfigError, msg=repr(domain)):
+                    config.load_logos()
+
     def test_env_file_is_read_after_the_environment(self):
         with fixtures.repo({"DECISION_BENCH_API_KEY": "from-env"}) as root:
             (root / ".env").write_text("# comment\nDECISION_BENCH_BASE_URL='http://localhost:1/v1'\nDECISION_BENCH_API_KEY=from-file\n")
