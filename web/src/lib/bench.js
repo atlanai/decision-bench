@@ -190,6 +190,7 @@ export function ranks(runs, cases) {
   const spreads = rankSpreads(models, cases.map(c => c.task)), out = new Map(scored.map((r, i) => [r.id, spreads[i]]));
   rankCache.set(key, out); return out;
 }
+export const positionOf = (m, ms) => m.questions ? 1 + ms.filter(o => o.accuracy > m.accuracy).length : null;
 export const rankText = s => !s ? '—' : s[0] === s[1] ? String(s[0]) : `${s[0]}–${s[1]}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
 export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);

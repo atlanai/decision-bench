@@ -55,3 +55,8 @@ test('the published leaderboard ranks every full run and leaves partial runs out
   assert.equal(B.rankText([2, 5]), '2–5');
   assert.equal(B.rankText(undefined), '—');
 });
+
+test('position is the order by accuracy, and equal accuracy shares a position', () => {
+  const ms = [{questions: 10, accuracy: .9}, {questions: 10, accuracy: .8}, {questions: 10, accuracy: .9}, {questions: 0, accuracy: null}];
+  assert.deepEqual(ms.map(m => B.positionOf(m, ms)), [1, 3, 1, null]);
+});

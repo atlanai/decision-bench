@@ -73,7 +73,7 @@ own label is scored even when it disagrees with its own highest probability; tha
 - **Paired comparisons**: for two full runs, the accuracy difference on shared rows with a bootstrap interval that
   resamples whole tasks (2,000 repetitions, fixed seed).
 
-Order on the leaderboard is by accuracy. The rank column is a 95% range of plausible places for each model, after
+Order on the leaderboard is by accuracy, and `#` is that order. The rank range column is a 95% range of plausible places for each model, after
 Mogstad, Romano, Shaikh and Wilhelm, *Inference for Ranks*. Each pair of models is compared on the rows both answered.
 Rows are resampled within their task (1,000 draws, fixed seed), with one draw shared by all models, so the pairing is
 kept and the tasks are treated as fixed. The best place is 1 plus the number of models reliably ahead; the worst is the
