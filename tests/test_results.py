@@ -133,6 +133,20 @@ class PublishFlow(unittest.TestCase):
         self.assertNotIn("127.0.0.1", json.dumps(metadata))
         self.assertEqual(results.check_published(load_cases(), load_manifest()), [])
 
+    def test_validate_requires_a_logo_for_every_published_model(self):
+        self.publish_with_probe({"return_value": (0.0, 0.0, None)})
+        self.assertEqual(report.build()["models"][0]["logo"], "example.com")
+        models_file = self.root / "config/models.json"
+        configured = json.loads(models_file.read_text())
+        del configured["models"][0]["logo"]
+        models_file.write_text(json.dumps(configured))
+        self.assertIn('results/mini/fake-model: config/models.json has no "logo" for this model',
+                      results.check_published(load_cases(), load_manifest())[0])
+        models_file.write_text(json.dumps(fixtures.MODELS))
+        (self.root / "site/assets/logos/example.com.png").unlink()
+        self.assertIn("site/assets/logos/example.com.png is missing",
+                      results.check_published(load_cases(), load_manifest())[0])
+
     def test_resume_publishes_the_baseline_of_the_execution_that_ran_the_rows(self):
         first, _ = self.publish_with_probe({"return_value": (1.0, 2.0, None)})
         again, _ = self.publish_with_probe({"return_value": (9.0, 99.0, None)})

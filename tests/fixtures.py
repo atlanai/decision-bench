@@ -25,7 +25,7 @@ def row(ident, task, category, gold, options=("a", "b")):
 ROWS = [row("r1", "T-1", "alpha", "a"), row("r2", "T-1", "alpha", "b"), row("r3", "T-2", "beta", "a")]
 MODELS = {"models": [
     {"id": "fake-model", "label": "Fake Model", "vendor": "Test", "provider": "openai-compatible",
-     "model": "fake/model-1", "request": {"response_format": "json_schema", "max_output_tokens": 256},
+     "model": "fake/model-1", "logo": "example.com", "request": {"response_format": "json_schema", "max_output_tokens": 256},
      "pricing": {"input_per_mtok": 1.0, "output_per_mtok": 2.0, "source_url": "https://example.com/pricing"}},
     {"id": "fake-typesafe", "label": "Fake TypeSafe", "vendor": "Test", "provider": "typesafe", "model": "jev-test"},
     {"id": "fake-laya", "label": "Fake Laya", "vendor": "Test", "provider": "laya", "model": "convaiinnovations/laya"},
@@ -48,6 +48,8 @@ def build(root, rows=ROWS):
     (root / "data/corpus/current.json").write_text(json.dumps({"path": "data/corpus/mini/cases.jsonl"}))
     (root / "config").mkdir()
     (root / "config/models.json").write_text(json.dumps(MODELS))
+    (root / "site/assets/logos").mkdir(parents=True)
+    (root / "site/assets/logos/example.com.png").write_bytes(b"\x89PNG")
     (root / "docs").mkdir()
     (root / "docs/protocol.md").write_text("Protocol")
     return manifest

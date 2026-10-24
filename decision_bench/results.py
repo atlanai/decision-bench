@@ -16,7 +16,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import corpus, openai_compat
+from . import config, corpus, openai_compat
 from .metrics import attempt_totals, consolidate_attempts, summarize
 from .runner import read_jsonl, runs_dir, write_json
 from .scoring import score_answer
@@ -386,8 +386,17 @@ def check_published(cases, manifest):
     problems = []
     case_map = {c["id"]: c for c in cases}
     suite = manifest.get("suite")
+    models = config.load_models()
+    configured = {m["id"]: m for m in models}
     for metadata, predictions, scores in load_published(suite):
-        where = f"results/{suite}/{metadata.get('model', {}).get('id')}"
+        model_id = metadata.get("model", {}).get("id")
+        where = f"results/{suite}/{model_id}"
+        logo = config.logo(configured.get(model_id) or metadata.get("model", {}), models)
+        if not logo:
+            problems.append(f'{where}: config/models.json has no "logo" for this model. Set it to the vendor\'s domain '
+                            "and add a square PNG at site/assets/logos/<logo>.png")
+        elif not (corpus.ROOT / f"site/assets/logos/{logo}.png").is_file():
+            problems.append(f"{where}: site/assets/logos/{logo}.png is missing; add the vendor's square PNG logo")
         if metadata.get("corpus", {}).get("sha256") != manifest["sha256"]:
             problems.append(f"{where}: published on corpus {metadata.get('corpus', {}).get('sha256', '')[:12]}, "
                             "not the current one")
