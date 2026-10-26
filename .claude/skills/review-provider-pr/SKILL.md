@@ -42,7 +42,7 @@ give it this list and CONTRIBUTING.md as the rubric:
 - **No silent substitution.** No fallback model under another model's name. If `--api-model` changes the payload,
   it changes the URL too, or the adapter rejects it.
 - **Secrets.** Keys and endpoints come only from environment variables. Nothing in `config/models.json`, the run
-  record or `metadata.json` carries a host, except a public pricing `source_url`.
+  record or `metadata.json` carries a host, except a public pricing `source_url` and the vendor domains in `logos`.
 - **Images.** How the adapter sends them. No image bytes or local paths in the records.
 - **Network baseline.** The provider's URL is in `runner.FIXED_ENDPOINTS` or `runner.endpoint_url()`. The provider
   coverage test in `tests/test_runner.py` fails otherwise. When two provider PRs are open, the one that merges

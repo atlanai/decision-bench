@@ -31,7 +31,7 @@ MODELS = {"models": [
     {"id": "fake-laya", "label": "Fake Laya", "vendor": "Test", "provider": "laya", "model": "convaiinnovations/laya"},
     {"id": "fake-claude", "label": "Fake Claude", "vendor": "Test", "provider": "claude-cli", "model": "claude-test",
      "request": {"reasoning_effort": "low"}},
-]}
+], "logos": {"Test": "example.com"}}
 
 
 def build(root, rows=ROWS):
@@ -48,6 +48,8 @@ def build(root, rows=ROWS):
     (root / "data/corpus/current.json").write_text(json.dumps({"path": "data/corpus/mini/cases.jsonl"}))
     (root / "config").mkdir()
     (root / "config/models.json").write_text(json.dumps(MODELS))
+    (root / "site/assets/logos").mkdir(parents=True)
+    (root / "site/assets/logos/example.com.png").write_bytes(b"\x89PNG")
     (root / "docs").mkdir()
     (root / "docs/protocol.md").write_text("Protocol")
     return manifest

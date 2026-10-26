@@ -128,6 +128,9 @@ Every value in `scores.json` can be recomputed from `predictions.jsonl` and the 
 
 ## Site data: `site/` (generated, not committed)
 
+Only the hand-made assets that `.gitignore` lists with `!` (icons, logos, `robots.txt`, `analytics.js` and a few
+more) are committed. Everything else in `site/` is build output.
+
 `python3 -m decision_bench report` reads `results/` and writes:
 
 | File | Contents |
@@ -150,7 +153,8 @@ a published entry with the same run id, because it may have been resumed since p
 | `cases` | The corpus rows (same as `corpus.json`). |
 | `inventory` | `cases`, `questions`, `tasks`, `categories`, `models_configured`, `runs`, `published_runs`. |
 | `prompt` | `version` and the `system` prompt sent to chat models. |
-| `models` | Every entry of `config/models.json`: `id`, `label`, `short_label`, `vendor`, `provider`, `color`, `api_model`, `request`, `pricing`. |
+| `models` | Every entry of `config/models.json`: `id`, `label`, `short_label`, `vendor`, `provider`, `color`, `vision`, `api_model`, `request`, `pricing`. |
+| `logos` | The `logos` map of `config/models.json`: vendor name to the domain that names `assets/logos/<domain>.png`. |
 | `leaderboard` | The `models` list of `leaderboard.json`. |
 | `runs` | One entry per shown run (below). |
 | `results` | One record per row per run: `run_id`, `case_id`, `status`, status-only `error`, `duration_ms`, `scores` (a one-item list: `question_id`, `gold`, `label`, `correct`, `confidence`, `probabilities`, `brier`, `log_loss`), `cost_usd`, `tokens`, `attempt_count`. Successful raw answer text is in the published `predictions.jsonl`. |

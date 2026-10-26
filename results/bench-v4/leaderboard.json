@@ -3,7 +3,7 @@
   "suite": "bench-v4",
   "corpus_version": "1.0",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
-  "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
+  "note": "Sorted by accuracy. The site ranks each model with a 95% range of places from paired row comparisons.",
   "models": [
     {
       "model_id": "amos-1-large",
@@ -114,6 +114,28 @@
       "corpus_current": true,
       "full_coverage": true,
       "completed_at": "2026-09-23T13:33:55.245634+00:00"
+    },
+    {
+      "model_id": "drex-max",
+      "label": "Drex Max",
+      "vendor": "Nace",
+      "provider": "drex",
+      "api_model": "drex-max",
+      "accuracy": 0.9402427637721755,
+      "wilson95": [
+        0.9244112465426017,
+        0.952927330602161
+      ],
+      "correct": 1007,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.05428728,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.05068840336134454,
+      "latency_p50_ms": 189.2403750680387,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-20T19:03:54.965094+00:00"
     },
     {
       "model_id": "gpt-6-luna",

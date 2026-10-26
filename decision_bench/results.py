@@ -16,7 +16,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import corpus, openai_compat
+from . import config, corpus, openai_compat
 from .metrics import attempt_totals, consolidate_attempts, summarize
 from .runner import read_jsonl, runs_dir, write_json
 from .scoring import score_answer
@@ -342,7 +342,7 @@ def leaderboard(suite, published=None, manifest=None):
     rows.sort(key=lambda r: (-(r["accuracy"] or 0), r["model_id"]))
     return {"schema_version": SCHEMA_VERSION, "suite": suite, "corpus_version": manifest.get("version"),
             "corpus_sha256": manifest["sha256"],
-            "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
+            "note": "Sorted by accuracy. The site ranks each model with a 95% range of places from paired row comparisons.",
             "models": rows}
 
 
@@ -386,12 +386,23 @@ def check_published(cases, manifest):
     problems = []
     case_map = {c["id"]: c for c in cases}
     suite = manifest.get("suite")
+    logos = config.load_logos()
+    for vendor, domain in logos.items():
+        if not (corpus.ROOT / f"site/assets/logos/{domain}.png").is_file():
+            problems.append(f'config/models.json logos "{vendor}": site/assets/logos/{domain}.png is missing; add the '
+                            "vendor's square PNG logo")
+    vendors = {m["id"]: m["vendor"] for m in config.load_models()}
     for metadata, predictions, scores in load_published(suite):
-        where = f"results/{suite}/{metadata.get('model', {}).get('id')}"
+        model = metadata.get("model", {})
+        where = f"results/{suite}/{model.get('id')}"
         if metadata.get("corpus", {}).get("sha256") != manifest["sha256"]:
             problems.append(f"{where}: published on corpus {metadata.get('corpus', {}).get('sha256', '')[:12]}, "
                             "not the current one")
             continue
+        vendor = vendors.get(model.get("id"), model.get("vendor"))
+        if vendor not in logos:
+            problems.append(f'{where}: no logo for vendor "{vendor}". Add "{vendor}": "<vendor domain>" to "logos" in '
+                            "config/models.json and a square PNG at site/assets/logos/<vendor domain>.png")
         seen = set()
         for p in predictions:
             c = case_map.get(p.get("row_id"))

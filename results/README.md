@@ -42,7 +42,8 @@ and are left out of cost coverage.
 3. `python3 -m decision_bench validate` must report no problems. It recomputes `scores.json` from
    `predictions.jsonl` and checks every answer and gold label against the corpus.
 4. Open a pull request with only the `results/<suite>/<model-id>/` folder and the updated leaderboard files. If the
-   model is new, add its entry to `config/models.json` in the same pull request. Fill in the **Results** fields of
+   model is new, add its entry to `config/models.json` in the same pull request. A new vendor also needs an entry in
+   the `logos` map there and a square PNG at `site/assets/logos/<vendor domain>.png`; `validate` fails without them. Fill in the **Results** fields of
    the pull request template. CI fails until they are filled in.
 
 Do not edit generated files by hand. Maintainers may re-run a submitted model to check it.
