@@ -41,6 +41,12 @@ test('pairs compare only the rows both models were scored on', () => {
   assert.deepEqual(B.rankSpreads([full, skipsLastTask], tasks), [[1, 2], [1, 2]]);
 });
 
+test('a pair that shares one row is not separated', () => {
+  const tasks = tasksOf(5, 30), strong = model(tasks, () => true);
+  const oneRow = tasks.map((_, r) => r === 0 ? [0, 1] : null);
+  assert.deepEqual(B.rankSpreads([strong, oneRow], tasks), [[1, 2], [1, 2]]);
+});
+
 test('the published leaderboard gives every full run a range', () => {
   B.init(JSON.parse(readFileSync(new URL('../../site/data.json', import.meta.url), 'utf8')), {});
   const ranks = B.ranks(B.RUNS, B.allCases);

@@ -175,12 +175,12 @@ export function rankSpreads(models, tasks) {
   }
   for (const p of pairs) p.se = sd(p.boot);
   return models.map((_, i) => {
-    const mine = pairs.filter(p => p.i === i || p.j === i), varying = mine.filter(p => p.se > 0);
+    const varying = pairs.filter(p => (p.i === i || p.j === i) && p.se > 0);
     const maxT = new Float64Array(RANK_DRAWS);
     for (const p of varying) for (let b = 0; b < RANK_DRAWS; b++) maxT[b] = Math.max(maxT[b], Math.abs(p.boot[b] - p.d) / p.se);
     const c = quantile([...maxT], .95);
     let best = 1, worst = modelCount;
-    for (const p of mine) {
+    for (const p of varying) {
       const ahead = p.i === i ? p.d : -p.d;
       const margin = c * p.se;
       if (ahead - margin > 0) worst--;
