@@ -342,7 +342,7 @@ def leaderboard(suite, published=None, manifest=None):
     rows.sort(key=lambda r: (-(r["accuracy"] or 0), r["model_id"]))
     return {"schema_version": SCHEMA_VERSION, "suite": suite, "corpus_version": manifest.get("version"),
             "corpus_sha256": manifest["sha256"],
-            "note": "Sorted by accuracy. Overlapping Wilson intervals mean the order is not a reliable ranking.",
+            "note": "Sorted by accuracy. The site ranks each model with a 95% range of places from paired row comparisons.",
             "models": rows}
 
 
