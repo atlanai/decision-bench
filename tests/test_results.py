@@ -133,6 +133,33 @@ class PublishFlow(unittest.TestCase):
         self.assertNotIn("127.0.0.1", json.dumps(metadata))
         self.assertEqual(results.check_published(load_cases(), load_manifest()), [])
 
+    def write_config(self, **changes):
+        (self.root / "config/models.json").write_text(json.dumps({**fixtures.MODELS, **changes}))
+
+    def problems(self):
+        return results.check_published(load_cases(), load_manifest())
+
+    def test_validate_requires_a_logo_for_the_vendor_of_every_published_model(self):
+        self.publish_with_probe({"return_value": (0.0, 0.0, None)})
+        self.write_config(logos={})
+        self.assertEqual(self.problems(), ['results/mini/fake-model: no logo for vendor "Test". Add "Test": '
+                                           '"<vendor domain>" to "logos" in config/models.json and a square PNG at '
+                                           'site/assets/logos/<vendor domain>.png'])
+
+    def test_validate_requires_every_logo_file(self):
+        self.publish_with_probe({"return_value": (0.0, 0.0, None)})
+        (self.root / "site/assets/logos/example.com.png").unlink()
+        self.assertEqual(self.problems(), ['config/models.json logos "Test": site/assets/logos/example.com.png is '
+                                           'missing; add the vendor\'s square PNG logo'])
+
+    def test_a_published_model_without_a_config_entry_keeps_its_vendor_logo(self):
+        self.publish_with_probe({"return_value": (0.0, 0.0, None)})
+        self.write_config(models=fixtures.MODELS["models"][1:])
+        self.assertEqual(self.problems(), [])
+        data = report.build()
+        self.assertEqual(data["logos"], {"Test": "example.com"})
+        self.assertEqual(data["runs"][0]["model"]["vendor"], "Test")
+
     def test_resume_publishes_the_baseline_of_the_execution_that_ran_the_rows(self):
         first, _ = self.publish_with_probe({"return_value": (1.0, 2.0, None)})
         again, _ = self.publish_with_probe({"return_value": (9.0, 99.0, None)})

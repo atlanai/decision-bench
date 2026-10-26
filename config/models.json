@@ -471,5 +471,23 @@
       "notes": "Amos 1 large (27B, open weights at huggingface.co/mukaddamzaid/amos-1-large) served by its own System One server; text and image evidence (images sent as data URIs), native probabilities in one forward pass.",
       "vision": true
     }
-  ]
+  ],
+  "logos": {
+    "Amazon": "amazon.com",
+    "Amos": "amos.scira.ai",
+    "Anthropic": "anthropic.com",
+    "DeepSeek": "deepseek.com",
+    "Google": "google.com",
+    "Jared Palmer": "jaredpalmer.com",
+    "Laya": "convaiinnovations.com",
+    "Levanto": "levanto.ai",
+    "Microsoft": "microsoft.com",
+    "Nace": "nace.ai",
+    "OpenAI": "openai.com",
+    "Perplexity": "perplexity.ai",
+    "Qwen": "qwen.ai",
+    "Together AI": "together.ai",
+    "TypeSafe": "typesafe.ai",
+    "Z.AI": "z.ai"
+  }
 }

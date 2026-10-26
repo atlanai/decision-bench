@@ -84,15 +84,27 @@ def _check_model(m):
             raise ConfigError(f"{where}: pricing.source_url must be an https URL")
 
 
+def _read():
+    return json.loads((corpus.ROOT / "config/models.json").read_text())
+
+
 def load_models():
-    data = json.loads((corpus.ROOT / "config/models.json").read_text())
-    models = data.get("models", [])
+    models = _read().get("models", [])
     ids = [m.get("id") for m in models]
     if len(ids) != len(set(ids)):
         raise ConfigError("config/models.json: duplicate model ids")
     for m in models:
         _check_model(m)
     return models
+
+
+def load_logos():
+    """Vendor name to the vendor's domain, which names site/assets/logos/<domain>.png."""
+    logos = _read().get("logos", {})
+    for vendor, domain in logos.items():
+        if not isinstance(domain, str) or not MODEL_ID.fullmatch(domain):
+            raise ConfigError(f'config/models.json logos "{vendor}": use the vendor\'s domain, for example google.com')
+    return logos
 
 
 def get_model(model_id):

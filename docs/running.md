@@ -87,6 +87,10 @@ model something else (for example `google/gemini-3.5-flash` on OpenRouter). Pass
 different name without editing the config; it is recorded in the run. To add a model, add an entry and open a pull
 request.
 
+Vendor logos live in the `logos` map at the end of `config/models.json`, keyed by the exact `vendor` name:
+`"Google": "google.com"` shows `site/assets/logos/google.com.png`, a square PNG. `validate` fails until every vendor
+with published results has an entry and its PNG exists.
+
 `request` options for `openai-compatible`:
 
 - `response_format`: `json_schema` (strict schema, default), `json_object`, or `prompt` (schema in the prompt only).
