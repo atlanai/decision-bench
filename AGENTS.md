@@ -21,6 +21,8 @@ python3 -m decision_bench leaderboard         # rewrites results/<suite>/leaderb
 - Never edit generated files by hand: `results/<suite>/<model-id>/` and the leaderboard files come from `publish`
   and `leaderboard`.
 - A frozen corpus never changes. A fix is a new corpus version.
+- `site/` is build output and git ignores it, except the hand-made files that `.gitignore` lists with `!`. When
+  you add a hand-made file to `site/`, add its `!` line too, or it is never committed and Pages never deploys it.
 - The same `--run-id` resumes a run. Use a new one for a new run.
 
 ## Pull requests
