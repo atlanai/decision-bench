@@ -461,6 +461,24 @@
       "notes": "Nace production System One API, native Choice probabilities. Text and image evidence are sent to Drex Max; no model fallback."
     },
     {
+      "id": "drex-max-v1.1",
+      "label": "Drex Max v1.1",
+      "short_label": "Drex Max v1.1",
+      "vendor": "Nace",
+      "provider": "drex",
+      "model": "drex-max",
+      "color": "#e9693c",
+      "request": {},
+      "pricing": {
+        "input_per_mtok": 0.06,
+        "output_per_mtok": 0,
+        "source_url": "https://console.nace.ai/docs/drex/guides/drex-max",
+        "as_of": "2026-10"
+      },
+      "vision": true,
+      "notes": "Drex Max v1.1 weights (revision 0919c2af621e4aba88d437788c91bedf1ea93d81), served through the existing drex-max API model name. Nace production System One API, native Choice probabilities, text and image evidence; no model fallback. The original drex-max result remains the v1 evaluation."
+    },
+    {
       "id": "amos-1-large",
       "label": "Amos 1 large",
       "short_label": "Amos large",
