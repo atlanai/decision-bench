@@ -72,6 +72,28 @@
       "completed_at": "2026-09-23T13:36:13.556133+00:00"
     },
     {
+      "model_id": "vllm-sr-d3",
+      "label": "vLLM-SR Decision 3.0 d3 (27B)",
+      "vendor": "vLLM Semantic Router",
+      "provider": "laya",
+      "api_model": "vllm-sr/d3",
+      "accuracy": 0.942110177404295,
+      "wilson95": [
+        0.9264792738277718,
+        0.9545807819050915
+      ],
+      "correct": 1009,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 92.48482109978795,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-14T03:49:27.570587+00:00"
+    },
+    {
       "model_id": "gemini-flash-lite-latest",
       "label": "Gemini Flash Lite",
       "vendor": "Google",
