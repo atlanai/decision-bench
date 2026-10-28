@@ -138,6 +138,28 @@
       "completed_at": "2026-09-23T14:08:16.953984+00:00"
     },
     {
+      "model_id": "drex-max-v1.1",
+      "label": "Drex Max v1.1",
+      "vendor": "Nace",
+      "provider": "drex",
+      "api_model": "drex-max",
+      "accuracy": 0.9318394024276377,
+      "wilson95": [
+        0.9151503116194213,
+        0.9454416118788878
+      ],
+      "correct": 998,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.05426532,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.05066789915966386,
+      "latency_p50_ms": 288.66512500007957,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-28T05:03:27.976064+00:00"
+    },
+    {
       "model_id": "deepseek-v4.1-flash",
       "label": "DeepSeek V4.1 Flash",
       "vendor": "DeepSeek",
