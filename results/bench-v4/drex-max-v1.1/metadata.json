@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "drex-max-v1.1",
+    "label": "Drex Max v1.1",
+    "short_label": "Drex Max v1.1",
+    "vendor": "Nace",
+    "provider": "drex",
+    "color": "#e9693c",
+    "vision": true,
+    "api_model": "drex-max",
+    "resolved_models": [
+      "drex-max"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.06,
+    "output_per_mtok": 0,
+    "source_url": "https://[ENDPOINT]/docs/drex/guides/drex-max",
+    "as_of": "2026-10"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "2030dff951484c81775f183d59f016281adaf515",
+    "git_dirty": false,
+    "git_commits": [
+      "2030dff951484c81775f183d59f016281adaf515"
+    ]
+  },
+  "run": {
+    "run_id": "drex-max-v1.1-bench-v4-full-20261028",
+    "status": "completed",
+    "created_at": "2026-10-28T04:53:43.733917+00:00",
+    "completed_at": "2026-10-28T05:03:27.976064+00:00",
+    "published_at": "2026-10-28T05:03:32.700670+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 90,
+    "max_attempts": 3,
+    "endpoint_id": "endpoint-d9060b3a42eb",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.6"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 1.7314169999735896,
+      "tcp_connect_ms": 9.545332999550737,
+      "tls_handshake_ms": 23.2991659995605
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 998,
+    "accuracy": 0.9318394024276377,
+    "wilson95": [
+      0.9151503116194213,
+      0.9454416118788878
+    ],
+    "errors": 0,
+    "cost_usd": 0.05426532,
+    "cost_coverage": 1.0,
+    "input_tokens": 904422,
+    "output_tokens": 173086,
+    "latency_p50_ms": 288.66512500007957,
+    "server_time_p50_ms_estimate": 244.543876001444
+  }
+}
