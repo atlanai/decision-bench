@@ -60,10 +60,11 @@ estimate until the API supplies a charged amount. This entry evaluates text rows
 is not enabled in the Djev adapter. See [Djev's API contract](https://djev.dev/llms.txt).
 
 Celeris uses the same typed System One question format. Set `CELERIS_API_KEY` in `.env`, then run
-`python3 -m decision_bench run --model celeris-1-decision --limit 5`. The model entry has `"vision": true`;
+`python3 -m decision_bench run --model celeris-1.1-decision --limit 5`. The model entry has `"vision": true`;
 the adapter sends a row's images as data URIs in Celeris's `x_celeris.images` map, which is where its
 endpoint reads them, instead of the top-level `images` list. Output tokens are not billed, so cost is the
-published input rate times reported input tokens.
+published input rate times reported input tokens. The adapter rejects `--api-model`: every Celeris decision model
+shares one endpoint path and the model comes from the entry's `model` field.
 
 ## Choose a model
 

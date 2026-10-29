@@ -472,12 +472,12 @@
       "vision": true
     },
     {
-      "id": "celeris-1-decision",
-      "label": "Celeris-1 Decision",
+      "id": "celeris-1.1-decision",
+      "label": "Celeris 1.1 Decision",
       "short_label": "Celeris Decision",
       "vendor": "Celeris",
       "provider": "celeris",
-      "model": "celeris-1-decision",
+      "model": "celeris-1.1-decision",
       "color": "#c1352b",
       "pricing": {
         "input_per_mtok": 0.04,
@@ -506,6 +506,7 @@
     "Qwen": "qwen.ai",
     "Together AI": "together.ai",
     "TypeSafe": "typesafe.ai",
+    "Celeris": "celeris.ai",
     "Z.AI": "z.ai"
   }
 }

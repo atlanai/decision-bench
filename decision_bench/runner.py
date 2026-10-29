@@ -25,7 +25,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import __version__, adapters, config, corpus, kev, openai_compat, openrouter_decisions, sage, tev1
+from . import __version__, adapters, celeris, config, corpus, kev, openai_compat, openrouter_decisions, sage, tev1
 from .corpus import PROMPT_VERSION, canonical, digest, public_input
 from .errors import CallError
 from .metrics import billable
@@ -79,7 +79,7 @@ def write_json(path, value):
 
 
 FIXED_ENDPOINTS = {"typesafe": adapters.TYPESAFE_URL, "djev": adapters.DJEV_URL, "sage": sage.URL, "tev1": tev1.URL,
-                   "openrouter-decisions": openrouter_decisions.URL}
+                   "openrouter-decisions": openrouter_decisions.URL, "celeris": celeris.URL}
 
 
 def endpoint_url(model):
