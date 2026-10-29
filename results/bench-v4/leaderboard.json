@@ -121,21 +121,21 @@
       "vendor": "Celeris",
       "provider": "celeris",
       "api_model": "celeris-1.1-decision",
-      "accuracy": 0.9374416433239963,
+      "accuracy": 0.938375350140056,
       "wilson95": [
-        0.9213163356301709,
-        0.9504400236324405
+        0.922347048748137,
+        0.9512700498085248
       ],
-      "correct": 1004,
+      "correct": 1005,
       "rows": 1071,
       "errors": 0,
-      "cost_usd": 0.03524616,
+      "cost_usd": 0.003524616,
       "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.032909579831932774,
-      "latency_p50_ms": 257.9487260000093,
+      "cost_per_1000_rows_usd": 0.0032909579831932774,
+      "latency_p50_ms": 245.253065,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-10-29T04:32:27.133082+00:00"
+      "completed_at": "2026-10-29T08:45:06.172502+00:00"
     },
     {
       "model_id": "gpt-6-luna",
