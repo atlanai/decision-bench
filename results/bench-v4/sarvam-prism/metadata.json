@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "sarvam-prism",
+    "label": "Sarvam-Prism",
+    "short_label": "Prism",
+    "vendor": "Sarvam",
+    "provider": "prism",
+    "color": "#4d7c0f",
+    "vision": false,
+    "api_model": "sarvamai/prism",
+    "resolved_models": [
+      "sarvamai/prism@417cf26c2eea27286a803dd721b4e78698bdb875"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "bbf23bd3794ee790d26c7d4b4cf22b5369f08237",
+    "git_dirty": false,
+    "git_commits": [
+      "bbf23bd3794ee790d26c7d4b4cf22b5369f08237"
+    ]
+  },
+  "run": {
+    "run_id": "sarvam-prism-pr46-r1",
+    "status": "completed",
+    "created_at": "2026-11-03T15:31:49.514783+00:00",
+    "completed_at": "2026-11-03T15:50:16.718589+00:00",
+    "published_at": "2026-11-03T16:31:05.384980+00:00",
+    "executions": 1,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-adc5a0accb1f",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 4.286291019525379,
+      "tcp_connect_ms": 226.937250001356,
+      "tls_handshake_ms": 240.41712502366863
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 961,
+    "accuracy": 0.8972922502334267,
+    "wilson95": [
+      0.877667833370823,
+      0.9140767362476214
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_p50_ms": 1014.8372919938993,
+    "server_time_p50_ms_estimate": 316.25937594799325
+  }
+}
