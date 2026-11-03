@@ -1,14 +1,4 @@
-"""Sarvam-Prism on Modal, behind a System One endpoint (POST /v1/systemone) that the `prism` provider calls.
-
-    PRISM_API_KEY=<key> modal run scripts/serve_prism.py::download   # once: weights to the volume, on a CPU container
-    PRISM_API_KEY=<key> modal deploy scripts/serve_prism.py          # one B200; URL https://<workspace>--sarvam-prism-api.modal.run
-    modal app stop decision-bench-sarvam-prism                       # always stop it after the run
-
-Prism ships its own FP8 inference code (prism.py in the model repo); general servers such as vLLM cannot load it. The
-code and weights are pinned to one Hub revision, because prism.py loads the backbone with trust_remote_code. Prism needs
-one FP8 GPU with about 120 GB free, so the endpoint runs on one B200 (H200 as fallback). The container stops after 10
-idle minutes. GPU time is an infrastructure cost and is never recorded as token pricing.
-"""
+"""Sarvam-Prism on Modal behind a System One endpoint for the `prism` provider; see docs/running.md."""
 import hmac
 import os
 import threading
@@ -29,7 +19,10 @@ image = (
     .env({"HF_HOME": "/hf", "TRITON_CACHE_DIR": "/hf/triton-cache", "HF_HUB_DISABLE_PROGRESS_BARS": "1",
           "TOKENIZERS_PARALLELISM": "false", "PYTHONUNBUFFERED": "1"})
 )
-secret = modal.Secret.from_dict({"PRISM_API_KEY": os.environ["PRISM_API_KEY"]})
+KEY = os.environ.get("PRISM_API_KEY", "")
+if len(KEY) < 24:
+    raise SystemExit("PRISM_API_KEY must be at least 24 characters, for example from `openssl rand -hex 24`")
+secret = modal.Secret.from_dict({"PRISM_API_KEY": KEY})
 
 
 def snapshot():
@@ -63,17 +56,21 @@ class Prism:
     def web(self):
         from fastapi import FastAPI, Header, HTTPException
         api = FastAPI()
-        key = os.environ["PRISM_API_KEY"].encode()
+        key = KEY.encode()
 
         @api.post("/v1/systemone")
         def systemone(body: dict, authorization: str = Header("")):
             if not hmac.compare_digest(authorization.encode(), b"Bearer " + key):
                 raise HTTPException(401, "invalid bearer key")
+            if body.get("model") != REPO:
+                raise HTTPException(422, f"this endpoint serves {REPO}")
+            if not isinstance(body.get("questions"), dict) or not body["questions"]:
+                raise HTTPException(422, "questions must be a non-empty object")
             started = time.perf_counter()
             try:
                 with self.lock:
                     answers = self.model.decide(body.get("state"), body["questions"])
-            except (KeyError, ValueError, TypeError) as e:
+            except ValueError as e:
                 raise HTTPException(422, str(e)) from e
             return {"model": f"{REPO}@{REVISION}", "answers": answers,
                     "latency_ms": (time.perf_counter() - started) * 1000}

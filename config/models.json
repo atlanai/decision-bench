@@ -452,7 +452,7 @@
       "vision": false,
       "color": "#4d7c0f",
       "request": {},
-      "notes": "Sarvam-Prism FP8 open weights, pinned Hub revision 417cf26c2eea27286a803dd721b4e78698bdb875, served with Sarvam's prism.py on one Modal B200 (scripts/serve_prism.py). Text only: image rows get their text rendering. GPU cost is recorded separately, never as token pricing."
+      "notes": "Sarvam-Prism FP8 open weights, pinned Hub revision 417cf26c2eea27286a803dd721b4e78698bdb875, served with Sarvam's prism.py on one Modal GPU, B200 requested with H200 fallback (scripts/serve_prism.py). Text only: image rows get their text rendering. GPU cost is recorded separately, never as token pricing."
     },
     {
       "id": "drex-max",

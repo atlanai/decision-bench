@@ -8,6 +8,8 @@ from .openai_compat import LOCAL_HOSTS, number
 
 def endpoint():
     base = (env_value("PRISM_BASE_URL") or "").strip().rstrip("/")
+    if not base:
+        raise CallError("PRISM_BASE_URL is not set; see .env.example", status="config_missing")
     parsed = urlsplit(base)
     if (parsed.scheme not in ("https", "http") or not parsed.hostname
             or parsed.username or parsed.password or parsed.query or parsed.fragment
@@ -29,5 +31,5 @@ def completion(model, case, timeout, api_model=None):
     from .adapters import systemone
     url = endpoint()
     result = systemone(model, case, timeout, api_model, url, api_key(url), "Prism")
-    result.update(images_sent=0, provider_duration_ms=number(result["raw"].get("latency_ms")))
+    result["provider_duration_ms"] = number(result["raw"].get("latency_ms"))
     return result
