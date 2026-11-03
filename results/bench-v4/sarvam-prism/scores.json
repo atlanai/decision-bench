@@ -588,10 +588,10 @@
     "per_1000_rows_usd": null
   },
   "latency_ms": {
-    "p50": 1046.8949170026463,
-    "p95": 1255.227499495959,
-    "p99": 1423.8154250779182,
-    "mean": 1185.931602598637
+    "p50": 1014.8372919938993,
+    "p95": 1118.1384784867987,
+    "p99": 1241.8768499977884,
+    "mean": 1029.3716951046474
   },
   "tokens": {
     "input": null,
@@ -601,9 +601,9 @@
     "coverage": 0.0
   },
   "attempts": {
-    "attempts": 1072,
-    "retries": 1,
-    "attempt_errors": 1,
+    "attempts": 1071,
+    "retries": 0,
+    "attempt_errors": 0,
     "incomplete_attempts": 0
   }
 }

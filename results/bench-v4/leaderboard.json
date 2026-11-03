@@ -374,10 +374,10 @@
       "cost_usd": null,
       "cost_coverage": 0.0,
       "cost_per_1000_rows_usd": null,
-      "latency_p50_ms": 1046.8949170026463,
+      "latency_p50_ms": 1014.8372919938993,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-11-03T15:25:16.892884+00:00"
+      "completed_at": "2026-11-03T15:50:16.718589+00:00"
     },
     {
       "model_id": "tev1-4b-experimental",

@@ -25,18 +25,18 @@
   },
   "harness": {
     "version": "0.3.0",
-    "git_commit": "d2f056f99cff617df7c9ca5caee8d544001f90b0",
-    "git_dirty": true,
+    "git_commit": "bbf23bd3794ee790d26c7d4b4cf22b5369f08237",
+    "git_dirty": false,
     "git_commits": [
-      "d2f056f99cff617df7c9ca5caee8d544001f90b0"
+      "bbf23bd3794ee790d26c7d4b4cf22b5369f08237"
     ]
   },
   "run": {
-    "run_id": "sarvam-prism-bench-v4-e336869b",
+    "run_id": "sarvam-prism-pr46-r1",
     "status": "completed",
-    "created_at": "2026-11-03T15:04:01.830184+00:00",
-    "completed_at": "2026-11-03T15:25:16.892884+00:00",
-    "published_at": "2026-11-03T15:25:50.084411+00:00",
+    "created_at": "2026-11-03T15:31:49.514783+00:00",
+    "completed_at": "2026-11-03T15:50:16.718589+00:00",
+    "published_at": "2026-11-03T16:31:05.384980+00:00",
     "executions": 1,
     "jobs": 1,
     "timeout_seconds": 180,
@@ -48,9 +48,9 @@
     },
     "network_baseline": {
       "probes": 5,
-      "dns_ms": 2.905333007220179,
-      "tcp_connect_ms": 221.32920898729935,
-      "tls_handshake_ms": 240.60470800031908
+      "dns_ms": 4.286291019525379,
+      "tcp_connect_ms": 226.937250001356,
+      "tls_handshake_ms": 240.41712502366863
     }
   },
   "coverage": {
@@ -73,7 +73,7 @@
     "cost_coverage": 0.0,
     "input_tokens": null,
     "output_tokens": null,
-    "latency_p50_ms": 1046.8949170026463,
-    "server_time_p50_ms_estimate": 360.7264580205083
+    "latency_p50_ms": 1014.8372919938993,
+    "server_time_p50_ms_estimate": 316.25937594799325
   }
 }
