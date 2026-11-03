@@ -447,12 +447,31 @@
       "label": "Sarvam-Prism",
       "short_label": "Prism",
       "vendor": "Sarvam",
-      "provider": "prism",
-      "model": "sarvamai/prism",
+      "provider": "sarvam",
+      "model": "sarvam-prism",
       "vision": false,
       "color": "#4d7c0f",
       "request": {},
-      "notes": "Sarvam-Prism FP8 open weights, pinned Hub revision 417cf26c2eea27286a803dd721b4e78698bdb875, served with Sarvam's prism.py on one Modal GPU, B200 requested with H200 fallback (scripts/serve_prism.py). Text only: image rows get their text rendering. GPU cost is recorded separately, never as token pricing."
+      "pricing": {
+        "input_per_mtok": 0.0422,
+        "output_per_mtok": 0,
+        "source_url": "https://docs.sarvam.ai/api/getting-started/pricing",
+        "as_of": "2026-11",
+        "note": "Published rate Rs 4 per 1M input tokens, GST excluded, converted at the FBIL reference rate of Rs 94.8606 per USD on 3 Nov 2026. Output tokens are not billed."
+      },
+      "notes": "Sarvam's hosted Decisions API (POST /v2/systemone). Text only: image rows get their text rendering."
+    },
+    {
+      "id": "sarvam-prism-self-hosted",
+      "label": "Sarvam-Prism (self-hosted)",
+      "short_label": "Prism self-hosted",
+      "vendor": "Sarvam",
+      "provider": "prism",
+      "model": "sarvamai/prism",
+      "vision": false,
+      "color": "#65a30d",
+      "request": {},
+      "notes": "Sarvam-Prism FP8 open weights, pinned Hub revision 417cf26c2eea27286a803dd721b4e78698bdb875, served with Sarvam's prism.py on one Modal GPU, B200 requested with H200 fallback (scripts/serve_prism.py). Text only. GPU cost is recorded separately, never as token pricing."
     },
     {
       "id": "drex-max",

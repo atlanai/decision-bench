@@ -20,9 +20,10 @@ from .errors import CallError
 
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 DJEV_URL = "https://api.djev.dev/v1/request"
+SARVAM_URL = "https://api.sarvam.ai/v2/systemone"
 # Credentials the harness itself uses are never passed to a CLI child process.
 HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
-                   "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL", "PRISM_API_KEY", "PRISM_BASE_URL", "NACE_API_KEY", "DREX_BASE_URL",
+                   "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL", "PRISM_API_KEY", "PRISM_BASE_URL", "SARVAM_API_KEY", "NACE_API_KEY", "DREX_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
 
@@ -48,6 +49,8 @@ def call(model, case, timeout, api_model=None):
         return typesafe(model, case, timeout, api_model)
     if provider == "djev":
         return djev(model, case, timeout, api_model)
+    if provider == "sarvam":
+        return sarvam(model, case, timeout, api_model)
     if provider == "tev1":
         from .tev1 import completion
         return completion(model, case, timeout, api_model)
@@ -94,6 +97,13 @@ def djev(model, case, timeout, api_model=None):
     if not key:
         raise CallError("DJEV_API_KEY is not set; see .env.example", status="auth_missing")
     return systemone(model, case, timeout, api_model, DJEV_URL, key, "Djev")
+
+
+def sarvam(model, case, timeout, api_model=None):
+    key = env_value("SARVAM_API_KEY")
+    if not key:
+        raise CallError("SARVAM_API_KEY is not set; see .env.example", status="auth_missing")
+    return systemone(model, case, timeout, api_model, SARVAM_URL, key, "Sarvam")
 
 
 def laya(model, case, timeout, api_model=None):

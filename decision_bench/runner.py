@@ -78,7 +78,7 @@ def write_json(path, value):
     temporary.replace(path)
 
 
-FIXED_ENDPOINTS = {"typesafe": adapters.TYPESAFE_URL, "djev": adapters.DJEV_URL, "sage": sage.URL, "tev1": tev1.URL,
+FIXED_ENDPOINTS = {"typesafe": adapters.TYPESAFE_URL, "djev": adapters.DJEV_URL, "sarvam": adapters.SARVAM_URL, "sage": sage.URL, "tev1": tev1.URL,
                    "openrouter-decisions": openrouter_decisions.URL}
 
 
@@ -152,6 +152,8 @@ def preflight(model):
         raise CallError("TYPESAFE_API_KEY is not set; see .env.example", status="auth_missing")
     elif provider == "djev" and not config.env_value("DJEV_API_KEY"):
         raise CallError("DJEV_API_KEY is not set; see .env.example", status="auth_missing")
+    elif provider == "sarvam" and not config.env_value("SARVAM_API_KEY"):
+        raise CallError("SARVAM_API_KEY is not set; see .env.example", status="auth_missing")
     elif provider == "tev1" and not config.env_value("TOGETHER_API_KEY"):
         raise CallError("TOGETHER_API_KEY is not set", status="auth_missing")
     elif provider == "sage" and not config.env_value("SAGE_API_KEY"):

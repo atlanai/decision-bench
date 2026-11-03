@@ -7,7 +7,7 @@ import urllib.error
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-from decision_bench import adapters
+from decision_bench import adapters, openai_compat, runner
 from decision_bench.errors import CallError
 
 CASE = {"id": "row-1", "state": {"message": "Please help with billing."},
@@ -53,7 +53,7 @@ class ClaudeAndCodex(unittest.TestCase):
     def test_cli_runs_in_an_empty_directory_without_harness_secrets(self):
         env = {"DECISION_BENCH_API_KEY": "harness-key", "TYPESAFE_API_KEY": "ts-key", "DJEV_API_KEY": "djev-key", "SAGE_API_KEY": "sage-key", "TOGETHER_API_KEY": "together-key",
                "LAYA_API_KEY": "laya-key", "LAYA_BASE_URL": "http://localhost:8000/v1",
-               "PRISM_API_KEY": "prism-key", "PRISM_BASE_URL": "https://prism.example"}
+               "PRISM_API_KEY": "prism-key", "PRISM_BASE_URL": "https://prism.example", "SARVAM_API_KEY": "sarvam-key"}
         response = {"structured_output": ANSWER, "is_error": False, "usage": {}}
         _, call = self.run_cli(SONNET, json.dumps(response), env=env)
         child = call.call_args.kwargs["env"]
@@ -66,6 +66,7 @@ class ClaudeAndCodex(unittest.TestCase):
         self.assertNotIn("LAYA_BASE_URL", child)
         self.assertNotIn("PRISM_API_KEY", child)
         self.assertNotIn("PRISM_BASE_URL", child)
+        self.assertNotIn("SARVAM_API_KEY", child)
         self.assertIn("decision-bench-", str(call.call_args.kwargs["cwd"]))
 
     def test_effort_comes_from_config(self):
@@ -155,6 +156,42 @@ class TypeSafe(unittest.TestCase):
                 adapters.call(self.MODEL, CASE, 10)
         self.assertNotIn("ts-test-key", str(cm.exception))
         self.assertFalse(cm.exception.retryable)
+
+
+
+class Sarvam(unittest.TestCase):
+    MODEL = {"id": "sarvam-prism", "provider": "sarvam", "model": "sarvam-prism"}
+
+    def test_requires_key_before_a_run(self):
+        with patch.object(runner.config, "env_value", return_value=None):
+            with self.assertRaises(CallError) as cm:
+                runner.preflight(self.MODEL)
+        self.assertEqual(cm.exception.status, "auth_missing")
+
+    def test_bearer_request_to_the_hosted_endpoint(self):
+        body = json.dumps({"model": "sarvam-prism", "answers": {"q": {"type": "choice", "choice": "billing", "confidence": .9,
+                           "probabilities": {"billing": .9, "technical": .1}}}, "usage": {"input_tokens": 50, "output_tokens": 0}})
+        response = MagicMock(status=200)
+        response.read.return_value = body.encode()
+        response.__enter__.return_value = response
+        opener = MagicMock()
+        opener.open.return_value = response
+        with patch.object(adapters, "env_value", return_value="sarvam-test-key"), \
+                patch.object(adapters.urllib.request, "build_opener", return_value=opener):
+            out = adapters.call(self.MODEL, CASE, 10)
+        req = opener.open.call_args.args[0]
+        self.assertEqual(req.full_url, "https://api.sarvam.ai/v2/systemone")
+        self.assertEqual(req.get_header("Authorization"), "Bearer sarvam-test-key")
+        self.assertEqual(json.loads(req.data)["model"], "sarvam-prism")
+        self.assertEqual(out["usage"]["input_tokens"], 50)
+        self.assertNotIn("sarvam-test-key", json.dumps(out))
+
+    def test_key_is_redacted_everywhere(self):
+        with patch.object(openai_compat, "env_value", side_effect={"SARVAM_API_KEY": "sarvam-test-key"}.get):
+            self.assertNotIn("sarvam-test-key", openai_compat.redact("echo sarvam-test-key"))
+
+    def test_network_baseline_probes_the_endpoint(self):
+        self.assertEqual(runner.endpoint_url(self.MODEL), "https://api.sarvam.ai/v2/systemone")
 
 
 class Djev(unittest.TestCase):
