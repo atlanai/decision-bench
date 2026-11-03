@@ -6,17 +6,23 @@
     "label": "Sarvam-Prism",
     "short_label": "Prism",
     "vendor": "Sarvam",
-    "provider": "prism",
+    "provider": "sarvam",
     "color": "#4d7c0f",
     "vision": false,
-    "api_model": "sarvamai/prism",
+    "api_model": "sarvam-prism",
     "resolved_models": [
-      "sarvamai/prism@417cf26c2eea27286a803dd721b4e78698bdb875"
+      "sarvam-prism"
     ]
   },
   "decision_pricing": null,
   "request": {},
-  "pricing": null,
+  "pricing": {
+    "input_per_mtok": 0.0422,
+    "output_per_mtok": 0,
+    "source_url": "https://docs.sarvam.ai/api/getting-started/pricing",
+    "as_of": "2026-11",
+    "note": "Published rate Rs 4 per 1M input tokens, GST excluded, converted at the FBIL reference rate of Rs 94.8606 per USD on 3 Nov 2026. Output tokens are not billed."
+  },
   "prompt_version": "choice-v1",
   "corpus": {
     "version": "1.0",
@@ -25,32 +31,32 @@
   },
   "harness": {
     "version": "0.3.0",
-    "git_commit": "bbf23bd3794ee790d26c7d4b4cf22b5369f08237",
+    "git_commit": "952e9429658b16bc468077f8bd4f1ed4c3ea5941",
     "git_dirty": false,
     "git_commits": [
-      "bbf23bd3794ee790d26c7d4b4cf22b5369f08237"
+      "952e9429658b16bc468077f8bd4f1ed4c3ea5941"
     ]
   },
   "run": {
-    "run_id": "sarvam-prism-pr46-r1",
+    "run_id": "sarvam-prism-api-r1",
     "status": "completed",
-    "created_at": "2026-11-03T15:31:49.514783+00:00",
-    "completed_at": "2026-11-03T15:50:16.718589+00:00",
-    "published_at": "2026-11-03T16:31:05.384980+00:00",
+    "created_at": "2026-11-03T17:35:33.146090+00:00",
+    "completed_at": "2026-11-03T17:56:57.717729+00:00",
+    "published_at": "2026-11-03T18:40:15.364739+00:00",
     "executions": 1,
-    "jobs": 1,
+    "jobs": 3,
     "timeout_seconds": 180,
     "max_attempts": 2,
-    "endpoint_id": "endpoint-adc5a0accb1f",
+    "endpoint_id": null,
     "platform": {
       "os": "Darwin",
       "python": "3.13.11"
     },
     "network_baseline": {
       "probes": 5,
-      "dns_ms": 4.286291019525379,
-      "tcp_connect_ms": 226.937250001356,
-      "tls_handshake_ms": 240.41712502366863
+      "dns_ms": 2.046290988801047,
+      "tcp_connect_ms": 20.162792003247887,
+      "tls_handshake_ms": 24.377041991101578
     }
   },
   "coverage": {
@@ -62,18 +68,18 @@
     "full": true
   },
   "totals": {
-    "correct": 961,
-    "accuracy": 0.8972922502334267,
+    "correct": 966,
+    "accuracy": 0.9019607843137255,
     "wilson95": [
-      0.877667833370823,
-      0.9140767362476214
+      0.8826883963102358,
+      0.9183598697784606
     ],
     "errors": 0,
-    "cost_usd": null,
-    "cost_coverage": 0.0,
-    "input_tokens": null,
-    "output_tokens": null,
-    "latency_p50_ms": 1014.8372919938993,
-    "server_time_p50_ms_estimate": 316.25937594799325
+    "cost_usd": 0.0329542332,
+    "cost_coverage": 1.0,
+    "input_tokens": 780906,
+    "output_tokens": 0,
+    "latency_p50_ms": 212.6012500084471,
+    "server_time_p50_ms_estimate": 145.8523330220487
   }
 }

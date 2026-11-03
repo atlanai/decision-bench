@@ -20,7 +20,7 @@ export const gh = path => `${REPO}/blob/main/${path}`;
 export const ghIssue = (template, params = {}) => `${REPO}/issues/new?template=${template}${Object.entries(params).map(([k, v]) => `&${k}=${encodeURIComponent(v)}`).join('')}`;
 
 /* ---------- Models: label, colour, vendor logo and interface come from data.json models[] ---------- */
-const IFACE = {'openai-compatible': 'API', 'openrouter-decisions': 'API', typesafe: 'API', djev: 'API', sage: 'API', tev1: 'API', laya: 'API', 'claude-cli': 'Claude Code CLI', 'codex-cli': 'Codex CLI'};
+const IFACE = {'openai-compatible': 'API', 'openrouter-decisions': 'API', typesafe: 'API', djev: 'API', sarvam: 'API', sage: 'API', tev1: 'API', laya: 'API', 'claude-cli': 'Claude Code CLI', 'codex-cli': 'Codex CLI'};
 const PALETTE = ['#2563eb', '#7c3aed', '#0f766e', '#d97706', '#db2777', '#0891b2', '#65a30d', '#c2410c', '#6d28d9', '#475569'];
 function registerModel(m, configured) {
   if (!m?.id || MODELS[m.id]) return;

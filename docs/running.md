@@ -30,6 +30,7 @@ precedence over `.env`.
 | `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
 | `DREX_BASE_URL` | `drex` | Nace System One base URL ending in `/v1`. |
 | `NACE_API_KEY` | `drex` | Bearer key for Nace Console. |
+| `SARVAM_API_KEY` | `sarvam` | Sarvam API key for the hosted Sarvam-Prism Decisions API at `https://api.sarvam.ai/v2/systemone`. |
 | `PRISM_BASE_URL` | `prism` | Your Sarvam-Prism endpoint from `scripts/serve_prism.py`. HTTPS is required except for `localhost`. |
 | `PRISM_API_KEY` | `prism` | The bearer key you deployed that endpoint with. |
 
@@ -295,7 +296,19 @@ always stop the named app after the run, including on failures. GPU/CPU/memory
 charges are separate infrastructure costs and must not be represented as
 OpenRouter token pricing. No benchmark result exists until the live run completes.
 
-## Sarvam-Prism on Modal
+## Sarvam-Prism
+
+`sarvam-prism` calls Sarvam's hosted Decisions API. Set `SARVAM_API_KEY` in `.env`, then:
+
+```sh
+python3 -m decision_bench run --model sarvam-prism --limit 5
+python3 -m decision_bench run --model sarvam-prism --jobs 3 --rpm 50
+```
+
+The pay-as-you-go plan allows 60 requests per minute, so `--rpm 50` leaves room for retries. The API reports input
+tokens, and the cost comes from the published rupee price converted to USD (see the model's `pricing.note`).
+
+### Self-hosted on Modal
 
 Sarvam-Prism is a 105B FP8 decision model. It runs only with Sarvam's own `prism.py`, on one GPU with about 120 GB
 free, so the `prism` provider calls an endpoint you host. `scripts/serve_prism.py` serves the pinned Hub revision
@@ -304,8 +317,8 @@ on one Modal B200 (H200 as fallback) with mandatory bearer auth:
 ```sh
 PRISM_API_KEY=<key> modal run scripts/serve_prism.py::download   # weights to a Modal volume, on a CPU container
 PRISM_API_KEY=<key> modal deploy scripts/serve_prism.py
-python3 -m decision_bench run --model sarvam-prism --limit 5 --jobs 1
-python3 -m decision_bench run --model sarvam-prism --jobs 1
+python3 -m decision_bench run --model sarvam-prism-self-hosted --limit 5 --jobs 1
+python3 -m decision_bench run --model sarvam-prism-self-hosted --jobs 1
 modal app stop decision-bench-sarvam-prism                       # always, also after a failure
 ```
 
