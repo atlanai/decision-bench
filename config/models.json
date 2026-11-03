@@ -443,6 +443,18 @@
       "notes": "Kev-27B v2 full bf16 weights, temperature 1.32, pinned Hub revision af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf. Self-hosted System One endpoint. Evaluate the same 949 text-only rows; exclude all 122 image cases. GPU cost is recorded separately, never inferred from Kev 4B OpenRouter token pricing."
     },
     {
+      "id": "sarvam-prism",
+      "label": "Sarvam-Prism",
+      "short_label": "Prism",
+      "vendor": "Sarvam",
+      "provider": "prism",
+      "model": "sarvamai/prism",
+      "vision": false,
+      "color": "#4d7c0f",
+      "request": {},
+      "notes": "Sarvam-Prism FP8 open weights, pinned Hub revision 417cf26c2eea27286a803dd721b4e78698bdb875, served with Sarvam's prism.py on one Modal B200 (scripts/serve_prism.py). Text only: image rows get their text rendering. GPU cost is recorded separately, never as token pricing."
+    },
+    {
       "id": "drex-max",
       "label": "Drex Max",
       "short_label": "Drex Max",
@@ -486,6 +498,7 @@
     "OpenAI": "openai.com",
     "Perplexity": "perplexity.ai",
     "Qwen": "qwen.ai",
+    "Sarvam": "sarvam.ai",
     "Together AI": "together.ai",
     "TypeSafe": "typesafe.ai",
     "Z.AI": "z.ai"

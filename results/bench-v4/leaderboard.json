@@ -358,6 +358,28 @@
       "completed_at": "2026-10-08T16:33:12.989324+00:00"
     },
     {
+      "model_id": "sarvam-prism",
+      "label": "Sarvam-Prism",
+      "vendor": "Sarvam",
+      "provider": "prism",
+      "api_model": "sarvamai/prism",
+      "accuracy": 0.8972922502334267,
+      "wilson95": [
+        0.877667833370823,
+        0.9140767362476214
+      ],
+      "correct": 961,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 1046.8949170026463,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-03T15:25:16.892884+00:00"
+    },
+    {
       "model_id": "tev1-4b-experimental",
       "label": "Tev1 4B Experimental",
       "vendor": "Together AI",

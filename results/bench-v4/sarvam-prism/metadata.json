@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "sarvam-prism",
+    "label": "Sarvam-Prism",
+    "short_label": "Prism",
+    "vendor": "Sarvam",
+    "provider": "prism",
+    "color": "#4d7c0f",
+    "vision": false,
+    "api_model": "sarvamai/prism",
+    "resolved_models": [
+      "sarvamai/prism@417cf26c2eea27286a803dd721b4e78698bdb875"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "d2f056f99cff617df7c9ca5caee8d544001f90b0",
+    "git_dirty": true,
+    "git_commits": [
+      "d2f056f99cff617df7c9ca5caee8d544001f90b0"
+    ]
+  },
+  "run": {
+    "run_id": "sarvam-prism-bench-v4-e336869b",
+    "status": "completed",
+    "created_at": "2026-11-03T15:04:01.830184+00:00",
+    "completed_at": "2026-11-03T15:25:16.892884+00:00",
+    "published_at": "2026-11-03T15:25:50.084411+00:00",
+    "executions": 1,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-adc5a0accb1f",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 2.905333007220179,
+      "tcp_connect_ms": 221.32920898729935,
+      "tls_handshake_ms": 240.60470800031908
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 961,
+    "accuracy": 0.8972922502334267,
+    "wilson95": [
+      0.877667833370823,
+      0.9140767362476214
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_p50_ms": 1046.8949170026463,
+    "server_time_p50_ms_estimate": 360.7264580205083
+  }
+}

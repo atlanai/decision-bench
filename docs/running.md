@@ -30,6 +30,8 @@ precedence over `.env`.
 | `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
 | `DREX_BASE_URL` | `drex` | Nace System One base URL ending in `/v1`. |
 | `NACE_API_KEY` | `drex` | Bearer key for Nace Console. |
+| `PRISM_BASE_URL` | `prism` | Your Sarvam-Prism endpoint from `scripts/serve_prism.py`. HTTPS is required except for `localhost`. |
+| `PRISM_API_KEY` | `prism` | The bearer key you deployed that endpoint with. |
 
 Examples of `DECISION_BENCH_BASE_URL`: `https://api.openai.com/v1`, `https://openrouter.ai/api/v1`,
 `http://localhost:4000/v1` (a local LiteLLM proxy), `http://localhost:8000/v1` (vLLM).
@@ -292,3 +294,22 @@ An external watchdog must stop the app after a 30-minute wall-clock limit;
 always stop the named app after the run, including on failures. GPU/CPU/memory
 charges are separate infrastructure costs and must not be represented as
 OpenRouter token pricing. No benchmark result exists until the live run completes.
+
+## Sarvam-Prism on Modal
+
+Sarvam-Prism is a 105B FP8 decision model. It runs only with Sarvam's own `prism.py`, on one GPU with about 120 GB
+free, so the `prism` provider calls an endpoint you host. `scripts/serve_prism.py` serves the pinned Hub revision
+on one Modal B200 (H200 as fallback) with mandatory bearer auth:
+
+```sh
+PRISM_API_KEY=<key> modal run scripts/serve_prism.py::download   # weights to a Modal volume, on a CPU container
+PRISM_API_KEY=<key> modal deploy scripts/serve_prism.py
+python3 -m decision_bench run --model sarvam-prism --limit 5 --jobs 1
+python3 -m decision_bench run --model sarvam-prism --jobs 1
+modal app stop decision-bench-sarvam-prism                       # always, also after a failure
+```
+
+Set `PRISM_BASE_URL` and `PRISM_API_KEY` in `.env` first. The first request after a deploy waits for the weights to
+load and the CUDA graphs to be captured, which takes several minutes. The server answers one request at a time, so
+`--jobs 1` keeps queueing out of the recorded latency. Prism reads text only: image rows get their text rendering,
+as for the other text-only models. GPU time is an infrastructure cost and is not recorded as token pricing.

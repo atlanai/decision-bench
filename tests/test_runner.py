@@ -71,7 +71,7 @@ class NetworkBaseline(unittest.TestCase):
         self.assertIsNone(meta["executions"][1]["network_baseline"])
 
     def test_every_http_provider_has_a_host_to_probe(self):
-        env = {"DECISION_BENCH_BASE_URL": "https://a.example.com/v1", "KEV_BASE_URL": "https://b.example.com",
+        env = {"DECISION_BENCH_BASE_URL": "https://a.example.com/v1", "KEV_BASE_URL": "https://b.example.com", "PRISM_BASE_URL": "https://p.example.com",
                "DREX_BASE_URL": "https://drex.example.com/v1", "LAYA_BASE_URL": "https://c.example.com/v1"}
         with patch.dict(runner.os.environ, env):
             missing = {p for p in runner.config.PROVIDERS - {"claude-cli", "codex-cli"}
