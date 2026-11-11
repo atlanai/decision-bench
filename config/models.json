@@ -413,6 +413,24 @@
       "notes": "Native Choice probabilities through OpenRouter. Text only: evaluated on the identical 949 rows without image assets; all 122 image-containing rows excluded. Hosted weights may update; returned model identity recorded."
     },
     {
+      "id": "gemini-decision-1",
+      "label": "Gemini Decision 1",
+      "short_label": "Gemini Decision 1",
+      "vendor": "Google",
+      "provider": "openrouter-decisions",
+      "model": "google/gemini-decision-1",
+      "vision": true,
+      "color": "#4285f4",
+      "request": {},
+      "pricing": {
+        "input_per_mtok": 0.1,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/google/gemini-decision-1",
+        "as_of": "2026-11-12"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
       "id": "kev-4b",
       "label": "Kev 4B",
       "short_label": "Kev 4B",
