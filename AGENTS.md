@@ -14,7 +14,8 @@ python3 -m decision_bench leaderboard         # rewrites results/<suite>/leaderb
 
 ## Rules
 
-- Runtime code uses the Python standard library only. Tests never call a real model.
+- Runtime code uses the Python standard library only. The one exception is Pillow, the optional `images`
+  extra, imported only to fit images to a provider's size limits. Tests never call a real model.
 - Never read, print or copy `.env`. Keys and endpoints come only from environment variables.
 - Never write an endpoint URL, a hostname, an IP address or a local path into a committed file, a commit message, a
   PR or a comment. `scripts/check_secrets.py` checks committed files only.
