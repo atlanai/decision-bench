@@ -319,7 +319,7 @@ def _run(args, model, cases, cfg, run_id, folder):
                          provider_duration_ms=result.get("provider_duration_ms"))
                 record.update({k: result.get(k) for k in ("usage", "cost_usd", "cost_basis", "resolved_model",
                                "output_text", "provider_duration_ms", "finish_reason", "output_validation_error",
-                               "output_wrapper_normalization", "command", "images_sent") if k in result})
+                               "output_wrapper_normalization", "command", "images_sent", "images_resized") if k in result})
                 record["raw_response"] = result["response"]
                 record["inference_input"] = result["payload"]
                 record["answers"] = normalize_answers(result["response"], case, result["source"])

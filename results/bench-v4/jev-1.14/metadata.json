@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "jev-1.14",
+    "label": "Jev 1.14",
+    "short_label": "Jev 1.14",
+    "vendor": "TypeSafe",
+    "provider": "openrouter-decisions",
+    "color": "#14b8a6",
+    "vision": true,
+    "api_model": "typesafe/jev-1.14",
+    "resolved_models": [
+      "typesafe/jev-1.14-20261014"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {
+    "image_min_side": 280,
+    "image_max_side": 1568
+  },
+  "pricing": {
+    "input_per_mtok": 0.042,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/typesafe/jev-1.14",
+    "as_of": "2026-11-12"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "d83584e10174cdfa7ed89f3247c8d7696959772a",
+    "git_dirty": false,
+    "git_commits": [
+      "d83584e10174cdfa7ed89f3247c8d7696959772a"
+    ]
+  },
+  "run": {
+    "run_id": "jev-1.14-fit-r1",
+    "status": "completed",
+    "created_at": "2026-11-11T22:00:17.182920+00:00",
+    "completed_at": "2026-11-11T22:04:00.365109+00:00",
+    "published_at": "2026-11-12T05:21:33.793853+00:00",
+    "executions": 1,
+    "jobs": 4,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 2.79150006826967,
+      "tcp_connect_ms": 214.07699992414564,
+      "tls_handshake_ms": 236.15466698538512
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1010,
+    "accuracy": 0.9430438842203548,
+    "wilson95": [
+      0.9275147767700637,
+      0.9554060182568501
+    ],
+    "errors": 0,
+    "cost_usd": 0.05600238,
+    "cost_coverage": 1.0,
+    "input_tokens": 1333390,
+    "output_tokens": 63539,
+    "latency_p50_ms": 754.3561659986153,
+    "server_time_p50_ms_estimate": 87.25599909666926
+  }
+}

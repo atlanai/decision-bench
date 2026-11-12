@@ -33,7 +33,7 @@ Start with the task you need the model to perform. Small accuracy differences ma
 
 ## Quick start
 
-Python 3.11 or newer. There are no runtime dependencies beyond the standard library. The corpus is committed, so you do not need to download the upstream datasets.
+Python 3.11 or newer. There are no runtime dependencies beyond the standard library, except Pillow for the one model that needs its images resized (see docs/running.md). The corpus is committed, so you do not need to download the upstream datasets.
 
 From the repository root:
 

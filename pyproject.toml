@@ -10,6 +10,9 @@ requires-python = ">=3.11"
 license = {text = "MIT"}
 dependencies = []
 
+[project.optional-dependencies]
+images = ["pillow==13.0.0"]
+
 [project.scripts]
 decision-bench = "decision_bench.__main__:main"
 

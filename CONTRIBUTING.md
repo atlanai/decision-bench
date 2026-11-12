@@ -70,7 +70,8 @@ A frozen corpus never changes once results exist for it. A fix to a row or label
 
 ## Code
 
-- Runtime code uses the Python standard library only. The viewer is plain browser JavaScript with no build step.
+- Runtime code uses the Python standard library only, except Pillow (the optional `images` extra), which only
+  the image resizing for a provider with size limits imports. The viewer is plain browser JavaScript with no build step.
 - New providers must record every attempt, error, token count and timing. They must also record the exact model and request options. Unknown values are `null`, not guesses.
 - Never route a request to a fallback model under another model's name.
 - Keys and endpoints come only from environment variables. Never write them to a file.

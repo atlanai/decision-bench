@@ -1,4 +1,6 @@
 """Native decisions, evidence boundaries, accounting, and credential isolation."""
+import base64
+import io
 import json
 import unittest
 from unittest.mock import MagicMock, patch
@@ -50,6 +52,19 @@ class OpenRouterDecisions(unittest.TestCase):
             self.assertEqual(openai_compat.redact("synthetic-openrouter-key"), "[REDACTED]")
         self.assertIn("OPENROUTER_API_KEY", adapters.HARNESS_SECRETS)
 
+    def test_published_predictions_flag_resized_images(self):
+        with repo():
+            case = corpus.load_cases()[0]
+            question = case["questions"][0]
+            answers = {question["id"]: {"label": question["gold"], "probabilities": {question["gold"]: 1.0},
+                                        "probability_source": "native"}}
+            records = [{"case_id": case["id"], "status": "ok", "answers": answers, "images_sent": 1,
+                        "images_resized": 1},
+                       {"case_id": case["id"], "status": "ok", "answers": answers, "images_sent": 1}]
+            resized, untouched = [results.predictions_from_run([r], [], {case["id"]: case})[0] for r in records]
+        self.assertEqual(resized["images_resized"], 1)
+        self.assertNotIn("images_resized", untouched)
+
     def test_public_native_output_excludes_transport_identifiers(self):
         with repo():
             case = corpus.load_cases()[0]
@@ -65,3 +80,61 @@ class OpenRouterDecisions(unittest.TestCase):
         self.assertEqual(json.loads(public["output_text"]), {"answers": original["answers"]})
         self.assertNotIn("private-request-id", json.dumps(public))
         self.assertNotIn("private-provider-route", json.dumps(public))
+
+
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+
+
+@unittest.skipUnless(Image, "pip install 'decision-bench[images]' to test image resizing")
+class ImageLimits(unittest.TestCase):
+    """A provider that rejects images outside a side range (Jev 1.14 on OpenRouter: 280 to 1568 px) gets the row's
+    images rescaled to fit, keeping the aspect ratio and the format."""
+    MODEL = {"id": "jev", "provider": "openrouter-decisions", "model": "typesafe/jev-1.14", "vision": True,
+             "request": {"image_min_side": 280, "image_max_side": 1568}}
+
+    def image(self, size, image_format):
+        out = io.BytesIO()
+        Image.new("RGB", size, "white").save(out, image_format)
+        return out.getvalue()
+
+    def send(self, images):
+        body = {"model": self.MODEL["model"], "answers": {"q": {"choice": "billing",
+                "probabilities": {"billing": .9, "technical": .1}}}, "usage": {"input_tokens": 9, "cost": .00001}}
+        response = MagicMock(status=200)
+        response.read.return_value = json.dumps(body).encode()
+        response.__enter__.return_value = response
+        with repo({"OPENROUTER_API_KEY": "synthetic-" + "openrouter-key"}), \
+                patch.object(adapters.urllib.request, "build_opener") as opener, \
+                patch.object(openrouter_decisions, "image_assets", return_value=images):
+            opener.return_value.open.return_value = response
+            result = adapters.call(self.MODEL, CASE, 10)
+        parts = json.loads(opener.return_value.open.call_args.args[0].data)["state"][1:]
+        sent = []
+        for part in parts:
+            header, data = part["image_url"]["url"].split(",", 1)
+            sent.append((header, base64.b64decode(data)))
+        return sent, result
+
+    def test_images_inside_the_limits_are_sent_unchanged(self):
+        png = self.image((300, 1500), "PNG")
+        sent, result = self.send([("image/png", png)])
+        self.assertEqual(sent, [("data:image/png;base64", png)])
+        self.assertEqual((result["images_sent"], result["images_resized"]), (1, 0))
+
+    def test_small_icon_is_scaled_up_to_the_minimum_side(self):
+        sent, result = self.send([("image/png", self.image((256, 256), "PNG"))])
+        header, data = sent[0]
+        self.assertEqual(header, "data:image/png;base64")
+        self.assertEqual(Image.open(io.BytesIO(data)).size, (280, 280))
+        self.assertEqual(result["images_resized"], 1)
+
+    def test_tall_receipt_is_scaled_down_to_the_maximum_side(self):
+        sent, result = self.send([("image/jpeg", self.image((900, 1600), "JPEG"))])
+        header, data = sent[0]
+        self.assertEqual(header, "data:image/jpeg;base64")
+        self.assertEqual(Image.open(io.BytesIO(data)).format, "JPEG")
+        self.assertEqual(Image.open(io.BytesIO(data)).size, (882, 1568))
+        self.assertEqual(result["images_resized"], 1)

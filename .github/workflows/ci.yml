@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "24"
+      - name: Install Pillow for the image resizing tests
+        run: python3 -m pip install pillow==13.0.0
       - name: Unit tests
         run: python3 -m unittest discover -s tests -v
       - name: Validate corpus, model config and published results

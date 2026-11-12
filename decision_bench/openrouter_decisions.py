@@ -19,12 +19,39 @@ def api_key():
     return key
 
 
+def fit_image(mime, content, min_side, max_side):
+    """Rescale an image whose shorter side is under min_side or longer side is over max_side, keeping its aspect
+    ratio and format. Returns (mime, bytes, resized). Pillow is the one runtime dependency outside the standard
+    library, and it is imported only for a model whose provider rejects some corpus images."""
+    import io
+
+    from PIL import Image
+
+    with Image.open(io.BytesIO(content)) as image:
+        width, height = image.size
+        scale = max(1, min_side / min(width, height))
+        scale = min(scale, max_side / max(width, height))
+        if scale == 1:
+            return mime, content, False
+        size = (round(width * scale), round(height * scale))
+        out = io.BytesIO()
+        image.resize(size, Image.Resampling.LANCZOS).save(out, image.format, quality=95)
+    return mime, out.getvalue(), True
+
+
 def completion(model, case, timeout, api_model=None):
     from .adapters import systemone
 
     key = api_key()
     data = public_input(case)
     images = image_assets(case) if model.get("vision") else []
+    request = model.get("request", {})
+    resized = 0
+    if images and ("image_min_side" in request or "image_max_side" in request):
+        fitted = [fit_image(mime, content, request.get("image_min_side", 1), request.get("image_max_side", 10**6))
+                  for mime, content in images]
+        images = [(mime, content) for mime, content, _ in fitted]
+        resized = sum(changed for _, _, changed in fitted)
     state = data["state"]
     if images:
         state = [json.dumps(state, ensure_ascii=False)] + [
@@ -38,6 +65,6 @@ def completion(model, case, timeout, api_model=None):
     result = systemone(model, case, timeout, api_model, URL, key, "OpenRouter Decisions", payload=payload)
     cost = number((result["raw"].get("usage") or {}).get("cost"))
     result["output_text"] = json.dumps({"answers": result["response"].get("answers", {})}, ensure_ascii=False)
-    result.update(images_sent=len(images), cost_usd=cost,
+    result.update(images_sent=len(images), images_resized=resized, cost_usd=cost,
                   cost_basis="provider_reported" if cost is not None else "unavailable")
     return result
