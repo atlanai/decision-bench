@@ -50,6 +50,28 @@
       "completed_at": "2026-10-08T15:50:51.499968+00:00"
     },
     {
+      "model_id": "jev-1.14",
+      "label": "Jev 1.14",
+      "vendor": "TypeSafe",
+      "provider": "openrouter-decisions",
+      "api_model": "typesafe/jev-1.14",
+      "accuracy": 0.9430438842203548,
+      "wilson95": [
+        0.9275147767700637,
+        0.9554060182568501
+      ],
+      "correct": 1010,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.05600238,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.05228980392156862,
+      "latency_p50_ms": 754.3561659986153,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-11T22:04:00.365109+00:00"
+    },
+    {
       "model_id": "gemini-3.5-flash",
       "label": "Gemini 3.5 Flash",
       "vendor": "Google",
