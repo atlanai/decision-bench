@@ -11,12 +11,14 @@ Every model is scored on these rows.
 | Amos 1 large | laya | 94.3% | 92.6%-95.6% | 0 | n/a | 322 ms |
 | Perplexity Decider V1.1 27B | openrouter-decisions | 93.9% | 92.2%-95.2% | 0 | $0.0170 | 539 ms |
 | DeepSeek V4.1 Flash | openai-compatible | 93.7% | 91.9%-95.1% | 6 | $0.6823 | 1409 ms |
+| Jev 1.14 | openrouter-decisions | 93.6% | 91.8%-95.0% | 0 | $0.0523 | 754 ms |
 | Gemini 3.5 Flash | openai-compatible | 93.5% | 91.7%-94.9% | 1 | $3.3163 | 3590 ms |
 | Drex Max | drex | 93.4% | 91.6%-94.8% | 0 | $0.0507 | 189 ms |
 | Gemini Flash Lite | openai-compatible | 93.4% | 91.6%-94.8% | 0 | $0.9229 | 3370 ms |
 | Jev 1.13 | typesafe | 93.2% | 91.4%-94.6% | 0 | $0.0432 | 439 ms |
 | GLM 5.3 Flash | openai-compatible | 93.0% | 91.2%-94.5% | 7 | $1.0260 | 2359 ms |
 | GPT-6 Luna | openai-compatible | 92.9% | 91.1%-94.4% | 10 | $0.1577 | 2013 ms |
+| Gemini Decision 1 | openrouter-decisions | 92.4% | 90.6%-93.9% | 0 | $0.0899 | 908 ms |
 | Sarvam-Prism | sarvam | 91.8% | 89.9%-93.4% | 0 | $0.0308 | 213 ms |
 | Claude Sonnet 5 | openai-compatible | 91.7% | 89.7%-93.3% | 1 | $5.0183 | 3588 ms |
 | GPT-5.6 Luna | openai-compatible | 91.7% | 89.7%-93.3% | 5 | $0.4049 | 1805 ms |
@@ -39,10 +41,12 @@ Only the models that were sent every image.
 | --- | --- | --- | --- | --- | --- | --- |
 | Amos 1 large | laya | 94.9% | 93.4%-96.0% | 0 | n/a | 322 ms |
 | Perplexity Decider V1.1 27B | openrouter-decisions | 94.5% | 93.0%-95.7% | 0 | $0.0170 | 539 ms |
+| Jev 1.14 | openrouter-decisions | 94.3% | 92.8%-95.5% | 0 | $0.0523 | 754 ms |
 | Gemini 3.5 Flash | openai-compatible | 94.2% | 92.6%-95.5% | 1 | $3.3163 | 3590 ms |
 | Gemini Flash Lite | openai-compatible | 94.1% | 92.5%-95.4% | 0 | $0.9229 | 3370 ms |
 | Drex Max | drex | 94.0% | 92.4%-95.3% | 0 | $0.0507 | 189 ms |
 | GPT-6 Luna | openai-compatible | 93.7% | 92.0%-95.0% | 10 | $0.1577 | 2013 ms |
+| Gemini Decision 1 | openrouter-decisions | 93.3% | 91.6%-94.6% | 0 | $0.0899 | 908 ms |
 | Claude Sonnet 5 | openai-compatible | 92.6% | 90.9%-94.0% | 1 | $5.0183 | 3588 ms |
 | GPT-5.6 Luna | openai-compatible | 92.6% | 90.9%-94.0% | 5 | $0.4049 | 1805 ms |
 | Sage 1.3 (Levanto) | sage | 91.8% | 90.0%-93.3% | 0 | $0.4075 | 441 ms |

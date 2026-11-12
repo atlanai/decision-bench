@@ -86,6 +86,7 @@ One line per row, in corpus order:
 | `confidence` | The probability the model gave its own answer, after normalizing to sum 1. |
 | `probabilities` | The full normalized distribution, or `null`. |
 | `images_sent` | How many of the row's images were sent: 0 for text-only models and for text tasks. |
+| `images_resized` | Present only when some of the row's images were rescaled to the provider's size limits before they were sent (`image_min_side`, `image_max_side`). |
 | `output_text` | The model's raw answer text for successful rows only (at most 20,000 characters; `output_truncated: true` if cut). Failed rows publish `null`. |
 | `error` | Status-only error class such as `HTTP 429`, without provider response bodies or routing details. |
 | `latency_ms` | Wall clock for the row, including retries. |

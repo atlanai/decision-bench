@@ -129,6 +129,50 @@
       }
     },
     {
+      "model_id": "jev-1.14",
+      "label": "Jev 1.14",
+      "vendor": "TypeSafe",
+      "provider": "openrouter-decisions",
+      "api_model": "typesafe/jev-1.14",
+      "accuracy": 0.9430438842203548,
+      "wilson95": [
+        0.9275147767700637,
+        0.9554060182568501
+      ],
+      "correct": 1010,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.05600238,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.05228980392156862,
+      "latency_p50_ms": 754.3561659986153,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-11T22:04:00.365109+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 888,
+          "accuracy": 0.9357218124341412,
+          "wilson95": [
+            0.9182940917339418,
+            0.9496361077871537
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1010,
+          "accuracy": 0.9430438842203548,
+          "wilson95": [
+            0.9275147767700637,
+            0.9554060182568501
+          ],
+          "errors": 0
+        }
+      }
+    },
+    {
       "model_id": "gemini-3.5-flash",
       "label": "Gemini 3.5 Flash",
       "vendor": "Google",
@@ -371,6 +415,50 @@
             0.94960909895355
           ],
           "errors": 10
+        }
+      }
+    },
+    {
+      "model_id": "gemini-decision-1",
+      "label": "Gemini Decision 1",
+      "vendor": "Google",
+      "provider": "openrouter-decisions",
+      "api_model": "google/gemini-decision-1",
+      "accuracy": 0.9327731092436975,
+      "wilson95": [
+        0.9161758937835047,
+        0.9462767690088547
+      ],
+      "correct": 999,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.0963084,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.08992380952380953,
+      "latency_p50_ms": 908.2237079273909,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-11T20:35:31.766264+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 877,
+          "accuracy": 0.9241306638566913,
+          "wilson95": [
+            0.9055209368496431,
+            0.9393204302779048
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 999,
+          "accuracy": 0.9327731092436975,
+          "wilson95": [
+            0.9161758937835047,
+            0.9462767690088547
+          ],
+          "errors": 0
         }
       }
     },

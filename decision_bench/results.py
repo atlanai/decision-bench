@@ -105,6 +105,8 @@ def predictions_from_run(records, ledger, case_map):
                              "error": public_error(a.get("error"), a.get("status")), "duration_ms": a.get("duration_ms"),
                              "cost_usd": a.get("cost_usd"), "cost_basis": a.get("cost_basis"),
                              "tokens": _tokens(a.get("usage"))} for a in own]}
+        if r.get("images_resized"):
+            row["images_resized"] = r["images_resized"]
         if own and all(a.get("decision_units") is not None for a in own):
             row["decision_units"] = sum(a["decision_units"] for a in own)
         if answer and answer.get("probability_source"):

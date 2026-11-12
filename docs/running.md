@@ -2,7 +2,8 @@
 
 ## Install
 
-Python 3.11 or newer. There are no runtime dependencies beyond the standard library.
+Python 3.11 or newer. There are no runtime dependencies beyond the standard library, except Pillow for a model
+with image size limits (`pip install -e '.[images]'`, see Jev 1.14 below).
 
 ```sh
 git clone <this repository> && cd decision-bench
@@ -327,3 +328,23 @@ Set `PRISM_BASE_URL` and `PRISM_API_KEY` in `.env` first. The first request afte
 load and the CUDA graphs to be captured, which takes several minutes. The server answers one request at a time, so
 `--jobs 1` keeps queueing out of the recorded latency. Prism reads text only: image rows get their text rendering,
 as for the other text-only models. GPU time is an infrastructure cost and is not recorded as token pricing.
+
+## Jev 1.14 via OpenRouter
+
+Use the ignored `OPENROUTER_API_KEY` and model id `jev-1.14`. It sends native Choice questions with text and image
+evidence to OpenRouter's Decisions endpoint, like Gemini Decision 1.
+
+TypeSafe rejects an image whose shorter side is under 280 px or whose longer side is over 1568 px
+(`Invalid image dimensions`). bench-v4 has 38 such rows: the 256 px DSN-1 icons and eight 1600 px FIN-3 receipts. The
+entry sets `image_min_side` and `image_max_side`, so the adapter rescales those images to fit before sending them,
+keeping the aspect ratio and format. Every other model gets the corpus images unchanged. This needs Pillow:
+
+```sh
+pip install -e '.[images]'
+python3 -m decision_bench run --model jev-1.14 --limit 5 --jobs 1 --max-attempts 1
+```
+
+Each rescaled row has `images_resized` in `predictions.jsonl`. Input costs $0.042 per million tokens and output is
+free (12 November 2026); provider-reported cost takes precedence.
+
+[OpenRouter model](https://openrouter.ai/typesafe/jev-1.14)

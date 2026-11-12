@@ -11,7 +11,7 @@ from . import corpus
 PROVIDERS = {"openai-compatible", "openrouter-decisions", "typesafe", "kev", "prism", "sarvam", "drex", "djev", "sage", "tev1", "laya", "claude-cli", "codex-cli"}
 MODEL_ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
 REQUEST_KEYS = {
-    "openrouter-decisions": set(),
+    "openrouter-decisions": {"image_min_side", "image_max_side"},
     "openai-compatible": {"response_format", "token_limit_field", "max_output_tokens", "reasoning_effort",
                           "temperature", "json_wrapper_policy"},
     "typesafe": set(),
@@ -74,6 +74,11 @@ def _check_model(m):
         raise ConfigError(f"{where}: token_limit_field must be max_tokens or max_completion_tokens")
     if request.get("json_wrapper_policy", "allow_single_code_fence") not in ("allow_single_code_fence", "strict"):
         raise ConfigError(f"{where}: json_wrapper_policy must be allow_single_code_fence or strict")
+    for key in ("image_min_side", "image_max_side"):
+        if key in request and (type(request[key]) is not int or request[key] < 1):
+            raise ConfigError(f"{where}: {key} must be a positive whole number of pixels")
+    if request.get("image_min_side", 0) > request.get("image_max_side", math.inf):
+        raise ConfigError(f"{where}: image_min_side is larger than image_max_side")
     if "vision" in m and not isinstance(m["vision"], bool):
         raise ConfigError(f"{where}: vision must be true or false")
     if m.get("kind", "llm") not in MODEL_KINDS:
