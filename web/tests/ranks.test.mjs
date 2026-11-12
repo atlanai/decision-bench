@@ -47,11 +47,43 @@ test('a pair that shares one row is not separated', () => {
   assert.deepEqual(B.rankSpreads([strong, oneRow], tasks), [[1, 2], [1, 2]]);
 });
 
-test('the published leaderboard gives every full run a range', () => {
-  B.init(JSON.parse(readFileSync(new URL('../../site/data.json', import.meta.url), 'utf8')), {});
-  const ranks = B.ranks(B.RUNS, B.allCases);
+B.init(JSON.parse(readFileSync(new URL('../../site/data.json', import.meta.url), 'utf8')), {});
+
+test('a pair gets the difference on shared rows with an interval from the same bootstrap', () => {
+  const text = B.textCases(), acc = r => B.subsetMetrics(r, text).accuracy;
+  const [best, ...others] = B.RUNS.slice().sort((a, b) => acc(b) - acc(a)), worst = others.at(-1);
+  const gap = B.pairedDifference(best, worst, text), none = B.pairedDifference(best, best, text);
+  assert.ok(Math.abs(gap.difference - (acc(best) - acc(worst))) < 1e-9);
+  assert.ok(gap.interval[0] > 0 && gap.interval[0] < gap.difference && gap.difference < gap.interval[1]);
+  assert.deepEqual([none.difference, ...none.interval], [0, 0, 0]);
+});
+
+test('every published run is ranked on the text rows, which all of them were scored on', () => {
+  const text = B.textCases(), ranks = B.ranks(B.RUNS, text);
+  assert.ok(text.length > 0 && text.length < B.allCases.length);
   assert.equal(ranks.size, B.RUNS.length);
   for (const [best, worst] of ranks.values()) assert.ok(best >= 1 && best <= worst && worst <= B.RUNS.length);
+});
+
+test('on all rows only the runs scored on every row are ranked', () => {
+  const ranked = B.evaluated(B.RUNS, B.allCases);
+  assert.ok(ranked.length > 0);
+  for (const r of B.RUNS) assert.equal(ranked.includes(r), B.subsetMetrics(r, B.allCases).cases === B.allCases.length, B.keyOf(r));
+  for (const r of ranked) assert.ok(B.allCases.every(c => !B.isImageTask(c.task) || B.rawResult(r.id, c.id).images_sent > 0), B.keyOf(r));
+  assert.equal(B.ranks(B.RUNS, B.allCases).size, ranked.length);
+});
+
+test('the # column never runs against the order by accuracy, in any view', () => {
+  const views = [B.textCases(), B.allCases, ...B.categoryOrder().flatMap(k => [B.textCases(), B.allCases].map(rows => rows.filter(c => B.catKey(c) === k)))].filter(rows => rows.length);
+  for (const cases of views) {
+    const runs = B.evaluated(B.RUNS, cases), place = B.places(runs, cases), spread = B.ranks(runs, cases);
+    const sorted = runs.slice().sort((a, b) => B.subsetMetrics(b, cases).accuracy - B.subsetMetrics(a, cases).accuracy);
+    assert.equal(place.get(sorted[0].id), 1);
+    for (const [i, r] of sorted.entries()) {
+      assert.ok(place.get(r.id) >= spread.get(r.id)[0]);
+      if (i) assert.ok(place.get(r.id) >= place.get(sorted[i - 1].id), `${B.keyOf(r)} on ${cases.length} rows`);
+    }
+  }
 });
 
 test('a range of one place shows one number', () => {
@@ -60,7 +92,14 @@ test('a range of one place shows one number', () => {
   assert.equal(B.rankText(undefined), '—');
 });
 
-test('position is the order by accuracy, and equal accuracy shares a position', () => {
-  const ms = [{questions: 10, accuracy: .9}, {questions: 10, accuracy: .8}, {questions: 10, accuracy: .9}, {questions: 0, accuracy: null}];
-  assert.deepEqual(ms.map(m => B.positionOf(m, ms)), [1, 3, 1, null]);
+test('the kind filter splits the published runs into decision models and general LLMs', () => {
+  const decision = B.runsOfKind(B.RUNS, 'decision').map(B.keyOf), llm = B.runsOfKind(B.RUNS, 'llm').map(B.keyOf);
+  assert.equal(decision.length + llm.length, B.RUNS.length);
+  assert.ok(decision.includes('microsoft-decision-1') && decision.includes('gpt-6-luna-decisions'));
+  assert.ok(llm.includes('gpt-6-luna') && llm.includes('claude-sonnet-5'));
+  assert.ok(llm.includes('gpt-5.6-luna'), 'a model that left the config gets its kind from its provider');
+  assert.equal(B.runsOfKind(B.RUNS, '').length, B.RUNS.length);
+  const text = B.textCases(), places = [...B.ranks(B.evaluated(B.runsOfKind(B.RUNS, 'decision'), text), text).values()];
+  assert.equal(places.length, decision.length);
+  assert.ok(places.every(([best, worst]) => worst <= decision.length) && places.some(([best]) => best === 1));
 });

@@ -16,10 +16,10 @@ image inputs; the viewer retains that distinction.
 
 The website recomputes metrics over eligible rows and labels exclusions and
 scored denominators. Historical downloadable scores and run metadata retain their
-original unadjusted aggregates. For comparisons on the same evidence, use the Text
-filter or the paired comparison, which only uses rows eligible for both models.
-Original bootstrap intervals are suppressed if eligibility changes the compared
-sample. Recompute them before publishing adjusted intervals.
+original unadjusted aggregates. The leaderboard ranks a model only in the views
+where it was scored on every row, so a model with excluded rows is ranked on the
+Text track and not on All inputs. The paired comparison uses the rows eligible
+for both models, and its interval is calculated on those rows.
 
 Jev's recorded run has 30 excluded icons, leaving 976 correct answers in 1,041
 eligible cases (93.8%). This is a scoring correction, not a new model run.

@@ -18,7 +18,7 @@ const TD = 'px-3 py-2.5 first:pl-5 last:pr-5';
 const go = h => e => { if (!e.target.closest('a,button')) navigate(h); };
 
 export function Models() {
-  const available = [...B.RUNS, ...B.PARTIAL];
+  const available = B.RUNS;
   const published = new Set(available.map(B.keyOf));
   const keys = B.ORDER.filter(k => published.has(k));
   return <>
@@ -51,7 +51,7 @@ export function Models() {
 export function ModelPage({id: k}) {
   const [adv, setAdv] = useState(false);
   const m = B.MODELS[k];
-  const run = [...B.RUNS, ...B.PARTIAL].find(r => B.keyOf(r) === k);
+  const run = B.RUNS.find(r => B.keyOf(r) === k);
   if (!m || !run) return <EmptyPage title="No published result">See the <a href="/models" className="text-brand hover:underline">models with results</a>.</EmptyPage>;
   const head = <>
     <Crumbs items={[['Models', href('models')], [m.name, '']]} />
@@ -72,7 +72,7 @@ export function ModelPage({id: k}) {
       <Stat label={`Accuracy · ${all.questions} scored rows`} value={pct(all.accuracy)} /><Stat label="95% interval" value={ciText(all.wilson)} /><Stat label="Median latency" value={ms(all.latency.p50)} />
       <Stat label={run.decision_pricing ? "Historical est. $ / 1k rows" : m.provider === 'sage' ? "Est. $ / 1k rows · Starter" : "$ / 1k rows"} value={money(all.costPer1k)} /><Stat label="Tasks that fit" value={`${count('ok')} / ${fits.filter(([, v]) => v.k !== 'na').length}`} />
     </div>
-    {run.coverage?.full === false && <Notice>This is a partial evaluation: {run.coverage.rows_completed} of {run.coverage.rows_in_corpus} corpus rows were run. Unrun rows are not scored, and this run is not ranked on the full leaderboard. {m.provider === 'tev1' && 'Tev1 was evaluated on 949 text-only cases; all 122 image-containing cases were excluded. Calibration metrics are unavailable for this label-only evaluation.'}</Notice>}
+    {run.coverage?.full === false && <Notice>This is a partial evaluation: {run.coverage.rows_completed} of {run.coverage.rows_in_corpus} corpus rows were run. Unrun rows are not scored, and this run is ranked on the Text track, not on the all-inputs leaderboard. {m.provider === 'tev1' && 'Tev1 was evaluated on 949 text-only cases; all 122 image-containing cases were excluded. Calibration metrics are unavailable for this label-only evaluation.'}</Notice>}
     {m.provider === 'sage' && <Notice>Sage abstained on {B.allCases.filter(c => { const r = B.rawResult(run.id, c.id); return r?.status === 'ok' && r.scores.some(s => s.label == null); }).length} rows. These count as incorrect in accuracy, not as API failures. Sage 1.3 returns native categorical probabilities. Cost is estimated from measured text, image and billed output tokens at Starter rates: $0.046 per million input tokens and $10 per million output tokens. Billed output includes reasoning; no web search was used. This is metered usage value covered by credits, not a card charge.</Notice>}
     {run.decision_pricing && <Section title="Decision usage and estimated cost">
       <div className="grid gap-3 sm:grid-cols-3">

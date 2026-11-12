@@ -18,12 +18,12 @@ from datetime import datetime, timezone
 
 from . import config, corpus
 from .corpus import PROMPT_VERSION, SYSTEM
-from .metrics import paired_comparison, summarize
+from .metrics import summarize
 from .results import export_run, leaderboard, load_published, records_from_predictions
 from .runner import runs_dir
 from .viewer import write_viewer
 
-DATA_SCHEMA_VERSION = 2
+DATA_SCHEMA_VERSION = 3
 
 
 def _run_entry(metadata, metrics, source, cases):
@@ -76,15 +76,7 @@ def collect(include_runs=False):
 
 def build(include_runs=False):
     cases, manifest, runs, records = collect(include_runs)
-    case_map = {c["id"]: c for c in cases}
     suite = manifest.get("suite")
-    comparable = [r for r in runs if r["current_corpus"] and r["coverage"]["full"]]
-    comparisons = []
-    for i, a in enumerate(comparable):
-        for b in comparable[i + 1:]:
-            paired = paired_comparison(records[a["id"]], records[b["id"]], case_map)
-            if paired:
-                comparisons.append({"a": a["id"], "b": b["id"], "corpus_sha256": manifest["sha256"], **paired})
     published = sum(r["source"] == "published" for r in runs)
     models = [{**config.display(m), "api_model": m["model"], "request": m.get("request", {}),
                "pricing": m.get("pricing")} for m in config.load_models()]
@@ -99,7 +91,6 @@ def build(include_runs=False):
               "leaderboard": leaderboard(suite, manifest=manifest)["models"],
               "runs": runs,
               "results": [r for rid in records for r in records[rid]],
-              "comparisons": comparisons,
               "include_runs": include_runs,
               "cases": cases}
     site = corpus.ROOT / "site"

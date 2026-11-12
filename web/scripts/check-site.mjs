@@ -55,12 +55,12 @@ try {
   assert.equal(await page.locator(':focus').innerText(), 'Skip to content');
   await page.keyboard.press('Enter');
   assert.equal(await page.locator(':focus').getAttribute('id'), 'main');
-  await page.getByRole('radio', {name: 'All inputs', exact: true}).focus();
+  await page.getByRole('radio', {name: 'Text', exact: true}).focus();
   // Radix moves focus in the next task; hold the key through that transition.
   await page.keyboard.down('ArrowRight');
-  await page.waitForURL(/modality=text/);
+  await page.waitForURL(/modality=all/);
   await page.keyboard.up('ArrowRight');
-  await page.locator('[role="radio"][value="text"][aria-checked="true"]').waitFor();
+  await page.locator('[role="radio"][value="all"][aria-checked="true"]').waitFor();
   await page.goto(base); await ready(page);
   const rowHref = await page.locator('a[href^="/row/"]').first().getAttribute('href');
   const detailResponse = page.waitForResponse(r => r.url().includes('/details/') && r.ok());

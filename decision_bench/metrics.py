@@ -153,11 +153,11 @@ def summarize(records, case_map, attempt_events=None):
 
 
 def paired_comparison(a, b, case_map, repetitions=2000, seed=20260923):
-    """Paired accuracy difference on shared rows, with a bootstrap over task clusters."""
+    """Accuracy of a minus b on shared rows, with a 95% interval that resamples rows within their task."""
     aa = {r["case_id"]: r for r in a}
     bb = {r["case_id"]: r for r in b}
     common = sorted(aa.keys() & bb.keys())
-    clusters = defaultdict(lambda: [0, 0, 0])
+    by_task = defaultdict(list)
     counts = {"both_correct": 0, "a_only_correct": 0, "b_only_correct": 0, "both_wrong": 0}
     for cid in common:
         left = {s["question_id"]: s for s in aa[cid]["scores"]}
@@ -166,20 +166,14 @@ def paired_comparison(a, b, case_map, repetitions=2000, seed=20260923):
             ca, cb = int(left[qid]["correct"]), int(right[qid]["correct"])
             key = "both_correct" if ca and cb else "a_only_correct" if ca else "b_only_correct" if cb else "both_wrong"
             counts[key] += 1
-            group = clusters[case_map[cid]["task"]]
-            group[0] += ca
-            group[1] += cb
-            group[2] += 1
-    values = list(clusters.values())
-    n = sum(x[2] for x in values)
+            by_task[case_map[cid]["task"]].append(ca - cb)
+    gaps = list(by_task.values())
+    n = sum(len(g) for g in gaps)
     if not n:
         return None
     rng = random.Random(seed)
-    deltas = []
-    for _ in range(repetitions):
-        sample = [rng.choice(values) for _ in values]
-        deltas.append(sum(x[0] - x[1] for x in sample) / sum(x[2] for x in sample))
-    return {"cases": len(common), "questions": n, "task_clusters": len(values), "cluster_unit": "task", **counts,
-            "accuracy_difference": sum(x[0] - x[1] for x in values) / n,
-            "cluster_bootstrap_ci95": [quantile(deltas, .025), quantile(deltas, .975)],
+    deltas = [sum(sum(rng.choices(g, k=len(g))) for g in gaps) / n for _ in range(repetitions)]
+    return {"cases": len(common), "questions": n, "tasks": len(gaps), **counts,
+            "accuracy_difference": sum(map(sum, gaps)) / n,
+            "bootstrap_ci95": [quantile(deltas, .025), quantile(deltas, .975)],
             "repetitions": repetitions, "seed": seed}

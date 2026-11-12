@@ -73,6 +73,12 @@ class Config(unittest.TestCase):
         self.assertTrue({"laya-routed", "jev-1.13", "djev", "sage", "gpt-6-luna", "gpt-6-luna-codex", "claude-sonnet-5-cli", "gemini-3.5-flash"} <= ids)
         self.assertNotIn("gpt-5.6-luna", ids)
         self.assertEqual({m["provider"] for m in models}, config.PROVIDERS)
+        self.assertEqual([m["id"] for m in models if m.get("kind") not in config.MODEL_KINDS], [])
+
+    def test_unknown_kind_is_rejected(self):
+        with self.assertRaises(config.ConfigError):
+            config._check_model({"id": "m", "label": "M", "vendor": "V", "provider": "openai-compatible",
+                                 "model": "m", "kind": "agent"})
 
 
 if __name__ == "__main__":

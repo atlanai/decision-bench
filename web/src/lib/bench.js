@@ -1,4 +1,4 @@
-/* The benchmark as the site sees it: data.json (schema 2, from `python3 -m decision_bench report`) and datasets.json,
+/* The benchmark as the site sees it: data.json (schema 3, from `python3 -m decision_bench report`) and datasets.json,
    indexed once at load. Everything here is read-only after init(), so pages call these helpers directly. */
 import {slug, human, clip} from './format.js';
 import {TASK_COPY} from './names.js';
@@ -7,7 +7,7 @@ import {imageInputExclusion} from './eligibility.js';
 export let data = null;
 export let allCases = [];
 export let caseMap = new Map();
-export let RUNS = [], PARTIAL = [], DATASETS = [];
+export let RUNS = [], DATASETS = [];
 export let MODELS = {}, ORDER = [];
 let recordMap = new Map(), rowsByTask = new Map(), dsByRow = new Map(), CAT_ORDER = [], TASK_ORDER = [];
 const statCache = new Map(), metricCache = new Map(), rankCache = new Map();
@@ -19,13 +19,15 @@ export const HUGGING_FACE_DATASET = document.querySelector('meta[name="huggingfa
 export const gh = path => `${REPO}/blob/main/${path}`;
 export const ghIssue = (template, params = {}) => `${REPO}/issues/new?template=${template}${Object.entries(params).map(([k, v]) => `&${k}=${encodeURIComponent(v)}`).join('')}`;
 
-/* ---------- Models: label, colour, vendor logo and interface come from data.json models[] ---------- */
+/* ---------- Models: label, colour, vendor logo, interface and kind come from data.json models[] ----------
+   kind is 'decision' or 'llm' from config/models.json; a published model that is no longer in the config gets it from its provider. */
 const IFACE = {'openai-compatible': 'API', 'openrouter-decisions': 'API', typesafe: 'API', djev: 'API', sarvam: 'API', sage: 'API', tev1: 'API', laya: 'API', 'claude-cli': 'Claude Code CLI', 'codex-cli': 'Codex CLI'};
+const CHAT_PROVIDERS = ['openai-compatible', 'claude-cli', 'codex-cli'];
 const PALETTE = ['#2563eb', '#7c3aed', '#0f766e', '#d97706', '#db2777', '#0891b2', '#65a30d', '#c2410c', '#6d28d9', '#475569'];
 function registerModel(m, configured) {
   if (!m?.id || MODELS[m.id]) return;
   const hash = [...m.id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0), vendor = m.vendor || '', logo = data?.logos?.[vendor];
-  MODELS[m.id] = {id: m.id, name: m.label || m.id, short: m.short_label || m.label || m.id, vendor, iface: IFACE[m.provider] || m.provider || '', provider: m.provider, color: m.color || PALETTE[hash % PALETTE.length], logo: logo ? `assets/logos/${logo}.png` : null, vision: !!m.vision, configured, api_model: m.api_model, request: m.request, pricing: m.pricing};
+  MODELS[m.id] = {id: m.id, name: m.label || m.id, short: m.short_label || m.label || m.id, vendor, iface: IFACE[m.provider] || m.provider || '', provider: m.provider, kind: m.kind || (CHAT_PROVIDERS.includes(m.provider) ? 'llm' : 'decision'), color: m.color || PALETTE[hash % PALETTE.length], logo: logo ? `assets/logos/${logo}.png` : null, vision: !!m.vision, configured, api_model: m.api_model, request: m.request, pricing: m.pricing};
   ORDER.push(m.id);
 }
 export const keyOf = r => r.model_id || r.model?.id || r.config?.model_id;
@@ -35,7 +37,7 @@ export const fullName = k => M(k).iface && M(k).iface !== 'API' ? `${M(k).name} 
 export const runName = r => fullName(keyOf(r));
 export const runColor = r => ident(r).color;
 export const byOrder = (a, b) => ORDER.indexOf(keyOf(a)) - ORDER.indexOf(keyOf(b));
-export const unevaluated = () => ORDER.filter(k => MODELS[k].configured && !RUNS.some(r => keyOf(r) === k) && !PARTIAL.some(r => keyOf(r) === k));
+export const unevaluated = () => ORDER.filter(k => MODELS[k].configured && !RUNS.some(r => keyOf(r) === k));
 
 /* ---------- Runs: completed runs on the current corpus, one per model ---------- */
 function collectRuns() {
@@ -46,11 +48,10 @@ function collectRuns() {
     const k = keyOf(r), o = by.get(k);
     if (!o || r.metrics.cases > o.metrics.cases || (r.metrics.cases === o.metrics.cases && String(r.completed_at || '') > String(o.completed_at || ''))) by.set(k, r);
   }
-  const all = [...by.values()].sort(byOrder);
-  RUNS = all.filter(r => r.coverage?.full !== false);
-  PARTIAL = all.filter(r => r.coverage?.full === false);
+  RUNS = [...by.values()].sort(byOrder);
 }
 export const hasResults = () => RUNS.length > 0;
+export const runsOfKind = (runs, kind) => kind ? runs.filter(r => ident(r).kind === kind) : runs;
 export const rawResult = (runId, caseId) => recordMap.get(`${runId}:${caseId}`);
 export const exclusionReason = (runId, caseId) => imageInputExclusion(caseMap.get(caseId), rawResult(runId, caseId));
 export const result = (runId, caseId) => exclusionReason(runId, caseId) ? undefined : rawResult(runId, caseId);
@@ -133,8 +134,10 @@ export const macroF1 = (run, tasks) => meanOf(tasks.map(t => {
 /* Fit verdict: the plain answer to "can I use this model for this task?" */
 export function verdict(m) { if (!m || m.accuracy == null || !m.questions) return {k: 'na', t: m?.excluded ? 'Not evaluated' : 'Not run'}; const [lo] = m.wilson; if (m.accuracy >= .9 && lo >= .85) return {k: 'ok', t: 'Fits'}; if (m.accuracy >= .8) return {k: 'risk', t: 'Risky'}; return {k: 'no', t: 'Not fit'}; }
 const RANK_DRAWS = 1000, RANK_SEED = 1;
-/* 95% rank range per model after Mogstad et al., "Inference for Ranks"; method in docs/protocol.md. models[i][row] is [correct, questions] or null. */
-export function rankSpreads(models, tasks) {
+/* Every pair of models on the rows both were scored on: the accuracy difference d (first minus second), its bootstrap
+   draws and their standard deviation. Rows are resampled within their task, one draw shared by all pairs; method in
+   docs/protocol.md. models[i][row] is [correct, questions] or null. */
+function pairedBootstrap(models, tasks) {
   const modelCount = models.length, byTask = new Map(), sets = new Map(), pairs = [];
   for (const [r, t] of tasks.entries()) {
     if (!byTask.has(t)) byTask.set(t, []);
@@ -173,6 +176,11 @@ export function rankSpreads(models, tasks) {
     for (const p of pairs) p.boot[b] = diff(p);
   }
   for (const p of pairs) p.se = sd(p.boot);
+  return pairs;
+}
+/* 95% rank range per model after Mogstad et al., "Inference for Ranks". */
+export function rankSpreads(models, tasks) {
+  const modelCount = models.length, pairs = pairedBootstrap(models, tasks);
   return models.map((_, i) => {
     const varying = pairs.filter(p => (p.i === i || p.j === i) && p.se > 0);
     const maxT = new Float64Array(RANK_DRAWS);
@@ -209,10 +217,24 @@ export function ranks(runs, cases) {
   rankCache.set(key, out);
   return out;
 }
-export const positionOf = (m, ms) => m.questions ? 1 + ms.filter(o => o.accuracy > m.accuracy).length : null;
+/* Accuracy of run a minus run b on the rows both were scored on, with the 95% interval of the same bootstrap. */
+export function pairedDifference(a, b, cases) {
+  const [pair] = pairedBootstrap([a, b].map(r => cases.map(c => scoreOn(r, c))), cases.map(c => c.task));
+  return pair ? {difference: pair.d, interval: [quantile([...pair.boot], .025), quantile([...pair.boot], .975)]} : null;
+}
+/* The # of each run in this view: the best place of its rank range, raised to the # of any run with the same or higher
+   accuracy, so the column never runs against the order by accuracy. Keyed by run id. */
+export function places(runs, cases) {
+  const spreads = ranks(runs, cases), accuracy = id => subsetMetrics(RUNS.find(r => r.id === id), cases).accuracy;
+  const out = new Map();
+  for (const id of spreads.keys()) out.set(id, Math.max(...[...spreads].filter(([other]) => accuracy(other) >= accuracy(id)).map(([, [best]]) => best)));
+  return out;
+}
 export const rankText = s => !s ? '—' : s[0] === s[1] ? String(s[0]) : `${s[0]}–${s[1]}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
-export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);
+/* The runs a view ranks: those scored on every one of its rows, so all of them are compared on the same rows. */
+export const evaluated = (rs, cases) => rs.filter(r => cases.length > 0 && subsetMetrics(r, cases).cases === cases.length);
+export const textCases = () => allCases.filter(c => !isImageTask(c.task));
 
 /* ---------- Per-row statistics across evaluated models ---------- */
 export function caseStats(c) {
@@ -245,8 +267,8 @@ export function init(json, datasetsDoc) {
   for (const c of allCases) if (!tk.includes(c.task)) tk.push(c.task);
   TASK_ORDER = tk.filter(t => rowsByTask.has(t)).sort((a, b) => CAT_ORDER.indexOf(taskCat(a)) - CAT_ORDER.indexOf(taskCat(b)) || tk.indexOf(a) - tk.indexOf(b));
   collectRuns(); indexDatasets(datasetsDoc);
-  /* Stable model order everywhere: overall accuracy, then configured-only models. */
-  const acc = new Map(RUNS.map(r => [keyOf(r), subsetMetrics(r, allCases).accuracy]));
+  /* Stable model order everywhere: accuracy on the text rows, which every run has, then configured-only models. */
+  const text = textCases(), acc = new Map(RUNS.map(r => [keyOf(r), subsetMetrics(r, text).accuracy]));
   ORDER.sort((a, b) => (acc.get(b) ?? -1) - (acc.get(a) ?? -1));
   RUNS.sort(byOrder);
 }
