@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils';
 import {useMedia} from '@/lib/device';
 import {PageHeader, Fit, Logo, Dash, Ext, Notice} from '@/components/common';
 import {List, ListHead, Item} from '@/components/list';
-import {UseCaseSelect, ModalityTabs, SearchBox} from '@/components/filters';
+import {UseCaseSelect, ModalityTabs, SearchBox, modalityOf} from '@/components/filters';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose} from '@/components/ui/dialog';
@@ -59,8 +59,8 @@ export function TaskDialog({t, onOpenChange}) {
 
 export function Tasks({route}) {
   const [closed, setClosed] = useState(() => new Set()), [info, setInfo] = useState(null);
-  const cat = route.q.get('category') || '', mod = route.q.get('modality') || '', q = (route.q.get('q') || '').toLowerCase();
-  const tasks = B.taskOrder().filter(t => (!cat || B.taskCat(t) === cat) && (!mod || (mod === 'image') === B.isImageTask(t)) && (!q || `${t} ${B.taskName(t)} ${B.taskBlurb(t)} ${B.taskAsk(t)} ${B.catInfo(B.taskCat(t)).name} ${B.taskInfo(t).input_type || ''} ${B.datasetsOfTask(t).map(d => d.name).join(' ')}`.toLowerCase().includes(q)));
+  const cat = route.q.get('category') || '', mod = modalityOf(route, 'all'), q = (route.q.get('q') || '').toLowerCase();
+  const tasks = B.taskOrder().filter(t => (!cat || B.taskCat(t) === cat) && (mod === 'all' || (mod === 'image') === B.isImageTask(t)) && (!q || `${t} ${B.taskName(t)} ${B.taskBlurb(t)} ${B.taskAsk(t)} ${B.catInfo(B.taskCat(t)).name} ${B.taskInfo(t).input_type || ''} ${B.datasetsOfTask(t).map(d => d.name).join(' ')}`.toLowerCase().includes(q)));
   const groups = B.categoryOrder().map(k => [k, tasks.filter(t => B.taskCat(t) === k)]).filter(([, ts]) => ts.length);
   /* Below 1024px the input and options columns are left out, not hidden: a hidden cell in a fixed table layout
      lets the cells after it slide into the wrong columns. */

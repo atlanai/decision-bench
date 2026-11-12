@@ -25,7 +25,7 @@ export function context(route) {
 function filters(route) {
   const q = route.q, out = {};
   if (B.categoryOrder().includes(q.get('category'))) out.filter_category = q.get('category');
-  if (['text', 'image'].includes(q.get('modality'))) out.filter_modality = q.get('modality');
+  if (['text', 'image', 'all'].includes(q.get('modality'))) out.filter_modality = q.get('modality');
   for (const k of ['a', 'b']) if (Object.hasOwn(B.MODELS, q.get(k))) out[`model_${k}`] = q.get(k);
   if (q.has('models')) out.selected_model_count = (q.get('models') || '').split(',').filter(k => Object.hasOwn(B.MODELS, k)).length;
   out.search_active = !!q.get('q');

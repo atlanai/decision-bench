@@ -33,7 +33,7 @@ class Metrics(unittest.TestCase):
         r = risk_coverage([{"confidence": .9, "correct": True}, {"confidence": .9, "correct": False}])
         self.assertTrue(all(x["accepted"] in [0, 2] for x in r))
 
-    def test_paired_comparison_uses_shared_rows_and_task_clusters(self):
+    def test_paired_comparison_uses_shared_rows(self):
         left = [{"case_id": "a", "scores": [{"question_id": "q", "correct": True}]},
                 {"case_id": "b", "scores": [{"question_id": "q", "correct": False}]}]
         right = [{"case_id": "a", "scores": [{"question_id": "q", "correct": False}]},
@@ -42,7 +42,18 @@ class Metrics(unittest.TestCase):
         self.assertEqual(result["cases"], 1)
         self.assertEqual(result["a_only_correct"], 1)
         self.assertEqual(result["accuracy_difference"], 1)
-        self.assertEqual(result["cluster_bootstrap_ci95"], [1, 1])
+        self.assertEqual(result["bootstrap_ci95"], [1, 1])
+
+    def test_paired_interval_keeps_the_tasks_fixed(self):
+        """One task where a always wins and one where b always wins: a draw of rows inside each task cannot change
+        the difference. A draw of whole tasks could pick the same task twice and report a gap that is not there."""
+        rows = [("a1", "A", True, False), ("a2", "A", True, False), ("b1", "B", False, True), ("b2", "B", False, True)]
+        score = lambda right: [{"question_id": "q", "correct": right}]
+        left = [{"case_id": i, "scores": score(a)} for i, _, a, _ in rows]
+        right = [{"case_id": i, "scores": score(b)} for i, _, _, b in rows]
+        result = paired_comparison(left, right, {i: {"task": t} for i, t, _, _ in rows}, repetitions=200)
+        self.assertEqual(result["accuracy_difference"], 0)
+        self.assertEqual(result["bootstrap_ci95"], [0, 0])
 
     def test_paid_retry_and_incomplete_attempt_remain_in_run_metrics(self):
         record = {"case_id": "c", "status": "ok", "duration_ms": 10,

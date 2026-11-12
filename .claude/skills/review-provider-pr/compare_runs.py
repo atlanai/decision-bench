@@ -113,10 +113,10 @@ def main():
     if args.against:
         _, reference = load_folder(Path(args.submitted).parent / args.against)
         b = records_from_predictions(reference, args.against)[0]
-        print(f"\nPaired accuracy difference against {args.against} (task-cluster bootstrap 95% interval):")
+        print(f"\nPaired accuracy difference against {args.against} (95% interval, rows resampled within their task):")
         for name, (_, predictions) in runs.items():
             c = paired_comparison(records_from_predictions(predictions, name)[0], b, case_map)
-            low, high = c["cluster_bootstrap_ci95"]
+            low, high = c["bootstrap_ci95"]
             print(f"  {name}: {c['accuracy_difference']:+.4f} [{low:+.4f}, {high:+.4f}]")
     return 0 if inside else 1
 

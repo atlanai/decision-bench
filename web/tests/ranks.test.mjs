@@ -47,20 +47,42 @@ test('a pair that shares one row is not separated', () => {
   assert.deepEqual(B.rankSpreads([strong, oneRow], tasks), [[1, 2], [1, 2]]);
 });
 
-test('the published leaderboard gives every full run a range', () => {
-  B.init(JSON.parse(readFileSync(new URL('../../site/data.json', import.meta.url), 'utf8')), {});
-  const ranks = B.ranks(B.RUNS, B.allCases);
+B.init(JSON.parse(readFileSync(new URL('../../site/data.json', import.meta.url), 'utf8')), {});
+
+test('a pair gets the difference on shared rows with an interval from the same bootstrap', () => {
+  const text = B.textCases(), acc = r => B.subsetMetrics(r, text).accuracy;
+  const [best, ...others] = B.RUNS.slice().sort((a, b) => acc(b) - acc(a)), worst = others.at(-1);
+  const gap = B.pairedDifference(best, worst, text), none = B.pairedDifference(best, best, text);
+  assert.ok(Math.abs(gap.difference - (acc(best) - acc(worst))) < 1e-9);
+  assert.ok(gap.interval[0] > 0 && gap.interval[0] < gap.difference && gap.difference < gap.interval[1]);
+  assert.deepEqual([none.difference, ...none.interval], [0, 0, 0]);
+});
+
+test('every published run is ranked on the text rows, which all of them were scored on', () => {
+  const text = B.textCases(), ranks = B.ranks(B.RUNS, text);
+  assert.ok(text.length > 0 && text.length < B.allCases.length);
   assert.equal(ranks.size, B.RUNS.length);
   for (const [best, worst] of ranks.values()) assert.ok(best >= 1 && best <= worst && worst <= B.RUNS.length);
+});
+
+test('on all rows only the runs scored on every row are ranked', () => {
+  const ranked = B.evaluated(B.RUNS, B.allCases);
+  assert.ok(ranked.length > 0 && ranked.length < B.RUNS.length);
+  for (const r of B.RUNS) assert.equal(ranked.includes(r), B.subsetMetrics(r, B.allCases).cases === B.allCases.length, B.keyOf(r));
+  for (const r of ranked) assert.ok(B.allCases.every(c => !B.isImageTask(c.task) || B.rawResult(r.id, c.id).images_sent > 0), B.keyOf(r));
+  assert.equal(B.ranks(B.RUNS, B.allCases).size, ranked.length);
+});
+
+test('the place of a model is 1 plus the models reliably ahead, so close models share a place', () => {
+  const text = B.textCases(), ranks = B.ranks(B.RUNS, text);
+  const byAccuracy = B.RUNS.slice().sort((a, b) => B.subsetMetrics(b, text).accuracy - B.subsetMetrics(a, text).accuracy);
+  assert.equal(ranks.get(byAccuracy[0].id)[0], 1);
+  assert.equal(ranks.get(byAccuracy[1].id)[0], 1, 'the top two models are too close to separate');
+  assert.ok(ranks.get(byAccuracy.at(-1).id)[0] > 1);
 });
 
 test('a range of one place shows one number', () => {
   assert.equal(B.rankText([1, 1]), '1');
   assert.equal(B.rankText([2, 5]), '2–5');
   assert.equal(B.rankText(undefined), '—');
-});
-
-test('position is the order by accuracy, and equal accuracy shares a position', () => {
-  const ms = [{questions: 10, accuracy: .9}, {questions: 10, accuracy: .8}, {questions: 10, accuracy: .9}, {questions: 0, accuracy: null}];
-  assert.deepEqual(ms.map(m => B.positionOf(m, ms)), [1, 3, 1, null]);
 });

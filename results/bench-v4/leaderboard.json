@@ -3,7 +3,7 @@
   "suite": "bench-v4",
   "corpus_version": "1.0",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
-  "note": "Sorted by accuracy. The site ranks each model with a 95% range of places from paired row comparisons.",
+  "note": "Each track compares its models on the same rows, sorted by accuracy. The files give no place number: models this close are often tied, and the site shows each model's 95% range of places.",
   "models": [
     {
       "model_id": "amos-1-large",
@@ -25,7 +25,29 @@
       "latency_p50_ms": 322.3389050690457,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-10-13T17:05:19.522936+00:00"
+      "completed_at": "2026-10-13T17:05:19.522936+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 895,
+          "accuracy": 0.9430979978925185,
+          "wilson95": [
+            0.9264942988390567,
+            0.9561287940233877
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1016,
+          "accuracy": 0.9486461251167133,
+          "wilson95": [
+            0.9337501427336912,
+            0.960335088057525
+          ],
+          "errors": 0
+        }
+      }
     },
     {
       "model_id": "pplx-decider-v1.1-27b",
@@ -47,95 +69,29 @@
       "latency_p50_ms": 539.4668329972774,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-10-08T15:50:51.499968+00:00"
-    },
-    {
-      "model_id": "gemini-3.5-flash",
-      "label": "Gemini 3.5 Flash",
-      "vendor": "Google",
-      "provider": "openai-compatible",
-      "api_model": "gemini-3.5-flash",
-      "accuracy": 0.942110177404295,
-      "wilson95": [
-        0.9264792738277718,
-        0.9545807819050915
-      ],
-      "correct": 1009,
-      "rows": 1071,
-      "errors": 1,
-      "cost_usd": 3.5517975,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 3.316337535014006,
-      "latency_p50_ms": 3589.5842079771683,
-      "corpus_current": true,
-      "full_coverage": true,
-      "completed_at": "2026-09-23T13:36:13.556133+00:00"
-    },
-    {
-      "model_id": "gemini-flash-lite-latest",
-      "label": "Gemini Flash Lite",
-      "vendor": "Google",
-      "provider": "openai-compatible",
-      "api_model": "gemini-flash-lite-latest",
-      "accuracy": 0.9411764705882353,
-      "wilson95": [
-        0.925444771056673,
-        0.95375454538214
-      ],
-      "correct": 1008,
-      "rows": 1071,
-      "errors": 0,
-      "cost_usd": 0.9884501,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.9229225957049486,
-      "latency_p50_ms": 3370.2833330025896,
-      "corpus_current": true,
-      "full_coverage": true,
-      "completed_at": "2026-09-23T13:33:55.245634+00:00"
-    },
-    {
-      "model_id": "drex-max",
-      "label": "Drex Max",
-      "vendor": "Nace",
-      "provider": "drex",
-      "api_model": "drex-max",
-      "accuracy": 0.9402427637721755,
-      "wilson95": [
-        0.9244112465426017,
-        0.952927330602161
-      ],
-      "correct": 1007,
-      "rows": 1071,
-      "errors": 0,
-      "cost_usd": 0.05428728,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.05068840336134454,
-      "latency_p50_ms": 189.2403750680387,
-      "corpus_current": true,
-      "full_coverage": true,
-      "completed_at": "2026-10-20T19:03:54.965094+00:00"
-    },
-    {
-      "model_id": "gpt-6-luna",
-      "label": "GPT-6 Luna",
-      "vendor": "OpenAI",
-      "provider": "openai-compatible",
-      "api_model": "gpt-6-luna",
-      "accuracy": 0.9365079365079365,
-      "wilson95": [
-        0.9202865210150111,
-        0.94960909895355
-      ],
-      "correct": 1003,
-      "rows": 1071,
-      "errors": 10,
-      "cost_usd": 0.1688888,
-      "cost_coverage": 0.9897388059701493,
-      "cost_per_1000_rows_usd": 0.15769262371615314,
-      "latency_p50_ms": 2012.8145829658024,
-      "corpus_current": true,
-      "full_coverage": true,
-      "completed_at": "2026-09-23T14:08:16.953984+00:00"
+      "completed_at": "2026-10-08T15:50:51.499968+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 891,
+          "accuracy": 0.9388830347734457,
+          "wilson95": [
+            0.9218008885320492,
+            0.9524262652781956
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1012,
+          "accuracy": 0.9449112978524743,
+          "wilson95": [
+            0.9295888752733975,
+            0.9570533983416171
+          ],
+          "errors": 0
+        }
+      }
     },
     {
       "model_id": "deepseek-v4.1-flash",
@@ -157,51 +113,152 @@
       "latency_p50_ms": 1408.9679169701412,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T13:58:50.363352+00:00"
+      "completed_at": "2026-09-23T13:58:50.363352+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 889,
+          "accuracy": 0.9367755532139094,
+          "wilson95": [
+            0.9194618200170325,
+            0.950567364267113
+          ],
+          "errors": 6
+        },
+        "all": null
+      }
     },
     {
-      "model_id": "claude-sonnet-5",
-      "label": "Claude Sonnet 5",
-      "vendor": "Anthropic",
+      "model_id": "gemini-3.5-flash",
+      "label": "Gemini 3.5 Flash",
+      "vendor": "Google",
       "provider": "openai-compatible",
-      "api_model": "claude-sonnet-5",
-      "accuracy": 0.9262371615312792,
+      "api_model": "gemini-3.5-flash",
+      "accuracy": 0.942110177404295,
       "wilson95": [
-        0.9090130881693816,
-        0.940414399564625
+        0.9264792738277718,
+        0.9545807819050915
       ],
-      "correct": 992,
+      "correct": 1009,
       "rows": 1071,
       "errors": 1,
-      "cost_usd": 5.37457,
-      "cost_coverage": 0.9990671641791045,
-      "cost_per_1000_rows_usd": 5.01827264239029,
-      "latency_p50_ms": 3588.1204580073245,
+      "cost_usd": 3.5517975,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 3.316337535014006,
+      "latency_p50_ms": 3589.5842079771683,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T14:20:57.286897+00:00"
+      "completed_at": "2026-09-23T13:36:13.556133+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 887,
+          "accuracy": 0.934668071654373,
+          "wilson95": [
+            0.9171275312757327,
+            0.9487036834823132
+          ],
+          "errors": 1
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1009,
+          "accuracy": 0.942110177404295,
+          "wilson95": [
+            0.9264792738277718,
+            0.9545807819050915
+          ],
+          "errors": 1
+        }
+      }
     },
     {
-      "model_id": "gpt-5.6-luna",
-      "label": "GPT-5.6 Luna",
-      "vendor": "OpenAI",
-      "provider": "openai-compatible",
-      "api_model": "gpt-5.6-luna",
-      "accuracy": 0.9262371615312792,
+      "model_id": "drex-max",
+      "label": "Drex Max",
+      "vendor": "Nace",
+      "provider": "drex",
+      "api_model": "drex-max",
+      "accuracy": 0.9402427637721755,
       "wilson95": [
-        0.9090130881693816,
-        0.940414399564625
+        0.9244112465426017,
+        0.952927330602161
       ],
-      "correct": 992,
+      "correct": 1007,
       "rows": 1071,
-      "errors": 5,
-      "cost_usd": 0.43365739999999997,
+      "errors": 0,
+      "cost_usd": 0.05428728,
       "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.4049088702147525,
-      "latency_p50_ms": 1805.3157500107773,
+      "cost_per_1000_rows_usd": 0.05068840336134454,
+      "latency_p50_ms": 189.2403750680387,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T13:29:11.085606+00:00"
+      "completed_at": "2026-10-20T19:03:54.965094+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 886,
+          "accuracy": 0.9336143308746049,
+          "wilson95": [
+            0.9159621128535896,
+            0.9477701171414065
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1007,
+          "accuracy": 0.9402427637721755,
+          "wilson95": [
+            0.9244112465426017,
+            0.952927330602161
+          ],
+          "errors": 0
+        }
+      }
+    },
+    {
+      "model_id": "gemini-flash-lite-latest",
+      "label": "Gemini Flash Lite",
+      "vendor": "Google",
+      "provider": "openai-compatible",
+      "api_model": "gemini-flash-lite-latest",
+      "accuracy": 0.9411764705882353,
+      "wilson95": [
+        0.925444771056673,
+        0.95375454538214
+      ],
+      "correct": 1008,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.9884501,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.9229225957049486,
+      "latency_p50_ms": 3370.2833330025896,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:33:55.245634+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 886,
+          "accuracy": 0.9336143308746049,
+          "wilson95": [
+            0.9159621128535896,
+            0.9477701171414065
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1008,
+          "accuracy": 0.9411764705882353,
+          "wilson95": [
+            0.925444771056673,
+            0.95375454538214
+          ],
+          "errors": 0
+        }
+      }
     },
     {
       "model_id": "jev-1.13",
@@ -223,7 +280,20 @@
       "latency_p50_ms": 438.5520829819143,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T13:50:29.093424+00:00"
+      "completed_at": "2026-09-23T13:50:29.093424+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 884,
+          "accuracy": 0.9315068493150684,
+          "wilson95": [
+            0.9136346038816346,
+            0.9458996565872616
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
     },
     {
       "model_id": "glm-5.3-flash",
@@ -245,117 +315,64 @@
       "latency_p50_ms": 2358.7047909968533,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T13:59:55.821544+00:00"
+      "completed_at": "2026-09-23T13:59:55.821544+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 883,
+          "accuracy": 0.9304531085353003,
+          "wilson95": [
+            0.9124724665178822,
+            0.9449628091879644
+          ],
+          "errors": 7
+        },
+        "all": null
+      }
     },
     {
-      "model_id": "sage",
-      "label": "Sage 1.3 (Levanto)",
-      "vendor": "Levanto",
-      "provider": "sage",
-      "api_model": "levanto-sage-v1.3",
-      "accuracy": 0.9178338001867413,
-      "wilson95": [
-        0.8998549310498828,
-        0.9328259030376701
-      ],
-      "correct": 983,
-      "rows": 1071,
-      "errors": 0,
-      "cost_usd": 0.436404434,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.40747379458450045,
-      "latency_p50_ms": 441.34887494146824,
-      "corpus_current": true,
-      "full_coverage": true,
-      "completed_at": "2026-10-09T12:38:31.114352+00:00"
-    },
-    {
-      "model_id": "kev-27b",
-      "label": "Kev 27B (Kev 1.0)",
-      "vendor": "Jared Palmer",
-      "provider": "kev",
-      "api_model": "kev-latest",
-      "accuracy": 0.9125395152792413,
-      "wilson95": [
-        0.8928611795423784,
-        0.9288913551916214
-      ],
-      "correct": 866,
-      "rows": 949,
-      "errors": 0,
-      "cost_usd": null,
-      "cost_coverage": 0.0,
-      "cost_per_1000_rows_usd": null,
-      "latency_p50_ms": 1024.4037080556154,
-      "corpus_current": true,
-      "full_coverage": false,
-      "completed_at": "2026-10-12T16:27:13.537366+00:00"
-    },
-    {
-      "model_id": "microsoft-decision-1",
-      "label": "Microsoft Decision 1",
-      "vendor": "Microsoft",
-      "provider": "openrouter-decisions",
-      "api_model": "microsoft/microsoft-decision-1",
-      "accuracy": 0.9072708113804004,
-      "wilson95": [
-        0.8871386031101873,
-        0.9241190078085635
-      ],
-      "correct": 861,
-      "rows": 949,
-      "errors": 0,
-      "cost_usd": 0.02796927,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.02947236037934668,
-      "latency_p50_ms": 607.4676250573248,
-      "corpus_current": true,
-      "full_coverage": false,
-      "completed_at": "2026-10-10T04:49:11.345242+00:00"
-    },
-    {
-      "model_id": "claude-haiku-4.5",
-      "label": "Claude Haiku 4.5",
-      "vendor": "Anthropic",
-      "provider": "openai-compatible",
-      "api_model": "claude-haiku-4-5-20251001",
-      "accuracy": 0.9056956115779645,
-      "wilson95": [
-        0.8867136153353633,
-        0.9217776079295347
-      ],
-      "correct": 970,
-      "rows": 1071,
-      "errors": 8,
-      "cost_usd": 2.078327,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 1.940548085901027,
-      "latency_p50_ms": 2127.8327500331216,
-      "corpus_current": true,
-      "full_coverage": true,
-      "completed_at": "2026-09-23T13:39:00.056705+00:00"
-    },
-    {
-      "model_id": "gpt-6-luna-decisions",
-      "label": "GPT-6 Luna Decisions",
+      "model_id": "gpt-6-luna",
+      "label": "GPT-6 Luna",
       "vendor": "OpenAI",
-      "provider": "openrouter-decisions",
-      "api_model": "openai/gpt-6-luna-decisions",
-      "accuracy": 0.9047619047619048,
+      "provider": "openai-compatible",
+      "api_model": "gpt-6-luna",
+      "accuracy": 0.9365079365079365,
       "wilson95": [
-        0.8857065548896963,
-        0.9209239290811513
+        0.9202865210150111,
+        0.94960909895355
       ],
-      "correct": 969,
+      "correct": 1003,
       "rows": 1071,
-      "errors": 0,
-      "cost_usd": 0.0886974,
-      "cost_coverage": 1.0,
-      "cost_per_1000_rows_usd": 0.08281736694677871,
-      "latency_p50_ms": 325.5317920120433,
+      "errors": 10,
+      "cost_usd": 0.1688888,
+      "cost_coverage": 0.9897388059701493,
+      "cost_per_1000_rows_usd": 0.15769262371615314,
+      "latency_p50_ms": 2012.8145829658024,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-10-08T16:33:12.989324+00:00"
+      "completed_at": "2026-09-23T14:08:16.953984+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 882,
+          "accuracy": 0.9293993677555321,
+          "wilson95": [
+            0.9113113774666157,
+            0.9440249134761809
+          ],
+          "errors": 10
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 1003,
+          "accuracy": 0.9365079365079365,
+          "wilson95": [
+            0.9202865210150111,
+            0.94960909895355
+          ],
+          "errors": 10
+        }
+      }
     },
     {
       "model_id": "sarvam-prism",
@@ -377,7 +394,310 @@
       "latency_p50_ms": 212.6012500084471,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-11-03T17:56:57.717729+00:00"
+      "completed_at": "2026-11-03T17:56:57.717729+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 871,
+          "accuracy": 0.9178082191780822,
+          "wilson95": [
+            0.8986029912004384,
+            0.9336444673488103
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
+    },
+    {
+      "model_id": "claude-sonnet-5",
+      "label": "Claude Sonnet 5",
+      "vendor": "Anthropic",
+      "provider": "openai-compatible",
+      "api_model": "claude-sonnet-5",
+      "accuracy": 0.9262371615312792,
+      "wilson95": [
+        0.9090130881693816,
+        0.940414399564625
+      ],
+      "correct": 992,
+      "rows": 1071,
+      "errors": 1,
+      "cost_usd": 5.37457,
+      "cost_coverage": 0.9990671641791045,
+      "cost_per_1000_rows_usd": 5.01827264239029,
+      "latency_p50_ms": 3588.1204580073245,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T14:20:57.286897+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 870,
+          "accuracy": 0.916754478398314,
+          "wilson95": [
+            0.8974530132510391,
+            0.93269546053516
+          ],
+          "errors": 1
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 992,
+          "accuracy": 0.9262371615312792,
+          "wilson95": [
+            0.9090130881693816,
+            0.940414399564625
+          ],
+          "errors": 1
+        }
+      }
+    },
+    {
+      "model_id": "gpt-5.6-luna",
+      "label": "GPT-5.6 Luna",
+      "vendor": "OpenAI",
+      "provider": "openai-compatible",
+      "api_model": "gpt-5.6-luna",
+      "accuracy": 0.9262371615312792,
+      "wilson95": [
+        0.9090130881693816,
+        0.940414399564625
+      ],
+      "correct": 992,
+      "rows": 1071,
+      "errors": 5,
+      "cost_usd": 0.43365739999999997,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.4049088702147525,
+      "latency_p50_ms": 1805.3157500107773,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:29:11.085606+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 870,
+          "accuracy": 0.916754478398314,
+          "wilson95": [
+            0.8974530132510391,
+            0.93269546053516
+          ],
+          "errors": 5
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 992,
+          "accuracy": 0.9262371615312792,
+          "wilson95": [
+            0.9090130881693816,
+            0.940414399564625
+          ],
+          "errors": 5
+        }
+      }
+    },
+    {
+      "model_id": "kev-27b",
+      "label": "Kev 27B (Kev 1.0)",
+      "vendor": "Jared Palmer",
+      "provider": "kev",
+      "api_model": "kev-latest",
+      "accuracy": 0.9125395152792413,
+      "wilson95": [
+        0.8928611795423784,
+        0.9288913551916214
+      ],
+      "correct": 866,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 1024.4037080556154,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-10-12T16:27:13.537366+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 866,
+          "accuracy": 0.9125395152792413,
+          "wilson95": [
+            0.8928611795423784,
+            0.9288913551916214
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
+    },
+    {
+      "model_id": "sage",
+      "label": "Sage 1.3 (Levanto)",
+      "vendor": "Levanto",
+      "provider": "sage",
+      "api_model": "levanto-sage-v1.3",
+      "accuracy": 0.9178338001867413,
+      "wilson95": [
+        0.8998549310498828,
+        0.9328259030376701
+      ],
+      "correct": 983,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.436404434,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.40747379458450045,
+      "latency_p50_ms": 441.34887494146824,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-09T12:38:31.114352+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 864,
+          "accuracy": 0.9104320337197049,
+          "wilson95": [
+            0.8905699264330942,
+            0.926984638774806
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 983,
+          "accuracy": 0.9178338001867413,
+          "wilson95": [
+            0.8998549310498828,
+            0.9328259030376701
+          ],
+          "errors": 0
+        }
+      }
+    },
+    {
+      "model_id": "microsoft-decision-1",
+      "label": "Microsoft Decision 1",
+      "vendor": "Microsoft",
+      "provider": "openrouter-decisions",
+      "api_model": "microsoft/microsoft-decision-1",
+      "accuracy": 0.9072708113804004,
+      "wilson95": [
+        0.8871386031101873,
+        0.9241190078085635
+      ],
+      "correct": 861,
+      "rows": 949,
+      "errors": 0,
+      "cost_usd": 0.02796927,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.02947236037934668,
+      "latency_p50_ms": 607.4676250573248,
+      "corpus_current": true,
+      "full_coverage": false,
+      "completed_at": "2026-10-10T04:49:11.345242+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 861,
+          "accuracy": 0.9072708113804004,
+          "wilson95": [
+            0.8871386031101873,
+            0.9241190078085635
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
+    },
+    {
+      "model_id": "claude-haiku-4.5",
+      "label": "Claude Haiku 4.5",
+      "vendor": "Anthropic",
+      "provider": "openai-compatible",
+      "api_model": "claude-haiku-4-5-20251001",
+      "accuracy": 0.9056956115779645,
+      "wilson95": [
+        0.8867136153353633,
+        0.9217776079295347
+      ],
+      "correct": 970,
+      "rows": 1071,
+      "errors": 8,
+      "cost_usd": 2.078327,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 1.940548085901027,
+      "latency_p50_ms": 2127.8327500331216,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-09-23T13:39:00.056705+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 850,
+          "accuracy": 0.8956796628029505,
+          "wilson95": [
+            0.8746097882561292,
+            0.9135589902690737
+          ],
+          "errors": 8
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 970,
+          "accuracy": 0.9056956115779645,
+          "wilson95": [
+            0.8867136153353633,
+            0.9217776079295347
+          ],
+          "errors": 8
+        }
+      }
+    },
+    {
+      "model_id": "gpt-6-luna-decisions",
+      "label": "GPT-6 Luna Decisions",
+      "vendor": "OpenAI",
+      "provider": "openrouter-decisions",
+      "api_model": "openai/gpt-6-luna-decisions",
+      "accuracy": 0.9047619047619048,
+      "wilson95": [
+        0.8857065548896963,
+        0.9209239290811513
+      ],
+      "correct": 969,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.0886974,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.08281736694677871,
+      "latency_p50_ms": 325.5317920120433,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-10-08T16:33:12.989324+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 849,
+          "accuracy": 0.8946259220231823,
+          "wilson95": [
+            0.8734746289750945,
+            0.9125951647870585
+          ],
+          "errors": 0
+        },
+        "all": {
+          "rows": 1071,
+          "correct": 969,
+          "accuracy": 0.9047619047619048,
+          "wilson95": [
+            0.8857065548896963,
+            0.9209239290811513
+          ],
+          "errors": 0
+        }
+      }
     },
     {
       "model_id": "tev1-4b-experimental",
@@ -399,7 +719,20 @@
       "latency_p50_ms": 387.2856249799952,
       "corpus_current": true,
       "full_coverage": false,
-      "completed_at": "2026-09-24T20:06:55.885806+00:00"
+      "completed_at": "2026-09-24T20:06:55.885806+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 810,
+          "accuracy": 0.8535300316122234,
+          "wilson95": [
+            0.8296088183800417,
+            0.8746005696231688
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
     },
     {
       "model_id": "kev-4b",
@@ -421,7 +754,20 @@
       "latency_p50_ms": 950.2222499577329,
       "corpus_current": true,
       "full_coverage": false,
-      "completed_at": "2026-10-12T15:42:36.770077+00:00"
+      "completed_at": "2026-10-12T15:42:36.770077+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 795,
+          "accuracy": 0.8377239199157007,
+          "wilson95": [
+            0.8129115588231931,
+            0.8598130577342703
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
     },
     {
       "model_id": "qwen3-32b",
@@ -443,7 +789,20 @@
       "latency_p50_ms": 373.2386250048876,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T13:44:19.072473+00:00"
+      "completed_at": "2026-09-23T13:44:19.072473+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 768,
+          "accuracy": 0.80927291886196,
+          "wilson95": [
+            0.7830489576685096,
+            0.8330030702866091
+          ],
+          "errors": 30
+        },
+        "all": null
+      }
     },
     {
       "model_id": "nova-micro-v1",
@@ -465,7 +824,20 @@
       "latency_p50_ms": 735.2302920189686,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T13:42:34.950666+00:00"
+      "completed_at": "2026-09-23T13:42:34.950666+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 635,
+          "accuracy": 0.6691253951527925,
+          "wilson95": [
+            0.6385591459295779,
+            0.6983279085399163
+          ],
+          "errors": 94
+        },
+        "all": null
+      }
     },
     {
       "model_id": "laya-routed",
@@ -487,7 +859,20 @@
       "latency_p50_ms": 1524.6552079916,
       "corpus_current": true,
       "full_coverage": true,
-      "completed_at": "2026-09-23T14:06:18.839538+00:00"
+      "completed_at": "2026-09-23T14:06:18.839538+00:00",
+      "tracks": {
+        "text": {
+          "rows": 949,
+          "correct": 486,
+          "accuracy": 0.512118018967334,
+          "wilson95": [
+            0.4803304978721344,
+            0.5438078269029385
+          ],
+          "errors": 0
+        },
+        "all": null
+      }
     }
   ]
 }

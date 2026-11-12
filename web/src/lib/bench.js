@@ -1,4 +1,4 @@
-/* The benchmark as the site sees it: data.json (schema 2, from `python3 -m decision_bench report`) and datasets.json,
+/* The benchmark as the site sees it: data.json (schema 3, from `python3 -m decision_bench report`) and datasets.json,
    indexed once at load. Everything here is read-only after init(), so pages call these helpers directly. */
 import {slug, human, clip} from './format.js';
 import {TASK_COPY} from './names.js';
@@ -7,7 +7,7 @@ import {imageInputExclusion} from './eligibility.js';
 export let data = null;
 export let allCases = [];
 export let caseMap = new Map();
-export let RUNS = [], PARTIAL = [], DATASETS = [];
+export let RUNS = [], DATASETS = [];
 export let MODELS = {}, ORDER = [];
 let recordMap = new Map(), rowsByTask = new Map(), dsByRow = new Map(), CAT_ORDER = [], TASK_ORDER = [];
 const statCache = new Map(), metricCache = new Map(), rankCache = new Map();
@@ -35,7 +35,7 @@ export const fullName = k => M(k).iface && M(k).iface !== 'API' ? `${M(k).name} 
 export const runName = r => fullName(keyOf(r));
 export const runColor = r => ident(r).color;
 export const byOrder = (a, b) => ORDER.indexOf(keyOf(a)) - ORDER.indexOf(keyOf(b));
-export const unevaluated = () => ORDER.filter(k => MODELS[k].configured && !RUNS.some(r => keyOf(r) === k) && !PARTIAL.some(r => keyOf(r) === k));
+export const unevaluated = () => ORDER.filter(k => MODELS[k].configured && !RUNS.some(r => keyOf(r) === k));
 
 /* ---------- Runs: completed runs on the current corpus, one per model ---------- */
 function collectRuns() {
@@ -46,9 +46,7 @@ function collectRuns() {
     const k = keyOf(r), o = by.get(k);
     if (!o || r.metrics.cases > o.metrics.cases || (r.metrics.cases === o.metrics.cases && String(r.completed_at || '') > String(o.completed_at || ''))) by.set(k, r);
   }
-  const all = [...by.values()].sort(byOrder);
-  RUNS = all.filter(r => r.coverage?.full !== false);
-  PARTIAL = all.filter(r => r.coverage?.full === false);
+  RUNS = [...by.values()].sort(byOrder);
 }
 export const hasResults = () => RUNS.length > 0;
 export const rawResult = (runId, caseId) => recordMap.get(`${runId}:${caseId}`);
@@ -133,8 +131,10 @@ export const macroF1 = (run, tasks) => meanOf(tasks.map(t => {
 /* Fit verdict: the plain answer to "can I use this model for this task?" */
 export function verdict(m) { if (!m || m.accuracy == null || !m.questions) return {k: 'na', t: m?.excluded ? 'Not evaluated' : 'Not run'}; const [lo] = m.wilson; if (m.accuracy >= .9 && lo >= .85) return {k: 'ok', t: 'Fits'}; if (m.accuracy >= .8) return {k: 'risk', t: 'Risky'}; return {k: 'no', t: 'Not fit'}; }
 const RANK_DRAWS = 1000, RANK_SEED = 1;
-/* 95% rank range per model after Mogstad et al., "Inference for Ranks"; method in docs/protocol.md. models[i][row] is [correct, questions] or null. */
-export function rankSpreads(models, tasks) {
+/* Every pair of models on the rows both were scored on: the accuracy difference d (first minus second), its bootstrap
+   draws and their standard deviation. Rows are resampled within their task, one draw shared by all pairs; method in
+   docs/protocol.md. models[i][row] is [correct, questions] or null. */
+function pairedBootstrap(models, tasks) {
   const modelCount = models.length, byTask = new Map(), sets = new Map(), pairs = [];
   for (const [r, t] of tasks.entries()) {
     if (!byTask.has(t)) byTask.set(t, []);
@@ -173,6 +173,11 @@ export function rankSpreads(models, tasks) {
     for (const p of pairs) p.boot[b] = diff(p);
   }
   for (const p of pairs) p.se = sd(p.boot);
+  return pairs;
+}
+/* 95% rank range per model after Mogstad et al., "Inference for Ranks". */
+export function rankSpreads(models, tasks) {
+  const modelCount = models.length, pairs = pairedBootstrap(models, tasks);
   return models.map((_, i) => {
     const varying = pairs.filter(p => (p.i === i || p.j === i) && p.se > 0);
     const maxT = new Float64Array(RANK_DRAWS);
@@ -209,10 +214,16 @@ export function ranks(runs, cases) {
   rankCache.set(key, out);
   return out;
 }
-export const positionOf = (m, ms) => m.questions ? 1 + ms.filter(o => o.accuracy > m.accuracy).length : null;
+/* Accuracy of run a minus run b on the rows both were scored on, with the 95% interval of the same bootstrap. */
+export function pairedDifference(a, b, cases) {
+  const [pair] = pairedBootstrap([a, b].map(r => cases.map(c => scoreOn(r, c))), cases.map(c => c.task));
+  return pair ? {difference: pair.d, interval: [quantile([...pair.boot], .025), quantile([...pair.boot], .975)]} : null;
+}
 export const rankText = s => !s ? '—' : s[0] === s[1] ? String(s[0]) : `${s[0]}–${s[1]}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
-export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);
+/* The runs a view ranks: those scored on every one of its rows, so all of them are compared on the same rows. */
+export const evaluated = (rs, cases) => rs.filter(r => cases.length > 0 && subsetMetrics(r, cases).cases === cases.length);
+export const textCases = () => allCases.filter(c => !isImageTask(c.task));
 
 /* ---------- Per-row statistics across evaluated models ---------- */
 export function caseStats(c) {
@@ -245,8 +256,8 @@ export function init(json, datasetsDoc) {
   for (const c of allCases) if (!tk.includes(c.task)) tk.push(c.task);
   TASK_ORDER = tk.filter(t => rowsByTask.has(t)).sort((a, b) => CAT_ORDER.indexOf(taskCat(a)) - CAT_ORDER.indexOf(taskCat(b)) || tk.indexOf(a) - tk.indexOf(b));
   collectRuns(); indexDatasets(datasetsDoc);
-  /* Stable model order everywhere: overall accuracy, then configured-only models. */
-  const acc = new Map(RUNS.map(r => [keyOf(r), subsetMetrics(r, allCases).accuracy]));
+  /* Stable model order everywhere: accuracy on the text rows, which every run has, then configured-only models. */
+  const text = textCases(), acc = new Map(RUNS.map(r => [keyOf(r), subsetMetrics(r, text).accuracy]));
   ORDER.sort((a, b) => (acc.get(b) ?? -1) - (acc.get(a) ?? -1));
   RUNS.sort(byOrder);
 }

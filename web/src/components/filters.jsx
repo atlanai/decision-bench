@@ -45,10 +45,12 @@ export function UseCaseSelect({route, className}) {
   );
 }
 
-export function ModalityTabs({route}) {
+/* The rows a page shows when the URL names no modality: the leaderboard opens on the text rows, which every model has. */
+export const modalityOf = (route, fallback) => route.q.get('modality') || fallback;
+export function ModalityTabs({route, fallback = 'all'}) {
   return (
-    <SegmentedControl aria-label="Input modality" value={route.q.get('modality') || 'all'} onValueChange={v => go(withQ(route, {modality: v === 'all' ? '' : v}))}>
-      <SegmentedList aria-label="Input"><SegmentedOption value="all">All inputs</SegmentedOption><SegmentedOption value="text">Text</SegmentedOption><SegmentedOption value="image">Image</SegmentedOption></SegmentedList>
+    <SegmentedControl aria-label="Input modality" value={modalityOf(route, fallback)} onValueChange={v => go(withQ(route, {modality: v === fallback ? '' : v}))}>
+      <SegmentedList aria-label="Input"><SegmentedOption value="text">Text</SegmentedOption><SegmentedOption value="all">All inputs</SegmentedOption><SegmentedOption value="image">Image</SegmentedOption></SegmentedList>
     </SegmentedControl>
   );
 }

@@ -10,14 +10,14 @@ import {tip} from '@/components/tip';
 import {cn} from '@/lib/utils';
 import {ModelName, Logo, Section, Notice, Dash, Notes} from '@/components/common';
 import {List, Item} from '@/components/list';
-import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns} from '@/components/filters';
+import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns, modalityOf} from '@/components/filters';
 import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
 import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
 
-const scopeCases = route => { const cat = route.q.get('category') || '', mod = route.q.get('modality') || ''; return B.rowsInOrder().filter(c => (!cat || B.catKey(c) === cat) && (!mod || (mod === 'image') === B.isImageTask(c.task))); };
+const scopeCases = route => { const cat = route.q.get('category') || '', mod = modalityOf(route, 'text'); return B.rowsInOrder().filter(c => (!cat || B.catKey(c) === cat) && (mod === 'all' || (mod === 'image') === B.isImageTask(c.task))); };
 export const ChartCard = ({title, description, foot, children, className}) => (
   <div className={cn('min-w-0 rounded-xl border bg-card p-4 shadow-xs md:p-5', className)}>
     <h3 className="text-sm font-semibold">{title}</h3>
@@ -153,13 +153,16 @@ const SHORT_CAT = {'AI agents': 'Agents', 'Customer support': 'Support', 'Produc
 const shortCat = name => { const n = name.split(' & ')[0]; return SHORT_CAT[n] || n; };
 const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Why a model has its rank range: the models it reliably beats, those that reliably beat it, and the rest. */
-const RANK_NOTE = '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both were scored on. Hover a range to see which models are reliably ahead or behind.';
+const RANK_NOTE = '# is 1 plus the number of models that are reliably better, so models too close to call share a place. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the same rows. Hover a range to see which models are reliably ahead or behind.';
+/* Models with results that this view does not rank, because they were not scored on every one of its rows. */
+const unrankedNote = (runs, cases) => { const out = B.RUNS.filter(r => !runs.includes(r) && B.subsetMetrics(r, cases).cases < cases.length); return out.length > 0 && `Not ranked here, because they were not scored on all ${num(cases.length)} rows: ${out.map(r => `${B.ident(r).short} (${num(B.subsetMetrics(r, cases).cases)})`).join(', ')}.`; };
+const placeOf = (rank, r) => rank.get(r.id)?.[0] ?? '—';
 const rangeTip = (name, [best, worst], n) => tip(name, [['Rank range', B.rankText([best, worst])], ['Reliably better than', plural(n - worst, 'model')], ['Reliably worse than', plural(best - 1, 'model')], ['Too close to call', plural(worst - best, 'model')]]);
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
 function LeaderboardSection({route, runs, cases}) {
   const [more, setMore] = useState(false), cat = route.q.get('category') || '';
   const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground max-md:hidden" title="Tokens, macro F1, calibration and errors" aria-expanded={more} data-track="leaderboard_columns" onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
-  const scope = `${cat ? `${B.catInfo(cat).name} rows` : 'All rows'}${route.q.get('modality') ? ` · ${route.q.get('modality')} inputs` : ''}`;
+  const scope = `${cat ? B.catInfo(cat).name : 'All use cases'} · ${{text: 'text rows', all: 'all rows', image: 'image rows'}[modalityOf(route, 'text')]}`;
   return <Section id="leaderboard" title="Leaderboard" actions={toggle} description={<><span className="max-md:hidden">{scope}. Click a column to re-sort.</span><span className="md:hidden">{scope} · {plural(cases.length, 'row')} in {new Set(cases.map(c => c.task)).size} tasks.</span></>} className="mt-6 md:mt-8">
     <div className="md:hidden"><LeaderList runs={runs} cases={cases} /></div>
     <div className="max-md:hidden"><Leaderboard route={route} runs={runs} cases={cases} more={more} /></div>
@@ -186,7 +189,7 @@ function Leaderboard({route, runs, cases, more}) {
       <TableScroll label="Leaderboard table">
         <table className="w-full text-sm">
           <thead><tr className="border-b text-left align-bottom [&>th]:py-2">
-            <Th title="Order by accuracy" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
+            <Th title="1 plus the number of models that are reliably better" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             <Th title="Places the model could hold at 95% confidence: best is 1 + the models reliably ahead, worst is the number of models minus those reliably behind">Rank range</Th>
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
@@ -197,9 +200,9 @@ function Leaderboard({route, runs, cases, more}) {
           <tbody>
             {sorted.map(([r, m]) => { const ci = m.wilson, tp = m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0);
               return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40">
-                <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{B.positionOf(m, all) ?? '—'}</td>
+                <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{placeOf(rank, r)}</td>
                 {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
-                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <sup className="text-[10px] text-muted-foreground" title={`${m.excluded} image-only cases excluded; ${m.questions} scored. Image required but not sent.`}>**</sup>}</span></td>
+                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} /></span></td>
                 <td className="px-3 py-2.5" data-tip={tip(B.runName(r), [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(ci)], ['Correct', `${m.correct}/${m.questions}`]])}>
                   <span className="flex items-center gap-3 whitespace-nowrap">
                     <span className="w-12 font-semibold tabular-nums">{pct(m.accuracy)}</span>
@@ -218,9 +221,8 @@ function Leaderboard({route, runs, cases, more}) {
     </div>
     <Notes items={[
       RANK_NOTE,
-      B.allCases.some(c => B.isImageTask(c.task)) && '** Image-only cases excluded when the image was not sent. N/E = not evaluated.',
       partial && '* Cost known for part of the rows.',
-      B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
+      unrankedNote(runs, cases),
     ]} />
   </>;
 }
@@ -238,7 +240,7 @@ function useSettle(ref, key) {
 const BY = {accuracy: ['Most accurate', m => m.accuracy, -1, m => pct(m.accuracy)], latency: ['Fastest', m => m.latency.p50, 1, m => ms(m.latency.p50)], cost: ['Cheapest', m => m.costPer1k, 1, m => money(m.costPer1k)]};
 function LeaderList({runs, cases}) {
   const [key, setKey] = useState('accuracy'), box = useRef(null), [, val, dir, show] = BY[key];
-  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), all = metrics.map(([, m]) => m), rank = B.ranks(runs, cases);
+  const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), rank = B.ranks(runs, cases);
   const sorted = metrics.slice().sort(([, a], [, b]) => { const va = val(a), vb = val(b); if (va == null) return 1; if (vb == null) return -1; return dir * (va - vb) || b.accuracy - a.accuracy; });
   const los = metrics.flatMap(([, m]) => m.wilson || []), [d0] = los.length ? zoomDomain(los, .1) : [0], cx = v => `${(v - d0) / (1 - d0 || 1) * 100}%`;
   useSettle(box, key);
@@ -250,14 +252,14 @@ function LeaderList({runs, cases}) {
     <div ref={box}><List>
       {sorted.map(([r, m], i) => { const k = B.keyOf(r), id = B.ident(r), ci = m.wilson;
         return <Item key={r.id} data-flip={r.id} href={modelHref(k)} chevron={false}
-          lead={<><span className="w-5 text-center text-[13px] text-muted-foreground tabular-nums">{key === 'accuracy' ? B.positionOf(m, all) : i + 1}</span><Logo k={k} size={30} className="ml-2 rounded-lg" /></>}
+          lead={<><span className="w-5 text-center text-[13px] text-muted-foreground tabular-nums">{key === 'accuracy' ? placeOf(rank, r) : i + 1}</span><Logo k={k} size={30} className="ml-2 rounded-lg" /></>}
           title={id.name} sub={<>{id.iface && id.iface !== 'API' && <>{id.iface} · </>}{key === 'accuracy' && rank.has(r.id) && <>Rank range {B.rankText(rank.get(r.id))} · </>}{others(m)}</>}
           trail={<span className="flex flex-col items-end gap-1.5">
             <span className="text-[15px] font-semibold tabular-nums">{show(m)}</span>
             {key === 'accuracy' && ci && <span className="relative block h-1.5 w-14" aria-hidden="true"><i className="absolute inset-x-0 top-[2.5px] h-px bg-border" /><i className="absolute top-0.5 h-0.5 rounded-full bg-foreground/25" style={{left: cx(ci[0]), width: `calc(${cx(ci[1])} - ${cx(ci[0])})`}} /><b className="absolute top-0 h-1.5 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}
           </span>} />; })}
     </List></div>
-    <Notes items={[key === 'accuracy' && RANK_NOTE, B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => B.ident(r).short).join(', ')}.`, 'Tap a model for its fit by use case.']} />
+    <Notes items={[key === 'accuracy' && RANK_NOTE, unrankedNote(runs, cases), 'Tap a model for its fit by use case.']} />
   </>;
 }
 
@@ -330,7 +332,7 @@ export function Home({route}) {
       {/* Sticky under the top bar; on phones one line of chips that scrolls sideways. */}
       <div className="sticky top-[calc(env(safe-area-inset-top)+48px)] z-30 -mx-4 flex items-center gap-2 overflow-x-auto bg-background/85 px-4 py-2.5 backdrop-blur-md [scrollbar-width:none] md:-mx-8 md:mt-6 md:flex-wrap md:overflow-visible md:px-8 md:py-3 lg:top-14">
         <UseCaseSelect route={route} className="shrink-0 md:min-w-44" />
-        {B.allCases.some(c => B.isImageTask(c.task)) && <div className="shrink-0 max-md:order-last"><ModalityTabs route={route} /></div>}
+        {B.allCases.some(c => B.isImageTask(c.task)) && <div className="shrink-0 max-md:order-last"><ModalityTabs route={route} fallback="text" /></div>}
         {B.RUNS.length > 0 && <ModelPicker route={route} />}
         <span className="ml-auto text-[13px] text-muted-foreground tabular-nums max-md:hidden">{plural(cases.length, 'row')} · {new Set(cases.map(c => c.task)).size} tasks</span>
       </div>

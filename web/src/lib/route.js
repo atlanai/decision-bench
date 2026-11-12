@@ -29,7 +29,7 @@ upgradeLegacyHash();
 export function parseRoute() {
   const parts = location.pathname.split('/').filter(Boolean);
   const q = new URLSearchParams(location.search);
-  if (!['text', 'image'].includes(q.get('modality'))) q.delete('modality');
+  if (!['text', 'image', 'all'].includes(q.get('modality'))) q.delete('modality');
   let id = '';
   try { id = decodeURIComponent(parts.slice(1).join('/') || ''); } catch { id = parts.slice(1).join('/'); }
   return {page: PAGES.includes(parts[0]) ? parts[0] : 'home', id, q};

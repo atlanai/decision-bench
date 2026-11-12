@@ -70,16 +70,34 @@ own label is scored even when it disagrees with its own highest probability; tha
 - **Macro averages**: mean accuracy over categories, and mean macro-F1 over tasks, so large tasks do not dominate.
 - **Calibration** (descriptive only): Brier score, log loss (true-label probability clipped at 1e-12), expected
   calibration error over 10 bins, a reliability curve, and a risk/coverage curve. Only valid answers contribute.
-- **Paired comparisons**: for two full runs, the accuracy difference on shared rows with a bootstrap interval that
-  resamples whole tasks (2,000 repetitions, fixed seed).
+- **Paired comparisons**: for two runs, the accuracy difference on the rows both were scored on, with a 95%
+  bootstrap interval. It is the same bootstrap as the rank range below.
 
-Order on the leaderboard is by accuracy, and `#` is that order. The site's rank range column is a 95% range of plausible places for each model, after
-Mogstad, Romano, Shaikh and Wilhelm, *Inference for Ranks*. Each pair of models is compared on the rows both were scored on.
-Rows are resampled within their task (1,000 draws, fixed seed), with one draw shared by all models, so the pairing is
-kept and the tasks are treated as fixed. The best place is 1 plus the number of models reliably ahead; the worst is the
-number of models minus those reliably behind. A max-t correction makes each range hold over all of that model's
-comparisons at once. Each range is for one model, so two ranges can overlap even when one model is reliably ahead of
-the other. Partial runs are not ranked.
+### Ranking
+
+**Same rows for every model.** A leaderboard view ranks only the models that were scored on every row of that view.
+There are two tracks:
+
+- **Text** (the default): the rows of the tasks with no image. Every published model is ranked here, including the
+  runs that cover only these rows.
+- **All inputs**: every row. Only the models that were sent the images are ranked here.
+
+A model that is not ranked in a view is named under the table with its number of scored rows.
+
+**Places show ties.** The table is sorted by accuracy, but `#` is not the line number. `#` is 1 plus the number of
+models that are reliably better, so models that the data cannot separate share a place. The rank range column is the
+95% range of plausible places for each model, after Mogstad, Romano, Shaikh and Wilhelm, *Inference for Ranks*. `#`
+is the best place of that range.
+
+**One bootstrap.** Each pair of models is compared on the same rows. Rows are resampled within their task (1,000
+draws, fixed seed), with one draw shared by all models, so the pairing is kept and the tasks are treated as fixed.
+The question it answers is "is this difference real on these tasks", not "would it hold on new tasks": with 35 tasks,
+a resample of whole tasks cannot separate most models. A max-t correction makes each range hold over all of that
+model's comparisons at once. Each range is for one model, so two ranges can overlap even when one model is reliably
+ahead of the other. The compare page and `paired_comparison` in `decision_bench/metrics.py` resample in the same way.
+
+`leaderboard.json` and `leaderboard.md` give the score of each model on both tracks, sorted by accuracy, with no
+place number. The site is the only source of places and rank ranges.
 
 ## Retries and resuming
 

@@ -116,14 +116,21 @@ Every value in `scores.json` can be recomputed from `predictions.jsonl` and the 
 
 ### `leaderboard.json` and `leaderboard.md`
 
-`results/<suite>/leaderboard.json` lists every published model, sorted by accuracy:
+`results/<suite>/leaderboard.json` lists every published model, sorted by accuracy on the text rows. `tracks` has
+the score of the model on each set of rows that the leaderboard compares (`docs/protocol.md`, Ranking): `text` is
+the rows with no image, and `all` is every row. A track is `null` when the model was not scored on every row of it
+with that row's image, or when the result is on an older corpus. The top-level `accuracy`, `correct`, `rows` and
+`errors` are for the rows that the run covered, so they are not comparable between models with different coverage.
+The files give no place number.
 
 ```json
 {"schema_version": 1, "suite": "bench-v4", "corpus_version": "1.0", "corpus_sha256": "…", "note": "…",
  "models": [{"model_id": "…", "label": "…", "vendor": "…", "provider": "…", "api_model": "…",
              "accuracy": 0.780, "wilson95": [0.734, 0.820], "correct": 280, "rows": 359, "errors": 2,
              "cost_usd": 0.19, "cost_coverage": 1.0, "cost_per_1000_rows_usd": 0.49, "latency_p50_ms": 1840,
-             "corpus_current": true, "full_coverage": true, "completed_at": "…"}]}
+             "corpus_current": true, "full_coverage": true, "completed_at": "…",
+             "tracks": {"text": {"rows": 300, "correct": 240, "accuracy": 0.800, "wilson95": [0.751, 0.841], "errors": 1},
+                        "all": null}}]}
 ```
 
 ## Site data: `site/` (generated, not committed)
@@ -144,7 +151,7 @@ more) are committed. Everything else in `site/` is build output.
 With `--include-runs`, local runs on the current corpus are added (marked `"source": "local"`). A local run replaces
 a published entry with the same run id, because it may have been resumed since publishing.
 
-`data.json` (schema version 2):
+`data.json` (schema version 3):
 
 | Key | Contents |
 | --- | --- |
@@ -158,7 +165,6 @@ a published entry with the same run id, because it may have been resumed since p
 | `leaderboard` | The `models` list of `leaderboard.json`. |
 | `runs` | One entry per shown run (below). |
 | `results` | One record per row per run: `run_id`, `case_id`, `status`, status-only `error`, `duration_ms`, `scores` (a one-item list: `question_id`, `gold`, `label`, `correct`, `confidence`, `probabilities`, `brier`, `log_loss`), `cost_usd`, `tokens`, `attempt_count`. Successful raw answer text is in the published `predictions.jsonl`. |
-| `comparisons` | Paired differences between full runs: `a`, `b` (run ids), `both_correct`, `a_only_correct`, `b_only_correct`, `both_wrong`, `accuracy_difference`, `cluster_bootstrap_ci95` (resampling tasks). |
 | `include_runs` | Whether local runs were included. |
 
 A `runs` entry:

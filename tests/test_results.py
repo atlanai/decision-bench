@@ -19,6 +19,50 @@ def run_args(**kw):
     return argparse.Namespace(**base)
 
 
+def published_result(model_id, manifest, answers, images_sent=0):
+    """A published result as load_published returns it. answers maps a row id to whether the answer is right."""
+    predictions = [{"row_id": row_id, "correct": right, "status": "ok", "images_sent": images_sent}
+                   for row_id, right in answers.items()]
+    metadata = {"model": {"id": model_id, "label": model_id}, "corpus": {"sha256": manifest["sha256"]},
+                "coverage": {"full": len(answers) == manifest["counts"]["cases"]}, "run": {"completed_at": None}}
+    correct = sum(answers.values())
+    scores = {"overall": {"accuracy": correct / len(answers), "wilson95": [0, 1], "correct": correct,
+                          "rows": len(answers), "errors": 0},
+              "cost": {"usd": None, "coverage": 0, "per_1000_rows_usd": None}, "latency_ms": {"p50": None}}
+    return metadata, predictions, scores
+
+
+class LeaderboardTracks(unittest.TestCase):
+    def test_each_track_lists_only_models_scored_on_all_of_its_rows(self):
+        image_row = {**fixtures.row("r4", "T-2", "beta", "a"), "assets": [{"path": "data/assets/r4.png", "mime_type": "image/png", "alt_text": "A chart."}]}
+        with fixtures.repo(rows=[*fixtures.ROWS, image_row]) as root:
+            (root / "data/assets").mkdir()
+            (root / "data/assets/r4.png").write_bytes(b"\x89PNG")
+            manifest = load_manifest()
+            text_right = {"r1": True, "r2": True, "r3": False}
+            published = [
+                published_result("sees-images", manifest, {**text_right, "r4": True}, images_sent=1),
+                published_result("text-only", manifest, {"r1": True, "r2": True, "r3": True}),
+                published_result("blind-on-images", manifest, {**text_right, "r4": True}),
+            ]
+            board = results.leaderboard("mini", published=published, manifest=manifest)
+        tracks = {m["model_id"]: m["tracks"] for m in board["models"]}
+        self.assertEqual([m["model_id"] for m in board["models"]], ["text-only", "blind-on-images", "sees-images"])
+        self.assertEqual({k: (t["text"]["correct"], t["text"]["rows"]) for k, t in tracks.items()},
+                         {"text-only": (3, 3), "blind-on-images": (2, 3), "sees-images": (2, 3)})
+        self.assertEqual(tracks["sees-images"]["all"]["rows"], 4)
+        self.assertEqual(tracks["sees-images"]["all"]["correct"], 3)
+        self.assertIsNone(tracks["text-only"]["all"])
+        self.assertIsNone(tracks["blind-on-images"]["all"])
+
+    def test_a_result_on_an_older_corpus_is_in_no_track(self):
+        with fixtures.repo():
+            manifest = load_manifest()
+            old = published_result("old", {**manifest, "sha256": "0" * 64}, {"r1": True, "r2": True, "r3": True})
+            board = results.leaderboard("mini", published=[old], manifest=manifest)
+        self.assertEqual(board["models"][0]["tracks"], {"text": None, "all": None})
+
+
 class EmptyResults(unittest.TestCase):
     def test_report_works_with_no_results(self):
         with fixtures.repo() as root:
@@ -230,7 +274,6 @@ class PublishFlow(unittest.TestCase):
         data = report.build(include_runs=True)
         self.assertEqual([(r["id"], r["source"]) for r in data["runs"]], [(meta["id"], "local")])
         self.assertFalse(data["runs"][0]["coverage"]["full"])
-        self.assertEqual(data["comparisons"], [])
 
     def test_cli_models_remote_prints_ids_only(self):
         with patch("builtins.print") as printed:
