@@ -153,8 +153,7 @@ def summarize(records, case_map, attempt_events=None):
 
 
 def paired_comparison(a, b, case_map, repetitions=2000, seed=20260923):
-    """Accuracy of a minus accuracy of b on the rows both answered. The interval resamples rows within their task,
-    so the tasks are fixed: the same bootstrap as the site's rank range (docs/protocol.md)."""
+    """Accuracy of a minus b on shared rows, with a 95% interval that resamples rows within their task."""
     aa = {r["case_id"]: r for r in a}
     bb = {r["case_id"]: r for r in b}
     common = sorted(aa.keys() & bb.keys())

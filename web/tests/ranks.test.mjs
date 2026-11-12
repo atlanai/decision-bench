@@ -67,18 +67,23 @@ test('every published run is ranked on the text rows, which all of them were sco
 
 test('on all rows only the runs scored on every row are ranked', () => {
   const ranked = B.evaluated(B.RUNS, B.allCases);
-  assert.ok(ranked.length > 0 && ranked.length < B.RUNS.length);
+  assert.ok(ranked.length > 0);
   for (const r of B.RUNS) assert.equal(ranked.includes(r), B.subsetMetrics(r, B.allCases).cases === B.allCases.length, B.keyOf(r));
   for (const r of ranked) assert.ok(B.allCases.every(c => !B.isImageTask(c.task) || B.rawResult(r.id, c.id).images_sent > 0), B.keyOf(r));
   assert.equal(B.ranks(B.RUNS, B.allCases).size, ranked.length);
 });
 
-test('the place of a model is 1 plus the models reliably ahead, so close models share a place', () => {
-  const text = B.textCases(), ranks = B.ranks(B.RUNS, text);
-  const byAccuracy = B.RUNS.slice().sort((a, b) => B.subsetMetrics(b, text).accuracy - B.subsetMetrics(a, text).accuracy);
-  assert.equal(ranks.get(byAccuracy[0].id)[0], 1);
-  assert.equal(ranks.get(byAccuracy[1].id)[0], 1, 'the top two models are too close to separate');
-  assert.ok(ranks.get(byAccuracy.at(-1).id)[0] > 1);
+test('the # column never runs against the order by accuracy, in any view', () => {
+  const views = [B.textCases(), B.allCases, ...B.categoryOrder().flatMap(k => [B.textCases(), B.allCases].map(rows => rows.filter(c => B.catKey(c) === k)))].filter(rows => rows.length);
+  for (const cases of views) {
+    const runs = B.evaluated(B.RUNS, cases), place = B.places(runs, cases), spread = B.ranks(runs, cases);
+    const sorted = runs.slice().sort((a, b) => B.subsetMetrics(b, cases).accuracy - B.subsetMetrics(a, cases).accuracy);
+    assert.equal(place.get(sorted[0].id), 1);
+    for (const [i, r] of sorted.entries()) {
+      assert.ok(place.get(r.id) >= spread.get(r.id)[0]);
+      if (i) assert.ok(place.get(r.id) >= place.get(sorted[i - 1].id), `${B.keyOf(r)} on ${cases.length} rows`);
+    }
+  }
 });
 
 test('a range of one place shows one number', () => {

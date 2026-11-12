@@ -325,7 +325,7 @@ def load_published(suite):
     return out
 
 
-TRACKS = {"text": ("Text rows", "Every model is scored on these rows."),
+TRACKS = {"text": ("Text rows", "The rows with no image."),
           "all": ("All rows", "Only the models that were sent every image.")}
 
 
@@ -396,6 +396,9 @@ def write_leaderboard(suite):
     older = [r["label"] for r in board["models"] if not r["corpus_current"]]
     if older:
         lines += ["", "On an older corpus, not listed: " + ", ".join(older) + "."]
+    unlisted = [r["label"] for r in board["models"] if r["corpus_current"] and not any(r["tracks"].values())]
+    if unlisted:
+        lines += ["", "Not scored on every row of either track, not listed: " + ", ".join(unlisted) + "."]
     (folder / "leaderboard.md").write_text("\n".join(lines) + "\n")
     return board
 

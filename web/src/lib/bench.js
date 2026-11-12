@@ -222,6 +222,14 @@ export function pairedDifference(a, b, cases) {
   const [pair] = pairedBootstrap([a, b].map(r => cases.map(c => scoreOn(r, c))), cases.map(c => c.task));
   return pair ? {difference: pair.d, interval: [quantile([...pair.boot], .025), quantile([...pair.boot], .975)]} : null;
 }
+/* The # of each run in this view: the best place of its rank range, raised to the # of any run with the same or higher
+   accuracy, so the column never runs against the order by accuracy. Keyed by run id. */
+export function places(runs, cases) {
+  const spreads = ranks(runs, cases), accuracy = id => subsetMetrics(RUNS.find(r => r.id === id), cases).accuracy;
+  const out = new Map();
+  for (const id of spreads.keys()) out.set(id, Math.max(...[...spreads].filter(([other]) => accuracy(other) >= accuracy(id)).map(([, [best]]) => best)));
+  return out;
+}
 export const rankText = s => !s ? '—' : s[0] === s[1] ? String(s[0]) : `${s[0]}–${s[1]}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
 /* The runs a view ranks: those scored on every one of its rows, so all of them are compared on the same rows. */

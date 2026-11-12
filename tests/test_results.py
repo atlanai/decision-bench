@@ -55,6 +55,20 @@ class LeaderboardTracks(unittest.TestCase):
         self.assertIsNone(tracks["text-only"]["all"])
         self.assertIsNone(tracks["blind-on-images"]["all"])
 
+    def test_a_result_that_misses_a_text_row_is_named_under_the_tables(self):
+        with fixtures.repo() as root:
+            manifest = load_manifest()
+            folder = root / "results/mini/short"
+            folder.mkdir(parents=True)
+            metadata, predictions, scores = published_result("short", manifest, {"r1": True, "r2": True})
+            (folder / "metadata.json").write_text(json.dumps(metadata))
+            (folder / "predictions.jsonl").write_text("".join(json.dumps(p) + "\n" for p in predictions))
+            (folder / "scores.json").write_text(json.dumps(scores))
+            results.write_leaderboard("mini")
+            table = (root / "results/mini/leaderboard.md").read_text()
+        self.assertIn("Not scored on every row of either track, not listed: short.", table)
+        self.assertNotIn("| short |", table)
+
     def test_a_result_on_an_older_corpus_is_in_no_track(self):
         with fixtures.repo():
             manifest = load_manifest()

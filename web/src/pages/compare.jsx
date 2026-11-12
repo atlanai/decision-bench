@@ -37,7 +37,7 @@ export function Compare({route}) {
       <span className="ml-auto max-md:-mt-1"><CopyButton text={url} label="Copy link" /></span>
     </div>
     {tot.n < B.allCases.length && <Notice>The comparison uses the {tot.n} rows that both models were scored on. Rows that one model was not run on, and image-only rows that a model was not sent the image for, are left out.</Notice>}
-    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={paired ? `Overall difference ${pp(paired.difference)} percentage points; 95% interval ${pp(paired.interval[0])} to ${pp(paired.interval[1])}, from the same bootstrap as the leaderboard rank (rows resampled within their task).` : ''}>
+    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={paired ? `Overall difference ${pp(paired.difference)} percentage points; 95% interval ${pp(paired.interval[0])} to ${pp(paired.interval[1])}, rows resampled within their task. The rank range also corrects for comparing every pair at once, so it can call this pair too close.` : ''}>
       <List className="md:hidden">
         <ListHead aside={diff(tot.n ? (tot.ao - tot.bo) / tot.n : null)}>All tasks · {tot.n} shared rows · A minus B</ListHead>
         {rows.map(r => <Item key={r.t} href={taskHref(r.t)} chevron={false} title={B.taskName(r.t)}
