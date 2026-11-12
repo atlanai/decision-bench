@@ -77,6 +77,7 @@ Each entry:
   "id": "gemini-3.5-flash",              // our stable slug: run ids and results/ paths use it
   "label": "Gemini 3.5 Flash", "short_label": "Gemini Flash", "vendor": "Google", "color": "#2563eb",
   "provider": "openai-compatible",       // openai-compatible | typesafe | djev | sage | laya | claude-cli | codex-cli
+  "kind": "llm",                         // llm: a general chat model. decision: built to return a decision. The site filters on it
   "model": "gemini-3.5-flash",           // the model name sent to the provider
   "request": {"response_format": "json_schema", "token_limit_field": "max_tokens", "max_output_tokens": 8192,
               "reasoning_effort": "low", "temperature": null, "json_wrapper_policy": "allow_single_code_fence"},

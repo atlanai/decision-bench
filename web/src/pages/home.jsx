@@ -10,7 +10,7 @@ import {tip} from '@/components/tip';
 import {cn} from '@/lib/utils';
 import {ModelName, Logo, Section, Notice, Dash, Notes} from '@/components/common';
 import {List, Item} from '@/components/list';
-import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns, modalityOf} from '@/components/filters';
+import {UseCaseSelect, ModalityTabs, KindTabs, ModelPicker, selectedRuns, modalityOf} from '@/components/filters';
 import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
@@ -155,7 +155,7 @@ const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Why a model has its rank range: the models it reliably beats, those that reliably beat it, and the rest. */
 const RANK_NOTE = '# is 1 plus the number of models that are reliably better, so models too close to call share a place. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the same rows. Hover a range to see which models are reliably ahead or behind.';
 /* Models with results that this view does not rank, because they were not scored on every one of its rows. */
-const unrankedNote = (runs, cases) => { const out = B.RUNS.filter(r => !runs.includes(r) && B.subsetMetrics(r, cases).cases < cases.length); return out.length > 0 && `Not ranked here, because they were not scored on all ${num(cases.length)} rows: ${out.map(r => `${B.ident(r).short} (${num(B.subsetMetrics(r, cases).cases)})`).join(', ')}.`; };
+const unrankedNote = (route, runs, cases) => { const out = selectedRuns(route).filter(r => !runs.includes(r)); return out.length > 0 && `Not ranked here, because they were not scored on all ${num(cases.length)} rows: ${out.map(r => `${B.ident(r).short} (${num(B.subsetMetrics(r, cases).cases)})`).join(', ')}.`; };
 const placeOf = (rank, r) => rank.get(r.id)?.[0] ?? '—';
 const rangeTip = (name, [best, worst], n) => tip(name, [['Rank range', B.rankText([best, worst])], ['Reliably better than', plural(n - worst, 'model')], ['Reliably worse than', plural(best - 1, 'model')], ['Too close to call', plural(worst - best, 'model')]]);
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
@@ -164,7 +164,7 @@ function LeaderboardSection({route, runs, cases}) {
   const toggle = <Button variant="ghost" size="sm" className="text-muted-foreground max-md:hidden" title="Tokens, macro F1, calibration and errors" aria-expanded={more} data-track="leaderboard_columns" onClick={() => setMore(v => !v)}>{more ? 'Fewer columns' : 'More columns'}<ChevronDownIcon className={cn('size-3.5 transition-transform', more && 'rotate-180')} /></Button>;
   const scope = `${cat ? B.catInfo(cat).name : 'All use cases'} · ${{text: 'text rows', all: 'all rows', image: 'image rows'}[modalityOf(route, 'text')]}`;
   return <Section id="leaderboard" title="Leaderboard" actions={toggle} description={<><span className="max-md:hidden">{scope}. Click a column to re-sort.</span><span className="md:hidden">{scope} · {plural(cases.length, 'row')} in {new Set(cases.map(c => c.task)).size} tasks.</span></>} className="mt-6 md:mt-8">
-    <div className="md:hidden"><LeaderList runs={runs} cases={cases} /></div>
+    <div className="md:hidden"><LeaderList route={route} runs={runs} cases={cases} /></div>
     <div className="max-md:hidden"><Leaderboard route={route} runs={runs} cases={cases} more={more} /></div>
   </Section>;
 }
@@ -222,7 +222,7 @@ function Leaderboard({route, runs, cases, more}) {
     <Notes items={[
       RANK_NOTE,
       partial && '* Cost known for part of the rows.',
-      unrankedNote(runs, cases),
+      unrankedNote(route, runs, cases),
     ]} />
   </>;
 }
@@ -238,7 +238,7 @@ function useSettle(ref, key) {
   }, [ref, key]);
 }
 const BY = {accuracy: ['Most accurate', m => m.accuracy, -1, m => pct(m.accuracy)], latency: ['Fastest', m => m.latency.p50, 1, m => ms(m.latency.p50)], cost: ['Cheapest', m => m.costPer1k, 1, m => money(m.costPer1k)]};
-function LeaderList({runs, cases}) {
+function LeaderList({route, runs, cases}) {
   const [key, setKey] = useState('accuracy'), box = useRef(null), [, val, dir, show] = BY[key];
   const metrics = runs.map(r => [r, B.subsetMetrics(r, cases)]), rank = B.ranks(runs, cases);
   const sorted = metrics.slice().sort(([, a], [, b]) => { const va = val(a), vb = val(b); if (va == null) return 1; if (vb == null) return -1; return dir * (va - vb) || b.accuracy - a.accuracy; });
@@ -259,7 +259,7 @@ function LeaderList({runs, cases}) {
             {key === 'accuracy' && ci && <span className="relative block h-1.5 w-14" aria-hidden="true"><i className="absolute inset-x-0 top-[2.5px] h-px bg-border" /><i className="absolute top-0.5 h-0.5 rounded-full bg-foreground/25" style={{left: cx(ci[0]), width: `calc(${cx(ci[1])} - ${cx(ci[0])})`}} /><b className="absolute top-0 h-1.5 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}
           </span>} />; })}
     </List></div>
-    <Notes items={[key === 'accuracy' && RANK_NOTE, unrankedNote(runs, cases), 'Tap a model for its fit by use case.']} />
+    <Notes items={[key === 'accuracy' && RANK_NOTE, unrankedNote(route, runs, cases), 'Tap a model for its fit by use case.']} />
   </>;
 }
 
@@ -333,6 +333,7 @@ export function Home({route}) {
       <div className="sticky top-[calc(env(safe-area-inset-top)+48px)] z-30 -mx-4 flex items-center gap-2 overflow-x-auto bg-background/85 px-4 py-2.5 backdrop-blur-md [scrollbar-width:none] md:-mx-8 md:mt-6 md:flex-wrap md:overflow-visible md:px-8 md:py-3 lg:top-14">
         <UseCaseSelect route={route} className="shrink-0 md:min-w-44" />
         {B.allCases.some(c => B.isImageTask(c.task)) && <div className="shrink-0 max-md:order-last"><ModalityTabs route={route} fallback="text" /></div>}
+        {B.RUNS.length > 0 && <div className="shrink-0"><KindTabs route={route} /></div>}
         {B.RUNS.length > 0 && <ModelPicker route={route} />}
         <span className="ml-auto text-[13px] text-muted-foreground tabular-nums max-md:hidden">{plural(cases.length, 'row')} · {new Set(cases.map(c => c.task)).size} tasks</span>
       </div>

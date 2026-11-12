@@ -160,7 +160,7 @@ a published entry with the same run id, because it may have been resumed since p
 | `cases` | The corpus rows (same as `corpus.json`). |
 | `inventory` | `cases`, `questions`, `tasks`, `categories`, `models_configured`, `runs`, `published_runs`. |
 | `prompt` | `version` and the `system` prompt sent to chat models. |
-| `models` | Every entry of `config/models.json`: `id`, `label`, `short_label`, `vendor`, `provider`, `color`, `vision`, `api_model`, `request`, `pricing`. |
+| `models` | Every entry of `config/models.json`: `id`, `label`, `short_label`, `vendor`, `provider`, `color`, `vision`, `kind` (`decision` or `llm`), `api_model`, `request`, `pricing`. |
 | `logos` | The `logos` map of `config/models.json`: vendor name to the domain that names `assets/logos/<domain>.png`. |
 | `leaderboard` | The `models` list of `leaderboard.json`. |
 | `runs` | One entry per shown run (below). |

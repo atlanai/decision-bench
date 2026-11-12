@@ -2,7 +2,7 @@ import {track} from '@/lib/analytics';
 /* Filter controls bound to the URL: use case, input modality, which models are shown, search. */
 import {startTransition, useEffect, useRef, useState} from 'react';
 import {CheckIcon, ChevronDownIcon, MinusIcon, SearchIcon} from 'lucide-react';
-import {categoryOrder, catInfo, RUNS, keyOf, allCases, fullName} from '@/lib/bench';
+import {categoryOrder, catInfo, RUNS, keyOf, allCases, fullName, runsOfKind} from '@/lib/bench';
 import {usePhone, haptic} from '@/lib/device';
 import {plural} from '@/lib/format';
 import {withQ, go, replace} from '@/lib/route';
@@ -55,7 +55,16 @@ export function ModalityTabs({route, fallback = 'all'}) {
   );
 }
 
-export const selectedRuns = route => { const sel = route.q.get('models'); if (!sel) return RUNS; const set = new Set(sel.split(',')); return RUNS.filter(r => set.has(keyOf(r))); };
+/* Decision models only, general LLMs only, or both. Places and rank ranges are worked out inside the chosen group. */
+export function KindTabs({route}) {
+  return (
+    <SegmentedControl aria-label="Kind of model" value={route.q.get('kind') || 'all'} onValueChange={v => go(withQ(route, {kind: v === 'all' ? '' : v}))}>
+      <SegmentedList aria-label="Kind of model"><SegmentedOption value="all">All models</SegmentedOption><SegmentedOption value="decision">Decision models</SegmentedOption><SegmentedOption value="llm">General LLMs</SegmentedOption></SegmentedList>
+    </SegmentedControl>
+  );
+}
+
+export const selectedRuns = route => { const sel = route.q.get('models'), runs = runsOfKind(RUNS, route.q.get('kind')); if (!sel) return runs; const set = new Set(sel.split(',')); return runs.filter(r => set.has(keyOf(r))); };
 
 /* Which models the leaderboard shows: one "All models" row that selects or clears everything (and shows a dash
    for a partial selection), then one checkbox per model. The ticks update at once; the page follows in a transition. */

@@ -26,8 +26,10 @@ REQUEST_KEYS = {
     "claude-cli": {"reasoning_effort"},
     "codex-cli": {"reasoning_effort"},
 }
+# "decision": built to return a decision and called through a decision API. "llm": a general chat model.
+MODEL_KINDS = {"decision", "llm"}
 MODEL_KEYS = {"id", "label", "short_label", "vendor", "provider", "model", "color", "request", "pricing", "notes",
-              "vision"}
+              "vision", "kind"}
 PRICING_KEYS = {"input_per_mtok", "cached_input_per_mtok", "output_per_mtok", "source_url", "as_of", "note"}
 
 
@@ -74,6 +76,8 @@ def _check_model(m):
         raise ConfigError(f"{where}: json_wrapper_policy must be allow_single_code_fence or strict")
     if "vision" in m and not isinstance(m["vision"], bool):
         raise ConfigError(f"{where}: vision must be true or false")
+    if m.get("kind", "llm") not in MODEL_KINDS:
+        raise ConfigError(f"{where}: kind must be one of {sorted(MODEL_KINDS)}")
     pricing = m.get("pricing")
     if pricing is not None:
         if set(pricing) - PRICING_KEYS:
@@ -120,7 +124,7 @@ def display(m):
     """Presentation fields only. Changing these never invalidates a run."""
     return {"id": m["id"], "label": m["label"], "short_label": m.get("short_label") or m["label"],
             "vendor": m["vendor"], "provider": m["provider"], "color": m.get("color"),
-            "vision": bool(m.get("vision"))}
+            "vision": bool(m.get("vision")), "kind": m.get("kind")}
 
 
 def estimate_cost(pricing, usage):

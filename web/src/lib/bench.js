@@ -19,13 +19,15 @@ export const HUGGING_FACE_DATASET = document.querySelector('meta[name="huggingfa
 export const gh = path => `${REPO}/blob/main/${path}`;
 export const ghIssue = (template, params = {}) => `${REPO}/issues/new?template=${template}${Object.entries(params).map(([k, v]) => `&${k}=${encodeURIComponent(v)}`).join('')}`;
 
-/* ---------- Models: label, colour, vendor logo and interface come from data.json models[] ---------- */
+/* ---------- Models: label, colour, vendor logo, interface and kind come from data.json models[] ----------
+   kind is 'decision' or 'llm' from config/models.json; a published model that is no longer in the config gets it from its provider. */
 const IFACE = {'openai-compatible': 'API', 'openrouter-decisions': 'API', typesafe: 'API', djev: 'API', sarvam: 'API', sage: 'API', tev1: 'API', laya: 'API', 'claude-cli': 'Claude Code CLI', 'codex-cli': 'Codex CLI'};
+const CHAT_PROVIDERS = ['openai-compatible', 'claude-cli', 'codex-cli'];
 const PALETTE = ['#2563eb', '#7c3aed', '#0f766e', '#d97706', '#db2777', '#0891b2', '#65a30d', '#c2410c', '#6d28d9', '#475569'];
 function registerModel(m, configured) {
   if (!m?.id || MODELS[m.id]) return;
   const hash = [...m.id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0), vendor = m.vendor || '', logo = data?.logos?.[vendor];
-  MODELS[m.id] = {id: m.id, name: m.label || m.id, short: m.short_label || m.label || m.id, vendor, iface: IFACE[m.provider] || m.provider || '', provider: m.provider, color: m.color || PALETTE[hash % PALETTE.length], logo: logo ? `assets/logos/${logo}.png` : null, vision: !!m.vision, configured, api_model: m.api_model, request: m.request, pricing: m.pricing};
+  MODELS[m.id] = {id: m.id, name: m.label || m.id, short: m.short_label || m.label || m.id, vendor, iface: IFACE[m.provider] || m.provider || '', provider: m.provider, kind: m.kind || (CHAT_PROVIDERS.includes(m.provider) ? 'llm' : 'decision'), color: m.color || PALETTE[hash % PALETTE.length], logo: logo ? `assets/logos/${logo}.png` : null, vision: !!m.vision, configured, api_model: m.api_model, request: m.request, pricing: m.pricing};
   ORDER.push(m.id);
 }
 export const keyOf = r => r.model_id || r.model?.id || r.config?.model_id;
@@ -49,6 +51,7 @@ function collectRuns() {
   RUNS = [...by.values()].sort(byOrder);
 }
 export const hasResults = () => RUNS.length > 0;
+export const runsOfKind = (runs, kind) => kind ? runs.filter(r => ident(r).kind === kind) : runs;
 export const rawResult = (runId, caseId) => recordMap.get(`${runId}:${caseId}`);
 export const exclusionReason = (runId, caseId) => imageInputExclusion(caseMap.get(caseId), rawResult(runId, caseId));
 export const result = (runId, caseId) => exclusionReason(runId, caseId) ? undefined : rawResult(runId, caseId);

@@ -86,3 +86,15 @@ test('a range of one place shows one number', () => {
   assert.equal(B.rankText([2, 5]), '2–5');
   assert.equal(B.rankText(undefined), '—');
 });
+
+test('the kind filter splits the published runs into decision models and general LLMs', () => {
+  const decision = B.runsOfKind(B.RUNS, 'decision').map(B.keyOf), llm = B.runsOfKind(B.RUNS, 'llm').map(B.keyOf);
+  assert.equal(decision.length + llm.length, B.RUNS.length);
+  assert.ok(decision.includes('microsoft-decision-1') && decision.includes('gpt-6-luna-decisions'));
+  assert.ok(llm.includes('gpt-6-luna') && llm.includes('claude-sonnet-5'));
+  assert.ok(llm.includes('gpt-5.6-luna'), 'a model that left the config gets its kind from its provider');
+  assert.equal(B.runsOfKind(B.RUNS, '').length, B.RUNS.length);
+  const text = B.textCases(), places = [...B.ranks(B.evaluated(B.runsOfKind(B.RUNS, 'decision'), text), text).values()];
+  assert.equal(places.length, decision.length);
+  assert.ok(places.every(([best, worst]) => worst <= decision.length) && places.some(([best]) => best === 1));
+});
