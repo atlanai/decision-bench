@@ -27,6 +27,8 @@ precedence over `.env`.
 | `TYPESAFE_API_KEY` | `typesafe` | Key for `https://api.typesafe.ai`. |
 | `SAGE_API_KEY` | `sage` | Levanto key from Intelligence → API Keys. |
 | `DJEV_API_KEY` | `djev` | Key for the hosted DiffusionGemma-Jev API at `https://api.djev.dev`. |
+| `BIELIK_ONE_BASE_URL` | `bielik-one` | Self-hosted Bielik One base, optionally ending in `/v1`; HTTPS or loopback HTTP only. |
+| `BIELIK_ONE_API_KEY` | `bielik-one` | Optional bearer key for deployments requiring authentication. |
 | `LAYA_BASE_URL` | `laya` | Laya System One base URL ending in `/v1`. Use `https://api.impossibl.com/v1` or a self-hosted `http://localhost:8000/v1`. |
 | `LAYA_API_KEY` | `laya` | Bearer key; required for hosted Laya, optional for an unauthenticated localhost server. |
 | `DREX_BASE_URL` | `drex` | Nace System One base URL ending in `/v1`. |
@@ -43,6 +45,21 @@ origin, redirects are refused, and neither the key nor the URL is written to any
 
 The `claude-cli` and `codex-cli` providers use the `claude` and `codex` commands on your `PATH` with their own
 sign-in. The harness removes its own keys from their environment.
+
+Bielik One uses the shared native System One transport and scoring, with text input only. Set
+`BIELIK_ONE_BASE_URL` in the environment and optionally `BIELIK_ONE_API_KEY`, then run:
+
+```sh
+python3 -m decision_bench run --model bielik-one-4b-r1 --limit 5 --run-id bielik-one-4b-smoke
+```
+
+The model entry fixes the inference options sent directly to the server. Keep the model revision,
+precision, runtime and calibration fixed when reproducing results. The base must be the server root
+or end in `/v1`; prefixed reverse-proxy paths are not supported. The adapter is text-only and records
+unavailable pricing as unknown, not zero. Self-hosted loopback latency excludes the public network
+and is not directly comparable with hosted API latency.
+`--api-model` may only repeat the configured alias; changing the model requires a separate model entry.
+Native-validation type `binary` is named `noul` in the serving API and evaluation profile.
 
 Laya uses the same typed question protocol as Jev. To run its hosted API, set `LAYA_BASE_URL` and
 `LAYA_API_KEY` in `.env`, then run `python3 -m decision_bench run --model laya-routed --limit 5`.
