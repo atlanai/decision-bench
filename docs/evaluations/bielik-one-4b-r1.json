@@ -1,0 +1,73 @@
+{
+  "calibration": {
+    "fit_code_sha256": "36afd03ebcdd2aed16b305bfa6a4cb8c7fd8ed9cb5e84d34213c04e6901a6f5e",
+    "inputs_sha256": "a781b1650370c25b5ffab254da378d9d741d3ee75a0f24c3d1b1fd719ff52128",
+    "method": "Per-type temperature scaling: minimize mean NLL over 81 logarithmically spaced temperatures in [0.25, 16], plus 1.",
+    "metrics": {
+      "choice": {
+        "fitted_validation_nll": 1.1591106508283764,
+        "n": 1000,
+        "raw_nll": 1.2789658352951183
+      },
+      "noul": {
+        "fitted_validation_nll": 0.5174721455211898,
+        "n": 500,
+        "raw_nll": 0.5601008622840747
+      },
+      "score": {
+        "fitted_validation_nll": 1.3183172292510137,
+        "n": 1068,
+        "raw_nll": 1.5514656914560991
+      }
+    },
+    "native_type_aliases": {
+      "binary": "noul"
+    },
+    "predictions_sha256": "8a0029adfdc9db05d5b5fd41346483faa349862341044ccda8578c334b3728f3",
+    "references_sha256": "5efa6a126a7a649cde7d7a03cb5e9df4350c0d087466be06d1f286a53d741ef6",
+    "source_overlap_audit_sha256": "b289fb6771b4970f13876650efe0443c367379414c4b5d6fc389116b9180f511",
+    "split": "native validation only"
+  },
+  "calibration_overlap_audit": {
+    "benchmark": {
+      "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+      "rows": 1071
+    },
+    "matches": [],
+    "matching_native_rows": 0,
+    "method": "Exact comparison after JSON canonicalization, whitespace normalization and Unicode casefolding: full request state/context and every source-state string leaf of at least 160 characters. No inference about paraphrases or semantic overlap.",
+    "native_validation": {
+      "inputs_sha256": "a781b1650370c25b5ffab254da378d9d741d3ee75a0f24c3d1b1fd719ff52128",
+      "rows": 2668
+    }
+  },
+  "confidence_semantics": "Runtime choice confidence measures excess of the highest probability above the uniform baseline, normalized to [0, 1]. The benchmark derives confidence from native probabilities using the unchanged scorer.",
+  "equal_hash_inference_files": {
+    "chat_suppression.json": "bed726da96bb4a008109763ec0c677dd5628c0bc26279fd86d149b9e1d9505c9",
+    "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+    "config.json": "0fd1dd0ae183355c0359e9ccbc1b470b259ec7dbe89666d87acee581d24f26fd",
+    "model.safetensors-00001-of-00002.safetensors": "ac9a1eff1a4c9c8a40cbea119edcfe35f18c9907c25b340505156d3a5f4778a8",
+    "model.safetensors-00002-of-00002.safetensors": "98cdd69d72142119ecbae1543799e4a649ac75f070e19781d4b8404abdb927ea",
+    "model.safetensors.index.json": "a3890d1b364bb42970ce714906c65c173eb4e21531b4b69b2e5bf3e0840c5878",
+    "tokenizer.json": "d84823f8e81500094cf518abdcd445f647b07ff6c95e7036e2d8d5a049d5c1fb",
+    "tokenizer_config.json": "6fc30221b0ec773811dfa2a04ebf0eec1a7e36a3bb1698888e28b38eabc1126c"
+  },
+  "latency_basis": "Self-hosted A100, loopback; public network excluded.",
+  "max_context": 32768,
+  "model": "speakleash/Bielik-One-4B-r1",
+  "precision": "BF16",
+  "public_model_revision": "567d29b0f15df28794acf0f6187f9216860d4551",
+  "request": {
+    "permutations": 1,
+    "questions_before_state": false,
+    "read_twice": true,
+    "read_twice_max_input_tokens": 4096,
+    "reasoning": "off",
+    "temperature": {
+      "choice": 2.2191389441356897,
+      "noul": 1.8025009252216606,
+      "score": 3.0314331330207946
+    }
+  },
+  "runtime_commit": "881089d201c806a1a67268a4190aeecdad3d8fac"
+}
