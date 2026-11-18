@@ -46,20 +46,61 @@ origin, redirects are refused, and neither the key nor the URL is written to any
 The `claude-cli` and `codex-cli` providers use the `claude` and `codex` commands on your `PATH` with their own
 sign-in. The harness removes its own keys from their environment.
 
-Bielik One uses the shared native System One transport and scoring, with text input only. Set
-`BIELIK_ONE_BASE_URL` in the environment and optionally `BIELIK_ONE_API_KEY`, then run:
+### Bielik One 4B
+
+Bielik One uses the shared native System One transport and scoring, with text input only.
+The submitted run used one A100 40GB, BF16, vLLM 0.32.0, and the
+[speakleash/bielik-one runtime at 881089d201c806a1a67268a4190aeecdad3d8fac](https://github.com/speakleash/bielik-one/tree/881089d201c806a1a67268a4190aeecdad3d8fac).
+Install that revision in a separate Python 3.12 environment:
+
+```sh
+python3.12 -m venv .venv-bielik-one
+. .venv-bielik-one/bin/activate
+pip install "bielik-one[vllm] @ git+https://github.com/speakleash/bielik-one@881089d201c806a1a67268a4190aeecdad3d8fac"
+```
+
+Start the backend, then the frontend in a second terminal with the same environment activated.
+Both commands pin the public model revision; the merged model needs no heads plugin.
+The backend uses the runtime's BF16, 32768-token context profile:
+
+```sh
+bielik-one backend speakleash/Bielik-One-4B-r1 \
+  --revision 567d29b0f15df28794acf0f6187f9216860d4551 --port 8013 --max-num-seqs 1
+```
+
+```sh
+bielik-one frontend speakleash/Bielik-One-4B-r1 \
+  --revision 567d29b0f15df28794acf0f6187f9216860d4551 --port 8012 --no-calibration
+```
+
+The frontend uses the default local backend on port 8013. `--no-calibration` disables the
+package's default temperatures; the harness supplies the fitted temperatures explicitly in
+each request. In the benchmark environment, set `BIELIK_ONE_BASE_URL` to the frontend's
+loopback root on port 8012. Set `BIELIK_ONE_API_KEY` only if your deployment requires a bearer
+key. Keep these deployment values in your environment or ignored `.env`. Then smoke test:
 
 ```sh
 python3 -m decision_bench run --model bielik-one-4b-r1 --limit 5 --run-id bielik-one-4b-smoke
 ```
 
-The model entry fixes the inference options sent directly to the server. Keep the model revision,
-precision, runtime and calibration fixed when reproducing results. The base must be the server root
-or end in `/v1`; prefixed reverse-proxy paths are not supported. The adapter is text-only and records
-unavailable pricing as unknown, not zero. Self-hosted loopback latency excludes the public network
-and is not directly comparable with hosted API latency.
-`--api-model` may only repeat the configured alias; changing the model requires a separate model entry.
-Native-validation type `binary` is named `noul` in the serving API and evaluation profile.
+The model entry fixes the inference options sent directly to the server. The temperatures
+were **refitted for read-twice**, enabled only when the complete standard prompt is at most
+4096 tokens and its repeated form fits the context. They are choice=2.2191389441356897,
+noul=1.8025009252216606 and score=3.0314331330207946, rather than the package's standard-prompt
+calibration. Per-type mean NLL was minimized on a separate native-validation split, without
+bench-v4 labels. The fitting inputs and original fitting script are not published with this
+submission, so the fit cannot be independently reproduced from the public materials; the
+exact request temperatures reproduce the saved probabilities. See the
+[evaluation profile](evaluations/bielik-one-4b-r1.json) for the method and validation counts.
+Temperature scaling preserves argmax accuracy but changes probability-based calibration metrics.
+
+Keep the model revision, precision, runtime and request temperatures fixed when reproducing
+results. The base must be the server root or end in `/v1`; prefixed reverse-proxy paths are
+not supported. The adapter is text-only and records unavailable pricing as unknown, not zero.
+Self-hosted loopback latency excludes the public network and is not directly comparable with
+hosted API latency. `--api-model` may only repeat the configured alias; changing the model
+requires a separate model entry. Native-validation type `binary` is named `noul` in the
+serving API and evaluation profile.
 
 Laya uses the same typed question protocol as Jev. To run its hosted API, set `LAYA_BASE_URL` and
 `LAYA_API_KEY` in `.env`, then run `python3 -m decision_bench run --model laya-routed --limit 5`.

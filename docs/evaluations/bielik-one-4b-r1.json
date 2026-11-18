@@ -1,7 +1,7 @@
 {
   "calibration": {
-    "fit_code_sha256": "36afd03ebcdd2aed16b305bfa6a4cb8c7fd8ed9cb5e84d34213c04e6901a6f5e",
-    "inputs_sha256": "a781b1650370c25b5ffab254da378d9d741d3ee75a0f24c3d1b1fd719ff52128",
+    "benchmark_usage": "Temperatures were fitted on 2568 categorical native-validation examples before bench-v4 inference. No bench-v4 labels were used in fitting. Positive per-type temperature scaling preserves argmax accuracy but affects probability-based calibration metrics.",
+    "data_availability": "The native-validation inputs, references, prediction records and original fitting script are not published with this submission. Independent reproduction of the temperature fit is therefore unavailable; hashes of these unavailable artifacts are omitted.",
     "method": "Per-type temperature scaling: minimize mean NLL over 81 logarithmically spaced temperatures in [0.25, 16], plus 1.",
     "metrics": {
       "choice": {
@@ -23,21 +23,24 @@
     "native_type_aliases": {
       "binary": "noul"
     },
-    "predictions_sha256": "8a0029adfdc9db05d5b5fd41346483faa349862341044ccda8578c334b3728f3",
-    "references_sha256": "5efa6a126a7a649cde7d7a03cb5e9df4350c0d087466be06d1f286a53d741ef6",
-    "source_overlap_audit_sha256": "b289fb6771b4970f13876650efe0443c367379414c4b5d6fc389116b9180f511",
-    "split": "native validation only"
+    "prompt_policy": "Refitted for read_twice=true with read_twice_max_input_tokens=4096 and the exact-context guard, matching this benchmark request profile. These are not the model package calibration.json temperatures, which apply to standard prompts.",
+    "split": "native validation only",
+    "temperatures": {
+      "choice": 2.2191389441356897,
+      "noul": 1.8025009252216606,
+      "score": 3.0314331330207946
+    }
   },
   "calibration_overlap_audit": {
     "benchmark": {
       "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
       "rows": 1071
     },
+    "evidence_availability": "Author-reported exact-match audit. The native-validation material is not published here, so this audit cannot be independently verified from this submission.",
     "matches": [],
     "matching_native_rows": 0,
     "method": "Exact comparison after JSON canonicalization, whitespace normalization and Unicode casefolding: full request state/context and every source-state string leaf of at least 160 characters. No inference about paraphrases or semantic overlap.",
     "native_validation": {
-      "inputs_sha256": "a781b1650370c25b5ffab254da378d9d741d3ee75a0f24c3d1b1fd719ff52128",
       "rows": 2668
     }
   },
