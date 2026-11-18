@@ -85,6 +85,9 @@ FIXED_ENDPOINTS = {"typesafe": adapters.TYPESAFE_URL, "djev": adapters.DJEV_URL,
 def endpoint_url(model):
     """The URL an HTTP provider calls, or None for a CLI provider."""
     provider = model["provider"]
+    if provider == "bielik-one":
+        from .bielik_one import endpoint
+        return endpoint()
     if provider == "openai-compatible":
         return openai_compat.base_url()
     if provider == "kev":
@@ -107,7 +110,7 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
            "model_id": model["id"], "provider": model["provider"], "api_model": api_model or model["model"],
            "request": model.get("request", {}), "vision": bool(model.get("vision")),
            "selected_case_ids": [c["id"] for c in cases]}
-    if model["provider"] in ("openai-compatible", "kev", "prism", "drex", "laya", "openrouter-decisions"):
+    if model["provider"] in ("openai-compatible", "kev", "prism", "drex", "laya", "openrouter-decisions", "bielik-one"):
         cfg["endpoint_id"] = openai_compat.endpoint_id(endpoint_url(model))
     return cfg
 
@@ -143,7 +146,10 @@ def add_estimated_cost(target, model):
 def preflight(model):
     """Fail before creating a run when credentials or a CLI are missing, instead of recording an error per row."""
     provider = model["provider"]
-    if provider == "openai-compatible":
+    if provider == "bielik-one":
+        from .bielik_one import endpoint
+        endpoint()
+    elif provider == "openai-compatible":
         openai_compat.api_key(openai_compat.base_url())
     elif provider == "openrouter-decisions":
         from .openrouter_decisions import api_key

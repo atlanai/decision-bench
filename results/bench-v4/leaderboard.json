@@ -424,6 +424,28 @@
       "completed_at": "2026-11-03T17:56:57.717729+00:00"
     },
     {
+      "model_id": "bielik-one-4b-r1",
+      "label": "Bielik One 4B r1",
+      "vendor": "SpeakLeash",
+      "provider": "bielik-one",
+      "api_model": "decision",
+      "accuracy": 0.8599439775910365,
+      "wilson95": [
+        0.8378699596469367,
+        0.8794450382094919
+      ],
+      "correct": 921,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 108.63399699974252,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-13T12:34:34.030564+00:00"
+    },
+    {
       "model_id": "tev1-4b-experimental",
       "label": "Tev1 4B Experimental",
       "vendor": "Together AI",

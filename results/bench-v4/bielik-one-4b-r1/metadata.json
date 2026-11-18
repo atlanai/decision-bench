@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "bielik-one-4b-r1",
+    "label": "Bielik One 4B r1",
+    "short_label": "Bielik One 4B",
+    "vendor": "SpeakLeash",
+    "provider": "bielik-one",
+    "color": "#b91c1c",
+    "vision": false,
+    "api_model": "decision",
+    "resolved_models": [
+      "decision"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {
+    "read_twice": true,
+    "read_twice_max_input_tokens": 4096,
+    "temperature": {
+      "choice": 2.2191389441356897,
+      "noul": 1.8025009252216606,
+      "score": 3.0314331330207946
+    },
+    "permutations": 1,
+    "questions_before_state": false,
+    "reasoning": "off"
+  },
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "bce74289f6cf7e80316751e5bf2679c6d79593a0",
+    "git_dirty": false,
+    "git_commits": [
+      "bce74289f6cf7e80316751e5bf2679c6d79593a0"
+    ]
+  },
+  "run": {
+    "run_id": "bielik-one-4b-public-20261113",
+    "status": "completed",
+    "created_at": "2026-11-13T12:32:19.160620+00:00",
+    "completed_at": "2026-11-13T12:34:34.030564+00:00",
+    "published_at": "2026-11-13T12:36:02.530657+00:00",
+    "executions": 1,
+    "jobs": 1,
+    "timeout_seconds": 300,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-56dbe9a2e859",
+    "platform": {
+      "os": "Linux",
+      "python": "3.12.3"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 0.0078100001701386645,
+      "tcp_connect_ms": 0.023599999622092582,
+      "tls_handshake_ms": null
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 921,
+    "accuracy": 0.8599439775910365,
+    "wilson95": [
+      0.8378699596469367,
+      0.8794450382094919
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 1542520,
+    "output_tokens": 1071,
+    "latency_p50_ms": 108.63399699974252,
+    "server_time_p50_ms_estimate": 108.5789870003282
+  }
+}

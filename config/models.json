@@ -537,6 +537,29 @@
       "color": "#2b4bff",
       "notes": "Amos 1 large (27B, open weights at huggingface.co/mukaddamzaid/amos-1-large) served by its own System One server; text and image evidence (images sent as data URIs), native probabilities in one forward pass.",
       "vision": true
+    },
+    {
+      "id": "bielik-one-4b-r1",
+      "label": "Bielik One 4B r1",
+      "short_label": "Bielik One 4B",
+      "vendor": "SpeakLeash",
+      "provider": "bielik-one",
+      "model": "decision",
+      "color": "#b91c1c",
+      "vision": false,
+      "request": {
+        "read_twice": true,
+        "read_twice_max_input_tokens": 4096,
+        "temperature": {
+          "choice": 2.2191389441356897,
+          "noul": 1.8025009252216606,
+          "score": 3.0314331330207946
+        },
+        "permutations": 1,
+        "questions_before_state": false,
+        "reasoning": "off"
+      },
+      "notes": "speakleash/Bielik-One-4B-r1 public revision 567d29b0f15df28794acf0f6187f9216860d4551; BF16; bielik-one runtime 881089d201c806a1a67268a4190aeecdad3d8fac; vLLM 0.32.0; context 32768. Native-validation temperatures fitted before benchmark inference; zero exact normalized context/document overlap found against bench-v4 (not a paraphrase test). Full profile and inference-file hashes: docs/evaluations/bielik-one-4b-r1.json. Self-hosted A100 loopback latency excludes the public network; cost unavailable, not zero. Full corpus text representations, no images."
     }
   ],
   "logos": {
@@ -554,6 +577,7 @@
     "Perplexity": "perplexity.ai",
     "Qwen": "qwen.ai",
     "Sarvam": "sarvam.ai",
+    "SpeakLeash": "speakleash.org",
     "Together AI": "together.ai",
     "TypeSafe": "typesafe.ai",
     "Z.AI": "z.ai"

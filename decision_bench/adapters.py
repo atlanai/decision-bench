@@ -22,7 +22,7 @@ TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 DJEV_URL = "https://api.djev.dev/v1/request"
 SARVAM_URL = "https://api.sarvam.ai/v2/systemone"
 # Credentials the harness itself uses are never passed to a CLI child process.
-HARNESS_SECRETS = ["DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
+HARNESS_SECRETS = ["BIELIK_ONE_API_KEY", "BIELIK_ONE_BASE_URL", "DECISION_BENCH_API_KEY", "DECISION_BENCH_BASE_URL", "OPENROUTER_API_KEY", "TYPESAFE_API_KEY", "DJEV_API_KEY", "SAGE_API_KEY", "TOGETHER_API_KEY",
                    "LAYA_API_KEY", "LAYA_BASE_URL", "KEV_API_KEY", "KEV_BASE_URL", "PRISM_API_KEY", "PRISM_BASE_URL", "SARVAM_API_KEY", "NACE_API_KEY", "DREX_BASE_URL",
                    "ANTHROPIC_MODEL", "CLAUDE_CODE_SUBAGENT_MODEL", "CLAUDECODE"]
 
@@ -31,6 +31,9 @@ def call(model, case, timeout, api_model=None):
     """Run one row. Returns a dict with: response (parsed JSON), source, output_text, usage, cost_usd,
     cost_basis, resolved_model, provider_duration_ms, adapter_duration_ms, payload (what was sent), raw."""
     provider = model["provider"]
+    if provider == "bielik-one":
+        from .bielik_one import call as bielik_call
+        return bielik_call(model, case, timeout, api_model)
     if provider == "openai-compatible":
         return openai_compat.completion(model, case, timeout, api_model)
     if provider == "openrouter-decisions":
@@ -111,7 +114,7 @@ def laya(model, case, timeout, api_model=None):
     return systemone(model, case, timeout, api_model, url, laya_key(url), "Laya")
 
 
-def systemone(model, case, timeout, api_model, url, key, provider_name, *, payload=None):
+def systemone(model, case, timeout, api_model, url, key, provider_name, *, payload=None, extra=None):
     def redact(value):
         return openai_compat.redact(value, extra_secrets=(key,), extra_endpoints=(url,))
 
@@ -125,6 +128,10 @@ def systemone(model, case, timeout, api_model, url, key, provider_name, *, paylo
         images = image_assets(case) if model.get("vision") else []
         if images:
             payload["images"] = [f"data:{mime};base64,{base64.b64encode(blob).decode()}" for mime, blob in images]
+    if extra:
+        if set(extra) & {"model", "state", "questions", "images"}:
+            raise CallError("Extra System One settings cannot replace input fields", status="config_invalid")
+        payload = {**payload, **extra}
     headers = {"Content-Type": "application/json", "User-Agent": "DecisionBench (classification evaluation)"}
     if key:
         headers["Authorization"] = f"Bearer {key}"
