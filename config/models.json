@@ -547,7 +547,7 @@
       "model": "sthanika-ai/Sieve-31B-v3",
       "color": "#7c3aed",
       "request": {},
-      "notes": "Sieve-31B-v3 (full fine-tune of gemma-4-31B-it, bf16 weights, pinned Hub revision 8fcee858f7f20a50bfa3c8f984c22adb3cbb46a2), served with sieve-serve: it reads the state once and returns the probabilities of the option labels, with no text generation. Text only; image rows are answered from their text rendering. GPU cost is recorded separately, never as token pricing.",
+      "notes": "Sieve-31B-v3 (full fine-tune of gemma-4-31B-it, bf16 weights, pinned Hub revision 8fcee858f7f20a50bfa3c8f984c22adb3cbb46a2), served with sieve-serve: it reads the state once and returns the probabilities of the option labels, with no text generation. Text only; image rows are answered from their text rendering. Run on 2x NVIDIA A100-SXM4-40GB in one node, the model's layers split over both GPUs, with the client on the same node (loopback); the latency reflects that setup.",
       "vision": false
     }
   ],

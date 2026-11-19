@@ -25,7 +25,10 @@ def api_key(url):
 
 def completion(model, case, timeout, api_model=None):
     from .adapters import systemone
+    if api_model and api_model != model["model"]:
+        raise CallError("sieve-serve answers with the model it loaded and ignores the request's model; "
+                        f"--api-model must be {model['model']}", status="config_invalid")
     url = endpoint()
     result = systemone(model, case, timeout, api_model, url, api_key(url), "Sieve")
-    result.update(images_sent=0, provider_duration_ms=number(result["raw"].get("latency_ms")))
+    result["provider_duration_ms"] = number(result["raw"].get("latency_ms"))
     return result

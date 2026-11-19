@@ -30,7 +30,18 @@ class SieveEndpoint(unittest.TestCase):
             result = adapters.call(model, {"id": "test"}, 60)
         self.assertEqual(call.call_args.args[4], "http://localhost:8020/v1/decide")
         self.assertEqual(result["provider_duration_ms"], 42)
-        self.assertEqual(result["images_sent"], 0)
+
+    def test_api_model_must_be_the_configured_model(self):
+        model = {"provider": "sieve", "model": "sthanika-ai/Sieve-31B-v3"}
+        values = {"SIEVE_BASE_URL": "http://localhost:8020"}
+        with patch.object(sieve, "env_value", side_effect=values.get), \
+                patch.object(adapters, "systemone", return_value={"raw": {}}) as call:
+            with self.assertRaises(CallError) as caught:
+                adapters.call(model, {"id": "test"}, 60, "sthanika-ai/Other-Model")
+            self.assertEqual(caught.exception.status, "config_invalid")
+            call.assert_not_called()
+            adapters.call(model, {"id": "test"}, 60, "sthanika-ai/Sieve-31B-v3")
+            call.assert_called_once()
 
     def test_secret_and_host_redaction(self):
         values = {"SIEVE_API_KEY": "test-sieve-key", "SIEVE_BASE_URL": "https://bench.example"}
