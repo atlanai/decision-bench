@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "vllm-sr-d3",
+    "label": "vLLM-SR Decision 3.0 d3 (27B)",
+    "short_label": "d3",
+    "vendor": "vLLM Semantic Router",
+    "provider": "laya",
+    "color": "#0f766e",
+    "vision": true,
+    "api_model": "vllm-sr/d3",
+    "resolved_models": [
+      "vllm-sr/d3"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "b8349f02b1de80299dec548a6bd639b8b64fdda2",
+    "git_dirty": true,
+    "git_commits": [
+      "b8349f02b1de80299dec548a6bd639b8b64fdda2"
+    ]
+  },
+  "run": {
+    "run_id": "vllm-sr-d3-bench-v4-774bc54e",
+    "status": "completed",
+    "created_at": "2026-10-14T03:43:30.648492+00:00",
+    "completed_at": "2026-10-14T03:49:27.570587+00:00",
+    "published_at": "2026-10-14T03:49:28.099943+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-e90564a4fd4b",
+    "platform": {
+      "os": "Linux",
+      "python": "3.12.15"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1009,
+    "accuracy": 0.942110177404295,
+    "wilson95": [
+      0.9264792738277718,
+      0.9545807819050915
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 910543,
+    "output_tokens": 0,
+    "latency_p50_ms": 92.48482109978795
+  }
+}
