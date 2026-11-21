@@ -464,3 +464,28 @@ prefix cache. It adds only `latency_ms` to the package response. Images are reje
 the text-only model entry sends the corpus's text rendering for all image rows.
 Over-limit inputs return HTTP 400 without truncation. GPU time is an infrastructure
 cost and is not recorded as token pricing; API cost remains unknown.
+
+## Amos 1 large from its open weights on Modal
+
+The published Amos 1 large run came from the submitter's own server. `scripts/serve_amos.py` serves the open weights
+at the pinned Hub revision on one Modal H100 80GB, with the `serve/amos` package from the model's Hub repository, the
+dependency versions it pins, and mandatory bearer auth. Thinking is off, so each answer is the probabilities from one
+forward pass, with no generated text.
+
+Set `LAYA_BASE_URL` (the deployed URL plus `/v1`) and `LAYA_API_KEY` (the same key) on the run commands only. In
+`.env` they would also send `laya-routed` and `amos-1-large` runs to this endpoint. The model id
+`amos-1-large-modal` keeps these runs, and any publish of them, apart from the submitter's `amos-1-large`.
+
+```sh
+AMOS_API_KEY=<key> modal run scripts/serve_amos.py::download      # 55 GB of weights to a Modal volume, on a CPU container
+AMOS_API_KEY=<key> modal deploy scripts/serve_amos.py              # AMOS_ROTATIONS=1 for one option order (default 4)
+python3 -m decision_bench run --model amos-1-large-modal --limit 5 --jobs 1
+python3 -m decision_bench run --model amos-1-large-modal --jobs 1
+python3 -I .claude/skills/review-provider-pr/compare_runs.py results/bench-v4/amos-1-large --runs <run id>
+modal app stop --yes decision-bench-amos-1-large                   # always, also after a failure
+```
+
+The first request after a deploy waits about a minute for the weights to load; send one request by hand first. The
+server answers one request at a time, so `--jobs 1` keeps queueing out of the recorded latency. Stop the app before
+you deploy again with another `AMOS_ROTATIONS`: a running container keeps the old setting. GPU time is an
+infrastructure cost and is not recorded as token pricing.

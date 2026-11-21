@@ -1,10 +1,10 @@
 """Sarvam-Prism on Modal behind a System One endpoint for the `prism` provider; see docs/running.md."""
-import hmac
 import os
 import threading
 import time
 
 import modal
+from systemone_gate import refusal, require_key
 
 REPO, REVISION = "sarvamai/prism", "417cf26c2eea27286a803dd721b4e78698bdb875"
 APP = "decision-bench-sarvam-prism"
@@ -18,10 +18,9 @@ image = (
                     "safetensors==0.6.2", "huggingface_hub==0.35.3", "fastapi==0.116.1")
     .env({"HF_HOME": "/hf", "TRITON_CACHE_DIR": "/hf/triton-cache", "HF_HUB_DISABLE_PROGRESS_BARS": "1",
           "TOKENIZERS_PARALLELISM": "false", "PYTHONUNBUFFERED": "1"})
+    .add_local_python_source("systemone_gate")
 )
-KEY = os.environ.get("PRISM_API_KEY", "")
-if len(KEY) < 24:
-    raise SystemExit("PRISM_API_KEY must be at least 24 characters, for example from `openssl rand -hex 24`")
+KEY = require_key("PRISM_API_KEY")
 secret = modal.Secret.from_dict({"PRISM_API_KEY": KEY})
 
 
@@ -56,14 +55,11 @@ class Prism:
     def web(self):
         from fastapi import FastAPI, Header, HTTPException
         api = FastAPI()
-        key = KEY.encode()
 
         @api.post("/v1/systemone")
         def systemone(body: dict, authorization: str = Header("")):
-            if not hmac.compare_digest(authorization.encode(), b"Bearer " + key):
-                raise HTTPException(401, "invalid bearer key")
-            if body.get("model") != REPO:
-                raise HTTPException(422, f"this endpoint serves {REPO}")
+            if refused := refusal(authorization, body, KEY, REPO):
+                raise HTTPException(*refused)
             if not isinstance(body.get("questions"), dict) or not body["questions"]:
                 raise HTTPException(422, "questions must be a non-empty object")
             started = time.perf_counter()
