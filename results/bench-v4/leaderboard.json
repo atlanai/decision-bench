@@ -336,28 +336,6 @@
       "completed_at": "2026-11-16T17:17:32.477592+00:00"
     },
     {
-      "model_id": "kev-27b",
-      "label": "Kev 27B (Kev 1.0)",
-      "vendor": "Jared Palmer",
-      "provider": "kev",
-      "api_model": "kev-latest",
-      "accuracy": 0.9125395152792413,
-      "wilson95": [
-        0.8928611795423784,
-        0.9288913551916214
-      ],
-      "correct": 866,
-      "rows": 949,
-      "errors": 0,
-      "cost_usd": null,
-      "cost_coverage": 0.0,
-      "cost_per_1000_rows_usd": null,
-      "latency_p50_ms": 1024.4037080556154,
-      "corpus_current": true,
-      "full_coverage": false,
-      "completed_at": "2026-10-12T16:27:13.537366+00:00"
-    },
-    {
       "model_id": "sieve-31b-v3",
       "label": "Sieve-31B-v3",
       "vendor": "Sthanika AI",
@@ -444,6 +422,28 @@
       "corpus_current": true,
       "full_coverage": true,
       "completed_at": "2026-10-08T16:33:12.989324+00:00"
+    },
+    {
+      "model_id": "kev-27b",
+      "label": "Kev 27B (Kev 1.0)",
+      "vendor": "Jared Palmer",
+      "provider": "kev",
+      "api_model": "kev-latest",
+      "accuracy": 0.9019607843137255,
+      "wilson95": [
+        0.8826883963102358,
+        0.9183598697784606
+      ],
+      "correct": 966,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 1081.9535410118988,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-21T09:56:21.407155+00:00"
     },
     {
       "model_id": "sarvam-prism",
