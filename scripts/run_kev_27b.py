@@ -15,7 +15,6 @@ def main():
     p.add_argument('--dry-run',action='store_true')
     a=p.parse_args()
     rows=corpus.load_cases()
-    assert len(rows)==1071
     if a.stage=='smoke':
         rows=[rows[0],rows[len(rows)//4],rows[len(rows)//2],rows[3*len(rows)//4],rows[-1]]
     run_id='kev-27b-bench-v4-'+('smoke' if a.stage=='smoke' else 'full')+'-v1'

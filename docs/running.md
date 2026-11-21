@@ -354,7 +354,7 @@ container, mandatory bearer authentication, and a 60-second idle shutdown.
 An external watchdog must stop the app after a 30-minute wall-clock limit;
 always stop the named app after the run, including on failures. GPU/CPU/memory
 charges are separate infrastructure costs and must not be represented as
-OpenRouter token pricing. No benchmark result exists until the live run completes.
+OpenRouter token pricing.
 
 ## Sieve-31B-v3
 
