@@ -53,7 +53,8 @@ class ClaudeAndCodex(unittest.TestCase):
     def test_cli_runs_in_an_empty_directory_without_harness_secrets(self):
         env = {"DECISION_BENCH_API_KEY": "harness-key", "TYPESAFE_API_KEY": "ts-key", "DJEV_API_KEY": "djev-key", "SAGE_API_KEY": "sage-key", "TOGETHER_API_KEY": "together-key",
                "LAYA_API_KEY": "laya-key", "LAYA_BASE_URL": "http://localhost:8000/v1",
-               "PRISM_API_KEY": "prism-key", "PRISM_BASE_URL": "https://prism.example", "SARVAM_API_KEY": "sarvam-key"}
+               "PRISM_API_KEY": "prism-key", "PRISM_BASE_URL": "https://prism.example", "SARVAM_API_KEY": "sarvam-key",
+               "BIELIK_ONE_API_KEY": "bielik-fixture-key", "BIELIK_ONE_BASE_URL": "https://bielik.example.com/v1"}
         response = {"structured_output": ANSWER, "is_error": False, "usage": {}}
         _, call = self.run_cli(SONNET, json.dumps(response), env=env)
         child = call.call_args.kwargs["env"]
@@ -67,6 +68,8 @@ class ClaudeAndCodex(unittest.TestCase):
         self.assertNotIn("PRISM_API_KEY", child)
         self.assertNotIn("PRISM_BASE_URL", child)
         self.assertNotIn("SARVAM_API_KEY", child)
+        self.assertNotIn("BIELIK_ONE_API_KEY", child)
+        self.assertNotIn("BIELIK_ONE_BASE_URL", child)
         self.assertIn("decision-bench-", str(call.call_args.kwargs["cwd"]))
 
     def test_effort_comes_from_config(self):

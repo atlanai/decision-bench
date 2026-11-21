@@ -62,7 +62,7 @@ def repo(env=None, rows=ROWS):
     with tempfile.TemporaryDirectory() as tmp:
         build(tmp, rows)
         clean = {k: v for k, v in os.environ.items()
-                 if not k.startswith(("DECISION_BENCH_", "TYPESAFE_", "LAYA_", "LITELLM_"))}
+                 if not k.startswith(("DECISION_BENCH_", "TYPESAFE_", "LAYA_", "LITELLM_", "BIELIK_ONE_"))}
         clean.update(env or {})
         with patch.object(corpus, "ROOT", Path(tmp)), patch.dict(os.environ, clean, clear=True), \
                 patch.object(runner, "connect_timings", side_effect=OSError("no network in tests")):
