@@ -468,17 +468,24 @@ cost and is not recorded as token pricing; API cost remains unknown.
 ## Amos 1 large from its open weights on Modal
 
 The published Amos 1 large run came from the submitter's own server. `scripts/serve_amos.py` serves the open weights
-at the pinned Hub revision on one Modal H100 80GB, with the repository's own `serve/amos` package, the dependency
-versions it pins, and mandatory bearer auth. Thinking is off, so every answer comes from the weights alone.
+at the pinned Hub revision on one Modal H100 80GB, with the `serve/amos` package from the model's Hub repository, the
+dependency versions it pins, and mandatory bearer auth. Thinking is off, so each answer is the probabilities from one
+forward pass, with no generated text.
+
+Set `LAYA_BASE_URL` (the deployed URL plus `/v1`) and `LAYA_API_KEY` (the same key) on the run commands only. In
+`.env` they would also send `laya-routed` runs to this endpoint.
 
 ```sh
 AMOS_API_KEY=<key> modal run scripts/serve_amos.py::download      # 55 GB of weights to a Modal volume, on a CPU container
 AMOS_API_KEY=<key> modal deploy scripts/serve_amos.py              # AMOS_ROTATIONS=1 for one option order (default 4)
-python3 -m decision_bench run --model amos-1-large --run-id <new id> --limit 5 --jobs 1
-python3 -m decision_bench run --model amos-1-large --run-id <new id> --jobs 1
-modal app stop decision-bench-amos-1-large                         # always, also after a failure
+python3 -m decision_bench run --model amos-1-large --limit 5 --jobs 1
+python3 -m decision_bench run --model amos-1-large --jobs 1
+python3 -I .claude/skills/review-provider-pr/compare_runs.py results/bench-v4/amos-1-large --runs <run id>
+modal app stop --yes decision-bench-amos-1-large                   # always, also after a failure
 ```
 
-Set `LAYA_BASE_URL` to the deployed URL plus `/v1` and `LAYA_API_KEY` to the same key. Compare the run's
-`runs/<run id>/results.jsonl` with `results/bench-v4/amos-1-large/predictions.jsonl` row by row. GPU time is an
-infrastructure cost and is not recorded as token pricing.
+The first request after a deploy waits about a minute for the weights to load; send one request by hand first. The
+server answers one request at a time, so `--jobs 1` keeps queueing out of the recorded latency. Stop the app before
+you deploy again with another `AMOS_ROTATIONS`: a running container keeps the old setting. Do not publish this run:
+`publish` replaces the submitter's `results/bench-v4/amos-1-large/`. GPU time is an infrastructure cost and is not
+recorded as token pricing.
