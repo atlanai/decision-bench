@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "quyet-1.2-large",
+    "label": "Quyet 1.2 Large",
+    "short_label": "Quyet 1.2 Large",
+    "vendor": "Quyet",
+    "provider": "quyet",
+    "color": "#1f3864",
+    "vision": false,
+    "api_model": "Quyet-1.2-Large",
+    "resolved_models": [
+      "Quyet-1.2-Large"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "412d13b19adaf75e09c017afabb893c4828fe080",
+    "git_dirty": true,
+    "git_commits": [
+      "412d13b19adaf75e09c017afabb893c4828fe080"
+    ]
+  },
+  "run": {
+    "run_id": "quyet-1.2-large-bench-v4-full-20261116",
+    "status": "completed",
+    "created_at": "2026-11-16T17:14:34.462636+00:00",
+    "completed_at": "2026-11-16T17:17:32.477592+00:00",
+    "published_at": "2026-11-16T17:18:11.482292+00:00",
+    "executions": 1,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 1,
+    "endpoint_id": "endpoint-a644fe99a419",
+    "platform": {
+      "os": "Linux",
+      "python": "3.12.3"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 0.005131994839757681,
+      "tcp_connect_ms": 0.017268990632146597,
+      "tls_handshake_ms": null
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 981,
+    "accuracy": 0.9159663865546218,
+    "wilson95": [
+      0.8978268574888175,
+      0.9311324980106348
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 751961,
+    "output_tokens": 0,
+    "latency_p50_ms": 122.02990095829591,
+    "server_time_p50_ms_estimate": 121.99023098219186
+  }
+}
