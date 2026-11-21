@@ -551,6 +551,17 @@
       "vision": true
     },
     {
+      "id": "amos-1-large-modal",
+      "label": "Amos 1 large (open weights on Modal)",
+      "short_label": "Amos large (Modal)",
+      "vendor": "Amos",
+      "provider": "laya",
+      "model": "amos-1-large",
+      "color": "#2b4bff",
+      "notes": "Amos 1 large open weights at Hub revision 362f4dc served by scripts/serve_amos.py on one Modal H100, independent of the submitter's server; text and image evidence, native probabilities in one forward pass, thinking off. GPU time is an infrastructure cost and is not recorded as token pricing.",
+      "vision": true
+    },
+    {
       "id": "sieve-31b-v3",
       "label": "Sieve-31B-v3",
       "short_label": "Sieve 31B",
