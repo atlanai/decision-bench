@@ -58,6 +58,8 @@ def completion(model, case, timeout, api_model=None):
             {"type": "image_url", "image_url": {
                 "url": f"data:{mime};base64,{base64.b64encode(content).decode()}"}}
             for mime, content in images]
+    elif request.get("state_as_text"):
+        state = json.dumps(state, ensure_ascii=False)
     payload = {"model": api_model or model["model"], "state": state,
                "questions": {q["id"]: {"type": q["type"],
                    "instructions": JUDGMENT_POLICY + q["instructions"], "criteria": q["options"]}

@@ -42,6 +42,25 @@ class OpenRouterDecisions(unittest.TestCase):
         self.assertEqual((result["cost_usd"], result["cost_basis"]), (.00001, "provider_reported"))
         self.assertEqual(result["usage"]["output_tokens"], 0)
 
+    def sent_state(self, model):
+        body = {"model": model["model"], "answers": {"q": {"choice": "billing",
+                "probabilities": {"billing": .9, "technical": .1}}}, "usage": {"input_tokens": 9, "cost": .00001}}
+        response = MagicMock(status=200)
+        response.read.return_value = json.dumps(body).encode()
+        response.__enter__.return_value = response
+        with repo({"OPENROUTER_API_KEY": "synthetic-" + "openrouter-key"}), \
+                patch.object(adapters.urllib.request, "build_opener") as opener:
+            opener.return_value.open.return_value = response
+            adapters.call(model, CASE, 10)
+        return json.loads(opener.return_value.open.call_args.args[0].data)["state"]
+
+    def test_text_state_is_sent_as_json_text_only_when_the_provider_requires_it(self):
+        """Respan and ScaleDown reject an object state with HTTP 400; they accept the same JSON as a string."""
+        text_only = dict(self.MODEL, vision=False)
+        self.assertEqual(self.sent_state(text_only), CASE["state"])
+        as_text = self.sent_state(dict(text_only, request={"state_as_text": True}))
+        self.assertEqual(as_text, json.dumps(CASE["state"], ensure_ascii=False))
+
     def test_preflight_requires_own_key_and_persistence_redacts_it(self):
         with repo({"DECISION_BENCH_API_KEY": "synthetic-" + "other-key"}):
             with self.assertRaises(CallError) as error:

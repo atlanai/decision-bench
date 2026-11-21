@@ -12,7 +12,7 @@ PROVIDERS = {"bielik-one", "openai-compatible", "openrouter-decisions", "typesaf
 MODEL_ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
 REQUEST_KEYS = {
     "bielik-one": {"read_twice", "read_twice_max_input_tokens", "permutations", "questions_before_state", "reasoning", "temperature"},
-    "openrouter-decisions": {"image_min_side", "image_max_side"},
+    "openrouter-decisions": {"image_min_side", "image_max_side", "state_as_text"},
     "openai-compatible": {"response_format", "token_limit_field", "max_output_tokens", "reasoning_effort",
                           "temperature", "json_wrapper_policy"},
     "typesafe": set(),
@@ -80,6 +80,8 @@ def _check_model(m):
             raise ConfigError(f"{where}: {key} must be a positive whole number of pixels")
     if request.get("image_min_side", 0) > request.get("image_max_side", math.inf):
         raise ConfigError(f"{where}: image_min_side is larger than image_max_side")
+    if not isinstance(request.get("state_as_text", False), bool):
+        raise ConfigError(f"{where}: state_as_text must be true or false")
     if "vision" in m and not isinstance(m["vision"], bool):
         raise ConfigError(f"{where}: vision must be true or false")
     pricing = m.get("pricing")
