@@ -510,6 +510,18 @@
       "notes": "Sarvam-Prism FP8 open weights, pinned Hub revision 417cf26c2eea27286a803dd721b4e78698bdb875, served with Sarvam's prism.py on one Modal GPU, B200 requested with H200 fallback (scripts/serve_prism.py). Text only. GPU cost is recorded separately, never as token pricing."
     },
     {
+      "id": "quyet-1.2-large",
+      "label": "Quyet 1.2 Large",
+      "short_label": "Quyet 1.2 Large",
+      "vendor": "Quyet",
+      "provider": "quyet",
+      "model": "Quyet-1.2-Large",
+      "vision": false,
+      "color": "#1f3864",
+      "request": {},
+      "notes": "Open weights at chinhnc/Quyet-1.2-Large, pinned Hub revision ffad03b6f20aa548ba2e045410e9fcafe4ddf0d2, served with quyet 1.2.0 and transformers 5.17.0 via scripts/serve_quyet.py in BF16 on one 80 GB GPU. Text only. GPU time is an infrastructure cost, not token pricing. The harness ran on the same machine as the server, so the published median latency includes no network time."
+    },
+    {
       "id": "drex-max",
       "label": "Drex Max",
       "short_label": "Drex Max",
@@ -587,6 +599,7 @@
     "Nace": "nace.ai",
     "OpenAI": "openai.com",
     "Perplexity": "perplexity.ai",
+    "Quyet": "quyet.ai",
     "Qwen": "qwen.ai",
     "Sarvam": "sarvam.ai",
     "SpeakLeash": "speakleash.org",

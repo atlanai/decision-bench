@@ -8,7 +8,7 @@ import re
 
 from . import corpus
 
-PROVIDERS = {"bielik-one", "openai-compatible", "openrouter-decisions", "typesafe", "kev", "sieve", "prism", "sarvam", "drex", "djev", "sage", "tev1", "laya", "claude-cli", "codex-cli"}
+PROVIDERS = {"bielik-one", "openai-compatible", "openrouter-decisions", "typesafe", "kev", "sieve", "prism", "quyet", "sarvam", "drex", "djev", "sage", "tev1", "laya", "claude-cli", "codex-cli"}
 MODEL_ID = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
 REQUEST_KEYS = {
     "bielik-one": {"read_twice", "read_twice_max_input_tokens", "permutations", "questions_before_state", "reasoning", "temperature"},
@@ -19,6 +19,7 @@ REQUEST_KEYS = {
     "kev": set(),
     "sieve": set(),
     "prism": set(),
+    "quyet": set(),
     "sarvam": set(),
     "drex": set(),
     "djev": set(),
