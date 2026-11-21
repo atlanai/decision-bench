@@ -57,7 +57,7 @@ image = (
     modal.Image.debian_slim(python_version="3.13")
     .apt_install("git")
     .uv_pip_install(f"kev[serve] @ git+https://github.com/jaredpalmer/kev.git@{KEV_REF}")
-    .uv_pip_install("flash-linear-attention==0.5.2", "triton>=3.7.1")   # the fused Qwen3.5 kernels are built on this fla (it needs triton >= 3.7.1 on Hopper)
+    .uv_pip_install("flash-linear-attention==0.5.2", "triton==3.8.0")   # the fused Qwen3.5 kernels are built on this fla; it needs triton >= 3.7.1 on Hopper and breaks on 3.9.0
     .env({"HF_HOME": "/hf", "HF_HUB_DISABLE_PROGRESS_BARS": "1", "TOKENIZERS_PARALLELISM": "false", "PYTHONUNBUFFERED": "1",
           "TRITON_CACHE_DIR": "/hf/triton-cache", **SETTINGS})
 )

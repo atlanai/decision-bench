@@ -344,8 +344,9 @@ the endpoint hash, resolved model, native probabilities and reported model
 latency without publishing the endpoint or bearer key. A remote endpoint must
 use HTTPS and authentication.
 
-`python3 scripts/run_kev_27b.py smoke` runs five spread-out text cases; `full`
-runs all 949 text-only cases, excluding the 122 image-containing rows.
+`python3 scripts/run_kev_27b.py smoke` runs five spread-out cases; `full` runs
+all 1,071 cases. Kev-27B loads no vision tower and its server has no image
+field, so it is text only: the 122 image rows use their text rendering.
 
 `scripts/serve_kev_27b.py` adapts Jared Palmer's official Modal serving script,
 with pinned code and weights, a dedicated app/cache name, a single H100

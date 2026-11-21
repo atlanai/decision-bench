@@ -476,7 +476,7 @@
       "vision": false,
       "color": "#181818",
       "request": {},
-      "notes": "Kev-27B v2 full bf16 weights, temperature 1.32, pinned Hub revision af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf. Self-hosted System One endpoint. Evaluate the same 949 text-only rows; exclude all 122 image cases. GPU cost is recorded separately, never inferred from Kev 4B OpenRouter token pricing."
+      "notes": "Kev-27B v2 full bf16 weights, temperature 1.32, pinned Hub revision af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf. Self-hosted System One endpoint. Text only: the checkpoint loads no vision tower, so image rows use their text rendering. GPU cost is recorded separately, never inferred from Kev 4B OpenRouter token pricing."
     },
     {
       "id": "sarvam-prism",

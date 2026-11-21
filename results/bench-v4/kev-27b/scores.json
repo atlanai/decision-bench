@@ -4,16 +4,16 @@
   "model_id": "kev-27b",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
   "overall": {
-    "rows": 949,
-    "correct": 866,
-    "accuracy": 0.9125395152792413,
+    "rows": 1071,
+    "correct": 966,
+    "accuracy": 0.9019607843137255,
     "wilson95": [
-      0.8928611795423784,
-      0.9288913551916214
+      0.8826883963102358,
+      0.9183598697784606
     ],
     "errors": 0,
-    "macro_category_accuracy": 0.9034463558314405,
-    "macro_task_f1": 0.9060141410508777
+    "macro_category_accuracy": 0.8531434711379672,
+    "macro_task_f1": 0.8926419068963296
   },
   "by_category": [
     {
@@ -41,23 +41,34 @@
     {
       "id": "data",
       "name": "Data & analytics",
-      "rows": 94,
-      "correct": 92,
-      "accuracy": 0.9787234042553191,
+      "rows": 126,
+      "correct": 124,
+      "accuracy": 0.9841269841269841,
       "wilson95": [
-        0.9257083451044751,
-        0.9941457864714599
+        0.9439701231255323,
+        0.9956362896112178
+      ]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "rows": 30,
+      "correct": 8,
+      "accuracy": 0.26666666666666666,
+      "wilson95": [
+        0.14182495553910618,
+        0.4444830204431169
       ]
     },
     {
       "id": "documents",
       "name": "Documents & meetings",
-      "rows": 57,
-      "correct": 45,
-      "accuracy": 0.7894736842105263,
+      "rows": 87,
+      "correct": 75,
+      "accuracy": 0.8620689655172413,
       "wilson95": [
-        0.6671363132153347,
-        0.875255734331081
+        0.7742118537134604,
+        0.9193030117226393
       ]
     },
     {
@@ -74,12 +85,12 @@
     {
       "id": "finance",
       "name": "Finance",
-      "rows": 91,
-      "correct": 89,
-      "accuracy": 0.978021978021978,
+      "rows": 121,
+      "correct": 119,
+      "accuracy": 0.9834710743801653,
       "wilson95": [
-        0.9233668616945964,
-        0.9939521206928791
+        0.9417321024498186,
+        0.9954555016821374
       ]
     },
     {
@@ -249,6 +260,18 @@
       ]
     },
     {
+      "id": "DAT-3",
+      "name": "Does the chart support the claim?",
+      "category": "data",
+      "rows": 32,
+      "correct": 32,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8928172849426366,
+        1
+      ]
+    },
+    {
       "id": "DAT-4",
       "name": "What does this column hold?",
       "category": "data",
@@ -258,6 +281,18 @@
       "wilson95": [
         0.8508409778365519,
         0.9947892280744034
+      ]
+    },
+    {
+      "id": "DOC-1",
+      "name": "Where is this page from?",
+      "category": "documents",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -282,6 +317,18 @@
       "wilson95": [
         0.7194181745602705,
         0.9614803521050127
+      ]
+    },
+    {
+      "id": "DSN-1",
+      "name": "What does this icon mean?",
+      "category": "design",
+      "rows": 30,
+      "correct": 8,
+      "accuracy": 0.26666666666666666,
+      "wilson95": [
+        0.14182495553910618,
+        0.4444830204431169
       ]
     },
     {
@@ -359,6 +406,18 @@
     {
       "id": "FIN-2",
       "name": "What does this 8-K report?",
+      "category": "finance",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "FIN-3",
+      "name": "Which figure is the total?",
       "category": "finance",
       "rows": 30,
       "correct": 30,
@@ -505,19 +564,19 @@
     {
       "id": "real",
       "name": "real",
-      "rows": 949,
-      "correct": 866,
-      "accuracy": 0.9125395152792413,
+      "rows": 1071,
+      "correct": 966,
+      "accuracy": 0.9019607843137255,
       "wilson95": [
-        0.8928611795423784,
-        0.9288913551916214
+        0.8826883963102358,
+        0.9183598697784606
       ]
     }
   ],
   "calibration": {
-    "brier": 0.12333568116863464,
-    "log_loss": 0.21752103254748048,
-    "ece": 0.011653480864070531,
+    "brier": 0.13142267582106976,
+    "log_loss": 0.2348197339429695,
+    "ece": 0.014899458865187497,
     "high_confidence_errors": 14
   },
   "cost": {
@@ -529,20 +588,20 @@
     "per_1000_rows_usd": null
   },
   "latency_ms": {
-    "p50": 1024.4037080556154,
-    "p95": 1446.7078918358307,
-    "p99": 2205.4365296522155,
-    "mean": 1113.2204621214246
+    "p50": 1081.9535410118988,
+    "p95": 1377.7922294975724,
+    "p99": 1786.4882041947562,
+    "mean": 1132.4983293904852
   },
   "tokens": {
-    "input": 668744,
-    "output": 82582,
+    "input": 743212,
+    "output": 93120,
     "cached_input": null,
     "reasoning_output": null,
     "coverage": 1.0
   },
   "attempts": {
-    "attempts": 949,
+    "attempts": 1071,
     "retries": 0,
     "attempt_errors": 0,
     "incomplete_attempts": 0
