@@ -36,6 +36,8 @@ precedence over `.env`.
 | `SARVAM_API_KEY` | `sarvam` | Sarvam API key for the hosted Sarvam-Prism Decisions API at `https://api.sarvam.ai/v2/systemone`. |
 | `PRISM_BASE_URL` | `prism` | Your Sarvam-Prism endpoint from `scripts/serve_prism.py`. HTTPS is required except for `localhost`. |
 | `PRISM_API_KEY` | `prism` | The bearer key you deployed that endpoint with. |
+| `QUYET_BASE_URL` | `quyet` | Your System One endpoint from `scripts/serve_quyet.py`. HTTPS is required except for local hosts. |
+| `QUYET_API_KEY` | `quyet` | Bearer key; required for non-local endpoints. |
 
 Examples of `DECISION_BENCH_BASE_URL`: `https://api.openai.com/v1`, `https://openrouter.ai/api/v1`,
 `http://localhost:4000/v1` (a local LiteLLM proxy), `http://localhost:8000/v1` (vLLM).
@@ -428,3 +430,36 @@ Each rescaled row has `images_resized` in `predictions.jsonl`. Input costs $0.04
 free (12 November 2026); provider-reported cost takes precedence.
 
 [OpenRouter model](https://openrouter.ai/typesafe/jev-1.14)
+
+## Quyet 1.2 Large on one GPU
+
+`scripts/serve_quyet.py` serves the public merged model at pinned revision
+`ffad03b6f20aa548ba2e045410e9fcafe4ddf0d2`, in BF16 on one 80 GB GPU with Python 3.12.
+Install the server dependencies in a separate environment:
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install 'quyet[student]==1.2.0' 'transformers==5.17.0'
+.venv/bin/python scripts/serve_quyet.py
+```
+
+The default bind is loopback. Set `QUYET_BASE_URL` in the environment to the local
+server's base URL ending in `/v1`, then use another terminal for the harness:
+
+```sh
+python3 -m decision_bench run --model quyet-1.2-large --limit 5 --jobs 1
+python3 -m decision_bench run --model quyet-1.2-large --jobs 1
+```
+
+The server answers one request at a time; `--jobs 1` avoids queueing in the latency.
+For access beyond loopback, set `QUYET_API_KEY` on the server and client and place
+an HTTPS reverse proxy in front of the server. Non-local HTTP endpoints and remote
+endpoints without a key are refused. Request bodies are limited to 4 MiB.
+
+The shared System One adapter supplies the policy, state and ordered choice
+criteria. The server passes state and questions unchanged to the public
+`predict(..., strict=True)` API, using the model's default temperatures and no
+prefix cache. It adds only `latency_ms` to the package response. Images are rejected;
+the text-only model entry sends the corpus's text rendering for all image rows.
+Over-limit inputs return HTTP 400 without truncation. GPU time is an infrastructure
+cost and is not recorded as token pricing; API cost remains unknown.

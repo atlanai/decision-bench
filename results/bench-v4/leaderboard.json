@@ -314,6 +314,28 @@
       "completed_at": "2026-10-09T12:38:31.114352+00:00"
     },
     {
+      "model_id": "quyet-1.2-large",
+      "label": "Quyet 1.2 Large",
+      "vendor": "Quyet",
+      "provider": "quyet",
+      "api_model": "Quyet-1.2-Large",
+      "accuracy": 0.9159663865546218,
+      "wilson95": [
+        0.8978268574888175,
+        0.9311324980106348
+      ],
+      "correct": 981,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 122.02990095829591,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-16T17:17:32.477592+00:00"
+    },
+    {
       "model_id": "kev-27b",
       "label": "Kev 27B (Kev 1.0)",
       "vendor": "Jared Palmer",
