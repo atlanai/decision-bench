@@ -5,6 +5,11 @@
   "deployment_template_revision": "85ccf56a0afb952323c621055b02876e8498d60c",
   "hardware": "NVIDIA H100 80GB HBM3",
   "hosting": "Modal",
+  "deployed": "2026-11-21",
+  "image_packages": {
+    "flash-linear-attention": "0.5.2",
+    "triton": "3.8.0"
+  },
   "models_endpoint_record": {
     "name": "kev-latest",
     "run": "jaredpalmer/kev-27b@af0e6d551bdc2cc724f3e9d7a8bee1cd4fb8f7bf",
