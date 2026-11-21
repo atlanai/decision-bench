@@ -336,6 +336,28 @@
       "completed_at": "2026-10-12T16:27:13.537366+00:00"
     },
     {
+      "model_id": "sieve-31b-v3",
+      "label": "Sieve-31B-v3",
+      "vendor": "Sthanika AI",
+      "provider": "sieve",
+      "api_model": "sthanika-ai/Sieve-31B-v3",
+      "accuracy": 0.9103641456582633,
+      "wilson95": [
+        0.8917567797536866,
+        0.9260381399814633
+      ],
+      "correct": 975,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 1152.1615637466311,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-16T12:52:56.912295+00:00"
+    },
+    {
       "model_id": "microsoft-decision-1",
       "label": "Microsoft Decision 1",
       "vendor": "Microsoft",

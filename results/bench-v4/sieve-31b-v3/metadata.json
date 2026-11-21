@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "sieve-31b-v3",
+    "label": "Sieve-31B-v3",
+    "short_label": "Sieve 31B",
+    "vendor": "Sthanika AI",
+    "provider": "sieve",
+    "color": "#7c3aed",
+    "vision": false,
+    "api_model": "sthanika-ai/Sieve-31B-v3",
+    "resolved_models": []
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "412d13b19adaf75e09c017afabb893c4828fe080",
+    "git_dirty": true,
+    "git_commits": [
+      "412d13b19adaf75e09c017afabb893c4828fe080"
+    ]
+  },
+  "run": {
+    "run_id": "sieve-31b-v3-bench-v4-c7ea7db7",
+    "status": "completed",
+    "created_at": "2026-11-16T12:39:35.793474+00:00",
+    "completed_at": "2026-11-16T12:52:56.912295+00:00",
+    "published_at": "2026-11-16T12:53:19.965846+00:00",
+    "executions": 1,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-4e4695f6c03d",
+    "platform": {
+      "os": "Linux",
+      "python": "3.12.16"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 0.005589798092842102,
+      "tcp_connect_ms": 0.035538338124752045,
+      "tls_handshake_ms": null
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 975,
+    "accuracy": 0.9103641456582633,
+    "wilson95": [
+      0.8917567797536866,
+      0.9260381399814633
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_p50_ms": 1152.1615637466311,
+    "server_time_p50_ms_estimate": 1152.0848972722888
+  }
+}

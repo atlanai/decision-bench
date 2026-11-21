@@ -25,7 +25,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import __version__, adapters, config, corpus, kev, openai_compat, openrouter_decisions, sage, tev1
+from . import __version__, adapters, config, corpus, kev, openai_compat, openrouter_decisions, sage, sieve, tev1
 from .corpus import PROMPT_VERSION, canonical, digest, public_input
 from .errors import CallError
 from .metrics import billable
@@ -92,6 +92,8 @@ def endpoint_url(model):
         return openai_compat.base_url()
     if provider == "kev":
         return kev.endpoint()
+    if provider == "sieve":
+        return sieve.endpoint()
     if provider == "prism":
         from .prism import endpoint
         return endpoint()
@@ -110,7 +112,7 @@ def frozen_config(model, cases, all_cases, manifest, api_model=None):
            "model_id": model["id"], "provider": model["provider"], "api_model": api_model or model["model"],
            "request": model.get("request", {}), "vision": bool(model.get("vision")),
            "selected_case_ids": [c["id"] for c in cases]}
-    if model["provider"] in ("openai-compatible", "kev", "prism", "drex", "laya", "openrouter-decisions", "bielik-one"):
+    if model["provider"] in ("openai-compatible", "kev", "sieve", "prism", "drex", "laya", "openrouter-decisions", "bielik-one"):
         cfg["endpoint_id"] = openai_compat.endpoint_id(endpoint_url(model))
     return cfg
 
@@ -167,6 +169,8 @@ def preflight(model):
     elif provider == "kev":
         from .kev import endpoint, api_key
         api_key(endpoint())
+    elif provider == "sieve":
+        sieve.endpoint()
     elif provider == "prism":
         from .prism import endpoint, api_key
         api_key(endpoint())

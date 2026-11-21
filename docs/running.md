@@ -355,6 +355,29 @@ always stop the named app after the run, including on failures. GPU/CPU/memory
 charges are separate infrastructure costs and must not be represented as
 OpenRouter token pricing. No benchmark result exists until the live run completes.
 
+## Sieve-31B-v3
+
+The `sieve` provider calls a self-hosted [Sieve](https://github.com/sthanika-ai/Sieve) server. Sieve never generates
+text: it reads the state once and returns a probability for every option. The provider sends the same native System
+One payload as TypeSafe to `POST <SIEVE_BASE_URL>/v1/decide` and records the endpoint hash, native probabilities and
+reported model latency, without publishing the endpoint. `SIEVE_API_KEY` is optional (`sieve-serve` has no
+authentication). Plain `http` is allowed only for localhost.
+
+`sieve-serve` answers with whatever weights it loaded and does not report which, and it ignores the request's
+`model` field (so `--api-model` must be the configured model). Download the pinned revision first and serve that
+folder: passing the repo id would load the Hub's main branch.
+
+```sh
+pip install -r https://raw.githubusercontent.com/sthanika-ai/Sieve/1e64657c930f91db7119b5638774c0f11a77e441/requirements.txt
+pip install "sieve-decisions[serve] @ git+https://github.com/sthanika-ai/Sieve@1e64657c930f91db7119b5638774c0f11a77e441"
+hf download sthanika-ai/Sieve-31B-v3 --revision 8fcee858f7f20a50bfa3c8f984c22adb3cbb46a2 --local-dir Sieve-31B-v3-8fcee858
+sieve-serve --model ./Sieve-31B-v3-8fcee858 --port 8020      # about 58 GiB of GPU memory in bf16
+export SIEVE_BASE_URL=http://localhost:8020
+python3 -m decision_bench run --model sieve-31b-v3 --limit 5 --jobs 1
+```
+
+The model is text only (`"vision": false`): image rows are answered from their text rendering.
+
 ## Sarvam-Prism
 
 `sarvam-prism` calls Sarvam's hosted Decisions API. Set `SARVAM_API_KEY` in `.env`, then:
