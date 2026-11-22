@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "cloudflare-clef-omni",
+    "label": "Clef Omni",
+    "short_label": "Clef Omni",
+    "vendor": "Cloudflare",
+    "provider": "openrouter-decisions",
+    "color": "#c2410c",
+    "vision": true,
+    "api_model": "cloudflare/clef-omni",
+    "resolved_models": [
+      "cloudflare/clef-omni-20261009"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.15,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/cloudflare/clef-omni",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "6752db9565494a45787c3dcc291839a5519d9656",
+    "git_dirty": false,
+    "git_commits": [
+      "6752db9565494a45787c3dcc291839a5519d9656",
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
+    ]
+  },
+  "run": {
+    "run_id": "cloudflare-clef-omni-bench-v4-r1",
+    "status": "completed_with_errors",
+    "created_at": "2026-11-21T13:39:09.039528+00:00",
+    "completed_at": "2026-11-22T13:20:29.247387+00:00",
+    "published_at": "2026-11-22T13:32:52.675832+00:00",
+    "executions": 3,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 2.2535829921253026,
+      "tcp_connect_ms": 218.00270798848942,
+      "tls_handshake_ms": 230.90137500548735
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1041,
+    "rows_error": 30,
+    "full": true
+  },
+  "totals": {
+    "correct": 921,
+    "accuracy": 0.8599439775910365,
+    "wilson95": [
+      0.8378699596469367,
+      0.8794450382094919
+    ],
+    "errors": 30,
+    "cost_usd": 0.1389378,
+    "cost_coverage": 0.9204244031830239,
+    "input_tokens": 926252,
+    "output_tokens": 0,
+    "latency_p50_ms": 868.0251659970963,
+    "server_time_p50_ms_estimate": null
+  }
+}

@@ -281,7 +281,10 @@
       "model": "typesafe/jev-1.14",
       "vision": true,
       "color": "#14b8a6",
-      "request": {"image_min_side": 280, "image_max_side": 1568},
+      "request": {
+        "image_min_side": 280,
+        "image_max_side": 1568
+      },
       "pricing": {
         "input_per_mtok": 0.042,
         "output_per_mtok": 0,
@@ -426,9 +429,9 @@
         "input_per_mtok": 0.042,
         "output_per_mtok": 0,
         "source_url": "https://openrouter.ai/microsoft/microsoft-decision-1",
-        "as_of": "2026-10-10"
+        "as_of": "2026-11-21"
       },
-      "notes": "Native Choice probabilities through OpenRouter. Text only: evaluated on the identical 949 rows without image assets; all 122 image-containing rows excluded. Hosted weights may update; returned model identity recorded."
+      "notes": "Native Choice probabilities through OpenRouter. Text only: all 1,071 rows, with the text rendering of the 122 image rows. Hosted weights may update; returned model identity recorded."
     },
     {
       "id": "gemini-decision-1",
@@ -462,9 +465,9 @@
         "input_per_mtok": 0.042,
         "output_per_mtok": 0,
         "source_url": "https://openrouter.ai/jaredpalmer/kev-4b",
-        "as_of": "2026-10-12"
+        "as_of": "2026-11-21"
       },
-      "notes": "Kev 4B through OpenRouter native Decisions API; not the Kev-27B requested in GitHub issue 16. Evaluated on the identical 949 text-only rows; all 122 image-containing rows excluded. OpenRouter lists 8,192 token context; returned checkpoint recorded."
+      "notes": "Kev 4B through OpenRouter native Decisions API; not the Kev-27B requested in GitHub issue 16. Text only: all 1,071 rows, with the text rendering of the 122 image rows. OpenRouter lists 8,192 token context; returned checkpoint recorded."
     },
     {
       "id": "kev-27b",
@@ -595,28 +598,513 @@
         "reasoning": "off"
       },
       "notes": "speakleash/Bielik-One-4B-r1 public revision 567d29b0f15df28794acf0f6187f9216860d4551; BF16; bielik-one runtime 881089d201c806a1a67268a4190aeecdad3d8fac; vLLM 0.32.0; context 32768. Native-validation temperatures fitted before benchmark inference; zero exact normalized context/document overlap found against bench-v4 (not a paraphrase test). Full profile and inference-file hashes: docs/evaluations/bielik-one-4b-r1.json. Self-hosted A100 loopback latency excludes the public network; cost unavailable, not zero. Full corpus text representations, no images."
+    },
+    {
+      "id": "baseten-bison-1",
+      "label": "Bison 1",
+      "vendor": "Baseten",
+      "provider": "openrouter-decisions",
+      "model": "baseten/bison-1",
+      "vision": true,
+      "color": "#7e22ce",
+      "pricing": {
+        "input_per_mtok": 0.1,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/baseten/bison-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "baseten-elephant-1",
+      "label": "Elephant 1",
+      "vendor": "Baseten",
+      "provider": "openrouter-decisions",
+      "model": "baseten/elephant-1",
+      "vision": true,
+      "color": "#9333ea",
+      "pricing": {
+        "input_per_mtok": 0.035,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/baseten/elephant-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "baseten-groundhog-1",
+      "label": "Groundhog 1",
+      "vendor": "Baseten",
+      "provider": "openrouter-decisions",
+      "model": "baseten/groundhog-1",
+      "vision": true,
+      "color": "#a855f7",
+      "pricing": {
+        "input_per_mtok": 0.035,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/baseten/groundhog-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "baseten-joey-1",
+      "label": "Joey 1",
+      "vendor": "Baseten",
+      "provider": "openrouter-decisions",
+      "model": "baseten/joey-1",
+      "vision": true,
+      "color": "#c084fc",
+      "pricing": {
+        "input_per_mtok": 0.01,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/baseten/joey-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "baseten-mammoth-1",
+      "label": "Mammoth 1",
+      "vendor": "Baseten",
+      "provider": "openrouter-decisions",
+      "model": "baseten/mammoth-1",
+      "vision": true,
+      "color": "#6b21a8",
+      "pricing": {
+        "input_per_mtok": 0.1,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/baseten/mammoth-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "cloudflare-clef",
+      "label": "Clef",
+      "vendor": "Cloudflare",
+      "provider": "openrouter-decisions",
+      "model": "cloudflare/clef",
+      "vision": true,
+      "color": "#ea580c",
+      "pricing": {
+        "input_per_mtok": 0.192,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/cloudflare/clef",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "cloudflare-clef-flash",
+      "label": "Clef Flash",
+      "vendor": "Cloudflare",
+      "provider": "openrouter-decisions",
+      "model": "cloudflare/clef-flash",
+      "vision": true,
+      "color": "#fb923c",
+      "pricing": {
+        "input_per_mtok": 0.019,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/cloudflare/clef-flash",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "cloudflare-clef-omni",
+      "label": "Clef Omni",
+      "vendor": "Cloudflare",
+      "provider": "openrouter-decisions",
+      "model": "cloudflare/clef-omni",
+      "vision": true,
+      "color": "#c2410c",
+      "pricing": {
+        "input_per_mtok": 0.15,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/cloudflare/clef-omni",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "heygen-decision-1",
+      "label": "HeyGen Decision",
+      "vendor": "HeyGen",
+      "provider": "openrouter-decisions",
+      "model": "heygen/heygen-decision-1",
+      "vision": true,
+      "color": "#e11d48",
+      "pricing": {
+        "input_per_mtok": 0.07,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/heygen/heygen-decision-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "heygen-decision-1-turbo",
+      "label": "HeyGen Decision Turbo",
+      "short_label": "HeyGen Turbo",
+      "vendor": "HeyGen",
+      "provider": "openrouter-decisions",
+      "model": "heygen/heygen-decision-1-turbo",
+      "vision": true,
+      "color": "#fb7185",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/heygen/heygen-decision-1-turbo",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "liquid-d1-ultra",
+      "label": "d1-ultra",
+      "vendor": "Liquid AI",
+      "provider": "openrouter-decisions",
+      "model": "liquid/d1-ultra",
+      "vision": true,
+      "color": "#0e7490",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/liquid/d1-ultra",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "liquid-d1.1",
+      "label": "d1.1",
+      "vendor": "Liquid AI",
+      "provider": "openrouter-decisions",
+      "model": "liquid/d1.1",
+      "vision": true,
+      "color": "#0891b2",
+      "pricing": {
+        "input_per_mtok": 0.02,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/liquid/d1.1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "liquid-d1.2",
+      "label": "d1.2",
+      "vendor": "Liquid AI",
+      "provider": "openrouter-decisions",
+      "model": "liquid/d1.2",
+      "vision": true,
+      "color": "#22d3ee",
+      "pricing": {
+        "input_per_mtok": 0.02,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/liquid/d1.2",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "liquid-d1.2-ultra",
+      "label": "d1.2-ultra",
+      "vendor": "Liquid AI",
+      "provider": "openrouter-decisions",
+      "model": "liquid/d1.2-ultra",
+      "vision": true,
+      "color": "#155e75",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/liquid/d1.2-ultra",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "microsoft-decision-1.1",
+      "label": "Microsoft Decision 1.1",
+      "short_label": "MS Decision 1.1",
+      "vendor": "Microsoft",
+      "provider": "openrouter-decisions",
+      "model": "microsoft/microsoft-decision-1.1",
+      "vision": true,
+      "color": "#50a0e0",
+      "request": {
+        "image_min_side": 280,
+        "image_max_side": 1568
+      },
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/microsoft/microsoft-decision-1.1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Images outside Microsoft's 280 to 1568 px side limits are rescaled to fit (flagged per row). Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "morph-reflex",
+      "label": "Reflex",
+      "vendor": "Morph",
+      "provider": "openrouter-decisions",
+      "model": "morph/reflex",
+      "vision": true,
+      "color": "#4338ca",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "cached_input_per_mtok": 0.002,
+        "source_url": "https://openrouter.ai/morph/reflex",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "drex-max-finance",
+      "label": "Drex Max Finance",
+      "vendor": "Nace",
+      "provider": "openrouter-decisions",
+      "model": "nace-ai/drex-max-finance",
+      "vision": true,
+      "color": "#3f6212",
+      "pricing": {
+        "input_per_mtok": 0.06,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/nace-ai/drex-max-finance",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "drex-max-openrouter",
+      "label": "Drex Max (OpenRouter)",
+      "short_label": "Drex Max (OR)",
+      "vendor": "Nace",
+      "provider": "openrouter-decisions",
+      "model": "nace-ai/drex-max",
+      "vision": true,
+      "color": "#84cc16",
+      "pricing": {
+        "input_per_mtok": 0.06,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/nace-ai/drex-max",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "drex-v1.5",
+      "label": "Drex v1.5",
+      "vendor": "Nace",
+      "provider": "openrouter-decisions",
+      "model": "nace-ai/drex-v1.5",
+      "vision": false,
+      "color": "#a3e635",
+      "pricing": {
+        "input_per_mtok": 0.04,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/nace-ai/drex-v1.5",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "drex-v2.0",
+      "label": "Drex v2.0",
+      "vendor": "Nace",
+      "provider": "openrouter-decisions",
+      "model": "nace-ai/drex-v2.0",
+      "vision": false,
+      "color": "#365314",
+      "pricing": {
+        "input_per_mtok": 0.06,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/nace-ai/drex-v2.0",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "parallel-decisions-fast",
+      "label": "Decisions Fast",
+      "short_label": "Parallel Fast",
+      "vendor": "Parallel",
+      "provider": "openrouter-decisions",
+      "model": "parallel/decisions-fast",
+      "vision": false,
+      "color": "#334155",
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded. Priced per request ($0.001), not per token; provider-reported cost is used."
+    },
+    {
+      "id": "pplx-decider-flash-v1.2",
+      "label": "Decider Flash V1.2",
+      "vendor": "Perplexity",
+      "provider": "openrouter-decisions",
+      "model": "perplexity/pplx-decider-flash-v1.2",
+      "vision": true,
+      "color": "#2dd4bf",
+      "pricing": {
+        "input_per_mtok": 0.01,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/perplexity/pplx-decider-flash-v1.2",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "pplx-decider-v1.2",
+      "label": "Decider V1.2",
+      "vendor": "Perplexity",
+      "provider": "openrouter-decisions",
+      "model": "perplexity/pplx-decider-v1.2",
+      "vision": true,
+      "color": "#115e59",
+      "pricing": {
+        "input_per_mtok": 0.02,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/perplexity/pplx-decider-v1.2",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "respan-span-02",
+      "label": "Span-02",
+      "vendor": "Respan",
+      "provider": "openrouter-decisions",
+      "model": "respan/span-02",
+      "vision": true,
+      "color": "#9d174d",
+      "pricing": {
+        "input_per_mtok": 0.01,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/respan/span-02",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "scaledown-classify-1",
+      "label": "Classify-1",
+      "vendor": "ScaleDown",
+      "provider": "openrouter-decisions",
+      "model": "scaledown/classify-1",
+      "vision": true,
+      "color": "#ca8a04",
+      "request": {
+        "state_as_text": true
+      },
+      "pricing": {
+        "input_per_mtok": 0.04,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/scaledown/classify-1",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. The provider rejects an object state, so text rows send the same state as a JSON string, as image rows already do. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "jev-1.13-openrouter",
+      "label": "Jev 1.13 (OpenRouter)",
+      "short_label": "Jev 1.13 (OR)",
+      "vendor": "TypeSafe",
+      "provider": "openrouter-decisions",
+      "model": "typesafe/jev-1.13",
+      "vision": true,
+      "color": "#5eead4",
+      "request": {
+        "image_min_side": 280,
+        "image_max_side": 1568
+      },
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/typesafe/jev-1.13",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text and image evidence. Images outside TypeSafe's 280 to 1568 px side limits are rescaled to fit (flagged per row). Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "tev1-4b-experimental-openrouter",
+      "label": "Tev1 4B Experimental (OpenRouter)",
+      "short_label": "Tev1 4B (OR)",
+      "vendor": "Together AI",
+      "provider": "openrouter-decisions",
+      "model": "togethercomputer/tev1-4b-experimental",
+      "vision": false,
+      "color": "#1e3a8a",
+      "pricing": {
+        "input_per_mtok": 0.042,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/togethercomputer/tev1-4b-experimental",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "solar-decide",
+      "label": "Solar Decide",
+      "vendor": "Upstage",
+      "provider": "openrouter-decisions",
+      "model": "upstage/solar-decide",
+      "vision": false,
+      "color": "#5b21b6",
+      "pricing": {
+        "input_per_mtok": 0.05,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/upstage/solar-decide",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "solar-decide-flash",
+      "label": "Solar Decide Flash",
+      "vendor": "Upstage",
+      "provider": "openrouter-decisions",
+      "model": "upstage/solar-decide-flash",
+      "vision": false,
+      "color": "#a78bfa",
+      "pricing": {
+        "input_per_mtok": 0.05,
+        "output_per_mtok": 0,
+        "source_url": "https://openrouter.ai/upstage/solar-decide-flash",
+        "as_of": "2026-11-21"
+      },
+      "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded."
     }
   ],
   "logos": {
     "Amazon": "amazon.com",
     "Amos": "amos.scira.ai",
     "Anthropic": "anthropic.com",
+    "Baseten": "baseten.co",
+    "Cloudflare": "cloudflare.com",
     "DeepSeek": "deepseek.com",
     "Google": "google.com",
+    "HeyGen": "heygen.com",
     "Jared Palmer": "jaredpalmer.com",
     "Laya": "convaiinnovations.com",
     "Levanto": "levanto.ai",
+    "Liquid AI": "liquid.ai",
     "Microsoft": "microsoft.com",
+    "Morph": "morphllm.com",
     "Nace": "nace.ai",
     "OpenAI": "openai.com",
+    "Parallel": "parallel.ai",
     "Perplexity": "perplexity.ai",
     "Quyet": "quyet.ai",
     "Qwen": "qwen.ai",
+    "Respan": "respan.ai",
     "Sarvam": "sarvam.ai",
+    "ScaleDown": "scaledown.ai",
     "SpeakLeash": "speakleash.org",
     "Sthanika AI": "sthanika.ai",
     "Together AI": "together.ai",
     "TypeSafe": "typesafe.ai",
+    "Upstage": "upstage.ai",
     "Z.AI": "z.ai"
   }
 }

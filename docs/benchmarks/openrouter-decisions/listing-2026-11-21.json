@@ -1,0 +1,546 @@
+{
+  "source": "GET /api/v1/models?output_modalities=decisions on openrouter.ai",
+  "fetched": "2026-11-21",
+  "models": [
+    {
+      "slug": "baseten/bison-1",
+      "name": "Baseten: Bison 1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.0000001"
+      },
+      "status": "run as baseten-bison-1"
+    },
+    {
+      "slug": "baseten/elephant-1",
+      "name": "Baseten: Elephant 1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000035"
+      },
+      "status": "run as baseten-elephant-1"
+    },
+    {
+      "slug": "baseten/groundhog-1",
+      "name": "Baseten: Groundhog 1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000035"
+      },
+      "status": "run as baseten-groundhog-1"
+    },
+    {
+      "slug": "baseten/joey-1",
+      "name": "Baseten: Joey 1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000001"
+      },
+      "status": "run as baseten-joey-1"
+    },
+    {
+      "slug": "baseten/mammoth-1",
+      "name": "Baseten: Mammoth 1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.0000001"
+      },
+      "status": "run as baseten-mammoth-1"
+    },
+    {
+      "slug": "cloudflare/clairic",
+      "name": "Cloudflare: Clairic",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.0000001"
+      },
+      "status": "not run: served only on OpenRouter's extractions endpoint"
+    },
+    {
+      "slug": "cloudflare/clef",
+      "name": "Cloudflare: Clef",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000192"
+      },
+      "status": "run as cloudflare-clef"
+    },
+    {
+      "slug": "cloudflare/clef-flash",
+      "name": "Cloudflare: Clef Flash",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000019"
+      },
+      "status": "run as cloudflare-clef-flash"
+    },
+    {
+      "slug": "cloudflare/clef-omni",
+      "name": "Cloudflare: Clef Omni",
+      "input_modalities": [
+        "text",
+        "image",
+        "audio",
+        "video"
+      ],
+      "pricing": {
+        "prompt": "0.00000015"
+      },
+      "status": "run as cloudflare-clef-omni"
+    },
+    {
+      "slug": "google/gemini-decision-1",
+      "name": "Google: Gemini Decision 1",
+      "input_modalities": [
+        "text",
+        "image",
+        "audio",
+        "video",
+        "file"
+      ],
+      "pricing": {
+        "prompt": "0.0000001",
+        "web_search": "0.014"
+      },
+      "status": "run as gemini-decision-1"
+    },
+    {
+      "slug": "heygen/heygen-decision-1",
+      "name": "HeyGen: HeyGen Decision",
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "pricing": {
+        "prompt": "0.00000007"
+      },
+      "status": "run as heygen-decision-1"
+    },
+    {
+      "slug": "heygen/heygen-decision-1-turbo",
+      "name": "HeyGen: HeyGen Decision Turbo",
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "pricing": {
+        "prompt": "0.000000042000000003"
+      },
+      "status": "run as heygen-decision-1-turbo"
+    },
+    {
+      "slug": "jaredpalmer/kev-4b",
+      "name": "Jared Palmer: Kev 4B",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as kev-4b"
+    },
+    {
+      "slug": "liquid/d1-ultra",
+      "name": "LiquidAI: d1-ultra",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042",
+        "input_cache_read": "0.000000042"
+      },
+      "status": "run as liquid-d1-ultra"
+    },
+    {
+      "slug": "liquid/d1.1",
+      "name": "LiquidAI: d1.1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000002",
+        "input_cache_read": "0.00000002"
+      },
+      "status": "run as liquid-d1.1"
+    },
+    {
+      "slug": "liquid/d1.2",
+      "name": "LiquidAI: d1.2",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000002"
+      },
+      "status": "run as liquid-d1.2"
+    },
+    {
+      "slug": "liquid/d1.2-ultra",
+      "name": "LiquidAI: d1.2-ultra",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as liquid-d1.2-ultra"
+    },
+    {
+      "slug": "microsoft/microsoft-decision-1",
+      "name": "Microsoft: Microsoft-Decision-1",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as microsoft-decision-1"
+    },
+    {
+      "slug": "microsoft/microsoft-decision-1.1",
+      "name": "Microsoft: Microsoft-Decision-1.1",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as microsoft-decision-1.1"
+    },
+    {
+      "slug": "morph/reflex",
+      "name": "Morph: Reflex",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042",
+        "input_cache_read": "0.000000002"
+      },
+      "status": "run as morph-reflex"
+    },
+    {
+      "slug": "nace-ai/drex-max",
+      "name": "Nace.AI: Drex Max",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000006",
+        "input_cache_read": "0.00000006"
+      },
+      "status": "run as drex-max-openrouter"
+    },
+    {
+      "slug": "nace-ai/drex-max-finance",
+      "name": "Nace.AI: Drex Max Finance",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000006",
+        "input_cache_read": "0.00000006"
+      },
+      "status": "run as drex-max-finance"
+    },
+    {
+      "slug": "nace-ai/drex-v1.5",
+      "name": "Nace.AI: Drex v1.5",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.00000004"
+      },
+      "status": "run as drex-v1.5"
+    },
+    {
+      "slug": "nace-ai/drex-v2.0",
+      "name": "Nace.AI: Drex v2.0",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.00000006"
+      },
+      "status": "run as drex-v2.0"
+    },
+    {
+      "slug": "openai/gpt-6-luna-decisions",
+      "name": "OpenAI: GPT-6 Luna Decisions",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.0000001",
+        "web_search": "0.01"
+      },
+      "status": "run as gpt-6-luna-decisions"
+    },
+    {
+      "slug": "parallel/decisions-fast",
+      "name": "Parallel: Decisions Fast",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "request": "0.001"
+      },
+      "status": "run as parallel-decisions-fast"
+    },
+    {
+      "slug": "perplexity/pplx-decider-flash-v1.2",
+      "name": "Perplexity: Decider Flash V1.2",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000001"
+      },
+      "status": "run as pplx-decider-flash-v1.2"
+    },
+    {
+      "slug": "perplexity/pplx-decider-flash-v1.3:free",
+      "name": "Perplexity: Decider Flash V1.3 (free)",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {},
+      "status": "not run: free only, 1,000 requests a day; no paid endpoint"
+    },
+    {
+      "slug": "perplexity/pplx-decider-v1.2",
+      "name": "Perplexity: Decider V1.2",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000002"
+      },
+      "status": "run as pplx-decider-v1.2"
+    },
+    {
+      "slug": "perplexity/pplx-decider-v1.3:free",
+      "name": "Perplexity: Decider V1.3 (free)",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {},
+      "status": "not run: free only, 1,000 requests a day; no paid endpoint"
+    },
+    {
+      "slug": "respan/span-01",
+      "name": "Respan: Span-01",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.00000002"
+      },
+      "status": "not run: accepts only yes/no questions"
+    },
+    {
+      "slug": "respan/span-01-lite",
+      "name": "Respan: Span-01 Lite",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {},
+      "status": "not run: accepts only yes/no questions"
+    },
+    {
+      "slug": "respan/span-01-lite:free",
+      "name": "Respan: Span-01 Lite (free)",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {},
+      "status": "not run: free variant of respan/span-01-lite"
+    },
+    {
+      "slug": "respan/span-02",
+      "name": "Respan: Span-02",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000001"
+      },
+      "status": "run as respan-span-02"
+    },
+    {
+      "slug": "scaledown/classify-1",
+      "name": "ScaleDown: Classify-1",
+      "input_modalities": [
+        "text",
+        "image",
+        "file"
+      ],
+      "pricing": {
+        "prompt": "0.00000004"
+      },
+      "status": "run as scaledown-classify-1"
+    },
+    {
+      "slug": "togethercomputer/tev1-4b-experimental",
+      "name": "Together: Tev1 4B Experimental",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as tev1-4b-experimental-openrouter"
+    },
+    {
+      "slug": "typesafe/jev-1.13",
+      "name": "TypeSafe: Jev 1.13",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as jev-1.13-openrouter"
+    },
+    {
+      "slug": "typesafe/jev-1.14",
+      "name": "TypeSafe: Jev 1.14",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "run as jev-1.14"
+    },
+    {
+      "slug": "upstage/solar-decide",
+      "name": "Upstage: Solar Decide",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.00000005",
+        "input_cache_read": "0.00000005"
+      },
+      "status": "run as solar-decide"
+    },
+    {
+      "slug": "upstage/solar-decide-flash",
+      "name": "Upstage: Solar Decide Flash",
+      "input_modalities": [
+        "text"
+      ],
+      "pricing": {
+        "prompt": "0.00000005",
+        "input_cache_read": "0.00000005"
+      },
+      "status": "run as solar-decide-flash"
+    },
+    {
+      "slug": "~liquid/d1-latest",
+      "name": "LiquidAI: d1 Latest",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000002"
+      },
+      "status": "alias of liquid/d1.2"
+    },
+    {
+      "slug": "~liquid/d1-ultra-latest",
+      "name": "LiquidAI: d1-ultra Latest",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "alias of liquid/d1.2-ultra"
+    },
+    {
+      "slug": "~perplexity/pplx-decider-flash-latest",
+      "name": "Perplexity: Decider Flash Latest",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000001"
+      },
+      "status": "alias of perplexity/pplx-decider-flash-v1.3"
+    },
+    {
+      "slug": "~perplexity/pplx-decider-latest",
+      "name": "Perplexity: Decider Latest",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.00000002"
+      },
+      "status": "alias of perplexity/pplx-decider-v1.3"
+    },
+    {
+      "slug": "~typesafe/jev-latest",
+      "name": "TypeSafe: Jev Latest",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "pricing": {
+        "prompt": "0.000000042"
+      },
+      "status": "alias of typesafe/jev-1.14"
+    }
+  ]
+}

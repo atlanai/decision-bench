@@ -4,16 +4,16 @@
   "model_id": "kev-4b",
   "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
   "overall": {
-    "rows": 949,
-    "correct": 795,
-    "accuracy": 0.8377239199157007,
+    "rows": 1071,
+    "correct": 890,
+    "accuracy": 0.830999066293184,
     "wilson95": [
-      0.8129115588231931,
-      0.8598130577342703
+      0.807380667816705,
+      0.8522514119241611
     ],
     "errors": 0,
-    "macro_category_accuracy": 0.8261608737608302,
-    "macro_task_f1": 0.8195749410095885
+    "macro_category_accuracy": 0.7797471643311978,
+    "macro_task_f1": 0.8124622858554227
   },
   "by_category": [
     {
@@ -41,45 +41,56 @@
     {
       "id": "data",
       "name": "Data & analytics",
-      "rows": 94,
-      "correct": 87,
-      "accuracy": 0.925531914893617,
+      "rows": 126,
+      "correct": 119,
+      "accuracy": 0.9444444444444444,
       "wilson95": [
-        0.8541862329739056,
-        0.9634618839824809
+        0.8897579028885562,
+        0.972831590771411
+      ]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "rows": 30,
+      "correct": 5,
+      "accuracy": 0.16666666666666666,
+      "wilson95": [
+        0.07336434240351683,
+        0.33564705185680177
       ]
     },
     {
       "id": "documents",
       "name": "Documents & meetings",
-      "rows": 57,
-      "correct": 33,
-      "accuracy": 0.5789473684210527,
+      "rows": 87,
+      "correct": 63,
+      "accuracy": 0.7241379310344828,
       "wilson95": [
-        0.4497991014068138,
-        0.6981260024694814
+        0.6222603074671171,
+        0.8070584187552303
       ]
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "rows": 150,
-      "correct": 128,
-      "accuracy": 0.8533333333333334,
+      "correct": 127,
+      "accuracy": 0.8466666666666667,
       "wilson95": [
-        0.7879140446419707,
-        0.9011063503617215
+        0.7804188029480452,
+        0.8956012072442565
       ]
     },
     {
       "id": "finance",
       "name": "Finance",
-      "rows": 91,
-      "correct": 88,
-      "accuracy": 0.967032967032967,
+      "rows": 121,
+      "correct": 118,
+      "accuracy": 0.9752066115702479,
       "wilson95": [
-        0.9075053921522588,
-        0.9887257975366542
+        0.9296344641257027,
+        0.9915328390809205
       ]
     },
     {
@@ -97,11 +108,11 @@
       "id": "product",
       "name": "Product management",
       "rows": 60,
-      "correct": 40,
-      "accuracy": 0.6666666666666666,
+      "correct": 39,
+      "accuracy": 0.65,
       "wilson95": [
-        0.540566298666634,
-        0.7727090578407216
+        0.5236238380947751,
+        0.7583239827618451
       ]
     },
     {
@@ -249,6 +260,18 @@
       ]
     },
     {
+      "id": "DAT-3",
+      "name": "Does the chart support the claim?",
+      "category": "data",
+      "rows": 32,
+      "correct": 32,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8928172849426366,
+        1
+      ]
+    },
+    {
       "id": "DAT-4",
       "name": "What does this column hold?",
       "category": "data",
@@ -258,6 +281,18 @@
       "wilson95": [
         0.7703918204763959,
         0.9695346096956899
+      ]
+    },
+    {
+      "id": "DOC-1",
+      "name": "Where is this page from?",
+      "category": "documents",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
       ]
     },
     {
@@ -285,15 +320,27 @@
       ]
     },
     {
+      "id": "DSN-1",
+      "name": "What does this icon mean?",
+      "category": "design",
+      "rows": 30,
+      "correct": 5,
+      "accuracy": 0.16666666666666666,
+      "wilson95": [
+        0.07336434240351683,
+        0.33564705185680177
+      ]
+    },
+    {
       "id": "ENG-1",
       "name": "Which file must change?",
       "category": "engineering",
       "rows": 30,
-      "correct": 28,
-      "accuracy": 0.9333333333333333,
+      "correct": 27,
+      "accuracy": 0.9,
       "wilson95": [
-        0.7867618227892791,
-        0.9815233646723066
+        0.7437855868473339,
+        0.9654007400402839
       ]
     },
     {
@@ -369,6 +416,18 @@
       ]
     },
     {
+      "id": "FIN-3",
+      "name": "Which figure is the total?",
+      "category": "finance",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
       "id": "FIN-4",
       "name": "What does this number report?",
       "category": "finance",
@@ -433,11 +492,11 @@
       "name": "Which headline won?",
       "category": "product",
       "rows": 30,
-      "correct": 17,
-      "accuracy": 0.5666666666666667,
+      "correct": 16,
+      "accuracy": 0.5333333333333333,
       "wilson95": [
-        0.3919700954540873,
-        0.7262276256938489
+        0.3614201328152505,
+        0.6976787277587178
       ]
     },
     {
@@ -505,44 +564,44 @@
     {
       "id": "real",
       "name": "real",
-      "rows": 949,
-      "correct": 795,
-      "accuracy": 0.8377239199157007,
+      "rows": 1071,
+      "correct": 890,
+      "accuracy": 0.830999066293184,
       "wilson95": [
-        0.8129115588231931,
-        0.8598130577342703
+        0.807380667816705,
+        0.8522514119241611
       ]
     }
   ],
   "calibration": {
-    "brier": 0.23473653485037685,
-    "log_loss": 0.4370692032680109,
-    "ece": 0.04597765836837906,
+    "brier": 0.2326819243900037,
+    "log_loss": 0.43626885107402574,
+    "ece": 0.04154139255050525,
     "high_confidence_errors": 12
   },
   "cost": {
-    "usd": 0.028087248,
+    "usd": 0.031198104,
     "coverage": 1.0,
     "basis": [
       "provider_reported"
     ],
-    "per_1000_rows_usd": 0.02959667860906217
+    "per_1000_rows_usd": 0.02912988235294118
   },
   "latency_ms": {
-    "p50": 950.2222499577329,
-    "p95": 1245.0280413962898,
-    "p99": 1477.149913199246,
-    "mean": 986.4027393120415
+    "p50": 1100.160500005586,
+    "p95": 1572.5436665015877,
+    "p99": 2628.365645596929,
+    "mean": 1182.9547444081968
   },
   "tokens": {
-    "input": 668744,
-    "output": 83301,
+    "input": 742812,
+    "output": 93826,
     "cached_input": null,
     "reasoning_output": null,
     "coverage": 1.0
   },
   "attempts": {
-    "attempts": 949,
+    "attempts": 1071,
     "retries": 0,
     "attempt_errors": 0,
     "incomplete_attempts": 0

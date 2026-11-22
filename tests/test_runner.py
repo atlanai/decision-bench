@@ -143,6 +143,17 @@ class Runner(unittest.TestCase):
             self.assertEqual(meta["config"]["corpus_sha256"], json.loads(
                 (root / "data/corpus/mini/manifest.json").read_text())["sha256"])
 
+    def test_run_with_a_unicode_line_separator_in_the_output_completes_and_resumes(self):
+        """A U+2028 in a model's output (Parallel Decisions Fast) must not split a results.jsonl line on read."""
+        def separator_output(m, c, t, a=None):
+            return response(c) | {"output_text": "line one\u2028line two"}
+        with fixtures.repo(ENV), patch.object(runner.time, "sleep"), \
+                patch.object(runner.adapters, "call", side_effect=separator_output):
+            self.assertEqual(runner.run(args())["status"], "completed")
+            self.assertEqual(runner.run(args(retry_errors=True))["status"], "completed")
+            rows = runner.read_jsonl(runner.runs_dir() / "test-run/results.jsonl")
+        self.assertEqual(rows[0]["output_text"], "line one\u2028line two")
+
     def test_retry_errors_reruns_only_failed_rows(self):
         with fixtures.repo(ENV), patch.object(runner.time, "sleep"):
             with patch.object(runner.adapters, "call", side_effect=lambda m, c, t, a=None:

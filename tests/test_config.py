@@ -34,7 +34,7 @@ class Config(unittest.TestCase):
         decisions = {"id": "decider", "label": "Decider", "vendor": "Test", "provider": "openrouter-decisions",
                      "model": "test/decider", "vision": True}
         bad = [{"image_min_side": 0}, {"image_max_side": "big"}, {"image_min_side": True},
-               {"image_min_side": 600, "image_max_side": 500}]
+               {"image_min_side": 600, "image_max_side": 500}, {"state_as_text": "yes"}]
         with fixtures.repo() as root:
             for request in bad:
                 self.write(root, [dict(decisions, request=request)])

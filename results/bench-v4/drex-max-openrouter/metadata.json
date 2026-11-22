@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "drex-max-openrouter",
+    "label": "Drex Max (OpenRouter)",
+    "short_label": "Drex Max (OR)",
+    "vendor": "Nace",
+    "provider": "openrouter-decisions",
+    "color": "#84cc16",
+    "vision": true,
+    "api_model": "nace-ai/drex-max",
+    "resolved_models": [
+      "nace-ai/drex-max-20261016"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.06,
+    "output_per_mtok": 0,
+    "cached_input_per_mtok": 0.06,
+    "source_url": "https://openrouter.ai/nace-ai/drex-max",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "5a84c4cc7a3dd03cb2cac75b27765dd5d3f5382e",
+    "git_dirty": false,
+    "git_commits": [
+      "5a84c4cc7a3dd03cb2cac75b27765dd5d3f5382e",
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
+    ]
+  },
+  "run": {
+    "run_id": "drex-max-openrouter-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-21T13:53:57.450766+00:00",
+    "completed_at": "2026-11-22T12:44:22.484808+00:00",
+    "published_at": "2026-11-22T13:32:58.850021+00:00",
+    "executions": 4,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 2.582959001301788,
+      "tcp_connect_ms": 219.1339160053758,
+      "tls_handshake_ms": 230.52349999488797
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1009,
+    "accuracy": 0.942110177404295,
+    "wilson95": [
+      0.9264792738277718,
+      0.9545807819050915
+    ],
+    "errors": 0,
+    "cost_usd": 0.05453232,
+    "cost_coverage": 1.0,
+    "input_tokens": 908872,
+    "output_tokens": 174712,
+    "latency_p50_ms": 1130.7216249988414,
+    "server_time_p50_ms_estimate": 459.3473339919001
+  }
+}

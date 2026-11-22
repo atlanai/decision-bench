@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "kev-4b",
+    "label": "Kev 4B",
+    "short_label": "Kev 4B",
+    "vendor": "Jared Palmer",
+    "provider": "openrouter-decisions",
+    "color": "#181818",
+    "vision": false,
+    "api_model": "jaredpalmer/kev-4b",
+    "resolved_models": [
+      "jaredpalmer/kev-4b-20260924"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.042,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/jaredpalmer/kev-4b",
+    "as_of": "2026-10-12"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "7248a4f9e9495c7b1b7c3232900b14eb663648fb",
+    "git_dirty": false,
+    "git_commits": [
+      "7248a4f9e9495c7b1b7c3232900b14eb663648fb"
+    ]
+  },
+  "run": {
+    "run_id": "kev-4b-bench-v4-text-v1",
+    "status": "completed",
+    "created_at": "2026-10-12T15:37:24.074825+00:00",
+    "completed_at": "2026-10-12T15:42:36.770077+00:00",
+    "published_at": "2026-10-12T15:42:45.895591+00:00",
+    "executions": 1,
+    "jobs": 3,
+    "timeout_seconds": 60,
+    "max_attempts": 3,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.14.7"
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 949,
+    "rows_completed": 949,
+    "rows_ok": 949,
+    "rows_error": 0,
+    "full": false
+  },
+  "totals": {
+    "correct": 795,
+    "accuracy": 0.8377239199157007,
+    "wilson95": [
+      0.8129115588231931,
+      0.8598130577342703
+    ],
+    "errors": 0,
+    "cost_usd": 0.028087248,
+    "cost_coverage": 1.0,
+    "input_tokens": 668744,
+    "output_tokens": 83301,
+    "latency_p50_ms": 950.2222499577329
+  },
+  "published_with_warnings": [
+    "it covers 949 of 1071 rows"
+  ]
+}

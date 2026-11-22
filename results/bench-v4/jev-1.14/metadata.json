@@ -33,20 +33,20 @@
   },
   "harness": {
     "version": "0.3.0",
-    "git_commit": "d83584e10174cdfa7ed89f3247c8d7696959772a",
+    "git_commit": "ed157da994872532fce7ed163b11d2bdc7c5190f",
     "git_dirty": false,
     "git_commits": [
-      "d83584e10174cdfa7ed89f3247c8d7696959772a"
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
     ]
   },
   "run": {
-    "run_id": "jev-1.14-fit-r1",
+    "run_id": "jev-1.14-bench-v4-r1",
     "status": "completed",
-    "created_at": "2026-11-11T22:00:17.182920+00:00",
-    "completed_at": "2026-11-11T22:04:00.365109+00:00",
-    "published_at": "2026-11-12T05:21:33.793853+00:00",
-    "executions": 1,
-    "jobs": 4,
+    "created_at": "2026-11-21T13:14:52.200796+00:00",
+    "completed_at": "2026-11-21T13:18:41.006719+00:00",
+    "published_at": "2026-11-22T13:32:45.592586+00:00",
+    "executions": 2,
+    "jobs": 2,
     "timeout_seconds": 180,
     "max_attempts": 2,
     "endpoint_id": "endpoint-bc609ec27097",
@@ -56,9 +56,9 @@
     },
     "network_baseline": {
       "probes": 5,
-      "dns_ms": 2.79150006826967,
-      "tcp_connect_ms": 214.07699992414564,
-      "tls_handshake_ms": 236.15466698538512
+      "dns_ms": 4.058292004629038,
+      "tcp_connect_ms": 220.22341699630488,
+      "tls_handshake_ms": 235.8317500038538
     }
   },
   "coverage": {
@@ -70,18 +70,18 @@
     "full": true
   },
   "totals": {
-    "correct": 1010,
-    "accuracy": 0.9430438842203548,
+    "correct": 1004,
+    "accuracy": 0.9374416433239963,
     "wilson95": [
-      0.9275147767700637,
-      0.9554060182568501
+      0.9213163356301709,
+      0.9504400236324405
     ],
     "errors": 0,
-    "cost_usd": 0.05600238,
+    "cost_usd": 0.056003556,
     "cost_coverage": 1.0,
-    "input_tokens": 1333390,
-    "output_tokens": 63539,
-    "latency_p50_ms": 754.3561659986153,
-    "server_time_p50_ms_estimate": 87.25599909666926
+    "input_tokens": 1333418,
+    "output_tokens": 63545,
+    "latency_p50_ms": 759.0974589984398,
+    "server_time_p50_ms_estimate": 78.76058299734723
   }
 }

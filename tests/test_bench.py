@@ -65,6 +65,10 @@ class ActiveCorpus(unittest.TestCase):
             if r.get("assets"):
                 self.assertTrue(r["state"], f"{r['id']}: image row without a text state")
 
+    def test_a_missing_corpus_file_is_an_error_not_an_empty_corpus(self):
+        with self.assertRaises(FileNotFoundError):
+            load_cases(ROOT / "data/corpus/missing/corpus.jsonl")
+
     def test_no_live_secret_formats(self):
         text = "\n".join(json.dumps(r, ensure_ascii=False) for r in self.rows)
         for pattern in (r"AKIA[0-9A-Z]{16}", r"gh[pousr]_[A-Za-z0-9]{30,}", r"xox[baprs]-[A-Za-z0-9-]{10,}",

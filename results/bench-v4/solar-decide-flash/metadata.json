@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "solar-decide-flash",
+    "label": "Solar Decide Flash",
+    "short_label": "Solar Decide Flash",
+    "vendor": "Upstage",
+    "provider": "openrouter-decisions",
+    "color": "#a78bfa",
+    "vision": false,
+    "api_model": "upstage/solar-decide-flash",
+    "resolved_models": [
+      "upstage/solar-decide-flash-20261008"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.05,
+    "output_per_mtok": 0,
+    "cached_input_per_mtok": 0.05,
+    "source_url": "https://openrouter.ai/upstage/solar-decide-flash",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "5a84c4cc7a3dd03cb2cac75b27765dd5d3f5382e",
+    "git_dirty": false,
+    "git_commits": [
+      "5a84c4cc7a3dd03cb2cac75b27765dd5d3f5382e"
+    ]
+  },
+  "run": {
+    "run_id": "solar-decide-flash-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-22T12:57:41.158220+00:00",
+    "completed_at": "2026-11-22T13:03:22.213671+00:00",
+    "published_at": "2026-11-22T13:33:05.234019+00:00",
+    "executions": 2,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 1.4734169817529619,
+      "tcp_connect_ms": 216.53858298668638,
+      "tls_handshake_ms": 224.78929100907408
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 846,
+    "accuracy": 0.7899159663865546,
+    "wilson95": [
+      0.7645037135800051,
+      0.8132558372226434
+    ],
+    "errors": 0,
+    "cost_usd": 0.053411600000000004,
+    "cost_coverage": 1.0,
+    "input_tokens": 1068232,
+    "output_tokens": 1071,
+    "latency_p50_ms": 1214.4128330110107,
+    "server_time_p50_ms_estimate": 555.0729590468109
+  }
+}

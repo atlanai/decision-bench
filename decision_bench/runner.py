@@ -26,7 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from . import __version__, adapters, config, corpus, kev, openai_compat, openrouter_decisions, sage, sieve, tev1
-from .corpus import PROMPT_VERSION, canonical, digest, public_input
+from .corpus import PROMPT_VERSION, canonical, digest, public_input, read_jsonl
 from .errors import CallError
 from .metrics import billable
 from .rate_limit import RequestPacer
@@ -52,24 +52,6 @@ def git_revision():
         return p.stdout.strip() if p.returncode == 0 else None
     status = call("status", "--porcelain")
     return {"commit": call("rev-parse", "HEAD"), "dirty": bool(status) if status is not None else None}
-
-
-def read_jsonl(path, allow_partial=False):
-    """Read a ledger. With allow_partial, an unterminated last line (a write in progress) is ignored."""
-    path = Path(path)
-    if not path.exists():
-        return []
-    out = []
-    lines = path.read_text().splitlines(keepends=True)
-    for index, line in enumerate(lines):
-        if line.strip():
-            try:
-                out.append(json.loads(line))
-            except json.JSONDecodeError:
-                if allow_partial and index == len(lines) - 1 and not line.endswith("\n"):
-                    break
-                raise
-    return out
 
 
 def write_json(path, value):
