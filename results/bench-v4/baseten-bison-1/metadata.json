@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "baseten-bison-1",
+    "label": "Bison 1",
+    "short_label": "Bison 1",
+    "vendor": "Baseten",
+    "provider": "openrouter-decisions",
+    "color": "#7e22ce",
+    "vision": true,
+    "api_model": "baseten/bison-1",
+    "resolved_models": [
+      "baseten/bison-1-20261120"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.1,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/baseten/bison-1",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "ed157da994872532fce7ed163b11d2bdc7c5190f",
+    "git_dirty": false,
+    "git_commits": [
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
+    ]
+  },
+  "run": {
+    "run_id": "baseten-bison-1-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-21T13:26:15.029413+00:00",
+    "completed_at": "2026-11-21T13:30:34.719119+00:00",
+    "published_at": "2026-11-22T13:32:48.350171+00:00",
+    "executions": 2,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 2.554416991188191,
+      "tcp_connect_ms": 219.61266700236592,
+      "tls_handshake_ms": 228.76670899859164
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1009,
+    "accuracy": 0.942110177404295,
+    "wilson95": [
+      0.9264792738277718,
+      0.9545807819050915
+    ],
+    "errors": 0,
+    "cost_usd": 0.0922471,
+    "cost_coverage": 1.0,
+    "input_tokens": 922471,
+    "output_tokens": 1071,
+    "latency_p50_ms": 852.9858340043575,
+    "server_time_p50_ms_estimate": 182.43937400984578
+  }
+}

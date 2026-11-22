@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "pplx-decider-flash-v1.2",
+    "label": "Decider Flash V1.2",
+    "short_label": "Decider Flash V1.2",
+    "vendor": "Perplexity",
+    "provider": "openrouter-decisions",
+    "color": "#2dd4bf",
+    "vision": true,
+    "api_model": "perplexity/pplx-decider-flash-v1.2",
+    "resolved_models": [
+      "perplexity/pplx-decider-flash-v1.2-20261016"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.01,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/perplexity/pplx-decider-flash-v1.2",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "5a84c4cc7a3dd03cb2cac75b27765dd5d3f5382e",
+    "git_dirty": false,
+    "git_commits": [
+      "5a84c4cc7a3dd03cb2cac75b27765dd5d3f5382e",
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
+    ]
+  },
+  "run": {
+    "run_id": "pplx-decider-flash-v1.2-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-21T14:08:31.349959+00:00",
+    "completed_at": "2026-11-22T12:48:29.511696+00:00",
+    "published_at": "2026-11-22T13:33:00.969058+00:00",
+    "executions": 3,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 1.943375013070181,
+      "tcp_connect_ms": 217.3332090023905,
+      "tls_handshake_ms": 225.53929101559334
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 973,
+    "accuracy": 0.9084967320261438,
+    "wilson95": [
+      0.889737913235183,
+      0.9243355279118661
+    ],
+    "errors": 0,
+    "cost_usd": 0.00905013,
+    "cost_coverage": 0.9962790697674418,
+    "input_tokens": 905013,
+    "output_tokens": 1071,
+    "latency_p50_ms": 767.2684999997728,
+    "server_time_p50_ms_estimate": null
+  }
+}

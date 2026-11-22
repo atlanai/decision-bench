@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "microsoft-decision-1.1",
+    "label": "Microsoft-Decision-1.1",
+    "short_label": "MS Decision 1.1",
+    "vendor": "Microsoft",
+    "provider": "openrouter-decisions",
+    "color": "#50a0e0",
+    "vision": true,
+    "api_model": "microsoft/microsoft-decision-1.1",
+    "resolved_models": [
+      "microsoft/microsoft-decision-1.1-20261117"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {
+    "image_min_side": 280,
+    "image_max_side": 1568
+  },
+  "pricing": {
+    "input_per_mtok": 0.042,
+    "output_per_mtok": 0,
+    "source_url": "https://openrouter.ai/microsoft/microsoft-decision-1.1",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "d8ef14f63b8e9c37eb90ba4850c81157be5a420f",
+    "git_dirty": false,
+    "git_commits": [
+      "d8ef14f63b8e9c37eb90ba4850c81157be5a420f"
+    ]
+  },
+  "run": {
+    "run_id": "microsoft-decision-1.1-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-22T13:20:59.144339+00:00",
+    "completed_at": "2026-11-22T13:25:26.902960+00:00",
+    "published_at": "2026-11-22T13:35:01.013211+00:00",
+    "executions": 2,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 2.391167014138773,
+      "tcp_connect_ms": 217.1827080019284,
+      "tls_handshake_ms": 228.68812500382774
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1017,
+    "accuracy": 0.9495798319327731,
+    "wilson95": [
+      0.9347933412264833,
+      0.9611526288587833
+    ],
+    "errors": 0,
+    "cost_usd": 0.035210784,
+    "cost_coverage": 1.0,
+    "input_tokens": 838352,
+    "output_tokens": 1071,
+    "latency_p50_ms": 858.3254580153152,
+    "server_time_p50_ms_estimate": 192.88074999349192
+  }
+}

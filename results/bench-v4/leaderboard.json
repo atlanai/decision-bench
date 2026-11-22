@@ -6,6 +6,28 @@
   "note": "Sorted by accuracy. The site ranks each model with a 95% range of places from paired row comparisons.",
   "models": [
     {
+      "model_id": "microsoft-decision-1.1",
+      "label": "Microsoft-Decision-1.1",
+      "vendor": "Microsoft",
+      "provider": "openrouter-decisions",
+      "api_model": "microsoft/microsoft-decision-1.1",
+      "accuracy": 0.9495798319327731,
+      "wilson95": [
+        0.9347933412264833,
+        0.9611526288587833
+      ],
+      "correct": 1017,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.035210784,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.03287654901960785,
+      "latency_p50_ms": 858.3254580153152,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-22T13:25:26.902960+00:00"
+    },
+    {
       "model_id": "amos-1-large",
       "label": "Amos 1 large",
       "vendor": "Amos",
@@ -906,6 +928,28 @@
       "corpus_current": true,
       "full_coverage": true,
       "completed_at": "2026-11-22T12:47:22.299849+00:00"
+    },
+    {
+      "model_id": "parallel-decisions-fast",
+      "label": "Decisions Fast",
+      "vendor": "Parallel",
+      "provider": "openrouter-decisions",
+      "api_model": "parallel/decisions-fast",
+      "accuracy": 0.8795518207282913,
+      "wilson95": [
+        0.8586892946632176,
+        0.897701228368269
+      ],
+      "correct": 942,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 1.071,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 1.0,
+      "latency_p50_ms": 1204.8579590045847,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-22T13:34:59.195096+00:00"
     },
     {
       "model_id": "drex-v1.5",

@@ -1,0 +1,610 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model_id": "drex-v2.0",
+  "corpus_sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+  "overall": {
+    "rows": 1071,
+    "correct": 946,
+    "accuracy": 0.8832866479925303,
+    "wilson95": [
+      0.8626726175228215,
+      0.9011608626848667
+    ],
+    "errors": 0,
+    "macro_category_accuracy": 0.8454982221141734,
+    "macro_task_f1": 0.8704914871546123
+  },
+  "by_category": [
+    {
+      "id": "agents",
+      "name": "AI agents & evals",
+      "rows": 154,
+      "correct": 129,
+      "accuracy": 0.8376623376623377,
+      "wilson95": [
+        0.7713308308047973,
+        0.8875575737729566
+      ]
+    },
+    {
+      "id": "commerce",
+      "name": "Sales & commerce",
+      "rows": 90,
+      "correct": 84,
+      "accuracy": 0.9333333333333333,
+      "wilson95": [
+        0.8620973805849326,
+        0.9690904934496107
+      ]
+    },
+    {
+      "id": "data",
+      "name": "Data & analytics",
+      "rows": 126,
+      "correct": 123,
+      "accuracy": 0.9761904761904762,
+      "wilson95": [
+        0.9323328336766188,
+        0.9918701952447746
+      ]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "rows": 30,
+      "correct": 12,
+      "accuracy": 0.4,
+      "wilson95": [
+        0.24590394326083403,
+        0.5767994750172616
+      ]
+    },
+    {
+      "id": "documents",
+      "name": "Documents & meetings",
+      "rows": 87,
+      "correct": 68,
+      "accuracy": 0.7816091954022989,
+      "wilson95": [
+        0.6839074696002304,
+        0.8554929812945139
+      ]
+    },
+    {
+      "id": "engineering",
+      "name": "Engineering",
+      "rows": 150,
+      "correct": 133,
+      "accuracy": 0.8866666666666667,
+      "wilson95": [
+        0.8259959574322895,
+        0.9280263616283548
+      ]
+    },
+    {
+      "id": "finance",
+      "name": "Finance",
+      "rows": 121,
+      "correct": 117,
+      "accuracy": 0.9669421487603306,
+      "wilson95": [
+        0.9180759744981802,
+        0.9870710277831106
+      ]
+    },
+    {
+      "id": "legal",
+      "name": "Legal",
+      "rows": 126,
+      "correct": 119,
+      "accuracy": 0.9444444444444444,
+      "wilson95": [
+        0.8897579028885562,
+        0.972831590771411
+      ]
+    },
+    {
+      "id": "product",
+      "name": "Product management",
+      "rows": 60,
+      "correct": 48,
+      "accuracy": 0.8,
+      "wilson95": [
+        0.6821795390818299,
+        0.8817161026314104
+      ]
+    },
+    {
+      "id": "safety",
+      "name": "Trust & safety",
+      "rows": 60,
+      "correct": 50,
+      "accuracy": 0.8333333333333334,
+      "wilson95": [
+        0.7196814850279217,
+        0.9068692279867897
+      ]
+    },
+    {
+      "id": "support",
+      "name": "Customer support",
+      "rows": 67,
+      "correct": 63,
+      "accuracy": 0.9402985074626866,
+      "wilson95": [
+        0.8563029501122377,
+        0.9765410285669565
+      ]
+    }
+  ],
+  "by_task": [
+    {
+      "id": "AGT-1",
+      "name": "Which tool to call",
+      "category": "agents",
+      "rows": 36,
+      "correct": 36,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.9035781695514236,
+        1
+      ]
+    },
+    {
+      "id": "AGT-2",
+      "name": "Did the injection succeed?",
+      "category": "agents",
+      "rows": 30,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
+      "wilson95": [
+        0.8332924860304112,
+        0.9940915620051425
+      ]
+    },
+    {
+      "id": "AGT-3",
+      "name": "Did the agent complete the task?",
+      "category": "agents",
+      "rows": 30,
+      "correct": 18,
+      "accuracy": 0.6,
+      "wilson95": [
+        0.42320052498273836,
+        0.7540960567391659
+      ]
+    },
+    {
+      "id": "AGT-4",
+      "name": "Is the answer backed by sources?",
+      "category": "agents",
+      "rows": 30,
+      "correct": 20,
+      "accuracy": 0.6666666666666666,
+      "wilson95": [
+        0.48779725813830266,
+        0.807697044731538
+      ]
+    },
+    {
+      "id": "AGT-5",
+      "name": "Which reply is better?",
+      "category": "agents",
+      "rows": 28,
+      "correct": 26,
+      "accuracy": 0.9285714285714286,
+      "wilson95": [
+        0.7735426157408214,
+        0.9801883525522292
+      ]
+    },
+    {
+      "id": "COM-1",
+      "name": "Does this product match the query?",
+      "category": "commerce",
+      "rows": 30,
+      "correct": 24,
+      "accuracy": 0.8,
+      "wilson95": [
+        0.6269395261897256,
+        0.9049502189759876
+      ]
+    },
+    {
+      "id": "COM-2",
+      "name": "What type of product is this?",
+      "category": "commerce",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "COM-3",
+      "name": "Which industry is this company in?",
+      "category": "commerce",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "DAT-1",
+      "name": "Which SQL answers the question?",
+      "category": "data",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "DAT-2",
+      "name": "Which cell answers the question?",
+      "category": "data",
+      "rows": 30,
+      "correct": 28,
+      "accuracy": 0.9333333333333333,
+      "wilson95": [
+        0.7867618227892791,
+        0.9815233646723066
+      ]
+    },
+    {
+      "id": "DAT-3",
+      "name": "Does the chart support the claim?",
+      "category": "data",
+      "rows": 32,
+      "correct": 32,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8928172849426366,
+        1
+      ]
+    },
+    {
+      "id": "DAT-4",
+      "name": "What does this column hold?",
+      "category": "data",
+      "rows": 34,
+      "correct": 33,
+      "accuracy": 0.9705882352941176,
+      "wilson95": [
+        0.8508409778365519,
+        0.9947892280744034
+      ]
+    },
+    {
+      "id": "DOC-1",
+      "name": "Where is this page from?",
+      "category": "documents",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "DOC-2",
+      "name": "Decision, action item, or neither?",
+      "category": "documents",
+      "rows": 30,
+      "correct": 18,
+      "accuracy": 0.6,
+      "wilson95": [
+        0.42320052498273836,
+        0.7540960567391659
+      ]
+    },
+    {
+      "id": "DOC-3",
+      "name": "Which summary is this meeting's?",
+      "category": "documents",
+      "rows": 27,
+      "correct": 20,
+      "accuracy": 0.7407407407407407,
+      "wilson95": [
+        0.553210695973843,
+        0.8682979157713322
+      ]
+    },
+    {
+      "id": "DSN-1",
+      "name": "What does this icon mean?",
+      "category": "design",
+      "rows": 30,
+      "correct": 12,
+      "accuracy": 0.4,
+      "wilson95": [
+        0.24590394326083403,
+        0.5767994750172616
+      ]
+    },
+    {
+      "id": "ENG-1",
+      "name": "Which file must change?",
+      "category": "engineering",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "ENG-2",
+      "name": "What kind of change is this?",
+      "category": "engineering",
+      "rows": 30,
+      "correct": 22,
+      "accuracy": 0.7333333333333333,
+      "wilson95": [
+        0.5555169795568831,
+        0.8581750444608938
+      ]
+    },
+    {
+      "id": "ENG-3",
+      "name": "Which weakness class is this?",
+      "category": "engineering",
+      "rows": 30,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
+      "wilson95": [
+        0.8332924860304112,
+        0.9940915620051425
+      ]
+    },
+    {
+      "id": "ENG-4",
+      "name": "Live secret or placeholder?",
+      "category": "engineering",
+      "rows": 30,
+      "correct": 22,
+      "accuracy": 0.7333333333333333,
+      "wilson95": [
+        0.5555169795568831,
+        0.8581750444608938
+      ]
+    },
+    {
+      "id": "ENG-5",
+      "name": "Which message describes this diff?",
+      "category": "engineering",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "FIN-1",
+      "name": "Which part of the 10-K?",
+      "category": "finance",
+      "rows": 30,
+      "correct": 26,
+      "accuracy": 0.8666666666666667,
+      "wilson95": [
+        0.7031831605558306,
+        0.9469043057578189
+      ]
+    },
+    {
+      "id": "FIN-2",
+      "name": "What does this 8-K report?",
+      "category": "finance",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "FIN-3",
+      "name": "Which figure is the total?",
+      "category": "finance",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "FIN-4",
+      "name": "What does this number report?",
+      "category": "finance",
+      "rows": 31,
+      "correct": 31,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.889740999265246,
+        0.9999999999999999
+      ]
+    },
+    {
+      "id": "LEG-1",
+      "name": "Does the NDA say this?",
+      "category": "legal",
+      "rows": 33,
+      "correct": 28,
+      "accuracy": 0.8484848484848485,
+      "wilson95": [
+        0.6907978686153953,
+        0.9334964074203904
+      ]
+    },
+    {
+      "id": "LEG-2",
+      "name": "What kind of clause is this?",
+      "category": "legal",
+      "rows": 30,
+      "correct": 30,
+      "accuracy": 1.0,
+      "wilson95": [
+        0.8864829086095221,
+        1
+      ]
+    },
+    {
+      "id": "LEG-3",
+      "name": "Is this term unfair, and how?",
+      "category": "legal",
+      "rows": 33,
+      "correct": 32,
+      "accuracy": 0.9696969696969697,
+      "wilson95": [
+        0.8468093832683193,
+        0.9946307279103482
+      ]
+    },
+    {
+      "id": "LEG-4",
+      "name": "Does the contract cover this?",
+      "category": "legal",
+      "rows": 30,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
+      "wilson95": [
+        0.8332924860304112,
+        0.9940915620051425
+      ]
+    },
+    {
+      "id": "PRD-1",
+      "name": "Which headline won?",
+      "category": "product",
+      "rows": 30,
+      "correct": 19,
+      "accuracy": 0.6333333333333333,
+      "wilson95": [
+        0.45513246433604937,
+        0.7812629779598231
+      ]
+    },
+    {
+      "id": "PRD-2",
+      "name": "Major, minor or patch?",
+      "category": "product",
+      "rows": 30,
+      "correct": 29,
+      "accuracy": 0.9666666666666667,
+      "wilson95": [
+        0.8332924860304112,
+        0.9940915620051425
+      ]
+    },
+    {
+      "id": "SAF-1",
+      "name": "Attack on the assistant",
+      "category": "safety",
+      "rows": 30,
+      "correct": 26,
+      "accuracy": 0.8666666666666667,
+      "wilson95": [
+        0.7031831605558306,
+        0.9469043057578189
+      ]
+    },
+    {
+      "id": "SAF-2",
+      "name": "Toxic comment or not",
+      "category": "safety",
+      "rows": 30,
+      "correct": 24,
+      "accuracy": 0.8,
+      "wilson95": [
+        0.6269395261897256,
+        0.9049502189759876
+      ]
+    },
+    {
+      "id": "SUP-1",
+      "name": "Which team owns this complaint?",
+      "category": "support",
+      "rows": 35,
+      "correct": 34,
+      "accuracy": 0.9714285714285714,
+      "wilson95": [
+        0.8546659090672868,
+        0.9949386386341466
+      ]
+    },
+    {
+      "id": "SUP-2",
+      "name": "What is the complaint about?",
+      "category": "support",
+      "rows": 32,
+      "correct": 29,
+      "accuracy": 0.90625,
+      "wilson95": [
+        0.7578150066422116,
+        0.9675990373736805
+      ]
+    }
+  ],
+  "by_source_kind": [
+    {
+      "id": "real",
+      "name": "real",
+      "rows": 1071,
+      "correct": 946,
+      "accuracy": 0.8832866479925303,
+      "wilson95": [
+        0.8626726175228215,
+        0.9011608626848667
+      ]
+    }
+  ],
+  "calibration": {
+    "brier": 0.16303622023157707,
+    "log_loss": 0.28532648158041146,
+    "ece": 0.007866459083691454,
+    "high_confidence_errors": 13
+  },
+  "cost": {
+    "usd": 0.04456872,
+    "coverage": 0.9962790697674418,
+    "basis": [
+      "provider_reported",
+      "unavailable"
+    ],
+    "per_1000_rows_usd": 0.04161411764705882
+  },
+  "latency_ms": {
+    "p50": 1062.1276660094736,
+    "p95": 1386.7081454882282,
+    "p99": 4064.2325043052547,
+    "mean": 1152.9339553599605
+  },
+  "tokens": {
+    "input": 742812,
+    "output": 92840,
+    "cached_input": null,
+    "reasoning_output": null,
+    "coverage": 0.967479674796748
+  },
+  "attempts": {
+    "attempts": 1107,
+    "retries": 36,
+    "attempt_errors": 32,
+    "incomplete_attempts": 4
+  }
+}

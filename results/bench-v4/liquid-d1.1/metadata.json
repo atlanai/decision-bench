@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "liquid-d1.1",
+    "label": "d1.1",
+    "short_label": "d1.1",
+    "vendor": "Liquid AI",
+    "provider": "openrouter-decisions",
+    "color": "#0891b2",
+    "vision": true,
+    "api_model": "liquid/d1.1",
+    "resolved_models": [
+      "liquid/d1.1-20261027"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": {
+    "input_per_mtok": 0.02,
+    "output_per_mtok": 0,
+    "cached_input_per_mtok": 0.02,
+    "source_url": "https://openrouter.ai/liquid/d1.1",
+    "as_of": "2026-11-21"
+  },
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "ed157da994872532fce7ed163b11d2bdc7c5190f",
+    "git_dirty": false,
+    "git_commits": [
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
+    ]
+  },
+  "run": {
+    "run_id": "liquid-d1.1-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-21T13:14:52.202743+00:00",
+    "completed_at": "2026-11-21T13:18:52.786429+00:00",
+    "published_at": "2026-11-22T13:32:55.370864+00:00",
+    "executions": 2,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-bc609ec27097",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 3.5970419994555414,
+      "tcp_connect_ms": 220.51429199927952,
+      "tls_handshake_ms": 235.98879200289957
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 997,
+    "accuracy": 0.930905695611578,
+    "wilson95": [
+      0.9141255280021985,
+      0.9446056562020602
+    ],
+    "errors": 0,
+    "cost_usd": 0.0177865,
+    "cost_coverage": 1.0,
+    "input_tokens": 889325,
+    "output_tokens": 0,
+    "latency_p50_ms": 781.3028749951627,
+    "server_time_p50_ms_estimate": 100.68845699424855
+  }
+}
