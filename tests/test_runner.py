@@ -144,8 +144,7 @@ class Runner(unittest.TestCase):
                 (root / "data/corpus/mini/manifest.json").read_text())["sha256"])
 
     def test_run_with_a_unicode_line_separator_in_the_output_completes_and_resumes(self):
-        """Parallel Decisions Fast returned U+2028 inside its output. JSONL keeps it unescaped, and the run summary,
-        the --retry-errors pass and publish all failed reading results.jsonl back."""
+        """A U+2028 in a model's output (Parallel Decisions Fast) must not split a results.jsonl line on read."""
         def separator_output(m, c, t, a=None):
             return response(c) | {"output_text": "line one\u2028line two"}
         with fixtures.repo(ENV), patch.object(runner.time, "sleep"), \

@@ -8,7 +8,7 @@ An open benchmark for how accurately, quickly, and cheaply language models make 
 
 ![1,071 benchmark rows](https://img.shields.io/badge/rows-1%2C071-3028C8?style=flat-square&labelColor=161616)
 ![35 benchmark tasks](https://img.shields.io/badge/tasks-35-ED9FC8?style=flat-square&labelColor=161616)
-![27 models evaluated](https://img.shields.io/badge/models-27-ED9FC8?style=flat-square&labelColor=161616)
+![56 models evaluated](https://img.shields.io/badge/models-56-ED9FC8?style=flat-square&labelColor=161616)
 [![Code license: MIT](https://img.shields.io/badge/code-MIT-3028C8?style=flat-square&labelColor=161616)](LICENSE)
 
 [Explore the leaderboard](https://decisionbench.ai/) · [Read the docs](docs/protocol.md) · [Dataset on Hugging Face](https://huggingface.co/datasets/atlanai/decision-bench)

@@ -322,8 +322,7 @@ git history. Hosted weights may update; the resolved model identity is retained 
 
 Use the ignored `OPENROUTER_API_KEY` and model id `kev-4b`. It is text only, so its 122 image rows use their text
 rendering; the earlier 949-row run is in git history. This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16.
-OpenRouter serves checkpoint `jaredpalmer/kev-4b-20260924`, rather than the newer Kev 1.0 release weights. GPU rental
-costs for self-hosted Kev-27B are unrelated.
+OpenRouter serves checkpoint `jaredpalmer/kev-4b-20260924`, rather than the newer Kev 1.0 release weights.
 
 [OpenRouter model](https://openrouter.ai/jaredpalmer/kev-4b)
 
@@ -425,11 +424,14 @@ free (12 November 2026); provider-reported cost takes precedence.
 ## Every decision model on OpenRouter
 
 On 21 and 22 November 2026, OpenRouter listed 45 models with the `decisions` output modality
-(`/api/v1/models?output_modalities=decisions`): 40 models and five `~...-latest` aliases. Each model below has an
-entry in `config/models.json` and runs with `python3 -m decision_bench run --model <id>`.
+(`/api/v1/models?output_modalities=decisions`): 40 models and five `~...-latest` aliases. Each of the 34 models that
+we ran has an entry in `config/models.json` (provider `openrouter-decisions`) and runs with
+`python3 -m decision_bench run --model <id>`.
 
-Each model had three full runs on all 1,071 rows, one after another, with `--jobs 4`, the default two attempts and
-one `--retry-errors` pass. The published folder is always run 1 (`<id>-bench-v4-r1`), decided before the results
+Each model had three full runs on all 1,071 rows, one after another, with `--jobs 4` and the default two attempts,
+then a `--retry-errors` pass with `--jobs 2`. The three Clef models and Parallel got extra passes with `--jobs 1` or 3.
+`run.jobs` in each `metadata.json` records the last pass. A run paused for credits resumed on the same run id, so
+some runs have more than two executions. The published folder is always run 1 (`<id>-bench-v4-r1`), decided before the results
 were known.
 
 - Image size limits: `jev-1.14`, `jev-1.13-openrouter` and `microsoft-decision-1.1` reject images outside 280 to

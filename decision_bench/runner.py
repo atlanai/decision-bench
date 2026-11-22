@@ -62,12 +62,12 @@ def read_jsonl(path, allow_partial=False):
     out = []
     with path.open() as f:
         lines = f.readlines()
-    for index, line in enumerate(lines):
+    for line in lines:
         if line.strip():
             try:
                 out.append(json.loads(line))
             except json.JSONDecodeError:
-                if allow_partial and index == len(lines) - 1 and not line.endswith("\n"):
+                if allow_partial and not line.endswith("\n"):
                     break
                 raise
     return out

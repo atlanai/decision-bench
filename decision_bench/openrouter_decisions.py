@@ -53,13 +53,13 @@ def completion(model, case, timeout, api_model=None):
         images = [(mime, content) for mime, content, _ in fitted]
         resized = sum(changed for _, _, changed in fitted)
     state = data["state"]
+    if images or request.get("state_as_text"):
+        state = json.dumps(state, ensure_ascii=False)
     if images:
-        state = [json.dumps(state, ensure_ascii=False)] + [
+        state = [state] + [
             {"type": "image_url", "image_url": {
                 "url": f"data:{mime};base64,{base64.b64encode(content).decode()}"}}
             for mime, content in images]
-    elif request.get("state_as_text"):
-        state = json.dumps(state, ensure_ascii=False)
     payload = {"model": api_model or model["model"], "state": state,
                "questions": {q["id"]: {"type": q["type"],
                    "instructions": JUDGMENT_POLICY + q["instructions"], "criteria": q["options"]}

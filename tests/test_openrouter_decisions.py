@@ -11,6 +11,21 @@ from test_adapters import CASE
 from fixtures import repo
 
 
+def call_openrouter(model, images=(), body=None, key="synthetic-" + "openrouter-key"):
+    """Call the adapter against a mocked OpenRouter response; return the sent request and the result."""
+    body = body or {"model": model["model"], "answers": {"q": {"choice": "billing",
+                    "probabilities": {"billing": .9, "technical": .1}}}, "usage": {"input_tokens": 9, "cost": .00001}}
+    response = MagicMock(status=200)
+    response.read.return_value = json.dumps(body).encode()
+    response.__enter__.return_value = response
+    with repo({"OPENROUTER_API_KEY": key}), \
+            patch.object(adapters.urllib.request, "build_opener") as opener, \
+            patch.object(openrouter_decisions, "image_assets", return_value=list(images)):
+        opener.return_value.open.return_value = response
+        result = adapters.call(model, CASE, 10)
+    return opener.return_value.open.call_args.args[0], result
+
+
 class OpenRouterDecisions(unittest.TestCase):
     MODEL = {"id": "decider", "provider": "openrouter-decisions",
              "model": "perplexity/pplx-decider-v1.1-27b", "vision": True}
@@ -20,15 +35,7 @@ class OpenRouterDecisions(unittest.TestCase):
         answer = {"choice": "billing", "probabilities": {"billing": .901, "technical": .099}}
         body = {"model": self.MODEL["model"], "answers": {"q": answer},
                 "usage": {"input_tokens": 500, "output_tokens": 0, "cost": .00001}, "debug": key}
-        response = MagicMock(status=200)
-        response.read.return_value = json.dumps(body).encode()
-        response.__enter__.return_value = response
-        with repo({"OPENROUTER_API_KEY": key}), \
-                patch.object(adapters.urllib.request, "build_opener") as opener, \
-                patch.object(openrouter_decisions, "image_assets", return_value=[("image/png", b"image")]):
-            opener.return_value.open.return_value = response
-            result = adapters.call(self.MODEL, CASE, 10)
-        request = opener.return_value.open.call_args.args[0]
+        request, result = call_openrouter(self.MODEL, [("image/png", b"image")], body, key)
         sent = json.loads(request.data)
         self.assertEqual(request.full_url, openrouter_decisions.URL)
         self.assertEqual(request.get_header("Authorization"), "Bearer " + key)
@@ -42,24 +49,18 @@ class OpenRouterDecisions(unittest.TestCase):
         self.assertEqual((result["cost_usd"], result["cost_basis"]), (.00001, "provider_reported"))
         self.assertEqual(result["usage"]["output_tokens"], 0)
 
-    def sent_state(self, model):
-        body = {"model": model["model"], "answers": {"q": {"choice": "billing",
-                "probabilities": {"billing": .9, "technical": .1}}}, "usage": {"input_tokens": 9, "cost": .00001}}
-        response = MagicMock(status=200)
-        response.read.return_value = json.dumps(body).encode()
-        response.__enter__.return_value = response
-        with repo({"OPENROUTER_API_KEY": "synthetic-" + "openrouter-key"}), \
-                patch.object(adapters.urllib.request, "build_opener") as opener:
-            opener.return_value.open.return_value = response
-            adapters.call(model, CASE, 10)
-        return json.loads(opener.return_value.open.call_args.args[0].data)["state"]
+    def sent_state(self, model, images=()):
+        request, _ = call_openrouter(model, images)
+        return json.loads(request.data)["state"]
 
     def test_text_state_is_sent_as_json_text_only_when_the_provider_requires_it(self):
-        """Respan and ScaleDown reject an object state with HTTP 400; they accept the same JSON as a string."""
-        text_only = dict(self.MODEL, vision=False)
-        self.assertEqual(self.sent_state(text_only), CASE["state"])
-        as_text = self.sent_state(dict(text_only, request={"state_as_text": True}))
-        self.assertEqual(as_text, json.dumps(CASE["state"], ensure_ascii=False))
+        """ScaleDown rejects an object state with HTTP 400 and accepts the same JSON as a string."""
+        as_text = dict(self.MODEL, request={"state_as_text": True})
+        self.assertEqual(self.sent_state(self.MODEL), CASE["state"])
+        self.assertEqual(self.sent_state(as_text), json.dumps(CASE["state"], ensure_ascii=False))
+        with_image = self.sent_state(as_text, [("image/png", b"image")])
+        self.assertEqual(with_image[0], json.dumps(CASE["state"], ensure_ascii=False))
+        self.assertEqual(with_image[1]["image_url"]["url"], "data:image/png;base64,aW1hZ2U=")
 
     def test_preflight_requires_own_key_and_persistence_redacts_it(self):
         with repo({"DECISION_BENCH_API_KEY": "synthetic-" + "other-key"}):
@@ -120,17 +121,8 @@ class ImageLimits(unittest.TestCase):
         return out.getvalue()
 
     def send(self, images):
-        body = {"model": self.MODEL["model"], "answers": {"q": {"choice": "billing",
-                "probabilities": {"billing": .9, "technical": .1}}}, "usage": {"input_tokens": 9, "cost": .00001}}
-        response = MagicMock(status=200)
-        response.read.return_value = json.dumps(body).encode()
-        response.__enter__.return_value = response
-        with repo({"OPENROUTER_API_KEY": "synthetic-" + "openrouter-key"}), \
-                patch.object(adapters.urllib.request, "build_opener") as opener, \
-                patch.object(openrouter_decisions, "image_assets", return_value=images):
-            opener.return_value.open.return_value = response
-            result = adapters.call(self.MODEL, CASE, 10)
-        parts = json.loads(opener.return_value.open.call_args.args[0].data)["state"][1:]
+        request, result = call_openrouter(self.MODEL, images)
+        parts = json.loads(request.data)["state"][1:]
         sent = []
         for part in parts:
             header, data = part["image_url"]["url"].split(",", 1)
