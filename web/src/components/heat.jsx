@@ -36,7 +36,9 @@ export function HeatTasks({runs, cases}) {
           <tbody>
             {tasks.map(t => { const cat = taskCat(t), head = cat !== last; last = cat; const tc = cases.filter(c => c.task === t);
               return <Fragment key={t}>
-                {head && <tr className="border-b bg-muted/40"><th colSpan={runs.length + 1} className="sticky left-0 py-2 pl-4 text-left text-xs font-semibold text-foreground md:pl-5">{catInfo(cat).name}</th></tr>}
+                {/* The cell spans the whole table, so it cannot stick; the label inside it does. */}
+                {head && <tr className="border-b bg-muted/40"><th colSpan={runs.length + 1} className="p-0 text-left text-xs font-semibold text-foreground">
+                  <span className="sticky left-0 inline-block py-2 pl-4 md:pl-5">{catInfo(cat).name}</span></th></tr>}
                 <tr className="border-b last:border-0">
                   {/* Phones: a narrow column where the name wraps, so four or five models fit beside it. */}
                   <th scope="row" className="sticky left-0 z-[1] w-[138px] max-w-[138px] bg-card py-1.5 pr-2 pl-4 text-left font-normal shadow-[1px_0_0_var(--border)] md:w-auto md:max-w-[320px] md:pr-4 md:pl-5 md:shadow-none">
