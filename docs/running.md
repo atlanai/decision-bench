@@ -314,14 +314,14 @@ cost takes precedence over the fallback price table.
 
 Use the ignored `OPENROUTER_API_KEY` and model id `microsoft-decision-1`. This text-only entry uses the native
 Decisions API on all 1,071 rows; its 122 image rows use their text rendering. The earlier 949-row text-only run is in
-git history. Hosted weights may update; the resolved model identity is retained for every response.
+[docs/benchmarks/microsoft-decision-1](benchmarks/microsoft-decision-1/README.md). Hosted weights may update; the resolved model identity is retained for every response.
 
 [OpenRouter model](https://openrouter.ai/microsoft/microsoft-decision-1)
 
 ## Kev 4B through OpenRouter
 
 Use the ignored `OPENROUTER_API_KEY` and model id `kev-4b`. It is text only, so its 122 image rows use their text
-rendering; the earlier 949-row run is in git history. This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16.
+rendering; the earlier 949-row run is in [docs/benchmarks/kev-4b](benchmarks/kev-4b/README.md). This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16.
 OpenRouter serves checkpoint `jaredpalmer/kev-4b-20260924`, rather than the newer Kev 1.0 release weights.
 
 [OpenRouter model](https://openrouter.ai/jaredpalmer/kev-4b)
@@ -424,7 +424,9 @@ free (12 November 2026); provider-reported cost takes precedence.
 ## Every decision model on OpenRouter
 
 On 21 and 22 November 2026, OpenRouter listed 45 models with the `decisions` output modality
-(`/api/v1/models?output_modalities=decisions`): 40 models and five `~...-latest` aliases. Each of the 34 models that
+(`/api/v1/models?output_modalities=decisions`): 40 models and five `~...-latest` aliases. The 21 November listing,
+with what happened to each model, is in
+[docs/benchmarks/openrouter-decisions/listing-2026-11-21.json](benchmarks/openrouter-decisions/listing-2026-11-21.json). Each of the 34 models that
 we ran has an entry in `config/models.json` (provider `openrouter-decisions`) and runs with
 `python3 -m decision_bench run --model <id>`.
 
