@@ -60,7 +60,8 @@ def read_jsonl(path, allow_partial=False):
     if not path.exists():
         return []
     out = []
-    lines = path.read_text().splitlines(keepends=True)
+    with path.open() as f:
+        lines = f.readlines()
     for index, line in enumerate(lines):
         if line.strip():
             try:

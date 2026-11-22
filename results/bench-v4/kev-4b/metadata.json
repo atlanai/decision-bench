@@ -30,51 +30,55 @@
   },
   "harness": {
     "version": "0.3.0",
-    "git_commit": "7248a4f9e9495c7b1b7c3232900b14eb663648fb",
+    "git_commit": "ed157da994872532fce7ed163b11d2bdc7c5190f",
     "git_dirty": false,
     "git_commits": [
-      "7248a4f9e9495c7b1b7c3232900b14eb663648fb"
+      "ed157da994872532fce7ed163b11d2bdc7c5190f"
     ]
   },
   "run": {
-    "run_id": "kev-4b-bench-v4-text-v1",
+    "run_id": "kev-4b-bench-v4-r1",
     "status": "completed",
-    "created_at": "2026-10-12T15:37:24.074825+00:00",
-    "completed_at": "2026-10-12T15:42:36.770077+00:00",
-    "published_at": "2026-10-12T15:42:45.895591+00:00",
-    "executions": 1,
-    "jobs": 3,
-    "timeout_seconds": 60,
-    "max_attempts": 3,
+    "created_at": "2026-11-21T13:14:52.199602+00:00",
+    "completed_at": "2026-11-21T13:20:12.471471+00:00",
+    "published_at": "2026-11-22T13:32:47.776444+00:00",
+    "executions": 2,
+    "jobs": 2,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
     "endpoint_id": "endpoint-bc609ec27097",
     "platform": {
       "os": "Darwin",
-      "python": "3.14.7"
+      "python": "3.13.11"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 4.443084006197751,
+      "tcp_connect_ms": 221.24366599018686,
+      "tls_handshake_ms": 237.3520420078421
     }
   },
   "coverage": {
     "rows_in_corpus": 1071,
-    "rows_selected": 949,
-    "rows_completed": 949,
-    "rows_ok": 949,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
     "rows_error": 0,
-    "full": false
+    "full": true
   },
   "totals": {
-    "correct": 795,
-    "accuracy": 0.8377239199157007,
+    "correct": 890,
+    "accuracy": 0.830999066293184,
     "wilson95": [
-      0.8129115588231931,
-      0.8598130577342703
+      0.807380667816705,
+      0.8522514119241611
     ],
     "errors": 0,
-    "cost_usd": 0.028087248,
+    "cost_usd": 0.031198104,
     "cost_coverage": 1.0,
-    "input_tokens": 668744,
-    "output_tokens": 83301,
-    "latency_p50_ms": 950.2222499577329
-  },
-  "published_with_warnings": [
-    "it covers 949 of 1071 rows"
-  ]
+    "input_tokens": 742812,
+    "output_tokens": 93826,
+    "latency_p50_ms": 1100.160500005586,
+    "server_time_p50_ms_estimate": 415.8780420111725
+  }
 }
