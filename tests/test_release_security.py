@@ -79,7 +79,7 @@ class ReleaseSecurity(unittest.TestCase):
     def test_committed_predictions_have_status_only_errors(self):
         for path in (corpus.ROOT / "results" / "bench-v4").glob("*/predictions.jsonl"):
             with self.subTest(model=path.parent.name):
-                for row in map(json.loads, path.read_text().splitlines()):
+                for row in corpus.read_jsonl(path):
                     if row["status"] != "ok":
                         self.assertIsNone(row.get("output_text"))
                     self.assertEqual(row.get("error"), results.public_error(row.get("error"), row["status"]))

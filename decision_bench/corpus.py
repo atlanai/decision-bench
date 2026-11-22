@@ -36,10 +36,31 @@ def load_manifest(path=None):
     return json.loads(Path(path or corpus_path()).with_name("manifest.json").read_text())
 
 
+def read_jsonl(path, allow_partial=False):
+    """Read a ledger. With allow_partial, an unterminated last line (a write in progress) is ignored."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    out = []
+    with path.open() as f:
+        lines = f.readlines()
+    for line in lines:
+        if line.strip():
+            try:
+                out.append(json.loads(line))
+            except json.JSONDecodeError:
+                if allow_partial and not line.endswith("\n"):
+                    break
+                raise
+    return out
+
+
 def load_cases(path=None):
     """Load and check the active corpus. Its sha256 must match the frozen manifest."""
     path = Path(path or corpus_path())
-    cases = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    if not path.exists():
+        raise FileNotFoundError(path)
+    cases = read_jsonl(path)
     validate(cases)
     manifest = path.with_name("manifest.json")
     if manifest.exists() and json.loads(manifest.read_text())["sha256"] != digest(cases):
