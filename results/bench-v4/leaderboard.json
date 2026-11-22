@@ -974,6 +974,28 @@
       "completed_at": "2026-11-22T12:47:11.233595+00:00"
     },
     {
+      "model_id": "solar-decide",
+      "label": "Solar Decide",
+      "vendor": "Upstage",
+      "provider": "openrouter-decisions",
+      "api_model": "upstage/solar-decide",
+      "accuracy": 0.869281045751634,
+      "wilson95": [
+        0.8477653221738621,
+        0.8881570686230702
+      ],
+      "correct": 931,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": 0.053411600000000004,
+      "cost_coverage": 1.0,
+      "cost_per_1000_rows_usd": 0.04987077497665733,
+      "latency_p50_ms": 1267.3884159885347,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-22T13:12:26.900480+00:00"
+    },
+    {
       "model_id": "bielik-one-4b-r1",
       "label": "Bielik One 4B r1",
       "vendor": "SpeakLeash",
