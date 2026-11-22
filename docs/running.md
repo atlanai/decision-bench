@@ -312,31 +312,20 @@ cost takes precedence over the fallback price table.
 
 ## Microsoft-Decision-1 via OpenRouter
 
-Use the ignored `OPENROUTER_API_KEY` and model id `microsoft-decision-1`. This
-text-only entry uses the native Decisions API and is evaluated on the 949 corpus
-rows without image assets. All 122 image-containing rows are excluded for the
-same shared-text comparison used for Tev1. Its partial run is not ranked on the
-full-corpus leaderboard. Hosted weights may update; the resolved model identity
-is retained for every response. Input costs $0.042 per million tokens and output
-is free as verified on 10 October 2026; measured provider-reported costs take
-precedence over this fallback rate.
+Use the ignored `OPENROUTER_API_KEY` and model id `microsoft-decision-1`. This text-only entry uses the native
+Decisions API on all 1,071 rows; its 122 image rows use their text rendering. The earlier 949-row text-only run is in
+git history. Hosted weights may update; the resolved model identity is retained for every response.
 
 [OpenRouter model](https://openrouter.ai/microsoft/microsoft-decision-1)
 
 ## Kev 4B through OpenRouter
 
-`python3 scripts/run_kev_4b.py smoke` checks five spread-out text cases;
-`python3 scripts/run_kev_4b.py full` runs the identical 949 text-only rows.
-Set `OPENROUTER_API_KEY` in ignored local secret storage. This uses the native
-Decisions API and excludes all 122 image-containing cases. Partial evaluations
-are not ranked on the full-corpus leaderboard.
+Use the ignored `OPENROUTER_API_KEY` and model id `kev-4b`. It is text only, so its 122 image rows use their text
+rendering; the earlier 949-row run is in git history. This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16.
+OpenRouter serves checkpoint `jaredpalmer/kev-4b-20260924`, rather than the newer Kev 1.0 release weights. GPU rental
+costs for self-hosted Kev-27B are unrelated.
 
-This is Kev 4B, not Jared Palmer's Kev-27B request in issue #16. As of
-12 October 2026, OpenRouter lists only the 4B model and serves checkpoint
-`jaredpalmer/kev-4b-20260924`, rather than the newer Kev 1.0 release weights.
-The [OpenRouter model listing](https://openrouter.ai/jaredpalmer/kev-4b) prices
-input at $0.042 per million tokens, with free output. Use provider-reported
-cost where available; GPU rental costs for self-hosted Kev-27B are unrelated.
+[OpenRouter model](https://openrouter.ai/jaredpalmer/kev-4b)
 
 ## Kev 27B on a temporary GPU
 
@@ -420,7 +409,8 @@ evidence to OpenRouter's Decisions endpoint, like Gemini Decision 1.
 TypeSafe rejects an image whose shorter side is under 280 px or whose longer side is over 1568 px
 (`Invalid image dimensions`). bench-v4 has 38 such rows: the 256 px DSN-1 icons and eight 1600 px FIN-3 receipts. The
 entry sets `image_min_side` and `image_max_side`, so the adapter rescales those images to fit before sending them,
-keeping the aspect ratio and format. Every other model gets the corpus images unchanged. This needs Pillow:
+keeping the aspect ratio and format. A model without these settings gets the corpus images unchanged. This needs
+Pillow:
 
 ```sh
 pip install -e '.[images]'
@@ -431,6 +421,30 @@ Each rescaled row has `images_resized` in `predictions.jsonl`. Input costs $0.04
 free (12 November 2026); provider-reported cost takes precedence.
 
 [OpenRouter model](https://openrouter.ai/typesafe/jev-1.14)
+
+## Every decision model on OpenRouter
+
+On 21 and 22 November 2026, OpenRouter listed 45 models with the `decisions` output modality
+(`/api/v1/models?output_modalities=decisions`): 40 models and five `~...-latest` aliases. Each model below has an
+entry in `config/models.json` and runs with `python3 -m decision_bench run --model <id>`.
+
+Each model had three full runs on all 1,071 rows, one after another, with `--jobs 4`, the default two attempts and
+one `--retry-errors` pass. The published folder is always run 1 (`<id>-bench-v4-r1`), decided before the results
+were known.
+
+- Image size limits: `jev-1.14`, `jev-1.13-openrouter` and `microsoft-decision-1.1` reject images outside 280 to
+  1568 px. Their entries set `image_min_side` and `image_max_side` (see Jev 1.14 above).
+- Object state: ScaleDown rejects a state object (HTTP 400). `scaledown-classify-1` sets `state_as_text`, so a text
+  row sends the same state as a JSON string, as image rows already do.
+- Cloudflare Clef Omni rejects any request whose option names contain `/`. In every run its 30 `eng-1` rows, whose
+  options are file paths, fail with HTTP 400 and count as no answer. Clef and Clef Flash fail on a few of the same
+  rows at random; repeated `--retry-errors` passes cleared them.
+- Models with native results get an `-openrouter` id (`jev-1.13-openrouter`, `drex-max-openrouter`,
+  `tev1-4b-experimental-openrouter`), so both stay published.
+- Not run: `cloudflare/clairic` (served only on OpenRouter's extractions endpoint), `respan/span-01` and
+  `span-01-lite` (yes/no questions only), and Perplexity Decider v1.3 (only a free variant, limited to 1,000
+  requests a day; the paid `~perplexity/pplx-decider-latest` alias serves v1.2). `pplx-decider-v1.1-27b` is no longer
+  listed and keeps its earlier results.
 
 ## Quyet 1.2 Large on one GPU
 
