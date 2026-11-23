@@ -168,10 +168,10 @@ function VsCell({r, base, g, n}) {
     <span className={tone}>{word}</span> <span className="text-xs text-muted-foreground">· {num(g.wins)}–{num(g.losses)}</span></td>;
 }
 /* The column header picks the reference model. With no pick it is the top model of the view; a pick stays in the URL,
-   so it holds when the filters change. */
+   so it holds when the filters change. The column has a fixed width so a longer name does not shift the table. */
 function VsPicker({route, runs, base}) {
   return <DropdownMenu>
-    <DropdownMenuTrigger asChild><button type="button" data-track="leaderboard_vs" aria-label={`Compare every model with ${B.runName(base)}`} className="inline-flex cursor-pointer items-center gap-1 text-foreground hover:text-foreground/80">vs {B.ident(base).short}<ChevronDownIcon className="size-3.5 opacity-60" /></button></DropdownMenuTrigger>
+    <DropdownMenuTrigger asChild><button type="button" data-track="leaderboard_vs" aria-label={`Compare every model with ${B.runName(base)}`} className="inline-flex max-w-full cursor-pointer items-center gap-1 text-foreground hover:text-foreground/80"><span className="truncate">vs {B.ident(base).short}</span><ChevronDownIcon className="size-3.5 shrink-0 opacity-60" /></button></DropdownMenuTrigger>
     <DropdownMenuContent className="max-h-96 overflow-y-auto">
       <DropdownMenuRadioGroup value={B.keyOf(base)} onValueChange={v => go(withQ(route, {vs: v}))}>
         {runs.map(r => <DropdownMenuRadioItem key={r.id} value={B.keyOf(r)}><ModelName k={B.keyOf(r)} link={false} /></DropdownMenuRadioItem>)}
@@ -215,7 +215,7 @@ function Leaderboard({route, runs, cases, more}) {
             <Th title="Order by accuracy" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             <Th title="Places the model could hold at 95% confidence: best is 1 + the models reliably ahead, worst is the number of models minus those reliably behind">Rank range</Th>
-            {base && <Th title={`Each model against ${B.runName(base)}, on the rows both were scored on: Ahead, Behind or Too close at 95% confidence, then the rows only this model got right – the rows only ${B.ident(base).short} got right. Pick another model here.`}><VsPicker route={route} runs={byAccuracy} base={base} /></Th>}
+            {base && <Th className="w-48 max-w-48 min-w-48" title={`Each model against ${B.runName(base)}, on the rows both were scored on: Ahead, Behind or Too close at 95% confidence, then the rows only this model got right – the rows only ${B.ident(base).short} got right. Pick another model here.`}><VsPicker route={route} runs={byAccuracy} base={base} /></Th>}
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
             <Th k="cost" className="text-right" title="Cost per 1,000 rows: provider-reported, else estimated from list prices">$ / 1k</Th>
