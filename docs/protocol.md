@@ -87,7 +87,8 @@ on the rows both were scored on, with an interval that uses the larger of the tw
 called ahead or behind only when that interval excludes zero, so the verdict reads the same from either model and
 never claims a gap that either model's rank range does not. A pair whose gap does not vary across the draws, such as
 two models that share one row, has no interval and stays too close, as in the ranges. Next to it, the site counts the
-rows only one of the two got right. The `comparisons` in `data.json`, which resample whole tasks, are not used for these verdicts.
+rows only one of the two got right. Compare also shows the paired comparison above, which resamples whole tasks and so
+asks whether the gap would hold on new tasks. It is not used for the verdict and can be uncertain where the verdict is not.
 
 ## Retries and resuming
 

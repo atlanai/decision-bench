@@ -39,6 +39,10 @@ export function Compare({route}) {
   const rows = B.taskOrder().map(t => { let both = 0, ao = 0, bo = 0, none = 0, n = 0; for (const c of B.taskRows(t)) { const va = B.result(ra.id, c.id), vb = B.result(rb.id, c.id); if (!va || !vb) continue; n++; const x = B.okOf(va), y = B.okOf(vb); if (x && y) both++; else if (x) ao++; else if (y) bo++; else none++; } return {t, n, both, ao, bo, none, d: n ? (ao - bo) / n : null}; }).filter(r => r.n);
   const tot = rows.reduce((s, r) => ({n: s.n + r.n, ao: s.ao + r.ao, bo: s.bo + r.bo, both: s.both + r.both, none: s.none + r.none}), {n: 0, ao: 0, bo: 0, both: 0, none: 0});
   const excludedInputs = B.subsetMetrics(ra, B.allCases).excluded || B.subsetMetrics(rb, B.allCases).excluded;
+  /* A second question: would the gap hold on new tasks? The run's own interval resamples whole tasks, so it is wider;
+     it is shown only when both models were scored on every row. */
+  const cmp = (B.data.comparisons || []).find(p => (p.a === ra.id && p.b === rb.id) || (p.a === rb.id && p.b === ra.id));
+  const tasksCi = !excludedInputs && cmp?.cluster_bootstrap_ci95 ? (cmp.a === ra.id ? cmp.cluster_bootstrap_ci95 : [-cmp.cluster_bootstrap_ci95[1], -cmp.cluster_bootstrap_ci95[0]]) : null;
   const diff = d => <span className={cn(d > 0 ? 'text-good' : d < 0 ? 'text-bad' : '')}>{d == null ? '—' : `${pp(d)} pp`}</span>;
   const url = `${location.origin}${href('compare', {a, b})}`;
   return <>
@@ -49,7 +53,7 @@ export function Compare({route}) {
       <span className="ml-auto max-md:-mt-1"><CopyButton text={url} label="Copy link" /></span>
     </div>
     {excludedInputs > 0 && <Notice>Comparison uses only rows with usable input for both models. Image-only rows are excluded when either model was not sent the image.</Notice>}
-    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={<Verdict a={ra} b={rb} />}>
+    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={<><Verdict a={ra} b={rb} />{tasksCi && <span className="mt-1 block">On new tasks: resampling whole tasks gives a 95% interval of {pp(tasksCi[0])} to {pp(tasksCi[1])} percentage points.</span>}</>}>
       <List className="md:hidden">
         <ListHead aside={diff(tot.n ? (tot.ao - tot.bo) / tot.n : null)}>All tasks · {tot.n} shared rows · A minus B</ListHead>
         {rows.map(r => <Item key={r.t} href={taskHref(r.t)} chevron={false} title={B.taskName(r.t)}
