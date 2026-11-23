@@ -77,7 +77,7 @@ function Hero({route, keys, runs, rows}) {
         <p className="mb-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase md:mb-5">Compare · same rows, same prompt · {num(rows.length)} rows</p>
         <h1 className="max-w-[20ch] font-pixel text-4xl leading-[1.02] uppercase sm:text-5xl lg:text-[52px]">Where does each model <em className="text-brand not-italic">get it wrong</em>?</h1>
         <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-foreground/75">Pick up to {B.MAX_PICKS} models. See where they agree, which rows split them, and what each one answered against the answer key.</p>
-        <div className="mt-8 mb-2 flex items-center justify-between gap-3">
+        <div className="mt-8 mb-2 flex items-center gap-3">
           <span className={LABEL}>{keys.length} of {B.MAX_PICKS} models</span>
           <CopyButton text={`${location.origin}${href('compare', {m: keys.join(',')})}`} label="Copy link to this comparison" />
         </div>
