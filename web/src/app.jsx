@@ -93,7 +93,7 @@ export function App() {
 
   if (error) return <main id="main"><EmptyPage title="Unable to load results"><p role="alert">{error}</p><button type="button" className="mt-4 rounded-md border px-4 py-2" onClick={() => location.reload()}>Try again</button></EmptyPage></main>;
   if (!ready) return null;
-  const wide = route.page === 'home';
+  const wide = route.page === 'home' || route.page === 'compare';
   return (
     <TooltipProvider>
       <a href="#main" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }} className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:shadow">Skip to content</a>

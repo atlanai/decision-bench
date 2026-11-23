@@ -26,7 +26,8 @@ function filters(route) {
   const q = route.q, out = {};
   if (B.categoryOrder().includes(q.get('category'))) out.filter_category = q.get('category');
   if (['text', 'image'].includes(q.get('modality'))) out.filter_modality = q.get('modality');
-  for (const k of ['a', 'b']) if (Object.hasOwn(B.MODELS, q.get(k))) out[`model_${k}`] = q.get(k);
+  const picked = q.has('m') ? q.get('m').split(',') : [q.get('a'), q.get('b')];
+  picked.filter(k => Object.hasOwn(B.MODELS, k)).slice(0, B.MAX_PICKS).forEach((k, i) => { out[`model_${'abcd'[i]}`] = k; });
   if (q.has('models')) out.selected_model_count = (q.get('models') || '').split(',').filter(k => Object.hasOwn(B.MODELS, k)).length;
   out.search_active = !!q.get('q');
   return out;

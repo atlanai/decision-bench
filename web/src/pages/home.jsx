@@ -12,7 +12,7 @@ import {ModelName, Logo, Section, Notice, Dash, Notes} from '@/components/common
 import {List, Item} from '@/components/list';
 import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns} from '@/components/filters';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
-import {RowsChart, Scatter, RecordGrid, Legend, Radar, MARKS, zoomDomain} from '@/components/charts';
+import {RowsChart, Scatter, RecordGrid, Legend, Radar, SLOTS, Mark, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
@@ -67,7 +67,7 @@ function UseCases({route}) {
 /* The banner under the cursor: a pink glow glides after the pointer (eased, so it trails a little), the grid lines
    around it turn pink, and the cells the pointer crosses light up as pixels that fade out, with a few sparks
    beside them. Drawn on one canvas; positions go to CSS variables, never through React state. */
-const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-[position:0_0]';
+export const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-[position:0_0]';
 const CELL = 24;
 function usePixelTrail(ref, canvasRef) {
   useEffect(() => {
@@ -182,31 +182,29 @@ function VsPicker({route, runs, base}) {
 /* Accuracy by use case for up to five models the reader ticks in the list beside it; the top three of the view to
    start. Picks live in ?radar= by slot ("a,,c" keeps c in slot 3), so a model keeps its colour and marker while
    others come and go. */
-const RADAR_SLOTS = [['var(--series-1)', 'circle'], ['var(--series-2)', 'square'], ['var(--series-3)', 'triangle'], ['var(--series-4)', 'diamond'], ['var(--foreground)', 'cross']];
-const Mark = ({slot}) => <svg viewBox="-6 -6 12 12" className="size-3 shrink-0" aria-hidden="true"><path d={MARKS[RADAR_SLOTS[slot][1]](0, 0)} fill={RADAR_SLOTS[slot][0]} /></svg>;
 function UseCaseRadar({route, runs, cases}) {
   const cats = B.categoryOrder().filter(k => cases.some(c => B.catKey(c) === k));
   if (cats.length < 3) return null;
   const all = runs.map(r => [r, B.subsetMetrics(r, cases)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy);
   const keyed = new Map(all.map(x => [B.keyOf(x[0]), x])), param = route.q.get('radar');
   const keys = param == null ? all.slice(0, 3).map(([r]) => B.keyOf(r)) : param.split(',');
-  const slots = RADAR_SLOTS.map((_, i) => keyed.get(keys[i]) || null), slotOf = new Map(slots.flatMap((x, i) => x ? [[x[0].id, i]] : []));
+  const slots = SLOTS.map((_, i) => keyed.get(keys[i]) || null), slotOf = new Map(slots.flatMap((x, i) => x ? [[x[0].id, i]] : []));
   const save = next => go(withQ(route, {radar: next.map(x => x ? B.keyOf(x[0]) : '').join(',').replace(/,+$/, '') || ','}));
   const toggle = x => { const next = slots.slice(), at = slotOf.get(x[0].id); if (at != null) next[at] = null; else { const free = next.indexOf(null); if (free < 0) return; next[free] = x; } save(next); };
   const rows = k => cases.filter(c => B.catKey(c) === k), full = !slots.includes(null);
   const series = slots.flatMap((x, i) => { if (!x) return []; const [r] = x, ms = cats.map(k => B.subsetMetrics(r, rows(k)));
-    return [{key: r.id, color: RADAR_SLOTS[i][0], shape: RADAR_SLOTS[i][1], values: ms.map(m => m.questions ? m.accuracy : null),
+    return [{key: r.id, color: SLOTS[i][0], shape: SLOTS[i][1], values: ms.map(m => m.questions ? m.accuracy : null),
       tips: ms.map((m, j) => m.questions ? tip(`${B.runName(r)} · ${B.catInfo(cats[j]).name}`, [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(m.wilson)], ['Correct', `${m.correct}/${m.questions}`]]) : null)}]; });
   const vals = series.flatMap(x => x.values.filter(v => v != null)), [min] = zoomDomain(vals.length ? vals : [.9], .1);
-  return <Section title="Accuracy by use case" description={`One spoke per use case. Tick up to ${RADAR_SLOTS.length} models in the list.`}>
+  return <Section title="Accuracy by use case" description={`One spoke per use case. Tick up to ${SLOTS.length} models in the list.`}>
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
       <ChartCard foot={series.length ? `The scale starts at ${pct0(min)}, not 0, and adjusts to the models shown, so small gaps look large; hover a point for its 95% interval.` : ''}>
         <Radar axes={cats.map(k => ({key: k, name: shortCat(B.catInfo(k).name)}))} series={series} min={min} empty="Tick a model in the list to draw it" label="Accuracy by use case" />
       </ChartCard>
       <div className="flex min-h-0 flex-col rounded-xl border bg-card shadow-xs lg:max-h-[600px]">
-        <div className="flex items-center justify-between border-b px-4 py-2.5 text-xs text-muted-foreground"><span>Models</span><span className="tabular-nums">{slotOf.size} of {RADAR_SLOTS.length}</span></div>
+        <div className="flex items-center justify-between border-b px-4 py-2.5 text-xs text-muted-foreground"><span>Models</span><span className="tabular-nums">{slotOf.size} of {SLOTS.length}</span></div>
         <ul className="max-h-72 overflow-y-auto p-1 lg:max-h-none">{all.map(x => { const [r, m] = x, at = slotOf.get(r.id), on = at != null, off = !on && full;
-          return <li key={r.id}><label className={cn('flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-1.5 text-sm hover:bg-muted/50', off && 'cursor-not-allowed opacity-50 hover:bg-transparent')} title={off ? `Up to ${RADAR_SLOTS.length} models at a time; untick one first` : undefined}>
+          return <li key={r.id}><label className={cn('flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-1.5 text-sm hover:bg-muted/50', off && 'cursor-not-allowed opacity-50 hover:bg-transparent')} title={off ? `Up to ${SLOTS.length} models at a time; untick one first` : undefined}>
             <input type="checkbox" className="size-3.5 accent-foreground" checked={on} disabled={off} onChange={() => toggle(x)} data-track="radar_toggle" />
             <span className="min-w-0 flex-1 truncate"><ModelName k={B.keyOf(r)} sub={false} link={false} /></span>
             {on && <Mark slot={at} />}<span className="w-12 text-right text-xs text-muted-foreground tabular-nums">{pct(m.accuracy)}</span></label></li>; })}</ul>

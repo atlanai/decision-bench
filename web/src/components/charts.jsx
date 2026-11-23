@@ -128,7 +128,8 @@ function hatchPattern(ctx, color) {
   const g = c.getContext('2d'); g.strokeStyle = color; g.lineWidth = 1.2; g.beginPath(); g.moveTo(0, 4); g.lineTo(4, 0); g.moveTo(-1, 1); g.lineTo(1, -1); g.moveTo(3, 5); g.lineTo(5, 3); g.stroke();
   return ctx.createPattern(c, 'repeat');
 }
-export function RecordGrid({runs, cases}) {
+/* marks: label each model with its slot marker (SLOTS) instead of its own colour. */
+export function RecordGrid({runs, cases, marks = false}) {
   const [ref, w] = useWidth(), cv = useRef(null), band = useRef(null), L = useRef(null);
   let body = null;
   if (w > 0) {
@@ -146,7 +147,7 @@ export function RecordGrid({runs, cases}) {
         <div style={{height: HEAD + 2}} />
         <div className="flex items-center text-xs text-muted-foreground" style={{height: SH, marginBottom: TOP - SH}}>Models wrong</div>
         {runs.map((r, ri) => <div key={r.id} className="flex items-center justify-between gap-2 overflow-hidden text-[13px]" style={{height: ROWH, marginBottom: RGAP}} title={runName(r)}>
-          <span className="inline-flex min-w-0 items-center gap-2"><i className="size-2 shrink-0 rounded-full" style={{background: ident(r).color}} /><span className="truncate font-medium">{w < 640 ? ident(r).short : ident(r).name}</span></span>
+          <span className="inline-flex min-w-0 items-center gap-2">{marks ? <Mark slot={ri} /> : <i className="size-2 shrink-0 rounded-full" style={{background: ident(r).color}} />}<span className="truncate font-medium">{w < 640 ? ident(r).short : ident(r).name}</span></span>
           <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground tabular-nums">{codes[ri].reduce((n, v) => n + (v > 1), 0)} wrong</span>
         </div>)}
       </div>
@@ -247,6 +248,10 @@ export const MARKS = {
   diamond: (x, y) => `M${x},${y - 4.8}L${x + 4.8},${y}L${x},${y + 4.8}L${x - 4.8},${y}z`,
   cross: (x, y) => `M${x - 1.6},${y - 4.5}h3.2v2.9h2.9v3.2h-2.9v2.9h-3.2v-2.9h-2.9v-3.2h2.9z`,
 };
+/* Colour and marker for each slot in a chart of a few picked models (the radar, Compare), with ink as the fifth. A model
+   keeps its slot while others come and go. */
+export const SLOTS = [['var(--series-1)', 'circle'], ['var(--series-2)', 'square'], ['var(--series-3)', 'triangle'], ['var(--series-4)', 'diamond'], ['var(--foreground)', 'cross']];
+export const Mark = ({slot, className}) => <svg viewBox="-6 -6 12 12" className={cn('size-3 shrink-0', className)} aria-hidden="true"><path d={MARKS[SLOTS[slot][1]](0, 0)} fill={SLOTS[slot][0]} /></svg>;
 export function Radar({axes, series, min, empty, label}) {
   return <Chart label={label}>{w => {
     const padX = w < 420 ? 64 : 88, R = Math.max(60, Math.min(210, w / 2 - padX)), h = 2 * R + 64, cx = w / 2, cy = h / 2, n = axes.length;

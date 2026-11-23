@@ -79,7 +79,9 @@ export const categoryOrder = () => CAT_ORDER;
 export const taskOrder = () => TASK_ORDER;
 export function catInfo(k) { const m = man().categories?.[k], c = allCases.find(x => catKey(x) === k); return {name: m?.name || c?.category_name || k, description: m?.description || ''}; }
 export function rowsInOrder() { const co = CAT_ORDER, to = TASK_ORDER; return allCases.map((c, i) => [c, i]).sort(([a, i], [b, j]) => co.indexOf(catKey(a)) - co.indexOf(catKey(b)) || to.indexOf(a.task) - to.indexOf(b.task) || i - j).map(([c]) => c); }
-export const goldText = c => { const q = c.questions[0], g = q.gold; return String(g).length <= 2 && q.options?.[g] ? `${g}: ${clip(String(q.options[g]), 42)}` : human(g); };
+/* An option as the reader sees it: a letter key with its text, anything else humanised. */
+export const optText = (c, k) => { const q = c.questions[0]; return String(k).length <= 2 && q.options?.[k] ? `${k}: ${clip(String(q.options[k]), 42)}` : human(k); };
+export const goldText = c => optText(c, c.questions[0].gold);
 export const assetUrl = a => String(a.path || '').replace(/^data\/assets\//, 'assets/rows/');
 
 /* ---------- Datasets: datasets.json when present, else derived from the rows' source fields ---------- */
@@ -247,6 +249,28 @@ const ordinal = n => `${n}${n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st',
 export const rankText = s => !s ? '—' : s[0] === s[1] ? ordinal(s[0]) : `${ordinal(s[0])}–${ordinal(s[1])}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
 export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);
+
+/* ---------- Compare: a few models side by side, row by row ---------- */
+export const MAX_PICKS = 4;
+/* The models Compare shows, from ?m=a,b,c, or ?a= and ?b= in older links; the top models fill it up to two. */
+export function pickKeys(q, ids) {
+  const asked = q.has('m') ? q.get('m').split(',') : [q.get('a'), q.get('b')];
+  const keys = [...new Set(asked.filter(k => ids.includes(k)))].slice(0, MAX_PICKS);
+  for (const k of ids) { if (keys.length >= 2) break; if (!keys.includes(k)) keys.push(k); }
+  return keys;
+}
+/* Every row all the runs were scored on, with each run's result, whether it was right, and the outcome: every run
+   right, every run wrong, or a split. */
+export function splits(runs, cases) {
+  const out = [];
+  for (const c of cases) {
+    const vs = runs.map(r => result(r.id, c.id));
+    if (vs.some(v => !v)) continue;
+    const oks = vs.map(okOf), right = oks.filter(Boolean).length;
+    out.push({c, vs, oks, kind: right === oks.length ? 'right' : right ? 'split' : 'wrong'});
+  }
+  return out;
+}
 
 /* ---------- Per-row statistics across evaluated models ---------- */
 export function caseStats(c) {

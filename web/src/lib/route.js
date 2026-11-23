@@ -38,7 +38,7 @@ export function parseRoute() {
 /* How a navigation should look on a phone or tablet. Each history entry carries its position (dbi), so going back
    is told apart from going somewhere new. Deeper pages push in from the right, shallower ones pop back, tabs fade,
    and stepping between rows deals the next card. '' means no page transition (a filter, a sheet, an anchor). */
-const DEPTH = {home: 0, tasks: 0, models: 0, data: 0, methodology: 0, task: 1, model: 1, compare: 1, review: 1, row: 2};
+const DEPTH = {home: 0, tasks: 0, models: 0, data: 0, methodology: 0, task: 1, model: 1, compare: 0, review: 1, row: 2};
 let pos = history.state?.dbi ?? 0, hint = null;
 if (history.state?.dbi == null) history.replaceState({...history.state, dbi: 0}, '');
 /* The page itself animated this change (a swiped card): 'skip'. Or say which way: 'next', 'prev'. A soft hint
