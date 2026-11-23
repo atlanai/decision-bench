@@ -187,15 +187,15 @@ function VsPicker({route, runs, base}) {
     </DropdownMenuContent>
   </DropdownMenu>;
 }
-/* Accuracy by use case for up to five models the reader ticks in the list beside it; the top three of the view to
-   start. Picks live in ?radar= by slot ("a,,c" keeps c in slot 3), so a model keeps its colour and marker while
+/* Accuracy by use case for up to five models the reader ticks in the list beside it; start (model ids), else the top
+   three of the view, to begin with. Picks live in ?radar= by slot ("a,,c" keeps c in slot 3), so a model keeps its colour and marker while
    others come and go. */
-function UseCaseRadar({route, runs, cases}) {
+export function UseCaseRadar({route, runs, cases, start}) {
   const cats = B.categoryOrder().filter(k => cases.some(c => B.catKey(c) === k));
   if (cats.length < 3) return null;
   const all = runs.map(r => [r, B.subsetMetrics(r, cases)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy);
   const keyed = new Map(all.map(x => [B.keyOf(x[0]), x])), param = route.q.get('radar');
-  const keys = param == null ? all.slice(0, 3).map(([r]) => B.keyOf(r)) : param.split(',');
+  const keys = param != null ? param.split(',') : start || all.slice(0, 3).map(([r]) => B.keyOf(r));
   const slots = SLOTS.map((_, i) => keyed.get(keys[i]) || null), slotOf = new Map(slots.flatMap((x, i) => x ? [[x[0].id, i]] : []));
   const save = next => go(withQ(route, {radar: next.map(x => x ? B.keyOf(x[0]) : '').join(',').replace(/,+$/, '') || ','}));
   const toggle = x => { const next = slots.slice(), at = slotOf.get(x[0].id); if (at != null) next[at] = null; else { const free = next.indexOf(null); if (free < 0) return; next[free] = x; } save(next); };

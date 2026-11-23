@@ -4,19 +4,15 @@ import * as B from '@/lib/bench';
 import {pct, pct0, pp, num, plural, ms} from '@/lib/format';
 import {href, go, withQ, taskHref, rowHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
-import {Section, EmptyPage, ModelName} from '@/components/common';
+import {EmptyPage, ModelName} from '@/components/common';
 import {CopyButton} from '@/components/record';
-import {Radar, RecordGrid, Legend, SLOTS, Mark, zoomDomain} from '@/components/charts';
-import {tip} from '@/components/tip';
+import {RecordGrid, Legend, SLOTS, Mark} from '@/components/charts';
 import {Button} from '@/components/ui/button';
 import {Tip} from '@/components/ui/tooltip';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
-import {PixelBanner} from '@/pages/home';
-import {TableCard} from '@/pages/task';
+import {PixelBanner, UseCaseRadar} from '@/pages/home';
 
-const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
-const TD = 'px-3 py-2.5 first:pl-5 last:pr-5 tabular-nums';
 const LABEL = 'font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase sm:text-[11px]';
 const VIEWS = [['split', 'They differ'], ['wrong', 'All wrong'], ['all', 'All rows']];
 const PAGE = 24;
@@ -136,34 +132,6 @@ function Verdicts({runs}) {
   </div>;
 }
 
-const shortCat = name => name.split(' & ')[0];
-function UseCases({runs, rows}) {
-  const cats = B.categoryOrder().filter(k => rows.some(x => B.catKey(x.c) === k));
-  if (cats.length < 3) return null;
-  const by = new Map(cats.map(k => [k, rows.filter(x => B.catKey(x.c) === k)]));
-  const series = runs.map((r, i) => ({key: r.id, color: SLOTS[i][0], shape: SLOTS[i][1],
-    values: cats.map(k => accuracyOn(by.get(k), i)),
-    tips: cats.map(k => tip(`${B.runName(r)} · ${B.catInfo(k).name}`, [['Accuracy', pct(accuracyOn(by.get(k), i))], ['Rows', num(by.get(k).length)]]))}));
-  const [min] = zoomDomain(series.flatMap(x => x.values), .1);
-  return <Section title="Profile by use case" description="Accuracy on the rows every picked model was scored on. The best model in each use case is in bold.">
-    <div className="grid gap-4 lg:grid-cols-2">
-      <div className="rounded-xl border bg-card p-4 shadow-xs">
-        <Radar axes={cats.map(k => ({key: k, name: shortCat(B.catInfo(k).name)}))} series={series} min={min} label="Accuracy by use case" />
-        <p className="mt-3 text-xs text-muted-foreground">The scale starts at {pct0(min)}, not 0, so small gaps look large. Hover a point for its numbers.</p>
-      </div>
-      <TableCard label="Accuracy by use case"><table className="w-full text-sm">
-        <thead><tr className="border-b"><th className={TH}>Use case</th>{runs.map((r, i) => <th key={r.id} className={cn(TH, 'text-right')}><span className="inline-flex items-center gap-1.5"><Mark slot={i} />{B.ident(r).short}</span></th>)}<th className={cn(TH, 'text-right')}>Differ</th></tr></thead>
-        <tbody>{cats.map(k => { const rs = by.get(k), acc = runs.map((_, i) => accuracyOn(rs, i)), best = Math.max(...acc);
-          return <tr key={k} className="border-b last:border-0">
-            <td className="py-2.5 pr-3 pl-5 font-medium">{B.catInfo(k).name}</td>
-            {acc.map((v, i) => <td key={i} className={cn(TD, 'text-right', v === best ? 'font-semibold' : 'text-muted-foreground')}>{pct(v)}</td>)}
-            <td className={cn(TD, 'text-right')}>{num(rs.filter(x => x.kind === 'split').length)}</td>
-          </tr>; })}</tbody>
-      </table></TableCard>
-    </div>
-  </Section>;
-}
-
 /* One row: the answer key, then each model's answer, whether it was right, and how sure it said it was. */
 function AnswerCard({x, runs}) {
   const {c, vs, oks} = x;
@@ -275,7 +243,7 @@ export function Compare({route}) {
     <div className="mx-auto max-w-[1600px] px-4 pb-16 md:px-8 lg:pb-20">
       {runs.some(r => B.subsetMetrics(r, B.allCases).excluded) && <p className="mt-8 max-w-3xl rounded-lg border bg-muted/50 px-4 py-3 text-sm text-muted-foreground">Only rows with usable input for every picked model are compared. Image rows are left out when a model was not sent the image.</p>}
       <Explorer route={route} runs={runs} rows={rows} />
-      <UseCases runs={runs} rows={rows} />
+      <UseCaseRadar route={route} runs={B.RUNS} cases={B.allCases} start={keys} />
     </div>
   </>;
 }
