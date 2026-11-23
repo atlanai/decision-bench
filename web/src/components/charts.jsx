@@ -213,29 +213,84 @@ export const Legend = ({items}) => (
 
 /* A dithered glow behind the radar: one continuous ramp, densest at the centre and fading to nothing at the outer ring,
    quantised with an 8x8 Bayer matrix (64 levels, so no banding). Dots of 1.5px on a 3px pitch are snapped to whole
-   device pixels so they stay sharp, drawn once into a mask over the foreground colour so they follow the theme. */
+   device pixels so they stay sharp, drawn once into a mask over the foreground colour so they follow the theme.
+   Two effects fill the gaps in the same dither, on a canvas above it: every few seconds a sonar ring leaves the centre,
+   and the pointer leaves a trail that fades, as in the page header. The trail stays ink, not pink: the series colours
+   (pink among them) belong to the data. Both stop off screen and with reduced motion. */
 const BAYER8 = (() => {
   let m = [[0]];  /* M(2n) = [[4M, 4M+2], [4M+3, 4M+1]] */
   while (m.length < 8) m = [...m.map(r => [...r.map(v => 4 * v), ...r.map(v => 4 * v + 2)]), ...m.map(r => [...r.map(v => 4 * v + 3), ...r.map(v => 4 * v + 1)])];
   return m;
 })();
+const PULSE_MS = 2200, PULSE_EVERY = 5500, PULSE_FIRST = 900, TRAIL_PX = 34;
 function DitherGlow({w, h, cx, cy, R, n}) {
-  const [mask, setMask] = useState(null);
+  const [mask, setMask] = useState(null), gaps = useRef(null), cv = useRef(null);
   useLayoutEffect(() => {
     const dpr = Math.min(3, window.devicePixelRatio || 1), c = document.createElement('canvas'), ctx = c.getContext('2d');
     if (!ctx) return;
     c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
-    ctx.beginPath();
-    for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / n; ctx[i ? 'lineTo' : 'moveTo']((cx + Math.cos(a) * R) * dpr, (cy + Math.sin(a) * R) * dpr); }
-    ctx.closePath(); ctx.clip();
-    const pitch = Math.max(2, Math.round(3 * dpr)), dot = Math.max(1, Math.round(1.5 * dpr));
+    const poly = new Path2D();
+    for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / n; poly[i ? 'lineTo' : 'moveTo']((cx + Math.cos(a) * R) * dpr, (cy + Math.sin(a) * R) * dpr); }
+    poly.closePath();
+    const pitch = Math.max(2, Math.round(3 * dpr)), dot = Math.max(1, Math.round(1.5 * dpr)), list = [];
+    /* Each gap keeps how much more density it needs before it shows: x, y (device px), rho, need. */
     for (let y = 0, j = 0; y < c.height; y += pitch, j++) for (let x = 0, i = 0; x < c.width; x += pitch, i++) {
       const rho = Math.hypot(x / dpr - cx, y / dpr - cy) / R;
-      if (rho < 1 && (BAYER8[j % 8][i % 8] + .5) / 64 < .6 * (1 - rho) ** 1.6) ctx.fillRect(x, y, dot, dot);
+      if (rho >= 1 || !ctx.isPointInPath(poly, x, y)) continue;
+      const need = (BAYER8[j % 8][i % 8] + .5) / 64 - .6 * (1 - rho) ** 1.6;
+      if (need < 0) ctx.fillRect(x, y, dot, dot); else list.push(x, y, rho, need);
     }
+    gaps.current = {dpr, dot, list: Float32Array.from(list)};
     setMask(`url(${c.toDataURL()})`);
   }, [w, h, cx, cy, R, n]);
-  return mask && <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-foreground opacity-30" style={{maskImage: mask, WebkitMaskImage: mask, maskSize: '100% 100%', WebkitMaskSize: '100% 100%'}} />;
+  useEffect(() => {
+    const el = cv.current, g = gaps.current, host = el?.parentElement;
+    if (!el || !g || reducedMotion()) return;
+    el.width = Math.round(w * g.dpr); el.height = Math.round(h * g.dpr);
+    const ctx = el.getContext('2d'), {dpr, dot, list} = g, spots = [];
+    let raf = 0, timer = 0, visible = false, pulse = null, ink = '';
+    const frame = now => {
+      raf = 0; ctx.clearRect(0, 0, el.width, el.height);
+      if (pulse != null) {
+        const p = (now - pulse) / PULSE_MS;
+        if (p >= 1) { pulse = null; timer = setTimeout(start, PULSE_EVERY - PULSE_MS); } else {
+          const at = 1.15 * (1 - (1 - p) ** 1.4), strength = .55 * (1 - p) ** .8;
+          ctx.globalAlpha = .4; ctx.fillStyle = ink;
+          for (let k = 0; k < list.length; k += 4) { const d = (list[k + 2] - at) / .09; if (list[k + 3] < strength * Math.exp(-d * d)) ctx.fillRect(list[k], list[k + 1], dot, dot); }
+        }
+      }
+      if (spots.length) {
+        ctx.globalAlpha = .7; ctx.fillStyle = ink;
+        for (let k = 0; k < list.length; k += 4) {
+          const x = list[k] / dpr, y = list[k + 1] / dpr;
+          let b = 0; for (const s of spots) { const d2 = ((x - s.x) ** 2 + (y - s.y) ** 2) / TRAIL_PX ** 2; if (d2 < 4) b = Math.max(b, s.e * Math.exp(-d2)); }
+          if (list[k + 3] < .8 * b) ctx.fillRect(list[k], list[k + 1], dot, dot);
+        }
+        for (const s of spots) s.e *= .9;
+        while (spots.length && spots[0].e < .04) spots.shift();
+      }
+      if (pulse != null || spots.length) raf = requestAnimationFrame(frame);
+    };
+    const kick = () => { if (!raf && visible) { ink = getComputedStyle(el).color; raf = requestAnimationFrame(frame); } };
+    const start = () => { if (visible) { pulse = performance.now(); kick(); } };
+    const move = e => {
+      if (e.pointerType !== 'mouse') return;
+      const b = host.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, last = spots.at(-1);
+      if (!last || Math.hypot(x - last.x, y - last.y) > 6) spots.push({x, y, e: 1}); else last.e = 1;
+      kick();
+    };
+    const io = new IntersectionObserver(([e]) => {
+      const was = visible; visible = e.isIntersecting;
+      if (visible && !was) timer = setTimeout(start, PULSE_FIRST);
+      if (!visible) { cancelAnimationFrame(raf); raf = 0; clearTimeout(timer); pulse = null; spots.length = 0; ctx.clearRect(0, 0, el.width, el.height); }
+    });
+    io.observe(el); host.addEventListener('pointermove', move);
+    return () => { io.disconnect(); host.removeEventListener('pointermove', move); cancelAnimationFrame(raf); clearTimeout(timer); };
+  }, [mask]); // eslint-disable-line react-hooks/exhaustive-deps
+  return mask && <>
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-foreground opacity-30" style={{maskImage: mask, WebkitMaskImage: mask, maskSize: '100% 100%', WebkitMaskSize: '100% 100%'}} />
+    <canvas ref={cv} aria-hidden="true" className="pointer-events-none absolute inset-0 text-foreground" style={{width: w, height: h}} />
+  </>;
 }
 
 /* Radar: one spoke per axis, one closed shape per series. series: {key,color,shape,values,tips}, where values[i] is
