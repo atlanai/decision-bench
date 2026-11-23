@@ -54,10 +54,30 @@ test('the published leaderboard gives every full run a range', () => {
   for (const [best, worst] of ranks.values()) assert.ok(best >= 1 && best <= worst && worst <= B.RUNS.length);
 });
 
-test('a range of one place shows one number', () => {
-  assert.equal(B.rankText([1, 1]), '1');
-  assert.equal(B.rankText([2, 5]), '2–5');
+test('a range of one place shows one place, and a range from first says tied', () => {
+  assert.equal(B.rankText([1, 1]), '1st');
+  assert.equal(B.rankText([1, 11]), 'Tied for 1st');
+  assert.equal(B.rankText([2, 5]), '2nd–5th');
+  assert.equal(B.rankText([3, 13]), '3rd–13th');
+  assert.equal(B.rankText([11, 22]), '11th–22nd');
   assert.equal(B.rankText(undefined), '—');
+});
+
+test('a gap reads the same from both models and never goes past either rank range', () => {
+  const ranks = B.ranks(B.RUNS, B.allCases), flip = {ahead: 'behind', behind: 'ahead', close: 'close'};
+  for (const r of B.RUNS) {
+    const gaps = B.versus(B.RUNS, B.allCases, r.id), [best, worst] = ranks.get(r.id);
+    assert.equal(gaps.size, B.RUNS.length - 1);
+    for (const [id, g] of gaps) {
+      const back = B.versus(B.RUNS, B.allCases, id).get(r.id);
+      assert.equal(back.call, flip[g.call]);
+      assert.deepEqual([back.wins, back.losses], [g.losses, g.wins]);
+      assert.ok(g.wins + g.losses <= g.rows);
+      assert.ok(Math.abs(back.gap + g.gap) < 1e-12 && g.lo <= g.gap && g.gap <= g.hi && g.rows > 0);
+    }
+    assert.ok(1 + [...gaps.values()].filter(g => g.call === 'ahead').length <= best);
+    assert.ok(B.RUNS.length - [...gaps.values()].filter(g => g.call === 'behind').length >= worst);
+  }
 });
 
 test('position is the order by accuracy, and equal accuracy shares a position', () => {

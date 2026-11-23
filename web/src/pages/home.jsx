@@ -3,7 +3,7 @@ import {track} from '@/lib/analytics';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ArrowDownIcon, ArrowUpIcon, ChevronDownIcon} from 'lucide-react';
 import * as B from '@/lib/bench';
-import {pct, pct0, ms, money, compact, num, metric, plural, secs, ciText} from '@/lib/format';
+import {pct, pct0, pp, ms, money, compact, num, metric, plural, secs, ciText} from '@/lib/format';
 import {href, withQ, rowHref, taskHref, catHref, modelHref, go} from '@/lib/route';
 import {haptic, reducedMotion, usePhone} from '@/lib/device';
 import {tip} from '@/components/tip';
@@ -11,6 +11,7 @@ import {cn} from '@/lib/utils';
 import {ModelName, Logo, Section, Notice, Dash, Notes} from '@/components/common';
 import {List, Item} from '@/components/list';
 import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns} from '@/components/filters';
+import {DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
@@ -153,8 +154,29 @@ const SHORT_CAT = {'AI agents': 'Agents', 'Customer support': 'Support', 'Produc
 const shortCat = name => { const n = name.split(' & ')[0]; return SHORT_CAT[n] || n; };
 const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Why a model has its rank range: the models it reliably beats, those that reliably beat it, and the rest. */
-const RANK_NOTE = '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both were scored on. Hover a range to see which models are reliably ahead or behind.';
+const RANK_NOTE = '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both were scored on; "Tied for 1st" means no model is reliably ahead of it. Hover a range to see how many models are reliably ahead or behind.';
+const VS_NOTE = 'vs: each model against the model you pick, on the rows both were scored on. Ahead or Behind means the accuracy gap holds at 95% confidence; Too close means it could be noise. The numbers count the rows only this model got right, then the rows only the picked model got right. Hover for the gap and its interval.';
 const rangeTip = (name, [best, worst], n) => tip(name, [['Rank range', B.rankText([best, worst])], ['Reliably better than', plural(n - worst, 'model')], ['Reliably worse than', plural(best - 1, 'model')], ['Too close to call', plural(worst - best, 'model')]]);
+/* A model's gap to the reference model, from the same paired bootstrap as the rank range. */
+const CALL = {ahead: ['Ahead', 'text-good', 'Reliably ahead'], behind: ['Behind', 'text-bad', 'Reliably behind'], close: ['Too close', 'text-foreground/80', 'Too close to call']};
+function VsCell({r, base, g, n}) {
+  if (r.id === base.id) return <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">Reference</td>;
+  if (!g) return <td className="px-3 py-2.5"><Dash /></td>;
+  const [word, color, long] = CALL[g.call];
+  return <td className="px-3 py-2.5 whitespace-nowrap tabular-nums" data-tip={tip(`${B.runName(r)} vs ${B.runName(base)}`, [['Verdict', long], ['Only this model right', plural(g.wins, 'row')], [`Only ${B.ident(base).short} right`, plural(g.losses, 'row')], ['Accuracy gap', `${pp(g.gap)} pp`], ['95% interval', `${pp(g.lo)} to ${pp(g.hi)} pp`], ['Rows compared', num(g.rows)], ['Adjusted for', `comparing with ${plural(n - 1, 'model')}`]])}>
+    <span className={color}>{word}</span> <span className="text-xs text-muted-foreground">· {g.wins}–{g.losses}</span></td>;
+}
+/* The column header picks the reference model; the top model by accuracy is the default and keeps the URL clean. */
+function VsPicker({route, runs, base, top}) {
+  return <DropdownMenu>
+    <DropdownMenuTrigger asChild><button type="button" data-track="leaderboard_vs" aria-label={`Compare every model with ${B.runName(base)}`} className="inline-flex cursor-pointer items-center gap-1 text-foreground hover:text-foreground/80">vs {B.ident(base).short}<ChevronDownIcon className="size-3.5 opacity-60" /></button></DropdownMenuTrigger>
+    <DropdownMenuContent className="max-h-96 overflow-y-auto">
+      <DropdownMenuRadioGroup value={B.keyOf(base)} onValueChange={v => go(withQ(route, {vs: v === B.keyOf(top) ? '' : v}))}>
+        {runs.map(r => <DropdownMenuRadioItem key={r.id} value={B.keyOf(r)}><ModelName k={B.keyOf(r)} link={false} /></DropdownMenuRadioItem>)}
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
+  </DropdownMenu>;
+}
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
 function LeaderboardSection({route, runs, cases}) {
   const [more, setMore] = useState(false), cat = route.q.get('category') || '';
@@ -174,6 +196,8 @@ function Leaderboard({route, runs, cases, more}) {
   const los = metrics.flatMap(([, m]) => m.wilson || []), [d0] = los.length ? zoomDomain(los, .1) : [0], cx = v => (v - d0) / (1 - d0 || 1) * 56;
   const value = (m, key, r) => key.startsWith('col:') ? B.subsetMetrics(r, colCases(key.slice(4))).accuracy : {accuracy: m.accuracy, latency: m.latency.p50, cost: m.costPer1k, tokens: m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0), ece: m.ece, brier: m.brier, macro: B.macroF1(r, tasks), errors: m.errors}[key];
   const sorted = metrics.slice().sort(([ra, a], [rb, b]) => { const va = value(a, sort.key, ra), vb = value(b, sort.key, rb); if (va == null) return 1; if (vb == null) return -1; return sort.dir === 'asc' ? va - vb : vb - va; });
+  const byAccuracy = metrics.filter(([r]) => rank.has(r.id)).sort(([, a], [, b]) => b.accuracy - a.accuracy).map(([r]) => r), top = byAccuracy[0];
+  const base = byAccuracy.find(r => B.keyOf(r) === route.q.get('vs')) || top, gaps = base ? B.versus(runs, cases, base.id) : new Map();
   const Th = ({k, children, className, title}) => (
     <th title={title} className={cn('h-10 px-3 text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5', className)}>
       {k ? <button type="button" data-track={`sort_${k}`} onClick={() => setSort(s => s.key === k ? {key: k, dir: s.dir === 'desc' ? 'asc' : 'desc'} : {key: k, dir: ASC.includes(k) ? 'asc' : 'desc'})} className={cn('inline-flex cursor-pointer items-center gap-1 hover:text-foreground', sort.key === k && 'text-foreground')}>
@@ -189,6 +213,7 @@ function Leaderboard({route, runs, cases, more}) {
             <Th title="Order by accuracy" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             <Th title="Places the model could hold at 95% confidence: best is 1 + the models reliably ahead, worst is the number of models minus those reliably behind">Rank range</Th>
+            {base && <Th title="Accuracy gap to the picked model on the rows both were scored on"><VsPicker route={route} runs={byAccuracy} base={base} top={top} /></Th>}
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
             <Th k="cost" className="text-right" title="Cost per 1,000 rows: provider-reported, else estimated from list prices">$ / 1k</Th>
@@ -196,7 +221,7 @@ function Leaderboard({route, runs, cases, more}) {
           </tr></thead>
           <tbody>
             {sorted.map(([r, m]) => { const ci = m.wilson, tp = m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0);
-              return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40">
+              return <tr key={r.id} className={cn('border-b transition-colors last:border-0 hover:bg-muted/40', r.id === base?.id && 'bg-muted/40')}>
                 <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{B.positionOf(m, all) ?? '—'}</td>
                 {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
                 <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <sup className="text-[10px] text-muted-foreground" title={`${m.excluded} image-only cases excluded; ${m.questions} scored. Image required but not sent.`}>**</sup>}</span></td>
@@ -207,6 +232,7 @@ function Leaderboard({route, runs, cases, more}) {
                   </span>
                 </td>
                 <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground tabular-nums" data-tip={rank.has(r.id) ? rangeTip(B.runName(r), rank.get(r.id), rank.size) : undefined}>{B.rankText(rank.get(r.id))}</td>
+                {base && <VsCell r={r} base={base} g={gaps.get(r.id)} n={rank.size} />}
                 {cols.map(k => { const s = B.subsetMetrics(r, colCases(k)); return <td key={k} className="px-1.5 py-2.5 text-right text-foreground/80 tabular-nums" data-tip={s.questions ? tip(`${B.runName(r)} · ${colName(k)}`, [['Accuracy', pct(s.accuracy)], ['95% interval', ciText(s.wilson)], ['Correct', `${s.correct}/${s.questions}`]]) : undefined}>{s.questions ? pct0(s.accuracy) : s.excluded ? <span title="Not evaluated: image required, but no image was sent.">N/E</span> : <Dash />}</td>; })}
                 <td className="px-3 py-2.5 text-right whitespace-nowrap tabular-nums">{ms(m.latency.p50)}</td>
                 <td className={cn('px-3 py-2.5 text-right whitespace-nowrap tabular-nums', !more && 'pr-5')}>{money(m.costPer1k)}{m.costCoverage != null && m.costCoverage < 1 && <sup className="text-warn" title={`Cost known for ${pct(m.costCoverage)} of rows`}>*</sup>}</td>
@@ -218,6 +244,7 @@ function Leaderboard({route, runs, cases, more}) {
     </div>
     <Notes items={[
       RANK_NOTE,
+      base && VS_NOTE,
       B.allCases.some(c => B.isImageTask(c.task)) && '** Image-only cases excluded when the image was not sent. N/E = not evaluated.',
       partial && '* Cost known for part of the rows.',
       B.PARTIAL.length > 0 && `Partial, not ranked: ${B.PARTIAL.map(r => `${B.ident(r).short} (${num(r.metrics.cases)} of ${num(B.allCases.length)} rows)`).join(', ')}.`,
@@ -251,7 +278,7 @@ function LeaderList({runs, cases}) {
       {sorted.map(([r, m], i) => { const k = B.keyOf(r), id = B.ident(r), ci = m.wilson;
         return <Item key={r.id} data-flip={r.id} href={modelHref(k)} chevron={false}
           lead={<><span className="w-5 text-center text-[13px] text-muted-foreground tabular-nums">{key === 'accuracy' ? B.positionOf(m, all) : i + 1}</span><Logo k={k} size={30} className="ml-2 rounded-lg" /></>}
-          title={id.name} sub={<>{id.iface && id.iface !== 'API' && <>{id.iface} · </>}{key === 'accuracy' && rank.has(r.id) && <>Rank range {B.rankText(rank.get(r.id))} · </>}{others(m)}</>}
+          title={id.name} sub={<>{id.iface && id.iface !== 'API' && <>{id.iface} · </>}{key === 'accuracy' && rank.has(r.id) && <>{B.rankText(rank.get(r.id))} · </>}{others(m)}</>}
           trail={<span className="flex flex-col items-end gap-1.5">
             <span className="text-[15px] font-semibold tabular-nums">{show(m)}</span>
             {key === 'accuracy' && ci && <span className="relative block h-1.5 w-14" aria-hidden="true"><i className="absolute inset-x-0 top-[2.5px] h-px bg-border" /><i className="absolute top-0.5 h-0.5 rounded-full bg-foreground/25" style={{left: cx(ci[0]), width: `calc(${cx(ci[1])} - ${cx(ci[0])})`}} /><b className="absolute top-0 h-1.5 w-[3px] -translate-x-1/2 rounded-[1px]" style={{left: cx(m.accuracy), background: B.runColor(r)}} /></span>}

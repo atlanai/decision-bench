@@ -1,5 +1,5 @@
 import * as B from '@/lib/bench';
-import {pp} from '@/lib/format';
+import {pp, num, plural} from '@/lib/format';
 import {href, go, taskHref} from '@/lib/route';
 import {cn} from '@/lib/utils';
 import {PageHeader, Section, Notice, ModelName} from '@/components/common';
@@ -26,9 +26,10 @@ export function Compare({route}) {
   const ra = B.RUNS.find(r => B.keyOf(r) === a), rb = B.RUNS.find(r => B.keyOf(r) === b);
   const rows = B.taskOrder().map(t => { let both = 0, ao = 0, bo = 0, none = 0, n = 0; for (const c of B.taskRows(t)) { const va = B.result(ra.id, c.id), vb = B.result(rb.id, c.id); if (!va || !vb) continue; n++; const x = B.okOf(va), y = B.okOf(vb); if (x && y) both++; else if (x) ao++; else if (y) bo++; else none++; } return {t, n, both, ao, bo, none, d: n ? (ao - bo) / n : null}; }).filter(r => r.n);
   const tot = rows.reduce((s, r) => ({n: s.n + r.n, ao: s.ao + r.ao, bo: s.bo + r.bo, both: s.both + r.both, none: s.none + r.none}), {n: 0, ao: 0, bo: 0, both: 0, none: 0});
-  const cmp = (B.data.comparisons || []).find(p => (p.a === ra.id && p.b === rb.id) || (p.a === rb.id && p.b === ra.id));
   const excludedInputs = B.subsetMetrics(ra, B.allCases).excluded || B.subsetMetrics(rb, B.allCases).excluded;
-  const ci = !excludedInputs && cmp?.cluster_bootstrap_ci95 ? (cmp.a === ra.id ? cmp.cluster_bootstrap_ci95 : [-cmp.cluster_bootstrap_ci95[1], -cmp.cluster_bootstrap_ci95[0]]) : null;
+  /* A against B from the leaderboard's own paired bootstrap, so the verdict here always matches its vs column. */
+  const g = B.versus(B.RUNS, B.allCases, rb.id).get(ra.id), n = B.ranks(B.RUNS, B.allCases).size;
+  const call = g && {ahead: `${B.M(a).name} is reliably ahead`, behind: `${B.M(a).name} is reliably behind`, close: 'Too close to call'}[g.call];
   const diff = d => <span className={cn(d > 0 ? 'text-good' : d < 0 ? 'text-bad' : '')}>{d == null ? '—' : `${pp(d)} pp`}</span>;
   const url = `${location.origin}${href('compare', {a, b})}`;
   return <>
@@ -38,8 +39,8 @@ export function Compare({route}) {
       <Pick label="Model B" value={b} other={a} onChange={v => go(href('compare', {a, b: v}))} />
       <span className="ml-auto max-md:-mt-1"><CopyButton text={url} label="Copy link" /></span>
     </div>
-    {excludedInputs > 0 && <Notice>Comparison uses only rows with usable input for both models. Image-only rows are excluded when either model was not sent the image. The original run bootstrap interval is not shown for this adjusted comparison.</Notice>}
-    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={ci ? `Overall difference ${pp(cmp.a === ra.id ? cmp.accuracy_difference : -cmp.accuracy_difference)} percentage points; 95% bootstrap interval over task clusters ${pp(ci[0])} to ${pp(ci[1])}.` : ''}>
+    {excludedInputs > 0 && <Notice>Comparison uses only rows with usable input for both models. Image-only rows are excluded when either model was not sent the image.</Notice>}
+    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={g ? <><strong className={cn('font-semibold', {ahead: 'text-good', behind: 'text-bad'}[g.call])}>{call}.</strong> Only {B.M(a).short} right on {plural(g.wins, 'row')}, only {B.M(b).short} on {num(g.losses)}, of {num(g.rows)} shared rows: {pp(g.gap)} percentage points, 95% interval {pp(g.lo)} to {pp(g.hi)}, adjusted for comparing each model with the other {num(n - 1)} as on the leaderboard.</> : ''}>
       <List className="md:hidden">
         <ListHead aside={diff(tot.n ? (tot.ao - tot.bo) / tot.n : null)}>All tasks · {tot.n} shared rows · A minus B</ListHead>
         {rows.map(r => <Item key={r.t} href={taskHref(r.t)} chevron={false} title={B.taskName(r.t)}
