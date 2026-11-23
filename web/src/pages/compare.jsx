@@ -19,6 +19,11 @@ const PAGE = 24;
 
 const pickHref = (route, keys) => withQ(route, {m: keys.join(','), a: '', b: ''});
 const toRows = () => document.getElementById('rows')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+/* Pixels burst out of the clicked button, drawn by the banner around it (PixelBanner). */
+const burst = e => {
+  const b = e.target.closest('button')?.getBoundingClientRect();
+  if (b) e.currentTarget.dispatchEvent(new CustomEvent('db:burst', {bubbles: true, detail: {x: b.left + b.width / 2, y: b.top + b.height / 2}}));
+};
 const accuracyOn = (rows, i) => rows.length ? rows.filter(x => x.oks[i]).length / rows.length : null;
 
 function ModelSelect({value, taken, onChange, placeholder, className}) {
@@ -79,7 +84,7 @@ function Hero({route, keys, runs, rows}) {
         <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-foreground/75">Pick up to {B.MAX_PICKS} models. See where they agree, which rows split them, and what each one answered against the answer key.</p>
         <div className="mt-8 mb-2 flex items-center gap-3">
           <span className={LABEL}>{keys.length} of {B.MAX_PICKS} models</span>
-          <CopyButton text={`${location.origin}${href('compare', {m: keys.join(',')})}`} label="Copy link to this comparison" />
+          <span onClick={burst}><CopyButton text={`${location.origin}${href('compare', {m: keys.join(',')})}`} label="Copy link to this comparison" /></span>
         </div>
         <div data-no-trail className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {runs.map((r, i) => <ModelCard key={r.id} route={route} keys={keys} i={i} run={r} rows={rows} />)}

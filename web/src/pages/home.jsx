@@ -77,10 +77,22 @@ function usePixelTrail(ref, canvasRef) {
     const size = () => { dpr = Math.min(2, devicePixelRatio || 1); cv.width = el.clientWidth * dpr; cv.height = el.clientHeight * dpr; cv.style.width = `${el.clientWidth}px`; cv.style.height = `${el.clientHeight}px`; pink = getComputedStyle(el).getPropertyValue('--pink').trim() || pink; };
     const ro = new ResizeObserver(size); ro.observe(el); size();
     const light = (c, r, v) => { const k = `${c},${r}`; cells.set(k, Math.max(cells.get(k) || 0, v)); };
+    /* A burst (db:burst, sent by a control inside the banner): pixels fly out of the point in every direction, slow down
+       and fade, each leaving a short trail as the cells it crossed fade behind it. */
+    const sparks = [];
+    const spread = () => {
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const p = sparks[i];
+        p.x += p.vx; p.y += p.vy; p.vx *= .94; p.vy *= .94; p.life *= .955;
+        if (p.life < .15) { sparks.splice(i, 1); continue; }
+        light(Math.round(p.x), Math.round(p.y), p.life);
+      }
+    };
     const frame = () => {
       raf = 0;
       sx += (tx - sx) * (reduce ? 1 : .16); sy += (ty - sy) * (reduce ? 1 : .16);
       el.style.setProperty('--mx', `${sx}px`); el.style.setProperty('--my', `${sy}px`);
+      spread();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.fillStyle = pink;
       for (const [k, v] of cells) {
         const [c, r] = k.split(',').map(Number), inset = 3 + (1 - v) * 5;
@@ -88,7 +100,7 @@ function usePixelTrail(ref, canvasRef) {
         const nv = v * (reduce ? 0 : .94); if (nv < .03) cells.delete(k); else cells.set(k, nv);
       }
       ctx.globalAlpha = 1;
-      if (inside || cells.size || Math.abs(tx - sx) + Math.abs(ty - sy) > .5) raf = requestAnimationFrame(frame);
+      if (inside || cells.size || sparks.length || Math.abs(tx - sx) + Math.abs(ty - sy) > .5) raf = requestAnimationFrame(frame);
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
     const move = e => {
@@ -117,11 +129,19 @@ function usePixelTrail(ref, canvasRef) {
       light(c, r, 1); for (let i = 0; i < 9; i++) light(c + Math.round(Math.random() * 4 - 2), r + Math.round(Math.random() * 4 - 2), .35 + Math.random() * .6);
       haptic(6); kick();
     };
-    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave); el.addEventListener('pointerdown', tap);
-    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('pointerdown', tap); ro.disconnect(); cancelAnimationFrame(raf); };
+    const burst = e => {
+      if (reduce) return;
+      const b = el.getBoundingClientRect(), c = Math.floor((e.detail.x - b.left) / CELL), r = Math.floor((e.detail.y - b.top) / CELL);
+      for (let i = 0; i < 6; i++) light(c + Math.round(Math.random() * 2 - 1), r + Math.round(Math.random() * 2 - 1), .8 + Math.random() * .2);
+      for (let i = 0; i < 34; i++) { const a = Math.random() * 2 * Math.PI, v = .35 + Math.random() * .6; sparks.push({x: c, y: r, vx: Math.cos(a) * v, vy: Math.sin(a) * v * .75, life: .75 + Math.random() * .25}); }
+      haptic(8); kick();
+    };
+    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave); el.addEventListener('pointerdown', tap); el.addEventListener('db:burst', burst);
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('pointerdown', tap); el.removeEventListener('db:burst', burst); ro.disconnect(); cancelAnimationFrame(raf); };
   }, [ref, canvasRef]);
 }
-/* The page header's grid with the pointer effects of usePixelTrail. Content marked data-no-trail calms it. */
+/* The page header's grid with the pointer effects of usePixelTrail. Content marked data-no-trail calms it; a control
+   inside it can send a db:burst event with detail {x, y} (client coordinates) to set off a burst of pixels there. */
 export function PixelBanner({children}) {
   const box = useRef(null), canvas = useRef(null);
   usePixelTrail(box, canvas);
