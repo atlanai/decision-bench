@@ -27,6 +27,12 @@ test('a consistent paired gap separates models whose Wilson intervals overlap', 
   const [w1, w2] = [B.wilson(k1, tasks.length), B.wilson(k2, tasks.length)];
   assert.ok(w1[0] < w2[1], 'the old non-overlap rule would give both models rank 1');
   assert.deepEqual(B.rankSpreads([strong, weak], tasks), [[1, 1], [2, 2]]);
+  const gaps = B.rankGaps([strong, weak], tasks), weakVsStrong = gaps[0].get(1), strongVsWeak = gaps[1].get(0);
+  assert.equal(weakVsStrong.call, 'behind');
+  assert.ok(weakVsStrong.gap < 0 && weakVsStrong.hi < 0);
+  assert.deepEqual([weakVsStrong.wins, weakVsStrong.losses, weakVsStrong.rows], [0, 15, 300]);
+  assert.equal(strongVsWeak.call, 'ahead');
+  assert.deepEqual([strongVsWeak.gap, strongVsWeak.lo, strongVsWeak.hi], [-weakVsStrong.gap, -weakVsStrong.hi, -weakVsStrong.lo]);
 });
 
 test('a model with few rows shows its uncertainty instead of taking rank 1', () => {
@@ -45,6 +51,8 @@ test('a pair that shares one row is not separated', () => {
   const tasks = tasksOf(5, 30), strong = model(tasks, () => true);
   const oneRow = tasks.map((_, r) => r === 0 ? [0, 1] : null);
   assert.deepEqual(B.rankSpreads([strong, oneRow], tasks), [[1, 2], [1, 2]]);
+  const g = B.rankGaps([strong, oneRow], tasks)[0].get(1);
+  assert.deepEqual({call: g.call, gap: g.gap, lo: g.lo, hi: g.hi, rows: g.rows}, {call: 'close', gap: -1, lo: null, hi: null, rows: 1});
 });
 
 test('the published leaderboard gives every full run a range', () => {
@@ -54,9 +62,9 @@ test('the published leaderboard gives every full run a range', () => {
   for (const [best, worst] of ranks.values()) assert.ok(best >= 1 && best <= worst && worst <= B.RUNS.length);
 });
 
-test('a range of one place shows one place, and a range from first says tied', () => {
+test('a range shows its best and worst place', () => {
   assert.equal(B.rankText([1, 1]), '1st');
-  assert.equal(B.rankText([1, 11]), 'Tied for 1st');
+  assert.equal(B.rankText([1, 11]), '1st–11th');
   assert.equal(B.rankText([2, 5]), '2nd–5th');
   assert.equal(B.rankText([3, 13]), '3rd–13th');
   assert.equal(B.rankText([11, 22]), '11th–22nd');
@@ -78,6 +86,11 @@ test('a gap reads the same from both models and never goes past either rank rang
     assert.ok(1 + [...gaps.values()].filter(g => g.call === 'ahead').length <= best);
     assert.ok(B.RUNS.length - [...gaps.values()].filter(g => g.call === 'behind').length >= worst);
   }
+});
+
+test('Compare draws only its pair and gets the same answer as the leaderboard', () => {
+  const [a, b, c] = B.RUNS;
+  for (const [x, y] of [[a, b], [b, a], [a, c]]) assert.deepEqual(B.pairGap(B.RUNS, B.allCases, x.id, y.id), B.versus(B.RUNS, B.allCases, y.id).get(x.id));
 });
 
 test('position is the order by accuracy, and equal accuracy shares a position', () => {

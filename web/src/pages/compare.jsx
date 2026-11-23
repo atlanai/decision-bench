@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import * as B from '@/lib/bench';
 import {pp, num, plural} from '@/lib/format';
 import {href, go, taskHref} from '@/lib/route';
@@ -19,6 +20,17 @@ function Pick({label, value, other, onChange}) {
     </Select></label>;
 }
 
+/* A against B on all rows, from the paired bootstrap the rank range uses. Drawing it takes over 100 ms, so it is worked
+   out after the page has painted. */
+function Verdict({a, b}) {
+  const key = `${a.id}|${b.id}`, [done, setDone] = useState({key: null, g: null});
+  useEffect(() => { const t = setTimeout(() => setDone({key, g: B.pairGap(B.RUNS, B.allCases, a.id, b.id)}), 0); return () => clearTimeout(t); }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (done.key !== key) return <span className="text-muted-foreground">Working out the verdict…</span>;
+  const g = done.g, n = B.evaluated(B.RUNS, B.allCases).length, ka = B.keyOf(a), kb = B.keyOf(b);
+  if (!g) return null;
+  return <><strong className={cn('font-semibold', B.CALLS[g.call].tone)}>{B.M(ka).name}: {B.CALLS[g.call].long.toLowerCase()}.</strong> Only {B.M(ka).short} right on {plural(g.wins, 'row')}, only {B.M(kb).short} on {num(g.losses)}, of {num(g.rows)} shared rows: {pp(g.gap)} percentage points{g.lo == null ? '; too few rows to estimate an interval' : <>, 95% interval {pp(g.lo)} to {pp(g.hi)}, adjusted for comparing each model with the other {num(n - 1)}</>}.</>;
+}
+
 export function Compare({route}) {
   if (B.RUNS.length < 2) return <><PageHeader title="Compare two models" /><Notice>Paired comparison needs at least two evaluated models.</Notice></>;
   const ids = B.RUNS.map(B.keyOf), qa = route.q.get('a'), qb = route.q.get('b');
@@ -27,20 +39,17 @@ export function Compare({route}) {
   const rows = B.taskOrder().map(t => { let both = 0, ao = 0, bo = 0, none = 0, n = 0; for (const c of B.taskRows(t)) { const va = B.result(ra.id, c.id), vb = B.result(rb.id, c.id); if (!va || !vb) continue; n++; const x = B.okOf(va), y = B.okOf(vb); if (x && y) both++; else if (x) ao++; else if (y) bo++; else none++; } return {t, n, both, ao, bo, none, d: n ? (ao - bo) / n : null}; }).filter(r => r.n);
   const tot = rows.reduce((s, r) => ({n: s.n + r.n, ao: s.ao + r.ao, bo: s.bo + r.bo, both: s.both + r.both, none: s.none + r.none}), {n: 0, ao: 0, bo: 0, both: 0, none: 0});
   const excludedInputs = B.subsetMetrics(ra, B.allCases).excluded || B.subsetMetrics(rb, B.allCases).excluded;
-  /* A against B from the leaderboard's own paired bootstrap, so the verdict here always matches its vs column. */
-  const g = B.versus(B.RUNS, B.allCases, rb.id).get(ra.id), n = B.ranks(B.RUNS, B.allCases).size;
-  const call = g && {ahead: `${B.M(a).name} is reliably ahead`, behind: `${B.M(a).name} is reliably behind`, close: 'Too close to call'}[g.call];
   const diff = d => <span className={cn(d > 0 ? 'text-good' : d < 0 ? 'text-bad' : '')}>{d == null ? '—' : `${pp(d)} pp`}</span>;
   const url = `${location.origin}${href('compare', {a, b})}`;
   return <>
-    <PageHeader title="Compare two models" description="Same rows, so the difference is real: rows where only one of the two is right, by task. Positive means model A is better." />
+    <PageHeader title="Compare two models" description="Both models on the same rows: the verdict on all rows, then the rows where only one of the two is right, by task. Positive means model A is better." />
     <div className="flex flex-wrap items-end gap-3">
       <Pick label="Model A" value={a} other={b} onChange={v => go(href('compare', {a: v, b}))} />
       <Pick label="Model B" value={b} other={a} onChange={v => go(href('compare', {a, b: v}))} />
       <span className="ml-auto max-md:-mt-1"><CopyButton text={url} label="Copy link" /></span>
     </div>
     {excludedInputs > 0 && <Notice>Comparison uses only rows with usable input for both models. Image-only rows are excluded when either model was not sent the image.</Notice>}
-    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={g ? <><strong className={cn('font-semibold', {ahead: 'text-good', behind: 'text-bad'}[g.call])}>{call}.</strong> Only {B.M(a).short} right on {plural(g.wins, 'row')}, only {B.M(b).short} on {num(g.losses)}, of {num(g.rows)} shared rows: {pp(g.gap)} percentage points, 95% interval {pp(g.lo)} to {pp(g.hi)}, adjusted for comparing each model with the other {num(n - 1)} as on the leaderboard.</> : ''}>
+    <Section title={`${B.M(a).name} against ${B.M(b).name}`} description={<Verdict a={ra} b={rb} />}>
       <List className="md:hidden">
         <ListHead aside={diff(tot.n ? (tot.ao - tot.bo) / tot.n : null)}>All tasks · {tot.n} shared rows · A minus B</ListHead>
         {rows.map(r => <Item key={r.t} href={taskHref(r.t)} chevron={false} title={B.taskName(r.t)}

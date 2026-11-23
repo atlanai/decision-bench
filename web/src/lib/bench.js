@@ -135,10 +135,13 @@ export function verdict(m) { if (!m || m.accuracy == null || !m.questions) retur
 const RANK_DRAWS = 1000, RANK_SEED = 1;
 /* 95% rank range per model after Mogstad et al., "Inference for Ranks"; method in docs/protocol.md. models[i][row] is [correct, questions] or null. */
 export const rankSpreads = (models, tasks) => rankStats(models, tasks).spreads;
+export const rankGaps = (models, tasks) => rankStats(models, tasks).gaps;
 /* The rank ranges, and for each model i its gap to every other model j on the rows both were scored on: gaps[i].get(j)
    is {gap: accuracy of j minus i, lo, hi, rows, wins, losses, call}: wins and losses count the rows j did better or
-   worse on than i, and call is 'ahead', 'behind' or 'close' for j against i. */
-function rankStats(models, tasks) {
+   worse on than i, and call is 'ahead', 'behind' or 'close' for j against i. With focus (a set of model indices), only
+   the pairs that involve a focus model are drawn, so only those models' ranges and their gaps to each other are
+   complete. The draws do not depend on the pairs, so those numbers equal the full run's. */
+function rankStats(models, tasks, focus = null) {
   const modelCount = models.length, byTask = new Map(), sets = new Map(), pairs = [];
   for (const [r, t] of tasks.entries()) {
     if (!byTask.has(t)) byTask.set(t, []);
@@ -152,6 +155,7 @@ function rankStats(models, tasks) {
     return set.sums.get(i);
   };
   for (let i = 0; i < modelCount; i++) for (let j = i + 1; j < modelCount; j++) {
+    if (focus && !focus.has(i) && !focus.has(j)) continue;
     const rows = [...tasks.keys()].filter(r => models[i][r] && models[j][r]);
     if (!rows.length) continue;
     let iWins = 0, jWins = 0;  /* rows one model scored better on than the other */
@@ -192,16 +196,21 @@ function rankStats(models, tasks) {
     for (const p of pairs) if (p.i === i || p.j === i) { const s = side(p, i, crit[i]); if (s > 0) worst--; else if (s < 0) best++; }
     return [best, worst];
   });
-  /* A pair's gap takes the larger of its two models' margins, so A against B always mirrors B against A and never
-     calls a gap that either model's rank range does not. */
+  /* A pair's gap takes the larger of its two models' margins, so it never calls a gap that either model's rank range
+     does not; B against A is A against B flipped. With no spread across the draws (one shared row, say) the interval
+     cannot be estimated: lo and hi are null and the pair stays too close, as in the ranges. */
   const gaps = models.map(() => new Map());
   for (const p of pairs) {
-    const c = Math.max(crit[p.i], crit[p.j]), margin = p.se > 0 ? c * p.se : 0, call = side(p, p.i, c);
-    gaps[p.i].set(p.j, {gap: -p.d, lo: -p.d - margin, hi: -p.d + margin, rows: p.rows, wins: p.jWins, losses: p.iWins, call: call > 0 ? 'behind' : call < 0 ? 'ahead' : 'close'});
-    gaps[p.j].set(p.i, {gap: p.d, lo: p.d - margin, hi: p.d + margin, rows: p.rows, wins: p.iWins, losses: p.jWins, call: call > 0 ? 'ahead' : call < 0 ? 'behind' : 'close'});
+    const c = Math.max(crit[p.i], crit[p.j]), s = side(p, p.i, c), spread = p.se > 0;
+    const g = {gap: -p.d, lo: spread ? -p.d - c * p.se : null, hi: spread ? -p.d + c * p.se : null, rows: p.rows, wins: p.jWins, losses: p.iWins, call: s > 0 ? 'behind' : s < 0 ? 'ahead' : 'close'};
+    gaps[p.i].set(p.j, g);
+    gaps[p.j].set(p.i, {...g, gap: -g.gap, lo: spread ? -g.hi : null, hi: spread ? -g.lo : null, wins: g.losses, losses: g.wins, call: FLIP[g.call]});
   }
   return {spreads, gaps};
 }
+const FLIP = {ahead: 'behind', behind: 'ahead', close: 'close'};
+/* How a gap reads on the site: the cell word, the full verdict, and its colour. */
+export const CALLS = {ahead: {word: 'Ahead', long: 'Reliably ahead', tone: 'text-good'}, behind: {word: 'Behind', long: 'Reliably behind', tone: 'text-bad'}, close: {word: 'Too close', long: 'Too close to call', tone: 'text-foreground'}};
 function sd(values) {
   const mean = values.reduce((x, y) => x + y, 0) / values.length;
   return Math.sqrt(values.reduce((x, y) => x + (y - mean) ** 2, 0) / (values.length - 1));
@@ -227,9 +236,15 @@ function rankView(runs, cases) {
 export const ranks = (runs, cases) => rankView(runs, cases).ranks;
 /* Every other run's gap to the reference run, keyed by run id; empty when the reference has no scored rows here. */
 export const versus = (runs, cases, refId) => rankView(runs, cases).gaps.get(refId) || new Map();
+/* Run a against run b, the same as versus(runs, cases, b).get(a), drawing only the pairs that involve a or b. */
+export function pairGap(runs, cases, a, b) {
+  const scored = evaluated(runs, cases), ia = scored.findIndex(r => r.id === a), ib = scored.findIndex(r => r.id === b);
+  if (ia < 0 || ib < 0) return null;
+  return rankStats(scored.map(r => cases.map(c => scoreOn(r, c))), cases.map(c => c.task), new Set([ia, ib])).gaps[ib].get(ia) || null;
+}
 export const positionOf = (m, ms) => m.questions ? 1 + ms.filter(o => o.accuracy > m.accuracy).length : null;
 const ordinal = n => `${n}${n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th'}`;
-export const rankText = s => !s ? '—' : s[0] === s[1] ? ordinal(s[0]) : s[0] === 1 ? 'Tied for 1st' : `${ordinal(s[0])}–${ordinal(s[1])}`;
+export const rankText = s => !s ? '—' : s[0] === s[1] ? ordinal(s[0]) : `${ordinal(s[0])}–${ordinal(s[1])}`;
 export function bestOn(t) { const rows = taskRows(t); return RUNS.map(r => [r, subsetMetrics(r, rows)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy)[0] || null; }
 export const evaluated = (rs, cases) => rs.filter(r => subsetMetrics(r, cases).questions > 0);
 

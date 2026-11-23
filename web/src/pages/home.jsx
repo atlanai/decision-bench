@@ -154,24 +154,26 @@ const SHORT_CAT = {'AI agents': 'Agents', 'Customer support': 'Support', 'Produc
 const shortCat = name => { const n = name.split(' & ')[0]; return SHORT_CAT[n] || n; };
 const ASC = ['latency', 'cost', 'tokens', 'ece', 'brier', 'errors'];
 /* Why a model has its rank range: the models it reliably beats, those that reliably beat it, and the rest. */
-const RANK_NOTE = '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both were scored on; "Tied for 1st" means no model is reliably ahead of it. Hover a range to see how many models are reliably ahead or behind.';
+const RANK_NOTE = '# is the order by accuracy. Rank range: the places a model could hold at 95% confidence, from comparing each pair of models on the rows both were scored on; a range from 1st means no model is reliably ahead of it. Hover a range to see how many models are reliably ahead or behind.';
 const VS_NOTE = 'vs: each model against the model you pick, on the rows both were scored on. Ahead or Behind means the accuracy gap holds at 95% confidence; Too close means it could be noise. The numbers count the rows only this model got right, then the rows only the picked model got right. Hover for the gap and its interval.';
 const rangeTip = (name, [best, worst], n) => tip(name, [['Rank range', B.rankText([best, worst])], ['Reliably better than', plural(n - worst, 'model')], ['Reliably worse than', plural(best - 1, 'model')], ['Too close to call', plural(worst - best, 'model')]]);
+/* The reference row's tint: stronger than the hover tint, and solid so the sticky Model cell carries it too. */
+const BASE_BG = {background: 'color-mix(in oklab, var(--foreground) 8%, var(--card))'};
 /* A model's gap to the reference model, from the same paired bootstrap as the rank range. */
-const CALL = {ahead: ['Ahead', 'text-good', 'Reliably ahead'], behind: ['Behind', 'text-bad', 'Reliably behind'], close: ['Too close', 'text-foreground/80', 'Too close to call']};
 function VsCell({r, base, g, n}) {
   if (r.id === base.id) return <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">Reference</td>;
   if (!g) return <td className="px-3 py-2.5"><Dash /></td>;
-  const [word, color, long] = CALL[g.call];
-  return <td className="px-3 py-2.5 whitespace-nowrap tabular-nums" data-tip={tip(`${B.runName(r)} vs ${B.runName(base)}`, [['Verdict', long], ['Only this model right', plural(g.wins, 'row')], [`Only ${B.ident(base).short} right`, plural(g.losses, 'row')], ['Accuracy gap', `${pp(g.gap)} pp`], ['95% interval', `${pp(g.lo)} to ${pp(g.hi)} pp`], ['Rows compared', num(g.rows)], ['Adjusted for', `comparing with ${plural(n - 1, 'model')}`]])}>
-    <span className={color}>{word}</span> <span className="text-xs text-muted-foreground">· {g.wins}–{g.losses}</span></td>;
+  const {word, long, tone} = B.CALLS[g.call];
+  return <td className="px-3 py-2.5 whitespace-nowrap tabular-nums" data-tip={tip(`${B.runName(r)} vs ${B.runName(base)}`, [['Verdict', long], ['Only this model right', plural(g.wins, 'row')], [`Only ${B.ident(base).short} right`, plural(g.losses, 'row')], ['Accuracy gap', `${pp(g.gap)} pp`], ['95% interval', g.lo == null ? 'too few rows to estimate' : `${pp(g.lo)} to ${pp(g.hi)} pp`], ['Rows compared', num(g.rows)], ['Adjusted for', `comparing with ${plural(n - 1, 'model')}`]])}>
+    <span className={tone}>{word}</span> <span className="text-xs text-muted-foreground">· {num(g.wins)}–{num(g.losses)}</span></td>;
 }
-/* The column header picks the reference model; the top model by accuracy is the default and keeps the URL clean. */
-function VsPicker({route, runs, base, top}) {
+/* The column header picks the reference model. With no pick it is the top model of the view; a pick stays in the URL,
+   so it holds when the filters change. */
+function VsPicker({route, runs, base}) {
   return <DropdownMenu>
     <DropdownMenuTrigger asChild><button type="button" data-track="leaderboard_vs" aria-label={`Compare every model with ${B.runName(base)}`} className="inline-flex cursor-pointer items-center gap-1 text-foreground hover:text-foreground/80">vs {B.ident(base).short}<ChevronDownIcon className="size-3.5 opacity-60" /></button></DropdownMenuTrigger>
     <DropdownMenuContent className="max-h-96 overflow-y-auto">
-      <DropdownMenuRadioGroup value={B.keyOf(base)} onValueChange={v => go(withQ(route, {vs: v === B.keyOf(top) ? '' : v}))}>
+      <DropdownMenuRadioGroup value={B.keyOf(base)} onValueChange={v => go(withQ(route, {vs: v}))}>
         {runs.map(r => <DropdownMenuRadioItem key={r.id} value={B.keyOf(r)}><ModelName k={B.keyOf(r)} link={false} /></DropdownMenuRadioItem>)}
       </DropdownMenuRadioGroup>
     </DropdownMenuContent>
@@ -213,7 +215,7 @@ function Leaderboard({route, runs, cases, more}) {
             <Th title="Order by accuracy" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             <Th title="Places the model could hold at 95% confidence: best is 1 + the models reliably ahead, worst is the number of models minus those reliably behind">Rank range</Th>
-            {base && <Th title={`Each model against ${B.runName(base)}, on the rows both were scored on: Ahead, Behind or Too close at 95% confidence, then the rows only this model got right – the rows only ${B.ident(base).short} got right. Pick another model here.`}><VsPicker route={route} runs={byAccuracy} base={base} top={top} /></Th>}
+            {base && <Th title={`Each model against ${B.runName(base)}, on the rows both were scored on: Ahead, Behind or Too close at 95% confidence, then the rows only this model got right – the rows only ${B.ident(base).short} got right. Pick another model here.`}><VsPicker route={route} runs={byAccuracy} base={base} /></Th>}
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
             <Th k="cost" className="text-right" title="Cost per 1,000 rows: provider-reported, else estimated from list prices">$ / 1k</Th>
@@ -221,10 +223,11 @@ function Leaderboard({route, runs, cases, more}) {
           </tr></thead>
           <tbody>
             {sorted.map(([r, m]) => { const ci = m.wilson, tp = m.tokensIn == null ? null : m.tokensIn + (m.tokensOut || 0);
-              return <tr key={r.id} className={cn('border-b transition-colors last:border-0 hover:bg-muted/40', r.id === base?.id && 'bg-muted/40')}>
+              const isBase = r.id === base?.id;
+              return <tr key={r.id} className="border-b transition-colors last:border-0 hover:bg-muted/40" style={isBase ? BASE_BG : undefined}>
                 <td className="py-2.5 pl-5 text-muted-foreground tabular-nums">{B.positionOf(m, all) ?? '—'}</td>
                 {/* Stays put while the use-case columns scroll sideways on narrower screens. */}
-                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]"><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <sup className="text-[10px] text-muted-foreground" title={`${m.excluded} image-only cases excluded; ${m.questions} scored. Image required but not sent.`}>**</sup>}</span></td>
+                <td className="sticky left-0 z-[1] bg-card px-3 py-2.5 max-xl:shadow-[1px_0_0_var(--border)]" style={isBase ? BASE_BG : undefined}><span className="inline-flex items-center gap-1"><ModelName k={B.keyOf(r)} />{m.excluded > 0 && <sup className="text-[10px] text-muted-foreground" title={`${m.excluded} image-only cases excluded; ${m.questions} scored. Image required but not sent.`}>**</sup>}</span></td>
                 <td className="px-3 py-2.5" data-tip={tip(B.runName(r), [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(ci)], ['Correct', `${m.correct}/${m.questions}`]])}>
                   <span className="flex items-center gap-3 whitespace-nowrap">
                     <span className="w-12 font-semibold tabular-nums">{pct(m.accuracy)}</span>

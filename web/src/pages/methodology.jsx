@@ -10,14 +10,14 @@ const A = ({href, children}) => <a href={href} target={href.startsWith('#') ? un
 const Terms = ({items}) => <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-[max-content_minmax(0,1fr)]">{items.map(([k, v]) => <div key={typeof k === 'string' ? k : v} className="contents"><dt className="font-medium text-foreground">{k}</dt><dd className="text-foreground/80 max-sm:mb-2">{v}</dd></div>)}</dl>;
 const METRICS = [
   ['Accuracy', 'Share of rows answered as the key does; no answer counts as wrong. Shown with a Wilson 95% interval. The # column is the order by accuracy.'],
-  ['Rank range', 'The places a model could hold at 95% confidence (Mogstad et al., Inference for Ranks). Each pair of models is compared on the rows both were scored on, with rows resampled within their task, so the range holds for these tasks. Each range is for one model: two ranges can overlap even when one model is reliably ahead of the other. The paired difference on Compare resamples whole tasks, so it asks whether the gap holds on new tasks and can disagree with the range for close pairs.'],
+  ['Rank range', 'The places a model could hold at 95% confidence (Mogstad et al., Inference for Ranks). Each pair of models is compared on the rows both were scored on, with rows resampled within their task, so the range holds for these tasks. Each range is for one model: two ranges can overlap even when one model is reliably ahead of the other.'],
+  ['vs and Compare', 'One pair at a time, from the same draws as the rank range: the accuracy gap on the rows both models were scored on, called ahead or behind only when its 95% interval, adjusted for comparing each model with all the others, excludes zero. A pair reads the same from either model and never claims a gap that either rank range does not. Next to it, the rows only one of the two got right.'],
   ['Per use case, per task', 'The same, recomputed on that subset of rows.'],
   ['Macro F1', 'F1 per option averaged within a task, then across tasks. Rewards the rare options.'],
   ['ECE and Brier', 'Calibration: the gap between stated confidence and observed accuracy, and the squared error of the stated probabilities. Lower is better.'],
   ['Latency', 'Wall-clock time per row at the client: median and 95th percentile. CLI times include start-up and are marked.'],
   ['Cost per 1,000 rows', 'Provider-reported cost where the endpoint returns it, else tokens priced at the list prices recorded with the run.'],
   ['Tokens', 'Input and output tokens per row.'],
-  ['Paired difference', 'Rows where only one of two models is right, with a bootstrap interval over task clusters.'],
 ];
 
 export function Methodology({id}) {

@@ -85,8 +85,9 @@ the other. Partial runs are not ranked.
 The leaderboard's `vs` column and the Compare page give the verdict for one pair from the same draws: the accuracy gap
 on the rows both were scored on, with an interval that uses the larger of the two models' max-t margins. The pair is
 called ahead or behind only when that interval excludes zero, so the verdict reads the same from either model and
-never claims a gap that either model's rank range does not. Next to it, the site counts the rows only one of the two
-got right. The `comparisons` in `data.json`, which resample whole tasks, are not used for these verdicts.
+never claims a gap that either model's rank range does not. A pair whose gap does not vary across the draws, such as
+two models that share one row, has no interval and stays too close, as in the ranges. Next to it, the site counts the
+rows only one of the two got right. The `comparisons` in `data.json`, which resample whole tasks, are not used for these verdicts.
 
 ## Retries and resuming
 
