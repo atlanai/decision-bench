@@ -90,6 +90,13 @@
   --bad: #b91c1c;
   --bad-soft: #fef2f2;
   --grid-ok: oklch(.9 0 0);
+  /* Series colours for charts whose shapes cross (the use-case radar), in this order, with ink as the fifth. Every
+     pair stays apart for normal vision against the card in each mode; in dark mode green and yellow sit in the
+     colour-blind floor band, so the radar also gives each slot its own marker shape. */
+  --series-1: #2a78d6;
+  --series-2: #e87ba4;
+  --series-3: #008300;
+  --series-4: #eda100;
 }
 /* Dark: a soft charcoal with a faint cool cast (Linear, Raycast), not near-black. Cards sit one step lighter than
    the page so they read as raised; tints are mixed from the page colour so they never glow. */
@@ -123,6 +130,10 @@
   --bad: #f87171;
   --bad-soft: color-mix(in oklab, var(--bad) 13%, var(--background));
   --grid-ok: oklch(.39 .006 286);
+  --series-1: #3987e5;
+  --series-2: #d55181;
+  --series-3: #008300;
+  --series-4: #c98500;
 }
 
 @keyframes accordion-down { from { height: 0 } to { height: var(--radix-accordion-content-height) } }

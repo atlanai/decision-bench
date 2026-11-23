@@ -208,3 +208,73 @@ export const Legend = ({items}) => (
     </span>)}
   </div>
 );
+
+/* A dithered glow behind the radar: one continuous ramp, densest at the centre and fading to nothing at the outer ring,
+   quantised with an 8x8 Bayer matrix (64 levels, so no banding). Dots of 1.5px on a 3px pitch are snapped to whole
+   device pixels so they stay sharp, drawn once into a mask over the foreground colour so they follow the theme. */
+const BAYER8 = (() => {
+  let m = [[0]];  /* M(2n) = [[4M, 4M+2], [4M+3, 4M+1]] */
+  while (m.length < 8) m = [...m.map(r => [...r.map(v => 4 * v), ...r.map(v => 4 * v + 2)]), ...m.map(r => [...r.map(v => 4 * v + 3), ...r.map(v => 4 * v + 1)])];
+  return m;
+})();
+function DitherGlow({w, h, cx, cy, R, n}) {
+  const [mask, setMask] = useState(null);
+  useLayoutEffect(() => {
+    const dpr = Math.min(3, window.devicePixelRatio || 1), c = document.createElement('canvas'), ctx = c.getContext('2d');
+    if (!ctx) return;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / n; ctx[i ? 'lineTo' : 'moveTo']((cx + Math.cos(a) * R) * dpr, (cy + Math.sin(a) * R) * dpr); }
+    ctx.closePath(); ctx.clip();
+    const pitch = Math.max(2, Math.round(3 * dpr)), dot = Math.max(1, Math.round(1.5 * dpr));
+    for (let y = 0, j = 0; y < c.height; y += pitch, j++) for (let x = 0, i = 0; x < c.width; x += pitch, i++) {
+      const rho = Math.hypot(x / dpr - cx, y / dpr - cy) / R;
+      if (rho < 1 && (BAYER8[j % 8][i % 8] + .5) / 64 < .6 * (1 - rho) ** 1.6) ctx.fillRect(x, y, dot, dot);
+    }
+    setMask(`url(${c.toDataURL()})`);
+  }, [w, h, cx, cy, R, n]);
+  return mask && <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-foreground opacity-30" style={{maskImage: mask, WebkitMaskImage: mask, maskSize: '100% 100%', WebkitMaskSize: '100% 100%'}} />;
+}
+
+/* Radar: one spoke per axis, one closed shape per series. series: {key,color,shape,values,tips}, where values[i] is
+   an accuracy or null (not evaluated: the shape breaks at that spoke) and shape names the marker (MARKS), a second cue
+   besides colour. The scale starts at min, so the caption must say where. With no series, the empty frame carries the
+   empty message in its centre. */
+export const MARKS = {
+  circle: (x, y) => `M${x - 4},${y}a4,4 0 1,0 8,0a4,4 0 1,0 -8,0`,
+  square: (x, y) => `M${x - 3.5},${y - 3.5}h7v7h-7z`,
+  triangle: (x, y) => `M${x},${y - 4.6}L${x + 4.4},${y + 3}H${x - 4.4}z`,
+  diamond: (x, y) => `M${x},${y - 4.8}L${x + 4.8},${y}L${x},${y + 4.8}L${x - 4.8},${y}z`,
+  cross: (x, y) => `M${x - 1.6},${y - 4.5}h3.2v2.9h2.9v3.2h-2.9v2.9h-3.2v-2.9h-2.9v-3.2h2.9z`,
+};
+export function Radar({axes, series, min, empty, label}) {
+  return <Chart label={label}>{w => {
+    const padX = w < 420 ? 64 : 88, R = Math.max(60, Math.min(210, w / 2 - padX)), h = 2 * R + 64, cx = w / 2, cy = h / 2, n = axes.length;
+    const d0 = min, r = lin(d0, 1, 0, R);
+    const at = (i, v) => { const a = -Math.PI / 2 + 2 * Math.PI * i / n; return [cx + Math.cos(a) * r(v), cy + Math.sin(a) * r(v)]; };
+    const ring = v => axes.map((_, i) => at(i, v).join(',')).join(' ');
+    const rings = niceTicks(d0, 1, 4).filter(t => t > d0 + 1e-9);
+    const ringY = t => cy + r(t) * Math.cos(Math.PI / n), labels = series.length ? rings.filter(t => t < 1) : [];
+    /* Closed when every spoke has a value; otherwise one open run per stretch of values, broken at each missing one. */
+    const shape = vs => {
+      const pt = i => at(i, vs[i]).join(',');
+      if (vs.every(v => v != null)) return `M${vs.map((_, i) => pt(i)).join('L')}Z`;
+      const z = vs.findIndex(v => v == null), runs = [];
+      for (let k = 1, cur = []; k <= n; k++) { const i = (z + k) % n; if (vs[i] == null) { if (cur.length) runs.push(cur); cur = []; } else cur.push(i); if (k === n && cur.length) runs.push(cur); }
+      return runs.map(run => `M${run.map(pt).join('L')}`).join('');
+    };
+    return <div className="relative"><DitherGlow w={w} h={h} cx={cx} cy={cy} R={R} n={n} /><Svg w={w} h={h}>
+      {rings.map(t => <polygon key={t} className="grid" fill="none" points={ring(t)} />)}
+      <polygon className="axis" fill="none" points={ring(d0)} />
+      {axes.map((a, i) => { const [x, y] = at(i, 1), [lx, ly] = [cx + (x - cx) * (1 + 14 / R), cy + (y - cy) * (1 + 14 / R)], anchor = Math.abs(lx - cx) < 4 ? 'middle' : lx > cx ? 'start' : 'end';
+        return <g key={a.key}><line className="grid" x1={cx} y1={cy} x2={x} y2={y} /><text className="t-ink" x={lx} y={ly + (ly > cy + 4 ? 10 : ly < cy - 4 ? -2 : 4)} textAnchor={anchor}>{a.name}</text></g>; })}
+      {series.map(x => <path key={x.key} d={shape(x.values)} fill="none" stroke={x.color} strokeWidth="2" strokeLinejoin="round" />)}
+      {!series.length && empty && <text className="t-ink" x={cx} y={cy + 4} textAnchor="middle" stroke="var(--card)" strokeWidth="6" paintOrder="stroke">{empty}</text>}
+      {/* Ring values down the gap below the centre, an axis of their own: with an odd spoke count no spoke runs there.
+          Bold, with a card-coloured halo, so they read over the glow and the lines; the outer ring is 100%. */}
+      {labels.map(t => <text key={t} className="t-value" x={cx} y={ringY(t) + 4} textAnchor="middle" fontWeight="600" stroke="var(--card)" strokeWidth="4" paintOrder="stroke">{pct0(t)}</text>)}
+      {series.map(x => x.values.map((v, i) => v == null ? null : <g key={`${x.key}-${i}`} data-tip={x.tips[i]} tabIndex={0} role="img" aria-label={tipLabel(x.tips[i])}>
+        <circle className="hit" cx={at(i, v)[0]} cy={at(i, v)[1]} r="9" /><path d={MARKS[x.shape](...at(i, v))} fill={x.color} stroke="var(--card)" strokeWidth="1.5" /></g>))}
+    </Svg></div>;
+  }}</Chart>;
+}
