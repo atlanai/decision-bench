@@ -9,7 +9,7 @@ import {BrandMark, GitHubIcon} from '@/components/icons';
 import {Button} from '@/components/ui/button';
 import {Tip} from '@/components/ui/tooltip';
 
-const NAV = [['home', '/', 'Leaderboard'], ['tasks', '/tasks', 'Tasks'], ['models', '/models', 'Models'], ['compare', '/compare', 'Compare'], ['data', '/data', 'Data'], ['methodology', '/methodology', 'Methodology']];
+const NAV = [['home', '/', 'Leaderboard'], ['compare', '/compare', 'Compare'], ['tasks', '/tasks', 'Tasks'], ['models', '/models', 'Models'], ['data', '/data', 'Data'], ['methodology', '/methodology', 'Methodology']];
 const SECTION = {task: 'tasks', row: 'tasks', review: 'tasks', model: 'models'};
 
 /* Switch themes with every transition off for one frame. Otherwise each element with transition-colors animates
@@ -150,7 +150,7 @@ function useTucked() {
   return hidden;
 }
 
-const TABS = [['home', '/', 'Leaderboard', TrophyIcon], ['tasks', '/tasks', 'Tasks', ListChecksIcon], ['models', '/models', 'Models', BoxesIcon], ['compare', '/compare', 'Compare', GitCompareArrowsIcon], ['data', '/data', 'Data', DatabaseIcon], ['methodology', '/methodology', 'Methodology', BookOpenIcon]];
+const TABS = [['home', '/', 'Leaderboard', TrophyIcon], ['compare', '/compare', 'Compare', GitCompareArrowsIcon], ['tasks', '/tasks', 'Tasks', ListChecksIcon], ['models', '/models', 'Models', BoxesIcon], ['data', '/data', 'Data', DatabaseIcon], ['methodology', '/methodology', 'Methodology', BookOpenIcon]];
 export function TabBar({page}) {
   const hidden = useTucked(), cur = SECTION[page] || page, i = TABS.findIndex(t => t[0] === cur);
   if (page === 'review') return null;
