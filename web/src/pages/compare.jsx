@@ -12,7 +12,7 @@ import {Button} from '@/components/ui/button';
 import {Tip} from '@/components/ui/tooltip';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/segmented-control';
-import {GRID} from '@/pages/home';
+import {PixelBanner} from '@/pages/home';
 import {TableCard} from '@/pages/task';
 
 const TH = 'h-10 px-3 text-left text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-5 last:pr-5';
@@ -76,9 +76,8 @@ function Agreement({route, rows}) {
 }
 
 function Hero({route, keys, runs, rows}) {
-  return <div className={cn('border-b [--grid-line:var(--border)]', GRID)}>
-    <div className="bg-gradient-to-b from-background/40 via-background/70 to-background">
-      <div className="mx-auto max-w-[1600px] px-4 pt-8 pb-10 md:px-8 md:pt-14 md:pb-12">
+  return <PixelBanner>
+      <div className="relative mx-auto max-w-[1600px] px-4 pt-8 pb-10 md:px-8 md:pt-14 md:pb-12">
         <p className="mb-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase md:mb-5">Compare · same rows, same prompt · {num(rows.length)} rows</p>
         <h1 className="max-w-[20ch] font-pixel text-4xl leading-[1.02] uppercase sm:text-5xl lg:text-[52px]">Where does each model <em className="text-brand not-italic">get it wrong</em>?</h1>
         <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-foreground/75">Pick up to {B.MAX_PICKS} models. See where they agree, which rows split them, and what each one answered against the answer key.</p>
@@ -86,15 +85,13 @@ function Hero({route, keys, runs, rows}) {
           <span className={LABEL}>{keys.length} of {B.MAX_PICKS} models</span>
           <CopyButton text={`${location.origin}${href('compare', {m: keys.join(',')})}`} label="Copy link to this comparison" />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div data-no-trail className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {runs.map((r, i) => <ModelCard key={r.id} route={route} keys={keys} i={i} run={r} rows={rows} />)}
           {keys.length < B.MAX_PICKS && <AddCard route={route} keys={keys} />}
         </div>
-        <Agreement route={route} rows={rows} />
-        <Verdicts runs={runs} />
+        <div data-no-trail><Agreement route={route} rows={rows} /><Verdicts runs={runs} /></div>
       </div>
-    </div>
-  </div>;
+  </PixelBanner>;
 }
 
 /* Each pair's verdict, from the paired bootstrap behind the leaderboard's rank range. One pair takes over 100 ms, so

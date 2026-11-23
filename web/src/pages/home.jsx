@@ -67,7 +67,7 @@ function UseCases({route}) {
 /* The banner under the cursor: a pink glow glides after the pointer (eased, so it trails a little), the grid lines
    around it turn pink, and the cells the pointer crosses light up as pixels that fade out, with a few sparks
    beside them. Drawn on one canvas; positions go to CSS variables, never through React state. */
-export const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-[position:0_0]';
+const GRID = 'bg-[linear-gradient(var(--grid-line)_1px,transparent_1px),linear-gradient(90deg,var(--grid-line)_1px,transparent_1px)] bg-[size:24px_24px] bg-[position:0_0]';
 const CELL = 24;
 function usePixelTrail(ref, canvasRef) {
   useEffect(() => {
@@ -121,9 +121,8 @@ function usePixelTrail(ref, canvasRef) {
     return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('pointerdown', tap); ro.disconnect(); cancelAnimationFrame(raf); };
   }, [ref, canvasRef]);
 }
-function Banner({route}) {
-  const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
-  const stat = (l, v, t) => <div title={t || undefined} className="flex min-w-0 flex-col-reverse px-3 first:pl-0 last:pr-0 sm:px-6"><dt className="mt-1 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase sm:text-[11px]">{l}</dt><dd className="font-mono text-xl font-medium tabular-nums sm:text-2xl">{v}</dd></div>;
+/* The page header's grid with the pointer effects of usePixelTrail. Content marked data-no-trail calms it. */
+export function PixelBanner({children}) {
   const box = useRef(null), canvas = useRef(null);
   usePixelTrail(box, canvas);
   return (
@@ -132,6 +131,16 @@ function Banner({route}) {
         <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute top-0 left-0" />
         <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
+        {children}
+      </div>
+    </div>
+  );
+}
+function Banner({route}) {
+  const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
+  const stat = (l, v, t) => <div title={t || undefined} className="flex min-w-0 flex-col-reverse px-3 first:pl-0 last:pr-0 sm:px-6"><dt className="mt-1 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase sm:text-[11px]">{l}</dt><dd className="font-mono text-xl font-medium tabular-nums sm:text-2xl">{v}</dd></div>;
+  return (
+    <PixelBanner>
         <div className="relative mx-auto grid max-w-[1600px] items-center gap-x-16 gap-y-10 px-4 pt-8 pb-10 md:px-8 md:pt-14 md:gap-y-12 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
             <p className="mb-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase md:mb-5"><span className="max-md:hidden">Decision Bench · </span>{B.man().version} · real records, open licences</p>
@@ -143,8 +152,7 @@ function Banner({route}) {
           </div>
           <UseCases route={route} />
         </div>
-      </div>
-    </div>
+    </PixelBanner>
   );
 }
 
