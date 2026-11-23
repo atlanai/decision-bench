@@ -213,7 +213,7 @@ function Leaderboard({route, runs, cases, more}) {
             <Th title="Order by accuracy" className="w-10">#</Th><Th className="sticky left-0 z-[1] bg-card">Model</Th>
             <Th k="accuracy" title="Share of rows answered as the key does, with its Wilson 95% interval">Accuracy</Th>
             <Th title="Places the model could hold at 95% confidence: best is 1 + the models reliably ahead, worst is the number of models minus those reliably behind">Rank range</Th>
-            {base && <Th title="Accuracy gap to the picked model on the rows both were scored on"><VsPicker route={route} runs={byAccuracy} base={base} top={top} /></Th>}
+            {base && <Th title={`Each model against ${B.runName(base)}, on the rows both were scored on: Ahead, Behind or Too close at 95% confidence, then the rows only this model got right – the rows only ${B.ident(base).short} got right. Pick another model here.`}><VsPicker route={route} runs={byAccuracy} base={base} top={top} /></Th>}
             {cols.map(k => <Th key={k} k={`col:${k}`} className={cn('px-1.5 text-right', cat && 'text-xs leading-tight whitespace-normal [&_button]:max-w-[84px] [&_button]:text-right')} title={`${colName(k)}: accuracy on ${colCases(k).length} rows`}>{cat ? colName(k) : shortCat(colName(k))}</Th>)}
             <Th k="latency" className="text-right" title="Median wall-clock time per row">Latency</Th>
             <Th k="cost" className="text-right" title="Cost per 1,000 rows: provider-reported, else estimated from list prices">$ / 1k</Th>
