@@ -6,6 +6,7 @@ import {pct, pct0, clip} from '@/lib/format';
 import {rowHref, go} from '@/lib/route';
 import {tip, showTip, moveTip, hideTip} from '@/components/tip';
 import {cn} from '@/lib/utils';
+import {reducedMotion} from '@/lib/device';
 
 const SVG_CLS = 'block overflow-visible font-sans text-[12px] [&_text]:fill-muted-foreground [&_text]:tabular-nums [&_.t-ink]:fill-foreground/80 [&_.t-value]:fill-foreground [&_.t-value]:tabular-nums [&_.grid]:stroke-border [&_.minor]:opacity-50 [&_.axis]:stroke-foreground/20 [&_.ref]:stroke-muted-foreground/60 [&_.ref]:[stroke-dasharray:3_3] [&_.hit]:fill-transparent [&_.whisker]:fill-none [&_.whisker]:stroke-foreground/70 [&_.ghost]:fill-none [&_.ghost]:stroke-foreground/15 [&_g[data-tip]:hover_.hit]:fill-foreground/5';
 
@@ -128,7 +129,8 @@ function hatchPattern(ctx, color) {
   const g = c.getContext('2d'); g.strokeStyle = color; g.lineWidth = 1.2; g.beginPath(); g.moveTo(0, 4); g.lineTo(4, 0); g.moveTo(-1, 1); g.lineTo(1, -1); g.moveTo(3, 5); g.lineTo(5, 3); g.stroke();
   return ctx.createPattern(c, 'repeat');
 }
-export function RecordGrid({runs, cases}) {
+/* marks: label each model with its slot marker (SLOTS) instead of its own colour. */
+export function RecordGrid({runs, cases, marks = false}) {
   const [ref, w] = useWidth(), cv = useRef(null), band = useRef(null), L = useRef(null);
   let body = null;
   if (w > 0) {
@@ -146,7 +148,7 @@ export function RecordGrid({runs, cases}) {
         <div style={{height: HEAD + 2}} />
         <div className="flex items-center text-xs text-muted-foreground" style={{height: SH, marginBottom: TOP - SH}}>Models wrong</div>
         {runs.map((r, ri) => <div key={r.id} className="flex items-center justify-between gap-2 overflow-hidden text-[13px]" style={{height: ROWH, marginBottom: RGAP}} title={runName(r)}>
-          <span className="inline-flex min-w-0 items-center gap-2"><i className="size-2 shrink-0 rounded-full" style={{background: ident(r).color}} /><span className="truncate font-medium">{w < 640 ? ident(r).short : ident(r).name}</span></span>
+          <span className="inline-flex min-w-0 items-center gap-2">{marks ? <Mark slot={ri} /> : <i className="size-2 shrink-0 rounded-full" style={{background: ident(r).color}} />}<span className="truncate font-medium">{w < 640 ? ident(r).short : ident(r).name}</span></span>
           <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground tabular-nums">{codes[ri].reduce((n, v) => n + (v > 1), 0)} wrong</span>
         </div>)}
       </div>
@@ -208,3 +210,172 @@ export const Legend = ({items}) => (
     </span>)}
   </div>
 );
+
+/* A dithered glow behind the radar: one continuous ramp, densest at the centre and fading to nothing at the outer ring,
+   quantised with an 8x8 Bayer matrix (64 levels, so no banding). Dots of 1.5px on a 3px pitch are snapped to whole
+   device pixels so they stay sharp, drawn once into a mask over the foreground colour so they follow the theme.
+   Two effects fill the gaps in the same dither, on a canvas above it: every few seconds a sonar ring leaves the centre,
+   and the pointer leaves a trail that fades, as in the page header. The trail stays ink, not pink: the series colours
+   (pink among them) belong to the data. Both stop off screen and with reduced motion. */
+const BAYER8 = (() => {
+  let m = [[0]];  /* M(2n) = [[4M, 4M+2], [4M+3, 4M+1]] */
+  while (m.length < 8) m = [...m.map(r => [...r.map(v => 4 * v), ...r.map(v => 4 * v + 2)]), ...m.map(r => [...r.map(v => 4 * v + 3), ...r.map(v => 4 * v + 1)])];
+  return m;
+})();
+const PULSE_MS = 2200, PULSE_EVERY = 5500, PULSE_FIRST = 900, TRAIL_PX = 34;
+function DitherGlow({w, h, cx, cy, R, n}) {
+  const [mask, setMask] = useState(null), gaps = useRef(null), cv = useRef(null);
+  useLayoutEffect(() => {
+    const dpr = Math.min(3, window.devicePixelRatio || 1), c = document.createElement('canvas'), ctx = c.getContext('2d');
+    if (!ctx) return;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    const poly = new Path2D();
+    for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / n; poly[i ? 'lineTo' : 'moveTo']((cx + Math.cos(a) * R) * dpr, (cy + Math.sin(a) * R) * dpr); }
+    poly.closePath();
+    const pitch = Math.max(2, Math.round(3 * dpr)), dot = Math.max(1, Math.round(1.5 * dpr)), list = [];
+    /* Each gap keeps how much more density it needs before it shows: x, y (device px), rho, need. */
+    for (let y = 0, j = 0; y < c.height; y += pitch, j++) for (let x = 0, i = 0; x < c.width; x += pitch, i++) {
+      const rho = Math.hypot(x / dpr - cx, y / dpr - cy) / R;
+      if (rho >= 1 || !ctx.isPointInPath(poly, x, y)) continue;
+      const need = (BAYER8[j % 8][i % 8] + .5) / 64 - .6 * (1 - rho) ** 1.6;
+      if (need < 0) ctx.fillRect(x, y, dot, dot); else list.push(x, y, rho, need);
+    }
+    gaps.current = {dpr, dot, list: Float32Array.from(list)};
+    setMask(`url(${c.toDataURL()})`);
+  }, [w, h, cx, cy, R, n]);
+  useEffect(() => {
+    const el = cv.current, g = gaps.current, host = el?.parentElement;
+    if (!el || !g || reducedMotion()) return;
+    el.width = Math.round(w * g.dpr); el.height = Math.round(h * g.dpr);
+    const ctx = el.getContext('2d'), {dpr, dot, list} = g, spots = [];
+    let raf = 0, timer = 0, visible = false, pulse = null, ink = '';
+    const frame = now => {
+      raf = 0; ctx.clearRect(0, 0, el.width, el.height);
+      if (pulse != null) {
+        const p = (now - pulse) / PULSE_MS;
+        if (p >= 1) { pulse = null; timer = setTimeout(start, PULSE_EVERY - PULSE_MS); } else {
+          const at = 1.15 * (1 - (1 - p) ** 1.4), strength = .55 * (1 - p) ** .8;
+          ctx.globalAlpha = .4; ctx.fillStyle = ink;
+          for (let k = 0; k < list.length; k += 4) { const d = (list[k + 2] - at) / .09; if (list[k + 3] < strength * Math.exp(-d * d)) ctx.fillRect(list[k], list[k + 1], dot, dot); }
+        }
+      }
+      if (spots.length) {
+        ctx.globalAlpha = .7; ctx.fillStyle = ink;
+        for (let k = 0; k < list.length; k += 4) {
+          const x = list[k] / dpr, y = list[k + 1] / dpr;
+          let b = 0; for (const s of spots) { const d2 = ((x - s.x) ** 2 + (y - s.y) ** 2) / TRAIL_PX ** 2; if (d2 < 4) b = Math.max(b, s.e * Math.exp(-d2)); }
+          if (list[k + 3] < .8 * b) ctx.fillRect(list[k], list[k + 1], dot, dot);
+        }
+        for (const s of spots) s.e *= .9;
+        while (spots.length && spots[0].e < .04) spots.shift();
+      }
+      if (pulse != null || spots.length) raf = requestAnimationFrame(frame);
+    };
+    const kick = () => { if (!raf && visible) { ink = getComputedStyle(el).color; raf = requestAnimationFrame(frame); } };
+    const start = () => { if (visible) { pulse = performance.now(); kick(); } };
+    const move = e => {
+      if (e.pointerType !== 'mouse') return;
+      const b = host.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, last = spots.at(-1);
+      if (!last || Math.hypot(x - last.x, y - last.y) > 6) spots.push({x, y, e: 1}); else last.e = 1;
+      kick();
+    };
+    const io = new IntersectionObserver(([e]) => {
+      const was = visible; visible = e.isIntersecting;
+      if (visible && !was) timer = setTimeout(start, PULSE_FIRST);
+      if (!visible) { cancelAnimationFrame(raf); raf = 0; clearTimeout(timer); pulse = null; spots.length = 0; ctx.clearRect(0, 0, el.width, el.height); }
+    });
+    io.observe(el); host.addEventListener('pointermove', move);
+    return () => { io.disconnect(); host.removeEventListener('pointermove', move); cancelAnimationFrame(raf); clearTimeout(timer); };
+  }, [mask]); // eslint-disable-line react-hooks/exhaustive-deps
+  return mask && <>
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-foreground opacity-30" style={{maskImage: mask, WebkitMaskImage: mask, maskSize: '100% 100%', WebkitMaskSize: '100% 100%'}} />
+    <canvas ref={cv} aria-hidden="true" className="pointer-events-none absolute inset-0 text-foreground" style={{width: w, height: h}} />
+  </>;
+}
+
+/* Radar: one spoke per axis, one closed shape per series. series: {key,color,shape,values,tips}, where values[i] is
+   an accuracy or null (not evaluated: the shape breaks at that spoke) and shape names the marker (MARKS), a second cue
+   besides colour. The scale starts at min, so the caption must say where. With no series, the empty frame carries the
+   empty message in its centre. */
+export const MARKS = {
+  circle: (x, y) => `M${x - 4},${y}a4,4 0 1,0 8,0a4,4 0 1,0 -8,0`,
+  square: (x, y) => `M${x - 3.5},${y - 3.5}h7v7h-7z`,
+  triangle: (x, y) => `M${x},${y - 4.6}L${x + 4.4},${y + 3}H${x - 4.4}z`,
+  diamond: (x, y) => `M${x},${y - 4.8}L${x + 4.8},${y}L${x},${y + 4.8}L${x - 4.8},${y}z`,
+  cross: (x, y) => `M${x - 1.6},${y - 4.5}h3.2v2.9h2.9v3.2h-2.9v2.9h-3.2v-2.9h-2.9v-3.2h2.9z`,
+};
+/* Colour and marker for each slot in a chart of a few picked models (the radar, Compare), with ink as the fifth. A model
+   keeps its slot while others come and go. */
+export const SLOTS = [['var(--series-1)', 'circle'], ['var(--series-2)', 'square'], ['var(--series-3)', 'triangle'], ['var(--series-4)', 'diamond'], ['var(--foreground)', 'cross']];
+export const Mark = ({slot, className}) => <svg viewBox="-6 -6 12 12" className={cn('size-3 shrink-0', className)} aria-hidden="true"><path d={MARKS[SLOTS[slot][1]](0, 0)} fill={SLOTS[slot][0]} /></svg>;
+/* The radar's drawn values, eased toward the real ones: the shapes grow out of the centre the first time the chart
+   scrolls into view, and glide when a model, the scale or a filter changes. A value is keyed by series and axis, so a
+   new series or axis starts at the centre. With reduced motion every change lands at once. */
+const RADAR_MS = 650;
+function useRadarMotion(ref, axes, series, min) {
+  const [seen, setSeen] = useState(false), [drawn, setDrawn] = useState(null), last = useRef(null);
+  useEffect(() => {
+    const el = ref.current; if (!el || seen) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } }, {threshold: .25});
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref, seen]);
+  const target = new Map(series.flatMap(x => axes.map((a, i) => [`${x.key}|${a.key}`, x.values[i]])));
+  const sig = `${min}|${[...target].join(';')}`;
+  useEffect(() => {
+    if (!seen) return;
+    const from = last.current || {min, vals: new Map()}, t0 = performance.now(), instant = reducedMotion();
+    let raf = 0;
+    const frame = now => {
+      const p = instant ? 1 : Math.min(1, (now - t0) / RADAR_MS), e = 1 - (1 - p) ** 3, m = from.min + (min - from.min) * e, vals = new Map();
+      for (const [k, v] of target) { if (v == null) { vals.set(k, null); continue; } const a = from.vals.get(k) ?? m; vals.set(k, a + (v - a) * e); }
+      last.current = {min: m, vals}; setDrawn(last.current);
+      if (p < 1) raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [seen, sig]); // eslint-disable-line react-hooks/exhaustive-deps
+  /* Before the chart is seen every shape sits folded at the centre. */
+  const at = drawn || {min, vals: new Map()};
+  return {min: at.min, value: (s, a) => { const v = target.get(`${s}|${a}`); return v == null ? null : at.vals.get(`${s}|${a}`) ?? at.min; }};
+}
+
+/* hot: the series under the pointer comes forward with a light fill; the others fade. */
+export function Radar({axes, series, min: realMin, empty, label}) {
+  const box = useRef(null), [hot, setHot] = useState(null), motion = useRadarMotion(box, axes, series, realMin), min = motion.min;
+  const live = series.map(x => ({...x, values: axes.map(a => motion.value(x.key, a.key))}));
+  const focus = k => ({onPointerEnter: () => setHot(k), onPointerLeave: () => setHot(null), onFocus: () => setHot(k), onBlur: () => setHot(null)});
+  const fade = k => hot && hot !== k ? .18 : 1;
+  return <div ref={box}><Chart label={label}>{w => {
+    const padX = w < 420 ? 64 : 88, R = Math.max(60, Math.min(210, w / 2 - padX)), h = 2 * R + 64, cx = w / 2, cy = h / 2, n = axes.length;
+    const d0 = min, r = lin(d0, 1, 0, R);
+    const at = (i, v) => { const a = -Math.PI / 2 + 2 * Math.PI * i / n; return [cx + Math.cos(a) * r(v), cy + Math.sin(a) * r(v)]; };
+    const ring = v => axes.map((_, i) => at(i, v).join(',')).join(' ');
+    const ringY = t => cy + r(t) * Math.cos(Math.PI / n);
+    /* Closed when every spoke has a value; otherwise one open run per stretch of values, broken at each missing one. */
+    const shape = vs => {
+      const pt = i => at(i, vs[i]).join(',');
+      if (vs.every(v => v != null)) return `M${vs.map((_, i) => pt(i)).join('L')}Z`;
+      const z = vs.findIndex(v => v == null), runs = [];
+      for (let k = 1, cur = []; k <= n; k++) { const i = (z + k) % n; if (vs[i] == null) { if (cur.length) runs.push(cur); cur = []; } else cur.push(i); if (k === n && cur.length) runs.push(cur); }
+      return runs.map(run => `M${run.map(pt).join('L')}`).join('');
+    };
+    const rings = niceTicks(realMin, 1, 4).filter(t => t > Math.max(realMin, d0) + 1e-9), labels = series.length ? rings.filter(t => t < 1) : [];
+    return <div className="relative"><DitherGlow w={w} h={h} cx={cx} cy={cy} R={R} n={n} /><Svg w={w} h={h}>
+      {rings.map(t => <polygon key={t} className="grid" fill="none" points={ring(t)} />)}
+      <polygon className="axis" fill="none" points={ring(d0)} />
+      {axes.map((a, i) => { const [x, y] = at(i, 1), [lx, ly] = [cx + (x - cx) * (1 + 14 / R), cy + (y - cy) * (1 + 14 / R)], anchor = Math.abs(lx - cx) < 4 ? 'middle' : lx > cx ? 'start' : 'end';
+        return <g key={a.key}><line className="grid" x1={cx} y1={cy} x2={x} y2={y} /><text className="t-ink" x={lx} y={ly + (ly > cy + 4 ? 10 : ly < cy - 4 ? -2 : 4)} textAnchor={anchor}>{a.name}</text></g>; })}
+      {live.map(x => <g key={x.key} {...focus(x.key)} style={{opacity: fade(x.key), transition: 'opacity .2s ease'}}>
+        <path d={shape(x.values)} fill={hot === x.key && x.values.every(v => v != null) ? x.color : 'none'} fillOpacity=".12" stroke={x.color} strokeWidth={hot === x.key ? 2.75 : 2} strokeLinejoin="round" />
+        <path d={shape(x.values)} fill="none" stroke="transparent" strokeWidth="12" strokeLinejoin="round" />
+      </g>)}
+      {!series.length && empty && <text className="t-ink" x={cx} y={cy + 4} textAnchor="middle" stroke="var(--card)" strokeWidth="6" paintOrder="stroke">{empty}</text>}
+      {/* Ring values down the gap below the centre, an axis of their own: with an odd spoke count no spoke runs there.
+          Bold, with a card-coloured halo, so they read over the glow and the lines; the outer ring is 100%. */}
+      {labels.map(t => <text key={t} className="t-value" x={cx} y={ringY(t) + 4} textAnchor="middle" fontWeight="600" stroke="var(--card)" strokeWidth="4" paintOrder="stroke">{pct0(t)}</text>)}
+      {live.map(x => x.values.map((v, i) => v == null ? null : <g key={`${x.key}-${i}`} data-tip={x.tips[i]} tabIndex={0} role="img" aria-label={tipLabel(x.tips[i])} {...focus(x.key)} style={{opacity: fade(x.key), transition: 'opacity .2s ease'}}>
+        <circle className="hit" cx={at(i, v)[0]} cy={at(i, v)[1]} r="9" /><path d={MARKS[x.shape](...at(i, v))} fill={x.color} stroke="var(--card)" strokeWidth="1.5" /></g>))}
+    </Svg></div>;
+  }}</Chart></div>;
+}

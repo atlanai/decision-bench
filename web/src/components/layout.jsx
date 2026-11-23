@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {BookOpenIcon, BoxesIcon, ChevronDownIcon, ChevronLeftIcon, ChevronUpIcon, DatabaseIcon, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, ListChecksIcon, MoonIcon, SunIcon, TrophyIcon} from 'lucide-react';
+import {BookOpenIcon, BoxesIcon, ChevronDownIcon, ChevronLeftIcon, ChevronUpIcon, DatabaseIcon, GitCompareArrowsIcon, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, ListChecksIcon, MoonIcon, SunIcon, TrophyIcon} from 'lucide-react';
 import {taskOrder, taskName, taskRows, caseMap, M, REPO, repoOk, HUGGING_FACE_DATASET} from '@/lib/bench';
 import {go, replace, href, taskHref, rowHref, navHint, historyPos} from '@/lib/route';
 import {haptic} from '@/lib/device';
@@ -9,8 +9,8 @@ import {BrandMark, GitHubIcon} from '@/components/icons';
 import {Button} from '@/components/ui/button';
 import {Tip} from '@/components/ui/tooltip';
 
-const NAV = [['home', '/', 'Leaderboard'], ['tasks', '/tasks', 'Tasks'], ['models', '/models', 'Models'], ['data', '/data', 'Data'], ['methodology', '/methodology', 'Methodology']];
-const SECTION = {task: 'tasks', row: 'tasks', review: 'tasks', model: 'models', compare: 'models'};
+const NAV = [['home', '/', 'Leaderboard'], ['compare', '/compare', 'Compare'], ['tasks', '/tasks', 'Tasks'], ['models', '/models', 'Models'], ['data', '/data', 'Data'], ['methodology', '/methodology', 'Methodology']];
+const SECTION = {task: 'tasks', row: 'tasks', review: 'tasks', model: 'models'};
 
 /* Switch themes with every transition off for one frame. Otherwise each element with transition-colors animates
    from the old palette to the new one, thousands at once, and the blurred sticky header can stay stuck halfway
@@ -79,9 +79,8 @@ function barFor(page, id) {
       return {title: `Row ${i + 1} of ${rows.length}`, short: `Row ${i + 1}`, up: [taskName(c.task), taskHref(c.task)], prev: rows[i - 1], next: rows[i + 1]};
     }
     case 'model': return {title: M(id).name, up: ['Models', href('models')]};
-    case 'compare': return {title: 'Compare', up: ['Models', href('models')]};
     case 'review': return {title: 'Review', up: ['Leaderboard', '/']};
-    default: return {title: {home: 'Leaderboard', tasks: 'Tasks', models: 'Models', data: 'Data', methodology: 'Methodology'}[page] || 'Decision Bench'};
+    default: return {title: {home: 'Leaderboard', tasks: 'Tasks', models: 'Models', compare: 'Compare', data: 'Data', methodology: 'Methodology'}[page] || 'Decision Bench'};
   }
 }
 /* The title of each history entry this visit, so Back can name the page it returns to. */
@@ -151,7 +150,7 @@ function useTucked() {
   return hidden;
 }
 
-const TABS = [['home', '/', 'Leaderboard', TrophyIcon], ['tasks', '/tasks', 'Tasks', ListChecksIcon], ['models', '/models', 'Models', BoxesIcon], ['data', '/data', 'Data', DatabaseIcon], ['methodology', '/methodology', 'Methodology', BookOpenIcon]];
+const TABS = [['home', '/', 'Leaderboard', TrophyIcon], ['compare', '/compare', 'Compare', GitCompareArrowsIcon], ['tasks', '/tasks', 'Tasks', ListChecksIcon], ['models', '/models', 'Models', BoxesIcon], ['data', '/data', 'Data', DatabaseIcon], ['methodology', '/methodology', 'Methodology', BookOpenIcon]];
 export function TabBar({page}) {
   const hidden = useTucked(), cur = SECTION[page] || page, i = TABS.findIndex(t => t[0] === cur);
   if (page === 'review') return null;
@@ -163,8 +162,8 @@ export function TabBar({page}) {
   };
   return (
     <nav aria-label="Main navigation" className={cn('vt-tabbar pointer-events-none fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(env(safe-area-inset-bottom),10px)] transition-transform duration-300 ease-[cubic-bezier(.32,.72,0,1)] motion-safe:animate-tabbar-in lg:hidden', hidden && 'translate-y-[calc(100%+6px)]')}>
-      <div className="pointer-events-auto relative mx-auto grid max-w-md grid-cols-5 rounded-[26px] border bg-background/90 p-1 shadow-[0_10px_34px_-10px_rgb(0_0_0/.28)] backdrop-blur-xl backdrop-saturate-150 select-none supports-[backdrop-filter]:bg-background/75 dark:shadow-[0_10px_34px_-10px_rgb(0_0_0/.6)]">
-        <i aria-hidden="true" className={cn('absolute inset-y-1 left-1 w-[calc((100%-8px)/5)] rounded-[22px] bg-foreground/[.07] transition-[transform,opacity] duration-400 ease-[cubic-bezier(.3,1.12,.5,1)] dark:bg-foreground/[.1]', i < 0 && 'opacity-0')} style={{transform: `translateX(${Math.max(0, i) * 100}%)`}} />
+      <div className="pointer-events-auto relative mx-auto grid max-w-md grid-cols-6 rounded-[26px] border bg-background/90 p-1 shadow-[0_10px_34px_-10px_rgb(0_0_0/.28)] backdrop-blur-xl backdrop-saturate-150 select-none supports-[backdrop-filter]:bg-background/75 dark:shadow-[0_10px_34px_-10px_rgb(0_0_0/.6)]">
+        <i aria-hidden="true" className={cn('absolute inset-y-1 left-1 w-[calc((100%-8px)/6)] rounded-[22px] bg-foreground/[.07] transition-[transform,opacity] duration-400 ease-[cubic-bezier(.3,1.12,.5,1)] dark:bg-foreground/[.1]', i < 0 && 'opacity-0')} style={{transform: `translateX(${Math.max(0, i) * 100}%)`}} />
         {TABS.map(([k, h, t, Icon], j) => { const on = j === i;
           return <a key={k} href={h} onClick={e => tap(e, k)} aria-current={on ? 'page' : undefined} className={cn('relative flex h-[50px] flex-col items-center justify-center gap-[3px] rounded-[22px] text-[10px] font-medium tracking-[.01em] text-muted-foreground max-[360px]:text-[9px] max-[360px]:tracking-normal transition-[color,transform] duration-150 active:scale-90', on && 'text-foreground')}>
             <Icon key={on ? 'on' : 'off'} className={cn('size-[21px]', on && 'motion-safe:animate-tab-pop')} strokeWidth={on ? 2.2 : 1.7} />

@@ -12,7 +12,7 @@ import {ModelName, Logo, Section, Notice, Dash, Notes} from '@/components/common
 import {List, Item} from '@/components/list';
 import {UseCaseSelect, ModalityTabs, ModelPicker, selectedRuns} from '@/components/filters';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
-import {RowsChart, Scatter, RecordGrid, Legend, zoomDomain} from '@/components/charts';
+import {RowsChart, Scatter, RecordGrid, Legend, Radar, SLOTS, Mark, zoomDomain} from '@/components/charts';
 import {HeatTasks} from '@/components/heat';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
@@ -21,7 +21,7 @@ import {SegmentedControl, SegmentedList, SegmentedOption} from '@/components/ui/
 const scopeCases = route => { const cat = route.q.get('category') || '', mod = route.q.get('modality') || ''; return B.rowsInOrder().filter(c => (!cat || B.catKey(c) === cat) && (!mod || (mod === 'image') === B.isImageTask(c.task))); };
 export const ChartCard = ({title, description, foot, children, className}) => (
   <div className={cn('min-w-0 rounded-xl border bg-card p-4 shadow-xs md:p-5', className)}>
-    <h3 className="text-sm font-semibold">{title}</h3>
+    {title && <h3 className="text-sm font-semibold">{title}</h3>}
     {description && <p className="mt-0.5 mb-4 text-xs text-muted-foreground">{description}</p>}
     {children}
     {foot && <p className="mt-3 text-xs text-muted-foreground">{foot}</p>}
@@ -77,10 +77,22 @@ function usePixelTrail(ref, canvasRef) {
     const size = () => { dpr = Math.min(2, devicePixelRatio || 1); cv.width = el.clientWidth * dpr; cv.height = el.clientHeight * dpr; cv.style.width = `${el.clientWidth}px`; cv.style.height = `${el.clientHeight}px`; pink = getComputedStyle(el).getPropertyValue('--pink').trim() || pink; };
     const ro = new ResizeObserver(size); ro.observe(el); size();
     const light = (c, r, v) => { const k = `${c},${r}`; cells.set(k, Math.max(cells.get(k) || 0, v)); };
+    /* A burst (db:burst, sent by a control inside the banner): pixels fly out of the point in every direction, slow down
+       and fade, each leaving a short trail as the cells it crossed fade behind it. */
+    const sparks = [];
+    const spread = () => {
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const p = sparks[i];
+        p.x += p.vx; p.y += p.vy; p.vx *= .94; p.vy *= .94; p.life *= .955;
+        if (p.life < .15) { sparks.splice(i, 1); continue; }
+        light(Math.round(p.x), Math.round(p.y), p.life);
+      }
+    };
     const frame = () => {
       raf = 0;
       sx += (tx - sx) * (reduce ? 1 : .16); sy += (ty - sy) * (reduce ? 1 : .16);
       el.style.setProperty('--mx', `${sx}px`); el.style.setProperty('--my', `${sy}px`);
+      spread();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.fillStyle = pink;
       for (const [k, v] of cells) {
         const [c, r] = k.split(',').map(Number), inset = 3 + (1 - v) * 5;
@@ -88,7 +100,7 @@ function usePixelTrail(ref, canvasRef) {
         const nv = v * (reduce ? 0 : .94); if (nv < .03) cells.delete(k); else cells.set(k, nv);
       }
       ctx.globalAlpha = 1;
-      if (inside || cells.size || Math.abs(tx - sx) + Math.abs(ty - sy) > .5) raf = requestAnimationFrame(frame);
+      if (inside || cells.size || sparks.length || Math.abs(tx - sx) + Math.abs(ty - sy) > .5) raf = requestAnimationFrame(frame);
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
     const move = e => {
@@ -117,13 +129,20 @@ function usePixelTrail(ref, canvasRef) {
       light(c, r, 1); for (let i = 0; i < 9; i++) light(c + Math.round(Math.random() * 4 - 2), r + Math.round(Math.random() * 4 - 2), .35 + Math.random() * .6);
       haptic(6); kick();
     };
-    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave); el.addEventListener('pointerdown', tap);
-    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('pointerdown', tap); ro.disconnect(); cancelAnimationFrame(raf); };
+    const burst = e => {
+      if (reduce) return;
+      const b = el.getBoundingClientRect(), c = Math.floor((e.detail.x - b.left) / CELL), r = Math.floor((e.detail.y - b.top) / CELL);
+      for (let i = 0; i < 6; i++) light(c + Math.round(Math.random() * 2 - 1), r + Math.round(Math.random() * 2 - 1), .8 + Math.random() * .2);
+      for (let i = 0; i < 34; i++) { const a = Math.random() * 2 * Math.PI, v = .35 + Math.random() * .6; sparks.push({x: c, y: r, vx: Math.cos(a) * v, vy: Math.sin(a) * v * .75, life: .75 + Math.random() * .25}); }
+      haptic(8); kick();
+    };
+    el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave); el.addEventListener('pointerdown', tap); el.addEventListener('db:burst', burst);
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('pointerdown', tap); el.removeEventListener('db:burst', burst); ro.disconnect(); cancelAnimationFrame(raf); };
   }, [ref, canvasRef]);
 }
-function Banner({route}) {
-  const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
-  const stat = (l, v, t) => <div title={t || undefined} className="flex min-w-0 flex-col-reverse px-3 first:pl-0 last:pr-0 sm:px-6"><dt className="mt-1 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase sm:text-[11px]">{l}</dt><dd className="font-mono text-xl font-medium tabular-nums sm:text-2xl">{v}</dd></div>;
+/* The page header's grid with the pointer effects of usePixelTrail. Content marked data-no-trail calms it; a control
+   inside it can send a db:burst event with detail {x, y} (client coordinates) to set off a burst of pixels there. */
+export function PixelBanner({children}) {
   const box = useRef(null), canvas = useRef(null);
   usePixelTrail(box, canvas);
   return (
@@ -132,6 +151,16 @@ function Banner({route}) {
         <canvas ref={canvas} aria-hidden="true" className="pointer-events-none absolute top-0 left-0" />
         <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [--grid-line:color-mix(in_oklab,var(--pink)_55%,transparent)] [mask-image:radial-gradient(200px_circle_at_var(--mx,50%)_var(--my,50%),#000,transparent_72%)]', GRID)} />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover/banner:opacity-100 group-data-[calm]/banner:opacity-0! [background:radial-gradient(360px_circle_at_var(--mx,50%)_var(--my,50%),color-mix(in_oklab,var(--pink)_9%,transparent),transparent_70%)]" />
+        {children}
+      </div>
+    </div>
+  );
+}
+function Banner({route}) {
+  const rows = B.allCases.length, imgs = B.allCases.filter(c => B.isImageTask(c.task)).length, models = B.RUNS.length, configured = B.ORDER.filter(k => B.MODELS[k].configured).length;
+  const stat = (l, v, t) => <div title={t || undefined} className="flex min-w-0 flex-col-reverse px-3 first:pl-0 last:pr-0 sm:px-6"><dt className="mt-1 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase sm:text-[11px]">{l}</dt><dd className="font-mono text-xl font-medium tabular-nums sm:text-2xl">{v}</dd></div>;
+  return (
+    <PixelBanner>
         <div className="relative mx-auto grid max-w-[1600px] items-center gap-x-16 gap-y-10 px-4 pt-8 pb-10 md:px-8 md:pt-14 md:gap-y-12 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)]">
           <div>
             <p className="mb-4 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase md:mb-5"><span className="max-md:hidden">Decision Bench · </span>{B.man().version} · real records, open licences</p>
@@ -143,8 +172,7 @@ function Banner({route}) {
           </div>
           <UseCases route={route} />
         </div>
-      </div>
-    </div>
+    </PixelBanner>
   );
 }
 
@@ -178,6 +206,39 @@ function VsPicker({route, runs, base}) {
       </DropdownMenuRadioGroup>
     </DropdownMenuContent>
   </DropdownMenu>;
+}
+/* Accuracy by use case for up to five models the reader ticks in the list beside it; start (model ids), else the top
+   three of the view, to begin with. Picks live in ?radar= by slot ("a,,c" keeps c in slot 3), so a model keeps its colour and marker while
+   others come and go. */
+export function UseCaseRadar({route, runs, cases, start}) {
+  const cats = B.categoryOrder().filter(k => cases.some(c => B.catKey(c) === k));
+  if (cats.length < 3) return null;
+  const all = runs.map(r => [r, B.subsetMetrics(r, cases)]).filter(([, m]) => m.questions).sort(([, a], [, b]) => b.accuracy - a.accuracy);
+  const keyed = new Map(all.map(x => [B.keyOf(x[0]), x])), param = route.q.get('radar');
+  const keys = param != null ? param.split(',') : start || all.slice(0, 3).map(([r]) => B.keyOf(r));
+  const slots = SLOTS.map((_, i) => keyed.get(keys[i]) || null), slotOf = new Map(slots.flatMap((x, i) => x ? [[x[0].id, i]] : []));
+  const save = next => go(withQ(route, {radar: next.map(x => x ? B.keyOf(x[0]) : '').join(',').replace(/,+$/, '') || ','}));
+  const toggle = x => { const next = slots.slice(), at = slotOf.get(x[0].id); if (at != null) next[at] = null; else { const free = next.indexOf(null); if (free < 0) return; next[free] = x; } save(next); };
+  const rows = k => cases.filter(c => B.catKey(c) === k), full = !slots.includes(null);
+  const series = slots.flatMap((x, i) => { if (!x) return []; const [r] = x, ms = cats.map(k => B.subsetMetrics(r, rows(k)));
+    return [{key: r.id, color: SLOTS[i][0], shape: SLOTS[i][1], values: ms.map(m => m.questions ? m.accuracy : null),
+      tips: ms.map((m, j) => m.questions ? tip(`${B.runName(r)} · ${B.catInfo(cats[j]).name}`, [['Accuracy', pct(m.accuracy)], ['95% interval', ciText(m.wilson)], ['Correct', `${m.correct}/${m.questions}`]]) : null)}]; });
+  const vals = series.flatMap(x => x.values.filter(v => v != null)), [min] = zoomDomain(vals.length ? vals : [.9], .1);
+  return <Section title="Accuracy by use case" description={`One spoke per use case. Tick up to ${SLOTS.length} models in the list.`}>
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <ChartCard foot={series.length ? `The scale starts at ${pct0(min)}, not 0, and adjusts to the models shown, so small gaps look large; hover a point for its 95% interval.` : ''}>
+        <Radar axes={cats.map(k => ({key: k, name: shortCat(B.catInfo(k).name)}))} series={series} min={min} empty="Tick a model in the list to draw it" label="Accuracy by use case" />
+      </ChartCard>
+      <div className="flex min-h-0 flex-col rounded-xl border bg-card shadow-xs lg:max-h-[600px]">
+        <div className="flex items-center justify-between border-b px-4 py-2.5 text-xs text-muted-foreground"><span>Models</span><span className="tabular-nums">{slotOf.size} of {SLOTS.length}</span></div>
+        <ul className="max-h-72 overflow-y-auto p-1 lg:max-h-none">{all.map(x => { const [r, m] = x, at = slotOf.get(r.id), on = at != null, off = !on && full;
+          return <li key={r.id}><label className={cn('flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-1.5 text-sm hover:bg-muted/50', off && 'cursor-not-allowed opacity-50 hover:bg-transparent')} title={off ? `Up to ${SLOTS.length} models at a time; untick one first` : undefined}>
+            <input type="checkbox" className="size-3.5 accent-foreground" checked={on} disabled={off} onChange={() => toggle(x)} data-track="radar_toggle" />
+            <span className="min-w-0 flex-1 truncate"><ModelName k={B.keyOf(r)} sub={false} link={false} /></span>
+            {on && <Mark slot={at} />}<span className="w-12 text-right text-xs text-muted-foreground tabular-nums">{pct(m.accuracy)}</span></label></li>; })}</ul>
+      </div>
+    </div>
+  </Section>;
 }
 /* Holds the extra-columns toggle so flipping it re-renders only the table, not the charts below. */
 function LeaderboardSection({route, runs, cases}) {
@@ -370,6 +431,7 @@ export function Home({route}) {
       </> : !runs.length ? <Section title="Leaderboard"><Notice>No selected model has results on these rows.</Notice></Section> : <>
         <LeaderboardSection route={route} runs={runs} cases={cases} />
         <Section title="Accuracy, speed and cost"><Headline runs={runs} cases={cases} /></Section>
+        <UseCaseRadar route={route} runs={runs} cases={cases} />
         <Section title="Accuracy by task" description={<>Only misses are coloured; faded cells are at or above 95%. Open a task for its rows.<span className="md:hidden"> Scroll sideways for every model.</span></>}><HeatTasks runs={runs} cases={cases} /></Section>
         <Section title="Trade-offs"><Tradeoffs runs={runs} cases={cases} /></Section>
         {/* Hover-driven and 1,000 columns wide: desktop and tablet only. */}

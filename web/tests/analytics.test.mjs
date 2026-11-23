@@ -63,6 +63,8 @@ test('filter changes have separate events, search tracks presence only, compare 
   a.page({page:'compare',id:'',q:new URLSearchParams()});
   a.page({page:'compare',id:'',q:new URLSearchParams('a=model-1&b=SECRET')});
   assert.equal(a.events.at(-1)[0],'comparison_change'); assert.equal(a.events.at(-1)[1].model_a,'model-1'); assert(!JSON.stringify(a.events).includes('SECRET'));
+  a.page({page:'compare',id:'',q:new URLSearchParams('m=SECRET,model-1')});
+  assert.equal(a.events.at(-1)[1].model_a,'model-1'); assert.equal(a.events.at(-1)[1].model_b,undefined); assert(!JSON.stringify(a.events).includes('SECRET'));
 });
 test('delegated clicks strip external paths and queries and classify downloads', () => {
   const a=app(); a.install();

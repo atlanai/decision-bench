@@ -23,7 +23,7 @@ export function Models() {
   const keys = B.ORDER.filter(k => published.has(k));
   return <>
     <PageHeader title="Models" description="Models with published benchmark results. Open one for its fit by use case, failures and calibration."
-      actions={B.RUNS.length > 1 && <Button variant="outline" asChild className="max-md:h-11 max-md:w-full max-md:rounded-xl"><a href={href('compare')}>Compare two models</a></Button>} />
+      actions={B.RUNS.length > 1 && <Button variant="outline" asChild className="max-md:h-11 max-md:w-full max-md:rounded-xl"><a href={href('compare')}>Compare models</a></Button>} />
     <List className="md:hidden">{keys.map(k => { const m = B.M(k), run = available.find(r => B.keyOf(r) === k), mm = B.subsetMetrics(run, B.allCases);
       return <Item key={k} href={modelHref(k)} lead={<Logo k={k} size={30} className="rounded-lg" />} title={B.fullName(k)}
         sub={[m.vendor, m.vision ? 'Text and images' : 'Text only', ms(mm.latency.p50), run.coverage?.full === false && `${run.coverage.rows_completed} rows · partial`].filter(Boolean).join(' · ')}
