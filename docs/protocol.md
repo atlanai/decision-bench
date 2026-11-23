@@ -82,6 +82,14 @@ number of models minus those reliably behind. A max-t correction makes each rang
 comparisons at once. Each range is for one model, so two ranges can overlap even when one model is reliably ahead of
 the other. Partial runs are not ranked.
 
+The leaderboard's `vs` column and the Compare page give the verdict for one pair from the same draws: the accuracy gap
+on the rows both were scored on, with an interval that uses the larger of the two models' max-t margins. The pair is
+called ahead or behind only when that interval excludes zero, so the verdict reads the same from either model and
+never claims a gap that either model's rank range does not. A pair whose gap does not vary across the draws, such as
+two models that share one row, has no interval and stays too close, as in the ranges. Next to it, the site counts the
+rows only one of the two got right. Compare also shows the paired comparison above, which resamples whole tasks and so
+asks whether the gap would hold on new tasks. It is not used for the verdict and can be uncertain where the verdict is not.
+
 ## Retries and resuming
 
 A call that fails with a retryable error (HTTP 408, 409, 425, 429, 5xx, a transport error, or a non-JSON body)
