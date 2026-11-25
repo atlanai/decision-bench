@@ -67,7 +67,7 @@ def collect(include_runs=False):
             except (ValueError, KeyError, json.JSONDecodeError) as exc:
                 print(f"skip runs/{run_id}: {exc}", file=sys.stderr)
                 continue
-            selected = [case_map[i] for i in json.loads(path.read_text())["config"]["selected_case_ids"] if i in case_map]
+            selected = [case_map[i] for i in json.loads(path.read_text(encoding="utf-8"))["config"]["selected_case_ids"] if i in case_map]
             # A local run replaces a published copy of the same run id: it may have been resumed since.
             entries[run_id] = _run_entry(metadata, metrics, "local", selected)
             records[run_id] = records_from_predictions(predictions, run_id)[0]
@@ -105,10 +105,10 @@ def build(include_runs=False):
     site = corpus.ROOT / "site"
     site.mkdir(exist_ok=True)
     temporary = site / "data.json.tmp"
-    temporary.write_text(json.dumps(output, ensure_ascii=False, allow_nan=False))
+    temporary.write_text(json.dumps(output, ensure_ascii=False, allow_nan=False), encoding="utf-8")
     temporary.replace(site / "data.json")
     write_viewer(output, site)
-    (site / "corpus.json").write_text(json.dumps(cases, ensure_ascii=False, indent=2) + "\n")
+    (site / "corpus.json").write_text(json.dumps(cases, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     datasets = corpus.ROOT / "data/datasets.json"
     if datasets.exists():
         shutil.copyfile(datasets, site / "datasets.json")

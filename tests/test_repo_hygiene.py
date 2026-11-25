@@ -1,4 +1,5 @@
 """Nothing committed may carry a credential, an internal hostname or a local home path."""
+import ast
 import importlib.util
 import json
 import re
@@ -128,6 +129,23 @@ class RepoHygiene(unittest.TestCase):
                                  check=True).stdout.split()
         for asset in [*tracked, "site/assets/logos/new-vendor.ai.png"]:
             self.assertFalse(ignored(asset), asset)
+
+    def test_text_files_are_read_and_written_as_utf8(self):
+        # Without an encoding Python uses the locale's, for example cp1252 on Windows, which cannot read the corpus.
+        missing = []
+        for path in sorted((ROOT / "decision_bench").glob("*.py")):
+            for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+                if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+                    continue
+                name, args = node.func.attr, node.args
+                # Path.open takes the mode first; urllib's opener.open and Image.open take a request or a file.
+                is_text_open = name == "open" and (not args or (isinstance(args[0], ast.Constant)
+                                                                and isinstance(args[0].value, str)
+                                                                and "b" not in args[0].value))
+                if (name in ("read_text", "write_text") or is_text_open) \
+                        and not any(k.arg == "encoding" for k in node.keywords):
+                    missing.append(f"{path.relative_to(ROOT).as_posix()}:{node.lineno} {name}()")
+        self.assertEqual(missing, [], "\n".join(missing))
 
 
 if __name__ == "__main__":

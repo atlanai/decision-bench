@@ -216,7 +216,7 @@ def cli(model, case, timeout, api_model=None):
         work = Path(tmp)
         schema = response_schema(case)
         schema_path = work / "response.schema.json"
-        schema_path.write_text(json.dumps(schema))
+        schema_path.write_text(json.dumps(schema), encoding="utf-8")
         env = {k: v for k, v in os.environ.items() if k not in HARNESS_SECRETS}
         if provider == "codex-cli":
             cmd = [executable("codex"), "exec", "--ignore-user-config", "--ephemeral", "--skip-git-repo-check",
