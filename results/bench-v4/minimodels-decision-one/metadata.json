@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "suite": "bench-v4",
+  "model": {
+    "id": "minimodels-decision-one",
+    "label": "Minimodels Decision One",
+    "short_label": "Decision One",
+    "vendor": "Minimodels",
+    "provider": "laya",
+    "color": "#eab308",
+    "vision": true,
+    "api_model": "minimodels/decision-one",
+    "resolved_models": [
+      "minimodels/decision-one"
+    ]
+  },
+  "decision_pricing": null,
+  "request": {},
+  "pricing": null,
+  "prompt_version": "choice-v1",
+  "corpus": {
+    "version": "1.0",
+    "sha256": "3599baea0d9c7e4e3d86c8b06af96e6850edca037b334bbc6b4e1a0033021725",
+    "current": true
+  },
+  "harness": {
+    "version": "0.3.0",
+    "git_commit": "36c7842301fb4f83313d821e570e542e5b6acb6e",
+    "git_dirty": true,
+    "git_commits": [
+      "36c7842301fb4f83313d821e570e542e5b6acb6e"
+    ]
+  },
+  "run": {
+    "run_id": "minimodels-decision-one-bench-v4-r1",
+    "status": "completed",
+    "created_at": "2026-11-26T00:43:21.358133+00:00",
+    "completed_at": "2026-11-26T02:25:16.881635+00:00",
+    "published_at": "2026-11-26T02:34:49.075694+00:00",
+    "executions": 2,
+    "jobs": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 2,
+    "endpoint_id": "endpoint-986ae1ae15ac",
+    "platform": {
+      "os": "Darwin",
+      "python": "3.13.16"
+    },
+    "network_baseline": {
+      "probes": 5,
+      "dns_ms": 0.005291018169373274,
+      "tcp_connect_ms": 0.08720799814909697,
+      "tls_handshake_ms": null
+    }
+  },
+  "coverage": {
+    "rows_in_corpus": 1071,
+    "rows_selected": 1071,
+    "rows_completed": 1071,
+    "rows_ok": 1071,
+    "rows_error": 0,
+    "full": true
+  },
+  "totals": {
+    "correct": 1019,
+    "accuracy": 0.9514472455648926,
+    "wilson95": [
+      0.936883405976834,
+      0.9627840426965334
+    ],
+    "errors": 0,
+    "cost_usd": null,
+    "cost_coverage": 0.0,
+    "input_tokens": 872203,
+    "output_tokens": 233791,
+    "latency_p50_ms": 885.3876250213943,
+    "server_time_p50_ms_estimate": 885.2079180069268
+  }
+}
