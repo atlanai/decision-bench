@@ -346,7 +346,7 @@ always stop the named app after the run, including on failures. GPU/CPU/memory
 charges are separate infrastructure costs and must not be represented as
 OpenRouter token pricing.
 
-## Sieve-31B-v3
+## Sieve-31B-v3 and Sieve-31B-v4
 
 The `sieve` provider calls a self-hosted [Sieve](https://github.com/sthanika-ai/Sieve) server. Sieve never generates
 text: it reads the state once and returns a probability for every option. The provider sends the same native System
@@ -367,7 +367,40 @@ export SIEVE_BASE_URL=http://localhost:8020
 python3 -m decision_bench run --model sieve-31b-v3 --limit 5 --jobs 1
 ```
 
-The model is text only (`"vision": false`): image rows are answered from their text rendering.
+Sieve-31B-v4 is served the same way, from its own pinned revision:
+
+```sh
+hf download sthanika-ai/Sieve-31B-v4 --revision 464dc7f46e150407aec322634d321071ba4b433f --local-dir Sieve-31B-v4-464dc7f4
+sieve-serve --model ./Sieve-31B-v4-464dc7f4 --port 8020      # about 58 GiB of GPU memory in bf16
+export SIEVE_BASE_URL=http://localhost:8020
+python3 -m decision_bench run --model sieve-31b-v4 --limit 5 --jobs 1
+```
+
+On GPUs with less memory, Sieve 0.5.2 splits the model's layers over several GPUs, as in the published Sieve-31B-v4
+run (two 40 GB GPUs):
+
+```sh
+pip install -r https://raw.githubusercontent.com/sthanika-ai/Sieve/aafc31b781e0f590d180d2b1c8ade283d1d8401a/requirements.txt
+pip install "sieve-decisions[serve] @ git+https://github.com/sthanika-ai/Sieve@aafc31b781e0f590d180d2b1c8ade283d1d8401a"
+sieve-serve --model ./Sieve-31B-v4-464dc7f4 --port 8020 --devices cuda:0,cuda:1
+```
+
+Both models are text only (`"vision": false`): image rows are answered from their text rendering.
+
+To re-run Sieve-31B-v4 without your own GPU, `scripts/serve_sieve.py` serves the pinned revision with `sieve-serve` at
+`1e64657` on one Modal H100 80GB. `sieve-serve` has no authentication, so the script puts a bearer-key gate in front
+of it. Set `SIEVE_BASE_URL` (the deployed URL) and `SIEVE_API_KEY` (the same key) for the run:
+
+```sh
+SIEVE_GATE_KEY=<key> modal run scripts/serve_sieve.py::download   # about 58 GiB of weights to a Modal volume, on a CPU container
+SIEVE_GATE_KEY=<key> modal deploy scripts/serve_sieve.py
+python3 -m decision_bench run --model sieve-31b-v4 --limit 20 --jobs 1 --timeout 1500
+python3 -m decision_bench run --model sieve-31b-v4 --jobs 2 --max-attempts 2 --timeout 180
+modal app stop --yes decision-bench-sieve-31b-v4                  # always, also after a failure
+```
+
+The first request after a deploy waits several minutes for the weights to load, so the smoke run has a long timeout.
+GPU time is an infrastructure cost and is not recorded as token pricing.
 
 ## Sarvam-Prism
 

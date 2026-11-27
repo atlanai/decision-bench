@@ -1074,6 +1074,18 @@
         "as_of": "2026-11-21"
       },
       "notes": "Native Choice probabilities through OpenRouter's Decisions API. Text only: image rows use their text rendering. Hosted weights may update; returned model identity recorded."
+    },
+    {
+      "id": "sieve-31b-v4",
+      "label": "Sieve-31B-v4",
+      "short_label": "Sieve 31B v4",
+      "vendor": "Sthanika AI",
+      "provider": "sieve",
+      "model": "sthanika-ai/Sieve-31B-v4",
+      "color": "#6d28d9",
+      "request": {},
+      "notes": "Sieve-31B-v4 (fine-tune of gemma-4-31B-it in two stages, a full fine-tune then a LoRA stage merged into the dense weights; bf16 weights, pinned Hub revision 464dc7f46e150407aec322634d321071ba4b433f), served with sieve-serve: it reads the state once and returns the probabilities of the option labels, with no text generation. Text only; image rows are answered from their text rendering. Run on 2x NVIDIA A100-SXM4-40GB in one node, the model's layers split over both GPUs, with the client on the same node (loopback); the latency reflects that setup.",
+      "vision": false
     }
   ],
   "logos": {

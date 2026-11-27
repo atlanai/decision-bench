@@ -1,4 +1,4 @@
-"""Bearer key and model checks shared by the Modal System One servers (serve_prism.py, serve_amos.py)."""
+"""Bearer key and model checks shared by the Modal System One servers (serve_prism.py, serve_amos.py, serve_sieve.py)."""
 import hmac
 import os
 
