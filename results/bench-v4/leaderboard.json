@@ -6,6 +6,28 @@
   "note": "Sorted by accuracy. The site ranks each model with a 95% range of places from paired row comparisons.",
   "models": [
     {
+      "model_id": "minimodels-decision-one",
+      "label": "Minimodels Decision One",
+      "vendor": "Minimodels",
+      "provider": "laya",
+      "api_model": "minimodels/decision-one",
+      "accuracy": 0.9514472455648926,
+      "wilson95": [
+        0.936883405976834,
+        0.9627840426965334
+      ],
+      "correct": 1019,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 885.3876250213943,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-26T02:25:16.881635+00:00"
+    },
+    {
       "model_id": "microsoft-decision-1.1",
       "label": "Microsoft-Decision-1.1",
       "vendor": "Microsoft",
