@@ -26,7 +26,7 @@ def write_viewer(output, site):
         body = json.dumps(detail, ensure_ascii=False, allow_nan=False, separators=(',', ':'))
         digest = hashlib.sha256(body.encode()).hexdigest()
         name = f'{digest}.json'
-        (directory / name).write_text(body, encoding='utf-8')
+        (directory / name).write_text(body, encoding='utf-8', newline='\n')
         cases.append({**{k: v for k, v in case.items() if k not in ('state', 'provenance')},
                       'detail_url': f'details/{name}'})
     records = []
@@ -40,6 +40,6 @@ def write_viewer(output, site):
     index = {**output, 'cases': cases, 'results': records}
     temporary = site / 'viewer.json.tmp'
     temporary.write_text(json.dumps(index, ensure_ascii=False, allow_nan=False, separators=(',', ':')),
-                         encoding='utf-8')
+                         encoding='utf-8', newline='\n')
     temporary.replace(site / 'viewer.json')
     return index

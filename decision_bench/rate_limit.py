@@ -27,7 +27,7 @@ class RequestPacer:
             return 0.0
         import fcntl  # POSIX only; importing the module remains safe for read-only commands.
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("a+", encoding="utf-8") as handle:
+        with self.path.open("a+", encoding="utf-8", newline="\n") as handle:
             fcntl.flock(handle, fcntl.LOCK_EX)
             try:
                 handle.seek(0)

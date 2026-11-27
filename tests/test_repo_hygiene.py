@@ -1,4 +1,5 @@
 """Nothing committed may carry a credential, an internal hostname or a local home path."""
+import ast
 import importlib.util
 import json
 import re
@@ -128,6 +129,38 @@ class RepoHygiene(unittest.TestCase):
                                  check=True).stdout.split()
         for asset in [*tracked, "site/assets/logos/new-vendor.ai.png"]:
             self.assertFalse(ignored(asset), asset)
+
+    def test_text_files_are_read_and_written_as_utf8(self):
+        # Without an encoding Python uses the locale's, for example cp1252 on Windows, which cannot read the corpus.
+        # Without newline="\n" a write on Windows turns every line ending into CRLF.
+        missing = []
+        for path in sorted((ROOT / "decision_bench").glob("*.py")):
+            for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+                if not isinstance(node, ast.Call):
+                    continue
+                args, keywords = node.args, {k.arg: k.value for k in node.keywords}
+                if isinstance(node.func, ast.Name) and node.func.id == "open":
+                    name, mode = "open", keywords.get("mode", args[1] if len(args) > 1 else None)
+                elif isinstance(node.func, ast.Attribute):
+                    # Path.open takes the mode first; urllib's opener.open and Image.open take a request or a file.
+                    name, mode = node.func.attr, keywords.get("mode", args[0] if args else None)
+                    if name == "open" and args and not (isinstance(args[0], ast.Constant)
+                                                        and isinstance(args[0].value, str)):
+                        continue
+                else:
+                    continue
+                if name not in ("open", "read_text", "write_text"):
+                    continue
+                mode = mode.value if isinstance(mode, ast.Constant) else "r"
+                if name == "open" and "b" in mode:
+                    continue
+                where = f"{path.relative_to(ROOT).as_posix()}:{node.lineno} {name}()"
+                if "encoding" not in keywords:
+                    missing.append(f"{where} without encoding")
+                writes = name == "write_text" or (name == "open" and any(c in mode for c in "wax+"))
+                if writes and "newline" not in keywords:
+                    missing.append(f"{where} without newline")
+        self.assertEqual(missing, [], "\n".join(missing))
 
 
 if __name__ == "__main__":

@@ -61,7 +61,7 @@ def load_run(run_id):
     folder = runs_dir() / run_id
     if not (folder / "run.json").exists():
         raise ValueError(f"No run at runs/{run_id}")
-    meta = json.loads((folder / "run.json").read_text())
+    meta = json.loads((folder / "run.json").read_text(encoding="utf-8"))
     selected = meta["config"]["selected_case_ids"]
     wanted = set(selected)
     latest = {r["case_id"]: r for r in read_jsonl(folder / "results.jsonl", allow_partial=True)}
@@ -297,8 +297,8 @@ def publish(run_id, force=False):
     write_json(staging / "metadata.json", metadata)
     write_json(staging / "scores.json", scores)
     (staging / "predictions.jsonl").write_text("".join(json.dumps(p, ensure_ascii=False, sort_keys=True) + "\n"
-                                                       for p in predictions))
-    (staging / "README.md").write_text(model_readme(metadata, scores))
+                                                       for p in predictions), encoding="utf-8", newline="\n")
+    (staging / "README.md").write_text(model_readme(metadata, scores), encoding="utf-8", newline="\n")
     shutil.rmtree(target, ignore_errors=True)
     staging.replace(target)
     board = write_leaderboard(metadata["suite"])
@@ -317,10 +317,10 @@ def load_published(suite):
         meta_path = model_dir / "metadata.json"
         if not meta_path.exists():
             continue
-        metadata = json.loads(meta_path.read_text())
+        metadata = json.loads(meta_path.read_text(encoding="utf-8"))
         predictions = read_jsonl(model_dir / "predictions.jsonl")
         scores_path = model_dir / "scores.json"
-        scores = json.loads(scores_path.read_text()) if scores_path.exists() else None
+        scores = json.loads(scores_path.read_text(encoding="utf-8")) if scores_path.exists() else None
         out.append((metadata, predictions, scores))
     return out
 
@@ -364,7 +364,7 @@ def write_leaderboard(suite):
                      f"{_fmt(r['cost_per_1000_rows_usd'], 'usd')} | {_fmt(r['latency_p50_ms'], 'ms')} |")
     if not board["models"]:
         lines.append("| (no published results yet) | | | | | | |")
-    (folder / "leaderboard.md").write_text("\n".join(lines) + "\n")
+    (folder / "leaderboard.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     return board
 
 

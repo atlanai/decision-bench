@@ -44,7 +44,7 @@ def env_value(name):
         return os.environ[name]
     path = corpus.ROOT / ".env"
     if path.exists():
-        for line in path.read_text().splitlines():
+        for line in path.read_text(encoding="utf-8").splitlines():
             key, sep, value = line.partition("=")
             if sep and key.strip() == name and not key.strip().startswith("#"):
                 return value.strip().strip("\"'") or None
@@ -97,7 +97,7 @@ def _check_model(m):
 
 
 def _read():
-    return json.loads((corpus.ROOT / "config/models.json").read_text())
+    return json.loads((corpus.ROOT / "config/models.json").read_text(encoding="utf-8"))
 
 
 def load_models():

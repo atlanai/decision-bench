@@ -56,7 +56,7 @@ def git_revision():
 
 def write_json(path, value):
     temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(json.dumps(openai_compat.redact(value), indent=2, ensure_ascii=False) + "\n")
+    temporary.write_text(json.dumps(openai_compat.redact(value), indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     temporary.replace(path)
 
 
@@ -249,7 +249,7 @@ def _run(args, model, cases, cfg, run_id, folder):
     raw_dir.mkdir(exist_ok=True)
     run_path = folder / "run.json"
     if run_path.exists():
-        meta = json.loads(run_path.read_text())
+        meta = json.loads(run_path.read_text(encoding="utf-8"))
         if meta["config"] != cfg:
             changed = sorted(k for k in set(meta["config"]) | set(cfg) if meta["config"].get(k) != cfg.get(k))
             raise ValueError(f"Run {run_id} was started with a different configuration ({', '.join(changed)}); "
@@ -282,7 +282,7 @@ def _run(args, model, cases, cfg, run_id, folder):
 
     def append(name, value):
         with lock:
-            with (folder / name).open("a") as f:
+            with (folder / name).open("a", encoding="utf-8", newline="\n") as f:
                 f.write(canonical(openai_compat.redact(value)) + "\n")
                 f.flush()
 
@@ -385,7 +385,7 @@ def run(args):
     folder = runs_dir() / run_id
     folder.mkdir(parents=True, exist_ok=True)
     print(f"Run {run_id}: {model['id']} ({model['provider']}), {len(cases)} rows", flush=True)
-    with (folder / ".run.lock").open("w") as lock:
+    with (folder / ".run.lock").open("w", encoding="utf-8", newline="\n") as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:

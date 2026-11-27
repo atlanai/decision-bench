@@ -28,12 +28,12 @@ def digest(value):
 
 
 def corpus_path():
-    pointer = json.loads((ROOT / "data/corpus/current.json").read_text())
+    pointer = json.loads((ROOT / "data/corpus/current.json").read_text(encoding="utf-8"))
     return ROOT / pointer["path"]
 
 
 def load_manifest(path=None):
-    return json.loads(Path(path or corpus_path()).with_name("manifest.json").read_text())
+    return json.loads(Path(path or corpus_path()).with_name("manifest.json").read_text(encoding="utf-8"))
 
 
 def read_jsonl(path, allow_partial=False):
@@ -42,7 +42,7 @@ def read_jsonl(path, allow_partial=False):
     if not path.exists():
         return []
     out = []
-    with path.open() as f:
+    with path.open(encoding="utf-8") as f:
         lines = f.readlines()
     for line in lines:
         if line.strip():
@@ -63,7 +63,7 @@ def load_cases(path=None):
     cases = read_jsonl(path)
     validate(cases)
     manifest = path.with_name("manifest.json")
-    if manifest.exists() and json.loads(manifest.read_text())["sha256"] != digest(cases):
+    if manifest.exists() and json.loads(manifest.read_text(encoding="utf-8"))["sha256"] != digest(cases):
         raise ValueError("Corpus hash does not match its frozen manifest")
     return cases
 
