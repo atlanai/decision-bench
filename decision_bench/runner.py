@@ -56,7 +56,7 @@ def git_revision():
 
 def write_json(path, value):
     temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(json.dumps(openai_compat.redact(value), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    temporary.write_text(json.dumps(openai_compat.redact(value), indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     temporary.replace(path)
 
 
@@ -282,7 +282,7 @@ def _run(args, model, cases, cfg, run_id, folder):
 
     def append(name, value):
         with lock:
-            with (folder / name).open("a", encoding="utf-8") as f:
+            with (folder / name).open("a", encoding="utf-8", newline="\n") as f:
                 f.write(canonical(openai_compat.redact(value)) + "\n")
                 f.flush()
 
@@ -385,7 +385,7 @@ def run(args):
     folder = runs_dir() / run_id
     folder.mkdir(parents=True, exist_ok=True)
     print(f"Run {run_id}: {model['id']} ({model['provider']}), {len(cases)} rows", flush=True)
-    with (folder / ".run.lock").open("w", encoding="utf-8") as lock:
+    with (folder / ".run.lock").open("w", encoding="utf-8", newline="\n") as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:

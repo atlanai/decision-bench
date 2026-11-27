@@ -297,8 +297,8 @@ def publish(run_id, force=False):
     write_json(staging / "metadata.json", metadata)
     write_json(staging / "scores.json", scores)
     (staging / "predictions.jsonl").write_text("".join(json.dumps(p, ensure_ascii=False, sort_keys=True) + "\n"
-                                                       for p in predictions), encoding="utf-8")
-    (staging / "README.md").write_text(model_readme(metadata, scores), encoding="utf-8")
+                                                       for p in predictions), encoding="utf-8", newline="\n")
+    (staging / "README.md").write_text(model_readme(metadata, scores), encoding="utf-8", newline="\n")
     shutil.rmtree(target, ignore_errors=True)
     staging.replace(target)
     board = write_leaderboard(metadata["suite"])
@@ -364,7 +364,7 @@ def write_leaderboard(suite):
                      f"{_fmt(r['cost_per_1000_rows_usd'], 'usd')} | {_fmt(r['latency_p50_ms'], 'ms')} |")
     if not board["models"]:
         lines.append("| (no published results yet) | | | | | | |")
-    (folder / "leaderboard.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (folder / "leaderboard.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     return board
 
 

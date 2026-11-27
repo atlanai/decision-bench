@@ -216,7 +216,7 @@ def cli(model, case, timeout, api_model=None):
         work = Path(tmp)
         schema = response_schema(case)
         schema_path = work / "response.schema.json"
-        schema_path.write_text(json.dumps(schema), encoding="utf-8")
+        schema_path.write_text(json.dumps(schema), encoding="utf-8", newline="\n")
         env = {k: v for k, v in os.environ.items() if k not in HARNESS_SECRETS}
         if provider == "codex-cli":
             cmd = [executable("codex"), "exec", "--ignore-user-config", "--ephemeral", "--skip-git-repo-check",
@@ -237,7 +237,7 @@ def cli(model, case, timeout, api_model=None):
             stdin = json.dumps(public_input(case), ensure_ascii=False)
         started = time.perf_counter()
         try:
-            proc = subprocess.run(cmd, input=stdin, text=True, capture_output=True, cwd=work, env=env, timeout=timeout)
+            proc = subprocess.run(cmd, input=stdin, text=True, encoding="utf-8", capture_output=True, cwd=work, env=env, timeout=timeout)
         except subprocess.TimeoutExpired as e:
             raise CallError(f"CLI timed out after {timeout}s", raw={"stdout": str(e.stdout or ""),
                             "stderr": str(e.stderr or "")}, status="timeout") from e

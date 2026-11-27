@@ -105,10 +105,10 @@ def build(include_runs=False):
     site = corpus.ROOT / "site"
     site.mkdir(exist_ok=True)
     temporary = site / "data.json.tmp"
-    temporary.write_text(json.dumps(output, ensure_ascii=False, allow_nan=False), encoding="utf-8")
+    temporary.write_text(json.dumps(output, ensure_ascii=False, allow_nan=False), encoding="utf-8", newline="\n")
     temporary.replace(site / "data.json")
     write_viewer(output, site)
-    (site / "corpus.json").write_text(json.dumps(cases, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (site / "corpus.json").write_text(json.dumps(cases, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     datasets = corpus.ROOT / "data/datasets.json"
     if datasets.exists():
         shutil.copyfile(datasets, site / "datasets.json")
