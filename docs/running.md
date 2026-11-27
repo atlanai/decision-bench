@@ -387,6 +387,21 @@ sieve-serve --model ./Sieve-31B-v4-464dc7f4 --port 8020 --devices cuda:0,cuda:1
 
 Both models are text only (`"vision": false`): image rows are answered from their text rendering.
 
+To re-run Sieve-31B-v4 without your own GPU, `scripts/serve_sieve.py` serves the pinned revision with `sieve-serve` at
+`1e64657` on one Modal H100 80GB. `sieve-serve` has no authentication, so the script puts a bearer-key gate in front
+of it. Set `SIEVE_BASE_URL` (the deployed URL) and `SIEVE_API_KEY` (the same key) for the run:
+
+```sh
+SIEVE_GATE_KEY=<key> modal run scripts/serve_sieve.py::download   # about 58 GiB of weights to a Modal volume, on a CPU container
+SIEVE_GATE_KEY=<key> modal deploy scripts/serve_sieve.py
+python3 -m decision_bench run --model sieve-31b-v4 --limit 20 --jobs 1 --timeout 1500
+python3 -m decision_bench run --model sieve-31b-v4 --jobs 2 --max-attempts 2 --timeout 180
+modal app stop --yes decision-bench-sieve-31b-v4                  # always, also after a failure
+```
+
+The first request after a deploy waits several minutes for the weights to load, so the smoke run has a long timeout.
+GPU time is an infrastructure cost and is not recorded as token pricing.
+
 ## Sarvam-Prism
 
 `sarvam-prism` calls Sarvam's hosted Decisions API. Set `SARVAM_API_KEY` in `.env`, then:
