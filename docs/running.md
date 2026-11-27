@@ -346,7 +346,7 @@ always stop the named app after the run, including on failures. GPU/CPU/memory
 charges are separate infrastructure costs and must not be represented as
 OpenRouter token pricing.
 
-## Sieve-31B-v3
+## Sieve-31B-v3 and Sieve-31B-v4
 
 The `sieve` provider calls a self-hosted [Sieve](https://github.com/sthanika-ai/Sieve) server. Sieve never generates
 text: it reads the state once and returns a probability for every option. The provider sends the same native System
@@ -367,7 +367,25 @@ export SIEVE_BASE_URL=http://localhost:8020
 python3 -m decision_bench run --model sieve-31b-v3 --limit 5 --jobs 1
 ```
 
-The model is text only (`"vision": false`): image rows are answered from their text rendering.
+Sieve-31B-v4 is served the same way, from its own pinned revision:
+
+```sh
+hf download sthanika-ai/Sieve-31B-v4 --revision 464dc7f46e150407aec322634d321071ba4b433f --local-dir Sieve-31B-v4-464dc7f4
+sieve-serve --model ./Sieve-31B-v4-464dc7f4 --port 8020      # about 58 GiB of GPU memory in bf16
+export SIEVE_BASE_URL=http://localhost:8020
+python3 -m decision_bench run --model sieve-31b-v4 --limit 5 --jobs 1
+```
+
+On GPUs with less memory, Sieve 0.5.2 splits the model's layers over several GPUs, as in the published Sieve-31B-v4
+run (two 40 GB GPUs):
+
+```sh
+pip install -r https://raw.githubusercontent.com/sthanika-ai/Sieve/aafc31b781e0f590d180d2b1c8ade283d1d8401a/requirements.txt
+pip install "sieve-decisions[serve] @ git+https://github.com/sthanika-ai/Sieve@aafc31b781e0f590d180d2b1c8ade283d1d8401a"
+sieve-serve --model ./Sieve-31B-v4-464dc7f4 --port 8020 --devices cuda:0,cuda:1
+```
+
+Both models are text only (`"vision": false`): image rows are answered from their text rendering.
 
 ## Sarvam-Prism
 
