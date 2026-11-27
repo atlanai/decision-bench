@@ -710,6 +710,28 @@
       "completed_at": "2026-11-22T12:52:05.862470+00:00"
     },
     {
+      "model_id": "sieve-31b-v4",
+      "label": "Sieve-31B-v4",
+      "vendor": "Sthanika AI",
+      "provider": "sieve",
+      "api_model": "sthanika-ai/Sieve-31B-v4",
+      "accuracy": 0.9140989729225023,
+      "wilson95": [
+        0.8958011871665413,
+        0.9294366897448102
+      ],
+      "correct": 979,
+      "rows": 1071,
+      "errors": 0,
+      "cost_usd": null,
+      "cost_coverage": 0.0,
+      "cost_per_1000_rows_usd": null,
+      "latency_p50_ms": 1141.1875989288092,
+      "corpus_current": true,
+      "full_coverage": true,
+      "completed_at": "2026-11-26T08:53:22.009883+00:00"
+    },
+    {
       "model_id": "sieve-31b-v3",
       "label": "Sieve-31B-v3",
       "vendor": "Sthanika AI",
