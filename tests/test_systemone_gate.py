@@ -1,4 +1,4 @@
-"""The bearer key and model gate that the Modal System One servers (serve_prism.py, serve_amos.py) run on every request."""
+"""The bearer key and model gate that the Modal System One servers (serve_prism.py, serve_amos.py, serve_sieve.py) run on every request."""
 import importlib.util
 import os
 from pathlib import Path
