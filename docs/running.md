@@ -389,17 +389,20 @@ Both models are text only (`"vision": false`): image rows are answered from thei
 
 To re-run Sieve-31B-v4 without your own GPU, `scripts/serve_sieve.py` serves the pinned revision with `sieve-serve` at
 `1e64657` on one Modal H100 80GB. `sieve-serve` has no authentication, so the script puts a bearer-key gate in front
-of it. Set `SIEVE_BASE_URL` (the deployed URL) and `SIEVE_API_KEY` (the same key) for the run:
+of it. Set `SIEVE_BASE_URL` (the deployed URL) and `SIEVE_API_KEY` (the deploy key) on the run commands only. In
+`.env` they would also send `sieve-31b-v3` runs to this endpoint, which refuses them.
 
 ```sh
 SIEVE_GATE_KEY=<key> modal run scripts/serve_sieve.py::download   # about 58 GiB of weights to a Modal volume, on a CPU container
 SIEVE_GATE_KEY=<key> modal deploy scripts/serve_sieve.py
-python3 -m decision_bench run --model sieve-31b-v4 --limit 20 --jobs 1 --timeout 1500
-python3 -m decision_bench run --model sieve-31b-v4 --jobs 2 --max-attempts 2 --timeout 180
+python3 -m decision_bench run --model sieve-31b-v4 --limit 20 --jobs 1 --run-id <smoke id>
+python3 -m decision_bench run --model sieve-31b-v4 --jobs 2 --run-id <run id>
+python3 -I .claude/skills/review-provider-pr/compare_runs.py results/bench-v4/sieve-31b-v4 --runs <run id>
 modal app stop --yes decision-bench-sieve-31b-v4                  # always, also after a failure
 ```
 
-The first request after a deploy waits several minutes for the weights to load, so the smoke run has a long timeout.
+The first request after a deploy waits about a minute while the weights load. Modal answers a web request that takes
+longer than 150 s with a redirect, which the harness refuses, so send one request by hand first if the load is slow.
 GPU time is an infrastructure cost and is not recorded as token pricing.
 
 ## Sarvam-Prism

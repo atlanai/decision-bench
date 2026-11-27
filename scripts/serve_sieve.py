@@ -13,6 +13,7 @@ REPO, REVISION = "sthanika-ai/Sieve-31B-v4", "464dc7f46e150407aec322634d321071ba
 SIEVE = "1e64657c930f91db7119b5638774c0f11a77e441"
 APP = "decision-bench-sieve-31b-v4"
 PORT = 8020
+WEIGHTS = f"/hf/sieve-31b-v4-{REVISION[:8]}"
 
 app = modal.App(APP)
 cache = modal.Volume.from_name(f"{APP}-cache", create_if_missing=True)
@@ -28,7 +29,6 @@ image = (
 )
 KEY = require_key("SIEVE_GATE_KEY")
 secret = modal.Secret.from_dict({"SIEVE_GATE_KEY": KEY})
-WEIGHTS = f"/hf/sieve-31b-v4-{REVISION[:8]}"
 
 
 @app.function(image=image, volumes={"/hf": cache}, secrets=[secret], cpu=8, memory=16384, timeout=7200)
@@ -45,10 +45,10 @@ class Sieve:
     @modal.enter()
     def start(self):
         started = time.time()
-        self.proc = subprocess.Popen(["sieve-serve", "--model", WEIGHTS, "--port", str(PORT)])
+        proc = subprocess.Popen(["sieve-serve", "--model", WEIGHTS, "--port", str(PORT)])
         while True:
-            if self.proc.poll() is not None:
-                raise RuntimeError(f"sieve-serve exited with {self.proc.returncode}")
+            if proc.poll() is not None:
+                raise RuntimeError(f"sieve-serve exited with {proc.returncode}")
             try:
                 socket.create_connection(("127.0.0.1", PORT), timeout=1).close()
                 break
